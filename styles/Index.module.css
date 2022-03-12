@@ -1,0 +1,19 @@
+.contactLink {
+    @apply inline-flex justify-center relative z-[1] min-w-[200px] mt-8 p-2;
+    @apply border border-white text-white text-[24px];
+    @apply transition-all ease-in-out duration-200;
+
+    &::before {
+        @apply absolute -z-[1] w-0 h-full top-0 left-0;
+        @apply bg-white transition-all ease-in-out duration-300;
+        content: '';
+    }
+
+    &:hover {
+        @apply text-black;
+    }
+
+    &:hover::before {
+        @apply w-full;
+    }
+}
