@@ -7,7 +7,8 @@ export default function Index() {
              <div className="container mx-auto text-center">
                  <h2 className="mb-4 font-medium text-[36px] md:text-[64px] lg:text-[100px] xl:text-[150px] text-white uppercase">Coming Soon !</h2>
                  <p className="font-light text-white text-[18px] md:text-[20px] xl:text-[28px]">I am currently working on my new website</p>
-                 <p className="font-light text-white text-[18px] md:text-[20px] xl:text-[28px]">I will be here soon, if you want to contact me click on "Contact" ! See you soon !</p>
+                 {/* eslint-disable-next-line react/no-unescaped-entities */}
+                 <p className="font-light text-white text-[18px] md:text-[20px] xl:text-[28px]">I will be here soon, if you want to contact me click on <span className="font-bold">Contact</span> ! See you soon !</p>
                  <a href="mailto:contact@alexandreadolphe.com" aria-label="contact Alexandre ADOLPHE" className={styles.contactLink}>Contact</a>
              </div>
          </div>
