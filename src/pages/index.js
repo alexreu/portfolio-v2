@@ -1,6 +1,6 @@
 import styles from '../../styles/Index.module.css'
 
-export default function Index() {
+const Index = () => {
     return (
         <section className="flex items-center justify-center mx-auto ">
             <div className="container flex flex-col items-center mx-auto text-center">
@@ -12,3 +12,5 @@ export default function Index() {
         </section>
     )
 }
+
+export default Index;

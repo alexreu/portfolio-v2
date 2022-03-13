@@ -2,7 +2,7 @@ import Head from "next/head";
 import Footer from "./footer";
 import Navbar from "./navbar";
 
-export default function Layout({children}) {
+const Layout = ({children}) => {
     return (
         <>
             <Head>
@@ -21,3 +21,5 @@ export default function Layout({children}) {
         </>
     )
 }
+
+export default Layout;

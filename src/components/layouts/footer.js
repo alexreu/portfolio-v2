@@ -1,4 +1,4 @@
-export default function Footer() {
+const Footer = () => {
     return (
         <footer className="lg:flex justify-between items-center mt-auto p-4">
             <div className="lgd:mb-4 text-white lgd:text-center">
@@ -9,3 +9,5 @@ export default function Footer() {
         </footer>
     )
 }
+
+export default Footer;
