@@ -1,5 +1,5 @@
 .contactLink {
-    @apply relative z-[1] overflow-hidden w-full max-w-[200px] mt-4 py-2.5;
+    @apply relative z-[1] overflow-hidden w-full max-w-[200px] lg:mt-4 py-2.5;
     @apply text-white text-[14px] rounded-full border border-white outline-none;
     @apply transition-all ease-in-out duration-300;
 
