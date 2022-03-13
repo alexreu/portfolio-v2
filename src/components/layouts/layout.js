@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Footer from "./footer";
 import Navbar from "./navbar";
-import Particles from "react-tsparticles";
 
 export default function Layout({children}) {
     return (
@@ -12,8 +11,7 @@ export default function Layout({children}) {
                 <meta name="description" content="Alexandre ADOLPHE - Portfolio"/>
             </Head>
             <div className="flex flex-col relative z-0 h-screen w-screen overflow-hidden p-4 bg-[url('/images/bg-under-construction.jpeg')]
-            bg-no-repeat bg-cover bg-center before:absolute before:h-full before:w-full before:top-0 before:left-0 before:-z-[1] before:bg-black before:bg-opacity-60">
-                <Particles id="tsparticles" />
+            bg-no-repeat bg-cover bg-center before:absolute before:h-full before:w-full before:top-0 before:left-0 before:-z-[1] before:bg-black before:bg-opacity-50">
                 <Navbar />
                 <main className="mt-auto font-main">
                     {children}
