@@ -9,6 +9,12 @@ module.exports = {
             main: ['Poppins', 'sans-serif'],
             sub: ['Cookie', 'sans-serif'],
         },
+        colors: {
+            primary: '#FD4766',
+            black: '#1F1F25',
+            'grey-dark': '#191919',
+            white: '#ffffff',
+        },
         extend: {
             screens: {
                 xsd: {max: "399px"},

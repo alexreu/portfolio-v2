@@ -8,20 +8,20 @@ const Layout = ({children}) => {
     return (
         <>
             <Head>
-                <title>Alexandre ADOLPHE | Coming Soon</title>
+                <title>Alexandre ADOLPHE | Developpeur Front-End</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
-                <meta name="description" content="Alexandre ADOLPHE - Portfolio"/>
+                <meta name="description" content="Alexandre ADOLPHE - Developpeur Front-End"/>
             </Head>
-            <div className="flex flex-col relative z-0 h-screen w-screen overflow-hidden p-4 before:absolute before:h-full before:w-full before:top-0 before:left-0 before:-z-[1] before:bg-black before:bg-opacity-50">
-                <Image
-                    src={backgroundPic}
-                    className="-z-[2]"
-                    alt=""
-                    layout="fill"
-                    objectFit="cover"
-                    objectPosition="center"
-                    loading="eager"
-                />
+            <div>
+                {/*<Image*/}
+                {/*    src={backgroundPic}*/}
+                {/*    className="-z-[2]"*/}
+                {/*    alt=""*/}
+                {/*    layout="fill"*/}
+                {/*    objectFit="cover"*/}
+                {/*    objectPosition="center"*/}
+                {/*    loading="eager"*/}
+                {/*/>*/}
                 <Navbar />
                 <main className="mt-auto font-main">
                     {children}
