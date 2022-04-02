@@ -1,0 +1,22 @@
+.transition-200 {
+    @apply transition-all ease-in-out duration-200;
+}
+.custom-underline {
+    @apply relative;
+
+    &::before {
+        @apply absolute left-0 bottom-0 h-[4px] w-0;
+        @apply bg-primary transition-200;
+        content: '';
+    }
+
+    &:hover::before {
+        @apply w-full;
+    }
+}
+
+.bg-test {
+    padding-top: 100px;
+    background-image: url("../public/images/bg-under-construction.jpeg");
+    background-attachment: fixed;
+}

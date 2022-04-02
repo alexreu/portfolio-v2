@@ -14,3 +14,16 @@
         @apply ml-4 right-0;
     }
 }
+
+.headerSticky {
+    animation-name: headerSticky;
+    animation-duration: .95s;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
+}
+
+@keyframes headerSticky {
+    from { @apply -translate-y-full}
+    to {@apply translate-y-0}
+}
