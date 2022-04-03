@@ -16,7 +16,7 @@
 }
 
 .bg-test {
-    padding-top: 100px;
+    @apply lg:pt-[100px];
     background-image: url("../public/images/bg-under-construction.jpeg");
-    background-attachment: fixed;
+    background-attachment: scroll;
 }
