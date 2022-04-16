@@ -5,7 +5,7 @@
     @apply relative;
 
     &::before {
-        @apply absolute left-0 bottom-0 h-[4px] w-0;
+        @apply lgd:hidden absolute left-0 bottom-0 h-[4px] w-0;
         @apply bg-primary transition-200;
         content: '';
     }
