@@ -1,0 +1,16 @@
+.btn {
+  @apply inline-flex items-center py-4 px-10;
+  @apply text-base font-main font-medium;
+  @apply border-2 uppercase rounded-[500px];
+
+  &-default {
+    @apply py-2 border-grey-light;
+    @apply hover:bg-primary hover:border-primary;
+    @apply transition-all duration-500 ease-in-out;
+  }
+
+  &-primary {
+    @apply bg-primary text-white border-primary;
+  }
+
+}

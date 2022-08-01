@@ -1,6 +1,8 @@
 import styles from '../../../styles/Navbar.module.css';
 import {useEffect, useState} from "react";
 import BurgerButton from "../burger-button";
+import Image from 'next/image';
+import Button from '../button';
 
 const Navbar = () => {
     const [scroll, setScroll] = useState(false);
@@ -37,14 +39,12 @@ const Navbar = () => {
         {label: 'A propos', icon: 'question-circle-fill', anchor: 'about'},
         {label: 'Diplômes', icon: 'mortarboard-fill', anchor: 'graduations'},
         {label: 'Portfolio', icon: 'award-fill', anchor: 'portfolio'},
-        {label: 'Contact', icon: 'send-fill', anchor: 'contact'},
     ]
     const navList = navContent.map((navItem, index) => {
         const {anchor, label, icon} = navItem
         return (
-            <li key={index} className="lgd:py-3 lgd:w-full transition-200 hover:text-primary lgd:border-b border-grey-light">
-                <a href={`#${anchor}`} className="custom-underline inline-flex items-center h-full gap-x-4">
-                    <i className={`bi bi-${icon}`}/>
+            <li key={index} className="lgd:py-2 lgd:w-full transition-200 duration-300 hover:text-primary lgd:border-b border-grey-light">
+                <a href={`#${anchor}`} className="custom-underline inline-flex items-center h-full gap-x-4 font-medium text-base">
                     <span>{label}</span>
                 </a>
             </li>
@@ -54,17 +54,28 @@ const Navbar = () => {
 
     return (
         <header role="banner"
-                className={(scroll ? `${styles.headerSticky} fixed top-0 z-[9999] bg-white` : 'absolute top-0 bg-transparent') + ` lgd:flex items-center justify-end w-full lgd:min-h-[64px] lgd:px-8 transition-all duration-300 ease-in-out`}>
+                className={(scroll ? `${styles.headerSticky} fixed top-0 z-[9999] bg-white shadow-lg` : 'absolute top-0 bg-transparent') + ` flex items-center justify-end lg:justify-between w-full min-h-[64px] px-8 lg:px-16 transition-all duration-300 ease-in-out`}>
             <BurgerButton type="button" onClick={handleToggleMenu} />
+
+            <a href='#' className='inline-flex items-center'>
+                <Image src="/vercel.svg" alt="logo" width='170px' height='50px' />
+                <span className='sr-only'>retour en haut de la page</span>
+            </a>
             <nav role="navigation" aria-label="navigation-principal"
-                 className={(openMenu ? 'lgd:w-screen lgd:translate-x-0' : 'lgd:w-0 lgd:-translate-x-full') + ` ${styles.mobilePopUp}`}>
-                <ul className="flex lgd:flex-col lg:justify-center items-stretch lgd:gap-y-3 lg:gap-x-16 lgd:overflow-hidden lg:min-h-[80px] lgd:px-4 text-[22px] transition-200">
-                    <li>
+                 className={`${(openMenu ?  'lgd:w-screen lgd:translate-x-0' : 'lgd:w-0 lgd:-translate-x-full')} ${styles.mobilePopUp}`}>
+                <ul className="flex lgd:flex-col lg:justify-end items-stretch lgd:gap-y-3 lg:gap-x-16 lgd:overflow-hidden lg:min-h-[64px] lgd:px-4 text-[22px] transition-200">
+                    <li className='lg:hidden'>
                         <button className='flex items-center justify-center lg:hidden ml-auto' onClick={handleToggleMenu}>
                             <i className="bi bi-x text-[35px]" />
                         </button>
                     </li>
                     {navList}
+                    <li className='inline-flex items-center'>
+                        <Button type="default" style={
+                            `${scroll ? 'text-grey-dark hover:text-white' : 'text-white'}`}>
+                            Contact
+                        </Button>
+                    </li>
                 </ul>
             </nav>
         </header>
