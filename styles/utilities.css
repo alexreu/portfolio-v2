@@ -5,7 +5,7 @@
     @apply relative;
 
     &::before {
-        @apply lgd:hidden absolute left-0 bottom-0 h-[4px] w-0;
+        @apply lgd:hidden absolute left-0 bottom-0 h-[3px] w-0;
         @apply bg-primary transition-200;
         content: '';
     }
@@ -17,6 +17,17 @@
 
 .bg-test {
     @apply lg:pt-[100px];
-    background-image: url("../public/images/bg-under-construction.jpeg");
-    background-attachment: scroll;
+    background-image: url("../public/images/bg-head.jpg");
+    background-attachment: fixed;
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    &::before {
+        @apply absolute h-full w-full top-0;
+        content: '';
+        background-color: rgba(16, 16, 16, 0.3);
+    }
+    @screen lgd {
+        background-position: center -11rem;
+    }
 }

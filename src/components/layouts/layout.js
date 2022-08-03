@@ -3,10 +3,11 @@ import Image from "next/image";
 import Footer from "./footer";
 import Navbar from "./navbar";
 import backgroundPic from '../../../public/images/bg-under-construction.jpeg'
+import { ThemeProvider } from "../../modules/theme/ThemeContext";
 
 const Layout = ({children}) => {
     return (
-        <>
+        <ThemeProvider>
             <Head>
                 <title>Alexandre ADOLPHE | Developpeur Front-End</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
@@ -28,7 +29,7 @@ const Layout = ({children}) => {
                 </main>
                 <Footer />
             </div>
-        </>
+        </ThemeProvider>
     )
 }
 

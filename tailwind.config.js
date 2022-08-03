@@ -4,6 +4,7 @@ module.exports = {
         "./src/pages/**/*.{js,ts,jsx,tsx}",
         "./src/components/**/*.{js,ts,jsx,tsx}",
     ],
+    darkMode: "class",
     theme: {
         fontFamily: {
             main: ['Poppins', 'sans-serif'],
@@ -11,6 +12,8 @@ module.exports = {
         },
         colors: {
             primary: '#FD4766',
+            'primary-darkest': '#161414',
+            'secondary-darkest': '#191919',
             black: '#1F1F25',
             'grey-dark': '#191919',
             'grey-light': '#E6E6E6',
