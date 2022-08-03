@@ -4,7 +4,7 @@
     background-image: url("/images/bg-head.avif");
     &::before {
         @apply z-0 w-full h-full absolute top-0 left-0;
-        @apply bg-black opacity-50;
+        @apply bg-black opacity-60;
         content: "";
     }
 }
