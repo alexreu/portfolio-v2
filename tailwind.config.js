@@ -3,11 +3,16 @@ module.exports = {
     content: [
         "./src/pages/**/*.{js,ts,jsx,tsx}",
         "./src/components/**/*.{js,ts,jsx,tsx}",
+        "./src/sections/**/*.{js,ts,jsx,tsx}",
     ],
     darkMode: "class",
     theme: {
+        container: {
+            center: true,
+        },
         fontFamily: {
             main: ['Poppins', 'sans-serif'],
+            montserrat: ['Montserrat', 'sans-serif'],
             sub: ['Cookie', 'sans-serif'],
         },
         colors: {

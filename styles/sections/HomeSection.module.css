@@ -1,0 +1,10 @@
+.homeBackground {
+    @apply flex items-center h-screen relative;
+    @apply bg-cover bg-center bg-fixed;
+    background-image: url("/images/bg-head.avif");
+    &::before {
+        @apply z-0 w-full h-full absolute top-0 left-0;
+        @apply bg-black opacity-50;
+        content: "";
+    }
+}
