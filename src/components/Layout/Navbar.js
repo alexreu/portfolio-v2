@@ -80,7 +80,7 @@ function Navbar() {
                 <Image src="/vercel.svg" alt="logo" width="170px" height="50px" />
                 <span className="sr-only">retour en haut de la page</span>
             </a>
-            <BurgerButton type="button" onClick={handleToggleMenu} />
+            <BurgerButton onClick={handleToggleMenu} style={scroll ? 'text-black dark:text-white' : 'text-white'} />
             <nav
                 role="navigation"
                 aria-label="navigation-principal"

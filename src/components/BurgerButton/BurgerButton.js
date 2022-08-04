@@ -1,6 +1,6 @@
-const BurgerButton = ({onClick, type}) => {
+const BurgerButton = ({onClick, style}) => {
     return (
-        <button onClick={onClick} type={type} className="flex items-center relative lg:hidden p-1">
+        <button onClick={onClick} type="button" className={`flex items-center relative lg:hidden p-1 ${style}`}>
             <i className="bi bi-list text-[35px]" />
             <span className="sr-only">Ouvrir le menu</span>
         </button>

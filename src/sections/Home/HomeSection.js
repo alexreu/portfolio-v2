@@ -10,12 +10,12 @@ const HomeSection = () => {
                 </span>
                 <Heading
                     variant="h1"
-                    className="flex items-center flex-col text-white text-[58px] leading-[75px] font-montserrat font-black"
+                    className="flex items-center flex-col text-white text-[30px] lg:text-[58px] lg:leading-[75px] font-montserrat font-black"
                 >
                     <span className="w-full">Alexandre Adolphe</span>
                     <span className="w-full text-primary">Developpeur JS.</span>
                 </Heading>
-                <p className="mt-5 mb-7 text-[54px] text-white font-main leading-none">Situé à l'île de la Réunion.</p>
+                <p className="mt-5 mb-7 text-base lg:text-[54px] text-white font-main leading-none">basé à l'île de la Réunion.</p>
                 <a href="#" className="btn btn-default text-white border-grey-light">
                     Voir mon cv
                 </a>
