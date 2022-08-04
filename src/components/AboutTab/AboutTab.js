@@ -40,7 +40,7 @@ const navTabsContent = [
     },
     {
         id: "education",
-        title: "Formations",
+        title: "Formations & Certifications",
         content: [
             {
                 title: "Formation 1",
@@ -67,20 +67,19 @@ function AboutTab() {
     };
     return (
         <div className="mt-7">
-            <ul className="flex items-center md:justify-evenly font-main text-sm font-semibold border border-grey-light rounded-full">
+            <ul className="flex items-center md:justify-between font-main text-sm font-semibold border border-border dark:border-border-dark rounded-full">
                 {navTabsContent.map((tab, index) => (
                     <li key={index}>
-                        <Button
-                            type="button"
+                        <a
                             key={tab.id}
                             id={tab.id}
                             onClick={() => handleTabClick(tab.id)}
-                            style={`${
-                                currentTab === tab.id ? "bg-primary text-white" : "text-grey"
-                            } px-[13.5px] lg:px-5 py-2 lg:py-3 text-sm font-semibold rounded-full transition-200`}
+                            className={`${
+                                currentTab === tab.id ? "bg-primary text-white" : "text-grey dark:text-white"
+                            } inline-block px-[13.5px] -my-px -mx-0.5 lg:px-4 py-2 lg:py-3 text-sm font-semibold rounded-full hover:cursor-pointer transition-200`}
                         >
                             {tab.title}
-                        </Button>
+                        </a>
                     </li>
                 ))}
             </ul>
