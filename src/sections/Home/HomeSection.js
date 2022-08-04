@@ -3,7 +3,7 @@ import styles from "../../../styles/sections/HomeSection.module.css";
 
 const HomeSection = () => {
     return (
-        <section className={styles.homeBackground}>
+        <section id="home" className={styles.homeBackground}>
             <div className="container relative z-10">
                 <span className="inline-flex w-full mb-5 font-sub text-grey-light text-base uppercase opacity-70 tracking-[4px]">
                     Developpeur Front end
