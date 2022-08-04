@@ -1,4 +1,4 @@
-import Heading from "../../components/heading/Heading";
+import Heading from "../../components/Heading/Heading";
 import styles from "../../../styles/sections/HomeSection.module.css";
 
 const HomeSection = () => {
@@ -15,7 +15,9 @@ const HomeSection = () => {
                     <span className="w-full">Alexandre Adolphe</span>
                     <span className="w-full text-primary">Developpeur JS.</span>
                 </Heading>
-                <p className="mt-5 mb-7 text-base lg:text-[54px] text-white font-main leading-none">basé à l'île de la Réunion.</p>
+                <p className="mt-5 mb-7 text-base lg:text-[54px] text-white font-main leading-none">
+                    basé à l'île de la Réunion.
+                </p>
                 <a href="#" className="btn btn-default text-white border-grey-light">
                     Voir mon cv
                 </a>
