@@ -1,6 +1,5 @@
-import Heading from "../heading/Heading";
-import Button from "../Button/Button";
 import { useState } from "react";
+import Button from "../Button/Button";
 
 const navTabsContent = [
     {
