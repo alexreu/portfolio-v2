@@ -7,16 +7,24 @@ const navTabsContent = [
         title: "Compétences",
         content: [
             {
-                title: "Skill 1",
-                description: "lorem ipsum dolor sit amet consectetur",
+                title: "Front End - Javascript",
+                description: "AlpineJs, ReactJs, NextJs",
             },
             {
-                title: "Skill 2",
-                description: "lorem ipsum dolor sit amet consectetur",
+                title: "Front End - CSS",
+                description: "CSS3, SASS, Bootstrap, Tailwind",
             },
             {
-                title: "Skill 3",
-                description: "lorem ipsum dolor sit amet consectetur",
+                title: "Back End - PHP",
+                description: "Laravel, Drupal",
+            },
+            {
+                title: "Back End - Javascript",
+                description: "NodeJs, ExpressJs",
+            },
+            {
+                title: "Back End - Base de données",
+                description: "Mysql, MongoDB",
             },
         ],
     },
@@ -83,14 +91,18 @@ function AboutTab() {
                     </li>
                 ))}
             </ul>
-            <div id="aboutTabContent" className="pt-5">
-                {tabContent[0].content.map(content => (
-                    <>
-                        <p>{content.title}</p>
-                        <p>{content.description}</p>
-                    </>
+            <ul id="aboutTabContent" className="pt-5">
+                {tabContent[0].content.map((content, index) => (
+                    <li key={index}>
+                        <span className="inline-block">
+                          {content.title.split("-").map((word, index) => (
+                            
+                          )}
+                          </span>
+                        {content.description}
+                    </li>
                 ))}
-            </div>
+            </ul>
         </div>
     );
 }
