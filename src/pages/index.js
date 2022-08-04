@@ -12,10 +12,10 @@ const Index = () => {
             <AboutSection />
             {/* <section className="bg-test h-[50vh] lg:h-screen">
             </section> */}
-            <section className='bg-white dark:bg-secondary-darkest h-[900px]'>
+            {/* <section className='bg-white dark:bg-secondary-darkest h-[900px]'>
             </section>
             <section className='bg-grey-light dark:bg-primary-darkest h-[900px]'>
-            </section>
+            </section> */}
         </>
     )
 }
