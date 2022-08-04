@@ -1,9 +1,9 @@
-const Button = ({style, children, ...props}) => {
+function Button({ style, children, ...props }) {
   return (
     <button className={style} {...props}>
       {children}
     </button>
-  )
+  );
 }
 
 export default Button;

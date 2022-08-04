@@ -1,10 +1,10 @@
-import Head from "next/head";
-import Footer from "./footer";
-import Navbar from "./Navbar";
-import { ThemeProvider } from "../../modules/theme/ThemeContext";
+import Footer from './footer';
+import Navbar from './Navbar';
+import { ThemeProvider } from '../../modules/theme/ThemeContext';
+import Head from 'next/head';
 
-const Layout = ({children}) => {
-    return (
+function Layout({ children }) {
+  return (
         <ThemeProvider>
             <Head>
                 <title>Alexandre ADOLPHE | Developpeur Front-End</title>
@@ -12,15 +12,15 @@ const Layout = ({children}) => {
                 <meta name="description" content="Alexandre ADOLPHE - Developpeur Front-End"/>
             </Head>
             <div>
-                {/*<Image*/}
-                {/*    src={backgroundPic}*/}
-                {/*    className="-z-[2]"*/}
-                {/*    alt=""*/}
-                {/*    layout="fill"*/}
-                {/*    objectFit="cover"*/}
-                {/*    objectPosition="center"*/}
-                {/*    loading="eager"*/}
-                {/*/>*/}
+                {/* <Image */}
+                {/*    src={backgroundPic} */}
+                {/*    className="-z-[2]" */}
+                {/*    alt="" */}
+                {/*    layout="fill" */}
+                {/*    objectFit="cover" */}
+                {/*    objectPosition="center" */}
+                {/*    loading="eager" */}
+                {/* /> */}
                 <Navbar />
                 <main className="mt-auto font-main">
                     {children}
@@ -28,7 +28,7 @@ const Layout = ({children}) => {
                 <Footer />
             </div>
         </ThemeProvider>
-    )
+  );
 }
 
 export default Layout;

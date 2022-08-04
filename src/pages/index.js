@@ -1,12 +1,8 @@
-import styles from '../../styles/Index.module.css'
-import Image from "next/image";
-import backgroundImage from '../../public/images/bg-under-construction.jpeg';
-import { ThemeContext } from '../modules/theme/ThemeContext';
 import HomeSection from '../sections/Home/HomeSection';
 import AboutSection from '../sections/About/AboutSection';
 
-const Index = () => {
-    return (
+function Index() {
+  return (
         <>
             <HomeSection />
             <AboutSection />
@@ -17,7 +13,7 @@ const Index = () => {
             <section className='bg-grey-light dark:bg-primary-darkest h-[900px]'>
             </section> */}
         </>
-    )
+  );
 }
 
 export default Index;
