@@ -1,4 +1,4 @@
-import Layout from "../components/layouts/layout";
+import Layout from "../components/Layout/Layout";
 import '../../styles/globals.css';
 import '../../styles/utilities.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'

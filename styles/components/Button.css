@@ -11,5 +11,4 @@
   &-primary {
     @apply bg-primary text-white border-primary;
   }
-
 }

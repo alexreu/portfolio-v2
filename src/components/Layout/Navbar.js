@@ -1,14 +1,14 @@
-import { React, useEffect, useState, useContext } from "react";
+import { React, useEffect, useState, useContext, useMemo } from "react";
 import Image from "next/image";
 import styles from "../../../styles/components/Navbar.module.css";
-import BurgerButton from "../burger-button";
-import Button from "../button";
+import BurgerButton from "../BurgerButton/BurgerButton";
+import Button from "../Button/Button";
 import { ThemeContext } from "../../modules/theme/ThemeContext";
 
 function Navbar() {
+    const { theme, setTheme } = useContext(ThemeContext);
     const [scroll, setScroll] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
-    const { theme, setTheme } = useContext(ThemeContext);
 
     useEffect(() => {
         const onScroll = () => {
@@ -90,38 +90,39 @@ function Navbar() {
             >
                 <ul className="flex lgd:flex-col lg:justify-end items-stretch lgd:gap-y-3 lg:gap-x-16 lgd:overflow-hidden lgd:bg-white lgd:dark:bg-primary-darkest lg:min-h-[64px] lgd:px-4 text-[22px] transition-200">
                     <li className="lg:hidden">
-                        <button
-                            className="flex items-center justify-center lg:hidden ml-auto"
+                        <Button
+                            type="button"
+                            style="flex items-center justify-center lg:hidden ml-auto"
                             onClick={handleToggleMenu}
                         >
                             <i className="bi bi-x text-[35px] dark:text-white" />
-                        </button>
+                        </Button>
                     </li>
                     {navList}
                     <li className="inline-flex items-center">
-                        <button
-                            onClick={toggleTheme}
-                            type="button"
-                            className={`${
-                                scroll ? "text-black dark:text-white" : "text-black lgd:dark:text-white lg:text-white"
-                            } inline-flex items-center justify-center h-10 w-10 bg-transparent rounded-full transition-200 hover:cursor-pointer hover:bg-[#9aa0a6]/[.157]`}
-                        >
+                        <Button
+                        onClick={toggleTheme}
+                        type="button"
+                        style={`${
+                            scroll ? "text-black dark:text-white" : "text-black lgd:dark:text-white lg:text-white"
+                        } inline-flex items-center justify-center h-10 w-10 bg-transparent rounded-full transition-200 hover:cursor-pointer hover:bg-[#9aa0a6]/[.157]`}>
                             <i
                                 className={`bi-${theme === "dark" ? "sun" : "moon"} font-medium text-lg transition-200`}
                             />
-                        </button>
+                        </Button>
+        
                     </li>
                     <li className="inline-flex items-center">
-                        <Button
-                            type="default"
-                            style={`${
+                        <a
+                            href="#contact"
+                            className={`btn btn-default ${
                                 scroll
                                     ? "text-grey-dark dark:text-white border-grey-light hover:text-white"
                                     : "text-grey-dark dark:text-white lg:text-white border-grey-light lg:border-[hsla(0,0%,100%,.2)]"
                             }`}
                         >
                             Contact
-                        </Button>
+                        </a>
                     </li>
                 </ul>
             </nav>

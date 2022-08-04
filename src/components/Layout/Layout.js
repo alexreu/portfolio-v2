@@ -1,8 +1,6 @@
 import Head from "next/head";
-import Image from "next/image";
 import Footer from "./footer";
-import Navbar from "./navbar";
-import backgroundPic from '../../../public/images/bg-under-construction.jpeg'
+import Navbar from "./Navbar";
 import { ThemeProvider } from "../../modules/theme/ThemeContext";
 
 const Layout = ({children}) => {
