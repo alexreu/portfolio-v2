@@ -95,7 +95,7 @@ const navTabsContent = [
 
 export const AboutTab = () => {
     const aboutTabContent = useRef(null);
-    //const aboutTabContentHeight = aboutTabContent.current.getClientRects()[0].height;
+
     const [currentTab, setCurrentTab] = useState("skills");
     const [tabContent, setTabContent] = useState(navTabsContent.filter(e => e.id === currentTab));
     const [displayShowMoreButton, setdisplayShowMoreButton] = useState(false);
@@ -103,21 +103,23 @@ export const AboutTab = () => {
 
     const handleTabClick = tabId => {
         setCurrentTab(tabId);
-        setTabContent(navTabsContent.filter(e => e.id === tabId));
-        aboutTabContent.current?.classList.remove(styles.full);
+        if (tabId !== currentTab) {
+            setTabContent(navTabsContent.filter(e => e.id === tabId));
+            aboutTabContent.current?.classList.remove(styles.full);
+        }
     };
 
     const handleMoreButtonClick = () => {
         const { current } = aboutTabContent;
-        const defaultClass = "aboutTabContent";
         current.classList.toggle(styles.full);
-        setTabContentHeight();
     };
 
     useEffect(() => {
         const aboutTabContentHeight = aboutTabContent.current.getClientRects()[0].height;
         setdisplayShowMoreButton(aboutTabContentHeight > 210);
-        setTabContentHeight(aboutTabContentHeight);
+        if (tabContentHeight !== aboutTabContentHeight || tabContentHeight < 210) {
+            setTabContentHeight(aboutTabContentHeight);
+        }
     }, [tabContent]);
 
     return (
@@ -165,4 +167,4 @@ export const AboutTab = () => {
             )}
         </div>
     );
-};;
+};
