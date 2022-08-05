@@ -1,7 +1,8 @@
-import Heading from "../../components/Heading/Heading";
-import styles from "../../../styles/sections/HomeSection.module.css";
+import React from "react";
+import styles from "./HomeSection.module.css";
+import { Heading } from "../../Heading";
 
-const HomeSection = () => {
+export const HomeSection = () => {
     return (
         <section id="home" className={styles.homeBackground}>
             <div className="container relative z-10">
@@ -25,5 +26,3 @@ const HomeSection = () => {
         </section>
     );
 };
-
-export default HomeSection;

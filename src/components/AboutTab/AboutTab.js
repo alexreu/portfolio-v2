@@ -1,5 +1,4 @@
-import { useState } from "react";
-import Button from "../Button/Button";
+import React, { useState } from "react";
 
 const navTabsContent = [
     {
@@ -65,7 +64,7 @@ const navTabsContent = [
         ],
     },
 ];
-function AboutTab() {
+export const AboutTab = () => {
     const [currentTab, setCurrentTab] = useState("skills");
     const [tabContent, setTabContent] = useState(navTabsContent.filter(e => e.id === currentTab));
 
@@ -91,20 +90,14 @@ function AboutTab() {
                     </li>
                 ))}
             </ul>
-            <ul id="aboutTabContent" className="pt-5">
+            <ul id="aboutTabContent" className="pt-5 space-y-4 font-main">
                 {tabContent[0].content.map((content, index) => (
-                    <li key={index}>
-                        <span className="inline-block">
-                          {content.title.split("-").map((word, index) => (
-                            
-                          )}
-                          </span>
+                    <li key={index} className="text-body text-base">
+                        <span className="block font-medium text-heading">{content.title}</span>
                         {content.description}
                     </li>
                 ))}
             </ul>
         </div>
     );
-}
-
-export default AboutTab;
+};

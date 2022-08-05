@@ -1,8 +1,9 @@
-import AboutTab from "../../components/AboutTab/AboutTab";
-import Heading from "../../components/Heading/Heading";
+import React from "react";
 import Image from "next/image";
+import { AboutTab } from "../../AboutTab";
+import { Heading } from "../../Heading";
 
-function AboutSection() {
+export const AboutSection = () => {
     return (
         <section id="#about" className="bg-white dark:bg-primary-darkest py-[80px] lg:py-[120px]">
             <div className="container lg:grid grid-cols-12 gap-x-12 items-center">
@@ -33,6 +34,4 @@ function AboutSection() {
             </div>
         </section>
     );
-}
-
-export default AboutSection;
+};
