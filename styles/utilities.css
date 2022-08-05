@@ -7,14 +7,18 @@
     &::before {
         @apply lgd:hidden absolute left-0 bottom-0 h-[3px] w-0;
         @apply bg-primary transition-200;
-        content: '';
+        content: "";
     }
 
     &:hover::before {
         @apply w-full;
     }
 }
-
+.section-subtitle {
+    background: linear-gradient(120deg, #1c99fe 20.69%, #7644ff 50.19%, #fd4766 79.69%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 .bg-test {
     @apply lg:pt-[100px];
     background-attachment: fixed;
@@ -23,7 +27,7 @@
     background-repeat: no-repeat;
     &::before {
         @apply absolute h-full w-full top-0;
-        content: '';
+        content: "";
         background-color: rgba(16, 16, 16, 0.3);
     }
     @screen lgd {

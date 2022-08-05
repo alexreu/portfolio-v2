@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import { AboutTab } from "../../AboutTab";
 import { Heading } from "../../Heading";
+import { SectionSubtitle } from "../../SectionSubtitle";
 
 export const AboutSection = () => {
     return (
@@ -12,12 +13,11 @@ export const AboutSection = () => {
                         src="/images/about-me.jpg"
                         className={"object-cover rounded-lg overflow-hidden"}
                         layout="fill"
-                        height={1150}
-                        width={1000}
                         alt=""
                     />
                 </div>
                 <div className="col-span-7 lgd:pt-10">
+                    <SectionSubtitle>Mes informations personnelles</SectionSubtitle>
                     <Heading
                         variant="h2"
                         className="mb-7 text-[32px] lg:text-[50px] text-heading dark:text-white font-main font-semibold"
