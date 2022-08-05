@@ -1,19 +1,42 @@
-.aboutTabContent {
-  @apply lg:max-h-[210px];
-  &.full {
-    @apply max-h-[1000px]
-  }
+.tab {
+    &List {
+        @apply flex items-center md:justify-between mdd:flex-wrap mdd:pb-2;
+        @apply font-main text-sm font-semibold md:border mdd:border-b border-border;
+        @apply dark:border-border-dark md:rounded-full;
+    }
+    &Content {
+        @apply pt-5 space-y-4 overflow-hidden;
+        @apply font-main transition-all duration-300 ease-in-out;
+
+        & + .showMoreButtonWrapper {
+            & button > i {
+                @apply transition-all duration-300 ease-in-out transform rotate-0;
+            }
+        }
+
+        &.folded {
+            @apply lg:max-h-[210px];
+        }
+        &.full {
+            @apply max-h-[1000px];
+            & + .showMoreButtonWrapper {
+                & button > i {
+                    @apply transition-all duration-300 ease-in-out transform rotate-180;
+                }
+            }
+        }
+    }
 }
 
-.showMoreButtonWrapper {
-  @apply inline-flex justify-center items-center w-full relative lgd:hidden;
-  @apply mt-4;
-  button {
-    @apply z-[2];
-  }
-  &::before {
-    @apply absolute h-px left-0 w-full z-[1] bottom-1/2;
-    @apply bg-border transform translate-y-1/2;
-    content: "";
-  }
+.showMore {
+    &Wrapper {
+        @apply inline-flex justify-center items-center lgd:hidden;
+        @apply relative w-full mt-4;
+
+        &::before {
+            @apply absolute h-px left-0 w-full z-[1] bottom-1/2;
+            @apply bg-border transform translate-y-1/2;
+            content: "";
+        }
+    }
 }

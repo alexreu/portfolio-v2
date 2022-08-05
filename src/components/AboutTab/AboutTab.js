@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./AboutTab.module.css";
 import { Button } from "../Button";
 
@@ -68,8 +68,8 @@ const navTabsContent = [
                 description: "Chargé d'Exploitation en Réseaux et Télécoms | 2015 - 2017",
             },
             {
-                title: "BaccalauréatSTI2D - niveau IV",
-                description: "Chargé d'Exploitation en Réseaux et Télécoms | 2015 - 2017",
+                title: "Baccalauréat STI2D - niveau IV",
+                description: "Spécialité ITEC: Innovation Technologique et Éco-Conception | 2014",
             },
         ],
     },
@@ -98,39 +98,42 @@ export const AboutTab = () => {
 
     const [currentTab, setCurrentTab] = useState("skills");
     const [tabContent, setTabContent] = useState(navTabsContent.filter(e => e.id === currentTab));
-    const [displayShowMoreButton, setdisplayShowMoreButton] = useState(false);
+    const [displayShowMoreButton, setDisplayShowMoreButton] = useState(false);
     const [tabContentHeight, setTabContentHeight] = useState(210);
 
     const handleTabClick = tabId => {
         setCurrentTab(tabId);
         if (tabId !== currentTab) {
             setTabContent(navTabsContent.filter(e => e.id === tabId));
-            aboutTabContent.current?.classList.remove(styles.full);
         }
     };
 
     const handleMoreButtonClick = () => {
-        const { current } = aboutTabContent;
-        current.classList.toggle(styles.full);
+        const {
+            current: { classList },
+        } = aboutTabContent;
+        classList.toggle(styles.full);
     };
 
     useEffect(() => {
         const aboutTabContentHeight = aboutTabContent.current.getClientRects()[0].height;
-        setdisplayShowMoreButton(aboutTabContentHeight > 210);
-        if (tabContentHeight !== aboutTabContentHeight || tabContentHeight < 210) {
+        if (tabContentHeight !== aboutTabContentHeight || tabContentHeight === 210) {
+            setDisplayShowMoreButton(aboutTabContentHeight >= 210);
             setTabContentHeight(aboutTabContentHeight);
         }
-    }, [tabContent]);
+    }, [tabContent, tabContentHeight]);
 
     return (
         <div className="mt-7">
-            <ul className="flex items-center md:justify-between mdd:flex-wrap mdd:pb-2 font-main text-sm font-semibold md:border mdd:border-b border-border dark:border-border-dark md:rounded-full">
+            <ul className={styles.tabList} role="tablist">
                 {navTabsContent.map((tab, index) => (
                     <li key={index}>
                         <a
                             key={tab.id}
                             id={tab.id}
                             onClick={() => handleTabClick(tab.id)}
+                            aria-selected={currentTab === tab.id}
+                            aria-controls="aboutTabContent"
                             className={`${
                                 currentTab === tab.id ? "bg-primary text-white" : "text-grey dark:text-white"
                             } inline-block px-[13.5px] -my-px -mx-0.5 lg:px-6 py-2 lg:py-3 text-sm font-semibold rounded-full hover:cursor-pointer transition-200`}
@@ -143,9 +146,7 @@ export const AboutTab = () => {
             <ul
                 ref={aboutTabContent}
                 id="aboutTabContent"
-                className={`${
-                    tabContentHeight > 210 ? styles.aboutTabContent : ""
-                } pt-5 space-y-4 font-main overflow-hidden transition-all duration-500 ease-in-out`}
+                className={`${tabContentHeight >= 210 ? styles.folded : ""} ${styles.tabContent}`}
             >
                 {tabContent[0].content.map((content, index) => (
                     <li key={index} className="text-body dark:text-white text-base font-light">
@@ -155,13 +156,13 @@ export const AboutTab = () => {
                 ))}
             </ul>
             {displayShowMoreButton && (
-                <div className={styles.showMoreButtonWrapper}>
+                <div className={styles.showMoreWrapper}>
                     <Button
                         type="button"
-                        style={`btn mx-auto rounded-full p-2 bg-primary text-white border-primary`}
+                        style={`btn z-[2] mx-auto rounded-full p-2 bg-primary text-white border-primary`}
                         onClick={handleMoreButtonClick}
                     >
-                        <i className="bi bi-chevron-down inline-flex"></i>
+                        <i className={`bi bi-chevron-down inline-flex`}></i>
                     </Button>
                 </div>
             )}
