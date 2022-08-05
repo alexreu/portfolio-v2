@@ -7,13 +7,13 @@ export const AboutSection = () => {
     return (
         <section id="#about" className="bg-white dark:bg-primary-darkest py-[80px] lg:py-[120px]">
             <div className="container lg:grid grid-cols-12 gap-x-12 items-center">
-                <div className="col-span-5 relative min-h-[400px] rounded-lg overflow-hidden">
+                <div className="col-span-5 relative rounded-lg overflow-hidden">
                     <Image
                         src="/images/about-me.jpg"
                         className={"object-cover rounded-lg overflow-hidden"}
                         layout="responsive"
-                        height={400}
-                        width={360}
+                        height={1150}
+                        width={1000}
                         alt=""
                     />
                 </div>

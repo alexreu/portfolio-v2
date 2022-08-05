@@ -77,7 +77,12 @@ export const Navbar = () => {
             } flex items-center justify-between z-[9999] w-full min-h-[64px] px-8 lg:px-16 transition-all duration-300 ease-in-out`}
         >
             <a href="#" className="inline-flex items-center">
-                <Image src="/vercel.svg" alt="logo" width="170px" height="50px" />
+                <Image
+                    src="/vercel.svg"
+                    alt="logo"
+                    width={scroll ? "112px " : "170px"}
+                    height={scroll ? "50px " : "66px"}
+                />
                 <span className="sr-only">retour en haut de la page</span>
             </a>
             <BurgerButton onClick={handleToggleMenu} style={scroll ? "text-black dark:text-white" : "text-white"} />

@@ -7,7 +7,7 @@ const navTabsContent = [
         content: [
             {
                 title: "Front End - Javascript",
-                description: "AlpineJs, ReactJs, NextJs",
+                description: "jQuery, AlpineJs, ReactJs, NextJs",
             },
             {
                 title: "Front End - CSS",
@@ -32,34 +32,60 @@ const navTabsContent = [
         title: "Expériences",
         content: [
             {
-                title: "Experience 1",
-                description: "lorem ipsum dolor sit amet consectetur",
+                title: "Simplon Prod - Développeur Front",
+                description: "2018 - 2022",
             },
             {
-                title: "Experience 2",
-                description: "lorem ipsum dolor sit amet consectetur",
+                title: "Stage Colipays - Intégrateur",
+                description: "2018",
             },
             {
-                title: "Experience 3",
-                description: "lorem ipsum dolor sit amet consectetur",
+                title: "Atout Pc's - Technicien informatique & réseau",
+                description: "2015 - 2017",
             },
         ],
     },
     {
         id: "education",
-        title: "Formations & Certifications",
+        title: "Formations",
         content: [
             {
-                title: "Formation 1",
-                description: "lorem ipsum dolor sit amet consectetur",
+                title: "Bachelor CSI - niveau VI",
+                description: "Concepteur de systèmes d'informations | 2019 - 2020",
             },
             {
-                title: "Formation 2",
-                description: "lorem ipsum dolor sit amet consectetur",
+                title: "DWWW - niveau V",
+                description: "Developpeur Web & Web Mobile | 2018 - 2019",
             },
             {
-                title: "Formation 3",
-                description: "lorem ipsum dolor sit amet consectetur",
+                title: "Simplon Reunion - certification",
+                description: "POEC Développeur Web | 2018",
+            },
+            {
+                title: "CERT - niveau V",
+                description: "Chargé d'Exploitation en Réseaux et Télécoms | 2015 - 2017",
+            },
+            {
+                title: "BaccalauréatSTI2D - niveau IV",
+                description: "Chargé d'Exploitation en Réseaux et Télécoms | 2015 - 2017",
+            },
+        ],
+    },
+    {
+        id: "other",
+        title: "Autres",
+        content: [
+            {
+                title: "Outils Collaboratifs",
+                description: "Git, Github, Gitlab, Jira, Trello",
+            },
+            {
+                title: "Langues",
+                description: "Français - Anglais",
+            },
+            {
+                title: "Soft Skills",
+                description: "Communication, Curiosité, Persévérance, Investit",
             },
         ],
     },
@@ -83,16 +109,16 @@ export const AboutTab = () => {
                             onClick={() => handleTabClick(tab.id)}
                             className={`${
                                 currentTab === tab.id ? "bg-primary text-white" : "text-grey dark:text-white"
-                            } inline-block px-[13.5px] -my-px -mx-0.5 lg:px-4 py-2 lg:py-3 text-sm font-semibold rounded-full hover:cursor-pointer transition-200`}
+                            } inline-block px-[13.5px] -my-px -mx-0.5 lg:px-6 py-2 lg:py-3 text-sm font-semibold rounded-full hover:cursor-pointer transition-200`}
                         >
                             {tab.title}
                         </a>
                     </li>
                 ))}
             </ul>
-            <ul id="aboutTabContent" className="pt-5 space-y-4 font-main">
+            <ul id="aboutTabContent" className="lg:h-[240px] pt-5 space-y-4 font-main">
                 {tabContent[0].content.map((content, index) => (
-                    <li key={index} className="text-body text-base">
+                    <li key={index} className="text-body text-base font-light">
                         <span className="block font-medium text-heading">{content.title}</span>
                         {content.description}
                     </li>
