@@ -1,11 +1,12 @@
 import React from "react";
-import { AboutSection, HomeSection } from "../components/Sections";
+import { AboutSection, HomeSection, ServicesSection } from "../components/Sections";
 
 const Index = () => {
     return (
         <>
             <HomeSection />
             <AboutSection />
+            <ServicesSection />
         </>
     );
 };

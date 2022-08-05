@@ -35,6 +35,8 @@ module.exports = {
             darkest: "#161414",
             "dark-border": "rgba(255,255,255,0.2)",
             "dark-body": "rgba(198, 201, 216, 0.75)",
+            "background-light": "#F9F9F9",
+            "background-dark-light": "#191919",
 
             primary: "#FD4766",
             "primary-darkest": "#161414",
