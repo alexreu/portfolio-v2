@@ -1,0 +1,19 @@
+.aboutTabContent {
+  @apply lg:max-h-[210px];
+  &.full {
+    @apply max-h-[1000px]
+  }
+}
+
+.showMoreButtonWrapper {
+  @apply inline-flex justify-center items-center w-full relative lgd:hidden;
+  @apply mt-4;
+  button {
+    @apply z-[2];
+  }
+  &::before {
+    @apply absolute h-px left-0 w-full z-[1] bottom-1/2;
+    @apply bg-border transform translate-y-1/2;
+    content: "";
+  }
+}

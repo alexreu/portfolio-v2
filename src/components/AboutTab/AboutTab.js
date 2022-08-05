@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import styles from "./AboutTab.module.css";
+import { Button } from "../Button";
 
 const navTabsContent = [
     {
@@ -90,17 +92,37 @@ const navTabsContent = [
         ],
     },
 ];
+
 export const AboutTab = () => {
+    const aboutTabContent = useRef(null);
+    //const aboutTabContentHeight = aboutTabContent.current.getClientRects()[0].height;
     const [currentTab, setCurrentTab] = useState("skills");
     const [tabContent, setTabContent] = useState(navTabsContent.filter(e => e.id === currentTab));
+    const [displayShowMoreButton, setdisplayShowMoreButton] = useState(false);
+    const [tabContentHeight, setTabContentHeight] = useState(210);
 
     const handleTabClick = tabId => {
         setCurrentTab(tabId);
         setTabContent(navTabsContent.filter(e => e.id === tabId));
+        aboutTabContent.current?.classList.remove(styles.full);
     };
+
+    const handleMoreButtonClick = () => {
+        const { current } = aboutTabContent;
+        const defaultClass = "aboutTabContent";
+        current.classList.toggle(styles.full);
+        setTabContentHeight();
+    };
+
+    useEffect(() => {
+        const aboutTabContentHeight = aboutTabContent.current.getClientRects()[0].height;
+        setdisplayShowMoreButton(aboutTabContentHeight > 210);
+        setTabContentHeight(aboutTabContentHeight);
+    }, [tabContent]);
+
     return (
         <div className="mt-7">
-            <ul className="flex items-center md:justify-between font-main text-sm font-semibold border border-border dark:border-border-dark rounded-full">
+            <ul className="flex items-center md:justify-between mdd:flex-wrap mdd:pb-2 font-main text-sm font-semibold md:border mdd:border-b border-border dark:border-border-dark md:rounded-full">
                 {navTabsContent.map((tab, index) => (
                     <li key={index}>
                         <a
@@ -116,14 +138,31 @@ export const AboutTab = () => {
                     </li>
                 ))}
             </ul>
-            <ul id="aboutTabContent" className="lg:h-[240px] pt-5 space-y-4 font-main">
+            <ul
+                ref={aboutTabContent}
+                id="aboutTabContent"
+                className={`${
+                    tabContentHeight > 210 ? styles.aboutTabContent : ""
+                } pt-5 space-y-4 font-main overflow-hidden transition-all duration-500 ease-in-out`}
+            >
                 {tabContent[0].content.map((content, index) => (
-                    <li key={index} className="text-body text-base font-light">
-                        <span className="block font-medium text-heading">{content.title}</span>
+                    <li key={index} className="text-body dark:text-white text-base font-light">
+                        <span className="block font-medium text-heading dark:text-dark-body">{content.title}</span>
                         {content.description}
                     </li>
                 ))}
             </ul>
+            {displayShowMoreButton && (
+                <div className={styles.showMoreButtonWrapper}>
+                    <Button
+                        type="button"
+                        style={`btn mx-auto rounded-full p-2 bg-primary text-white border-primary`}
+                        onClick={handleMoreButtonClick}
+                    >
+                        <i className="bi bi-chevron-down inline-flex"></i>
+                    </Button>
+                </div>
+            )}
         </div>
     );
-};
+};;

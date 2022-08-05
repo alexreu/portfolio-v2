@@ -6,12 +6,12 @@ import { Heading } from "../../Heading";
 export const AboutSection = () => {
     return (
         <section id="#about" className="bg-white dark:bg-primary-darkest py-[80px] lg:py-[120px]">
-            <div className="container lg:grid grid-cols-12 gap-x-12 items-center">
-                <div className="col-span-5 relative rounded-lg overflow-hidden">
+            <div className="container lg:grid grid-cols-12 items-baseline gap-x-12">
+                <div className="col-span-5 relative rounded-lg overflow-hidden min-h-[300px] lg:min-h-[550px]">
                     <Image
                         src="/images/about-me.jpg"
                         className={"object-cover rounded-lg overflow-hidden"}
-                        layout="responsive"
+                        layout="fill"
                         height={1150}
                         width={1000}
                         alt=""
