@@ -17,20 +17,20 @@ export const Navbar = () => {
     const { theme, setTheme } = useContext(ThemeContext);
     const [scroll, setScroll] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
-    const [MyTrue, setMyTrue] = useState(true);
     const [underlineItem, setUnderlineItem] = useState(null);
 
     useEffect(() => {
         const onScroll = () => {
             const scrollCheck = window.scrollY > 120;
-            const s = navContent.find(e => {
-                const bounding = document.querySelector(`section#${e.anchor}`).getClientRects();
+            const visibleSection = navContent.find(section => {
+                const bounding = document.querySelector(`section#${section.anchor}`).getClientRects();
                 const [{ bottom }] = bounding;
                 if (bottom >= 64) {
-                    return e;
+                    return section;
                 }
             });
-            setUnderlineItem(s?.anchor);
+            setUnderlineItem(visibleSection.anchor);
+
             if (scrollCheck !== scroll) {
                 setScroll(scrollCheck);
             }
@@ -57,7 +57,7 @@ export const Navbar = () => {
         document.body.classList.toggle("w-screen");
     };
 
-    const navList = navContent.map((navItem, index) => {
+    const navList = navContent.map(navItem => {
         const { anchor, label } = navItem;
         return (
             <MenuItem
