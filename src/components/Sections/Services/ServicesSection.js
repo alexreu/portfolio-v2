@@ -45,7 +45,7 @@ const servicesData = [
 
 export const ServicesSection = () => {
     return (
-        <SectionWrapper>
+        <SectionWrapper id="services">
             <div className="container text-center">
                 <SectionSubtitle>Que puis-je faire pour vous ?</SectionSubtitle>
                 <Heading

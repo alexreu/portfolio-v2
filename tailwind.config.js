@@ -38,16 +38,12 @@ module.exports = {
             "background-light": "#F9F9F9",
             "background-dark-light": "#191919",
 
-            primary: "#FD4766",
             "primary-darkest": "#161414",
             "secondary-darkest": "#191919",
             black: "#1F1F25",
-            "dark-body": "rgba(198, 201, 216, 0.75)",
             grey: "rgba(29,29,36,.75)",
             "grey-dark": "#191919",
             "grey-light": "#E6E6E6",
-            white: "#ffffff",
-            border: "#E6E6E6",
             "border-dark": "rgba(255,255,255,0.2)",
         },
         extend: {

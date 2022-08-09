@@ -4,15 +4,33 @@ import { ThemeContext } from "../../modules/theme";
 import styles from "./Navbar.module.css";
 import { BurgerButton } from "../BurgerButton";
 import { Button } from "../Button";
+import { MenuItem } from "../MenuItem";
+
+const navContent = [
+    { label: "Accueil", icon: "house-door-fill", anchor: "home" },
+    { label: "A propos", icon: "question-circle-fill", anchor: "about" },
+    { label: "Services", icon: "gear-fill", anchor: "services" },
+    // { label: "Portfolio", icon: "award-fill", anchor: "portfolio" },
+];
 
 export const Navbar = () => {
     const { theme, setTheme } = useContext(ThemeContext);
     const [scroll, setScroll] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
+    const [MyTrue, setMyTrue] = useState(true);
+    const [underlineItem, setUnderlineItem] = useState(null);
 
     useEffect(() => {
         const onScroll = () => {
             const scrollCheck = window.scrollY > 120;
+            const s = navContent.find(e => {
+                const bounding = document.querySelector(`section#${e.anchor}`).getClientRects();
+                const [{ bottom }] = bounding;
+                if (bottom >= 64) {
+                    return e;
+                }
+            });
+            setUnderlineItem(s?.anchor);
             if (scrollCheck !== scroll) {
                 setScroll(scrollCheck);
             }
@@ -31,35 +49,24 @@ export const Navbar = () => {
             document.removeEventListener("scroll", onScroll);
             window.removeEventListener("resize", onWindowResize);
         };
-    }, [scroll, openMenu]);
+    }, [scroll, openMenu, underlineItem]);
 
     const handleToggleMenu = () => {
         setOpenMenu(!openMenu);
         document.body.classList.toggle("fixed");
         document.body.classList.toggle("w-screen");
     };
-    const navContent = [
-        { label: "Accueil", icon: "house-door-fill", anchor: "home" },
-        { label: "A propos", icon: "question-circle-fill", anchor: "about" },
-        { label: "Diplômes", icon: "mortarboard-fill", anchor: "graduations" },
-        { label: "Portfolio", icon: "award-fill", anchor: "portfolio" },
-    ];
+
     const navList = navContent.map((navItem, index) => {
         const { anchor, label } = navItem;
         return (
-            <li
-                key={index}
-                className={`${
-                    scroll ? "text-black dark:lg:text-white" : "text-black dark:text-white lg:text-white"
-                } lgd:py-2 lgd:w-full transition-200 duration-300 dark:hover:text-primary hover:text-primary lgd:border-b border-grey-light`}
-            >
-                <a
-                    href={`#${anchor}`}
-                    className="custom-underline inline-flex items-center h-full gap-x-4 font-medium text-base"
-                >
-                    <span>{label}</span>
-                </a>
-            </li>
+            <MenuItem
+                anchor={anchor}
+                label={label}
+                scroll={scroll}
+                key={anchor}
+                isUnderline={anchor !== "home" && anchor === underlineItem}
+            />
         );
     });
 

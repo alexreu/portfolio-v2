@@ -5,7 +5,7 @@
 
     &:hover {
         @apply transform -translate-y-[5px];
-        box-shadow: 0 10px 15px 0 rgba(253,71,102,0.1);
+        box-shadow: 0 10px 15px 0 rgba(253,71,102,0.2);
     }
 
     &Heading {
