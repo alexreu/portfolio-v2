@@ -1,0 +1,10 @@
+.sectionHead {
+    &Title {
+        @apply mb-5;
+        @apply text-[32px] lg:text-[50px] text-heading;
+        @apply font-main font-semibold;
+    }
+    &Description {
+        @apply lg:px-[25%] text-lg text-gray;
+    }
+}

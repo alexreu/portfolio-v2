@@ -1,5 +1,5 @@
 import React from "react";
-import { AboutSection, HomeSection, ServicesSection } from "../components/Sections";
+import { AboutSection, HomeSection, PortfolioSection, ServicesSection } from "../components/Sections";
 
 const Index = () => {
     return (
@@ -7,6 +7,7 @@ const Index = () => {
             <HomeSection />
             <AboutSection />
             <ServicesSection />
+            <PortfolioSection />
         </>
     );
 };

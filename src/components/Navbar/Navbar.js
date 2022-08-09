@@ -7,10 +7,10 @@ import { Button } from "../Button";
 import { MenuItem } from "../MenuItem";
 
 const navContent = [
-    { label: "Accueil", icon: "house-door-fill", anchor: "home" },
-    { label: "A propos", icon: "question-circle-fill", anchor: "about" },
-    { label: "Services", icon: "gear-fill", anchor: "services" },
-    // { label: "Portfolio", icon: "award-fill", anchor: "portfolio" },
+    { label: "Accueil", anchor: "home" },
+    { label: "A propos", anchor: "about" },
+    { label: "Services", anchor: "services" },
+    { label: "Réalisations", anchor: "portfolio" },
 ];
 
 export const Navbar = () => {
