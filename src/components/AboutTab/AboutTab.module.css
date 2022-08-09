@@ -6,9 +6,9 @@
     }
     &Content {
         @apply pt-5 space-y-4 overflow-hidden;
-        @apply font-main transition-all duration-300 ease-in-out;
+        @apply font-main;
 
-        & + .showMoreButtonWrapper {
+        & + .showMoreWrapper {
             & button > i {
                 @apply transition-all duration-300 ease-in-out transform rotate-0;
             }
@@ -16,12 +16,15 @@
 
         &.folded {
             @apply lg:max-h-[210px];
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
         }
         &.full {
-            @apply max-h-[1000px];
-            & + .showMoreButtonWrapper {
+            @apply max-h-[5000px];
+            transition: max-height 1s ease-in-out;
+
+            & + .showMoreWrapper {
                 & button > i {
-                    @apply transition-all duration-300 ease-in-out transform rotate-180;
+                    @apply rotate-180;
                 }
             }
         }

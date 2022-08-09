@@ -162,7 +162,7 @@ export const AboutTab = () => {
                         style={`btn z-[2] mx-auto rounded-full p-2 bg-primary text-white border-primary`}
                         onClick={handleMoreButtonClick}
                     >
-                        <i className={`bi bi-chevron-down inline-flex`}></i>
+                        <i className="bi bi-chevron-down inline-flex"></i>
                     </Button>
                 </div>
             )}
