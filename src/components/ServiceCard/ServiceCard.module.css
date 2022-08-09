@@ -1,0 +1,22 @@
+.card {
+    @apply flex flex-col py-10 px-8;
+    @apply text-left bg-white rounded-lg;
+    @apply transition-all duration-200 ease-in-out;
+
+    &:hover {
+        @apply transform -translate-y-[5px];
+        box-shadow: 0 10px 15px 0 rgba(253,71,102,0.1);
+    }
+
+    &Heading {
+        @apply mb-5;
+        @apply text-xl font-semibold;
+    }
+    &Icon {
+        @apply inline-flex items-center order-first mb-6;
+        @apply text-primary text-[42px];
+    }
+    &Description {
+        @apply text-base text-gray font-light;
+    }
+}
