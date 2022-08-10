@@ -5,6 +5,7 @@ import styles from "./ProjectCard.module.css";
 
 export const ProjectCard = ({ title, subtitle, link, picture }) => {
     const { url, title: linkTitle } = link;
+    console.log(picture);
     return (
         <div className={`${styles.projectCard}`}>
             <Image src={picture} layout="fill" alt="" className={`${styles.projectCardPicture}`} />
