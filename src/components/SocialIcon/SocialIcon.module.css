@@ -1,0 +1,13 @@
+.socialLink {
+    @apply inline-flex items-center justify-center p-1;
+    @apply w-12 h-12 text-base text-grey-light;
+    @apply border-2 rounded-full border-grey-light;
+    @apply transition-all duration-200 ease-in;
+    &:hover {
+        @apply bg-primary border-primary;
+        @apply transform -translate-y-0.5;
+    }
+    &Icon {
+        @apply inline-flex items-center;
+    }
+}
