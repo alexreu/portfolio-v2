@@ -6,7 +6,7 @@ import { Loader } from "../components/Loader";
 
 const Index = () => {
     const { data: aboutData, error: aboutError } = useSwr("/api/about", fetcher);
-    console.log({ aboutData });
+
     if (!aboutData) return <Loader />;
     return (
         <>
