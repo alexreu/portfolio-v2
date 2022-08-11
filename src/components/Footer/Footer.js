@@ -27,7 +27,7 @@ const socialLinks = [
 ];
 export const Footer = () => {
     return (
-        <footer className={styles.footer} id="#footer">
+        <footer className={styles.footer} id="contact">
             <div className="container">
                 <div className="lg:grid grid-cols-2 gap-10">
                     <div className={styles.footerPictureWrapper}>
@@ -63,8 +63,8 @@ export const Footer = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="container mt-8 py-4 text-center border-t border-lighter">
-                    <p className="text-primary-light">Copyright Alex Développement 2022 - Tous droits reservés</p>
+                <div className="mt-8 py-4 text-center border-t border-lighter font-light text-primary-light">
+                    <p>Copyright Alex Développement 2022 - Tous droits reservés</p>
                 </div>
             </div>
         </footer>
