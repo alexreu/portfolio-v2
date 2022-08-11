@@ -1,17 +1,29 @@
 .footer {
     @apply py-8 bg-black;
 
-    &Logo {
-        @apply w-full h-auto;
+    &Picture {
+
+        &Wrapper {
+            @apply col-span-1 flex items-end justify-start relative;
+            @apply min-h-[350px] -mt-[120px] p-12 overflow-hidden rounded-lg;
+
+            &::after {
+                @apply absolute bottom-0 left-0 w-full h-[85%];
+                @apply transition-all duration-300 ease-in-out;
+                content: "";
+                background: linear-gradient(to bottom, rgba(15, 15, 15, 0), rgba(15, 15, 15, 0.75) 100%);
+            }
+        }
+
+        &Content {
+            @apply relative z-10 text-4xl text-white text-opacity-75;
+        }
     }
 
     &Social {
-        &Wrapper {
-            @apply col-span-1;
-        }
 
         &List {
-            @apply flex justify-center gap-3;
+            @apply flex flex-col justify-center col-span-1 gap-8;
         }
     }
 

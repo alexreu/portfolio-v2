@@ -1,0 +1,21 @@
+.socialLink {
+    @apply inline-flex items-center gap-8;
+    @apply transition-all duration-200 ease-in;
+
+    &:hover {
+        & .socialLinkContent, .socialLinkIcon  {
+            @apply text-primary;
+            @apply transform -translate-y-[3px];
+        }
+    }
+
+    &Content {
+        @apply text-xl text-white font-light tracking-tight;
+        @apply transition-all duration-200 ease-in;
+    }
+    &Icon {
+        @apply inline-flex items-center;
+        @apply text-white text-xl;
+        @apply transition-all duration-200 ease-in;
+    }
+}

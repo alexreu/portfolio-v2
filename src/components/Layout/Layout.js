@@ -2,7 +2,7 @@ import React from "react";
 import Head from "next/head";
 import { Footer } from "../Footer";
 import { Navbar } from "../Navbar";
-import { ThemeProvider } from "../../modules/theme/ThemeContext";
+import { ThemeProvider } from "../../modules/theme";
 
 function Layout({ children }) {
     return (
