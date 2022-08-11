@@ -5,7 +5,7 @@
 
         &Wrapper {
             @apply col-span-1 flex items-end justify-start relative;
-            @apply min-h-[350px] -mt-[120px] p-12 overflow-hidden rounded-lg;
+            @apply min-h-[350px] lg:-mt-[120px] lgd:mb-8 p-12 overflow-hidden rounded-lg;
 
             &::after {
                 @apply absolute bottom-0 left-0 w-full h-[85%];

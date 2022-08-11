@@ -1,5 +1,5 @@
 .socialLink {
-    @apply inline-flex items-center gap-8;
+    @apply inline-flex items-center gap-4 lg:gap-8;
     @apply transition-all duration-200 ease-in;
 
     &:hover {
@@ -10,12 +10,12 @@
     }
 
     &Content {
-        @apply text-xl text-white font-light tracking-tight;
+        @apply text-sm lg:text-base text-primary-light tracking-tight;
         @apply transition-all duration-200 ease-in;
     }
     &Icon {
         @apply inline-flex items-center;
-        @apply text-white text-xl;
+        @apply text-primary-light text-xl;
         @apply transition-all duration-200 ease-in;
     }
 }

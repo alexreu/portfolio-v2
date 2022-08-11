@@ -3,6 +3,7 @@ import styles from "./Footer.module.css";
 import Image from "next/image";
 import { SocialLink } from "../SocialLink";
 import { id } from "../../modules/idGenerator";
+import Link from "next/link";
 
 const socialLinks = [
     {
@@ -28,7 +29,7 @@ export const Footer = () => {
     return (
         <footer className={styles.footer} id="#footer">
             <div className="container">
-                <div className=" grid grid-cols-2 gap-10">
+                <div className="lg:grid grid-cols-2 gap-10">
                     <div className={styles.footerPictureWrapper}>
                         <Image src="/images/contact-us.jpeg" alt="" layout="fill" className={styles.footerPicture} />
                         <div className={styles.footerPictureContent}>
@@ -44,7 +45,26 @@ export const Footer = () => {
                                 </li>
                             );
                         })}
+                        <li className="flex">
+                            <div className="inline-flex items-center text-sm lg:text-base text-white font-light">
+                                <i className="bi bi-shield-check inline-flex items-center mr-4 lg:mr-8 text-xl"></i>
+                                <Link href="/legal-mentions">
+                                    <a className="transform transition-all ease-in duration-200 hover:-translate-y-[3px] hover:text-primary">
+                                        Mentions Légales
+                                    </a>
+                                </Link>
+                                <span className="mx-1">,</span>
+                                <Link href="/confidentiality-policy">
+                                    <a className="transform transition-all ease-in duration-200 hover:-translate-y-[3px] hover:text-primary">
+                                        Politique de confidentialités
+                                    </a>
+                                </Link>
+                            </div>
+                        </li>
                     </ul>
+                </div>
+                <div className="container mt-8 py-4 text-center border-t border-lighter">
+                    <p className="text-primary-light">Copyright Alex Développement 2022 - Tous droits reservés</p>
                 </div>
             </div>
         </footer>

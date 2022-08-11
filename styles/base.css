@@ -1,5 +1,5 @@
 @tailwind base;
 
 main section:last-of-type {
-    @apply pb-[220px];
+    @apply lg:pb-[220px];
 }
