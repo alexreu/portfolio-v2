@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React from "react";
 
 export const MenuItem = ({ anchor, label, scroll, isUnderline }) => {
     return (
