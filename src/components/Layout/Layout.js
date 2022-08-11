@@ -6,7 +6,7 @@ import { ThemeProvider } from "../../modules/theme";
 
 function Layout({ children }) {
     return (
-        <ThemeProvider>
+        <>
             <Head>
                 <title>Alexandre ADOLPHE | Developpeur Front-End</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -15,7 +15,7 @@ function Layout({ children }) {
             <Navbar />
             <main className="mt-auto font-main">{children}</main>
             <Footer />
-        </ThemeProvider>
+        </>
     );
 }
 

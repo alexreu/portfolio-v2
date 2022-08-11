@@ -1,0 +1,90 @@
+[
+  {
+    "id": "skills",
+    "title": "Compétences",
+    "content": [
+      {
+        "title": "Front End - Javascript",
+        "description": "jQuery, AlpineJs, ReactJs, NextJs"
+      },
+      {
+        "title": "Front End - CSS",
+        "description": "CSS3, SASS, Bootstrap, Tailwind"
+      },
+      {
+        "title": "Back End - PHP",
+        "description": "Laravel, Drupal"
+      },
+      {
+        "title": "Back End - Javascript",
+        "description": "NodeJs, ExpressJs"
+      },
+      {
+        "title": "Back End - Base de données",
+        "description": "Mysql, MongoDB"
+      }
+    ]
+  },
+  {
+    "id": "experiencess",
+    "title": "Expériences",
+    "content": [
+      {
+        "title": "Simplon Prod - Développeur Front",
+        "description": "2018 - 2022"
+      },
+      {
+        "title": "Stage Colipays - Intégrateur",
+        "description": "2018"
+      },
+      {
+        "title": "Atout Pc's - Technicien informatique & réseau",
+        "description": "2015 - 2017"
+      }
+    ]
+  },
+  {
+    "id": "education",
+    "title": "Formations",
+    "content": [
+      {
+        "title": "Bachelor CSI - niveau VI",
+        "description": "Concepteur de systèmes d'informations | 2019 - 2020"
+      },
+      {
+        "title": "DWWW - niveau V",
+        "description": "Developpeur Web & Web Mobile | 2018 - 2019"
+      },
+      {
+        "title": "Simplon Reunion - certification",
+        "description": "POEC Développeur Web | 2018"
+      },
+      {
+        "title": "CERT - niveau V",
+        "description": "Chargé d'Exploitation en Réseaux et Télécoms | 2015 - 2017"
+      },
+      {
+        "title": "Baccalauréat STI2D - niveau IV",
+        "description": "Spécialité ITEC: Innovation Technologique et Éco-Conception | 2014"
+      }
+    ]
+  },
+  {
+    "id": "other",
+    "title": "Autres",
+    "content": [
+      {
+        "title": "Outils Collaboratifs",
+        "description": "Git, Github, Gitlab, Jira, Trello"
+      },
+      {
+        "title": "Langues",
+        "description": "Français - Anglais"
+      },
+      {
+        "title": "Soft Skills",
+        "description": "Communication, Curiosité, Persévérance, Investit"
+      }
+    ]
+  }
+]

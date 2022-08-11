@@ -4,7 +4,7 @@ import { AboutTab } from "../../AboutTab";
 import { Heading } from "../../Heading";
 import { SectionSubtitle } from "../../SectionSubtitle";
 
-export const AboutSection = () => {
+export const AboutSection = ({ data }) => {
     return (
         <section id="about" className="bg-white dark:bg-primary-darkest py-[80px] lg:py-[120px]">
             <div className="container lg:grid grid-cols-12 items-baseline gap-x-12">
@@ -29,7 +29,7 @@ export const AboutSection = () => {
                         pariatur, corporis sequi quam ad sit ipsum sint, nesciunt ullam exercitationem distinctio
                         numquam iste excepturi eius eaque!
                     </p>
-                    <AboutTab />
+                    <AboutTab data={data} />
                 </div>
             </div>
         </section>

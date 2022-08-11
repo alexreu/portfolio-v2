@@ -1,0 +1,10 @@
+.loader {
+    @apply h-[100px] w-[100px] border-[10px] border-primary rounded-full;
+    @apply opacity-100;
+
+    &Wrapper {
+        @apply flex flex-col items-center justify-center;
+        @apply absolute w-screen h-screen overflow-hidden z-[9999];
+        @apply bg-black;
+    }
+}

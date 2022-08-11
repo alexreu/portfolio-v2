@@ -83,7 +83,7 @@ export const Navbar = () => {
                     : "absolute top-0 bg-transparent"
             } flex items-center justify-between z-[9999] w-full min-h-[64px] px-8 lg:px-16 transition-all duration-300 ease-in-out`}
         >
-            <a href="#" className="inline-flex items-center">
+            <a href="#home" className="inline-flex items-center">
                 <Image
                     src="/vercel.svg"
                     alt="logo"
