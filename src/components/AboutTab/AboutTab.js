@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styles from "./AboutTab.module.css";
 import { Button } from "../Button";
 
-export const AboutTab = ({ data: navTabsContent }) => {
+export const AboutTab = ({ data: { about: navTabsContent } }) => {
     const aboutTabContent = useRef(null);
     const [currentTab, setCurrentTab] = useState("skills");
     const [tabContent, setTabContent] = useState(navTabsContent.filter(e => e.id === currentTab));

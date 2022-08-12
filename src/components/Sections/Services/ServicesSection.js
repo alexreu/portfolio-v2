@@ -4,46 +4,7 @@ import { Heading } from "../../Heading";
 import { SectionSubtitle } from "../../SectionSubtitle";
 import { ServiceCard } from "../../ServiceCard";
 
-const servicesData = [
-    {
-        icon: "window",
-        title: "Website Development",
-        description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page.",
-    },
-    {
-        icon: "window",
-        title: "Website Development",
-        description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page.",
-    },
-    {
-        icon: "window",
-        title: "Website Development",
-        description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page.",
-    },
-    {
-        icon: "window",
-        title: "Website Development",
-        description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page.",
-    },
-    {
-        icon: "window",
-        title: "Website Development",
-        description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page.",
-    },
-    {
-        icon: "window",
-        title: "Website Development",
-        description:
-            "It is a long established fact that a reader will be distracted by the readable content of a page.",
-    },
-];
-
-export const ServicesSection = () => {
+export const ServicesSection = ({ data: { services = [] } }) => {
     return (
         <SectionWrapper id="services">
             <div className="container text-center">
@@ -59,7 +20,7 @@ export const ServicesSection = () => {
                     alteration.
                 </p>
                 <ul className="md:grid grid-cols-2 lg:grid-cols-3 gap-8 mdd:space-y-6 mt-10">
-                    {servicesData.map(({ icon, title, description }, index) => (
+                    {services.map(({ icon, title, description }, index) => (
                         <li key={`${title}'-'${index}`}>
                             <ServiceCard icon={icon} title={title} description={description} />
                         </li>

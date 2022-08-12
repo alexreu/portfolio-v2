@@ -1,0 +1,58 @@
+{
+  "projects": [
+    {
+      "title": "Website title",
+      "subtitle": "Development",
+      "picture": "/images/projects/project-1.jpeg",
+      "link": {
+        "title": "Voir le site",
+        "url": "#"
+      }
+    },
+    {
+      "title": "Website title",
+      "subtitle": "Development",
+      "picture": "/images/projects/project-2.jpeg",
+      "link": {
+        "title": "Voir le site",
+        "url": "#"
+      }
+    },
+    {
+      "title": "Website title",
+      "subtitle": "Development",
+      "picture": "/images/projects/project-3.jpeg",
+      "link": {
+        "title": "Voir le site",
+        "url": "#"
+      }
+    },
+    {
+      "title": "Website title",
+      "subtitle": "Development",
+      "picture": "/images/projects/project-1.jpeg",
+      "link": {
+        "title": "Voir le site",
+        "url": "#"
+      }
+    },
+    {
+      "title": "Website title",
+      "subtitle": "Development",
+      "picture": "/images/projects/project-2.jpeg",
+      "link": {
+        "title": "Voir le site",
+        "url": "#"
+      }
+    },
+    {
+      "title": "Website title",
+      "subtitle": "Development",
+      "picture": "/images/projects/project-3.jpeg",
+      "link": {
+        "title": "Voir le site",
+        "url": "#"
+      }
+    }
+  ]
+}

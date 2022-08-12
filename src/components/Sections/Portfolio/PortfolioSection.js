@@ -4,70 +4,7 @@ import { SectionHead } from "../../SectionHead";
 import { ProjectCard } from "../../ProjectCard";
 import { id } from "../../../modules/idGenerator";
 
-const projectsContent = [
-    {
-        id: id(),
-        title: "Website title",
-        subtitle: "Development",
-        picture: "/images/projects/project-1.jpeg",
-        link: {
-            title: "Voir le site",
-            url: "#",
-        },
-    },
-    {
-        id: id(),
-        title: "Website title",
-        subtitle: "Development",
-        picture: "/images/projects/project-2.jpeg",
-        link: {
-            title: "Voir le site",
-            url: "#",
-        },
-    },
-    {
-        id: id(),
-        title: "Website title",
-        subtitle: "Development",
-        picture: "/images/projects/project-3.jpeg",
-        link: {
-            title: "Voir le site",
-            url: "#",
-        },
-    },
-    {
-        id: id(),
-        title: "Website title",
-        subtitle: "Development",
-        picture: "/images/projects/project-1.jpeg",
-        link: {
-            title: "Voir le site",
-            url: "#",
-        },
-    },
-    {
-        id: id(),
-        title: "Website title",
-        subtitle: "Development",
-        picture: "/images/projects/project-2.jpeg",
-        link: {
-            title: "Voir le site",
-            url: "#",
-        },
-    },
-    {
-        id: id(),
-        title: "Website title",
-        subtitle: "Development",
-        picture: "/images/projects/project-3.jpeg",
-        link: {
-            title: "Voir le site",
-            url: "#",
-        },
-    },
-];
-
-export const PortfolioSection = () => {
+export const PortfolioSection = ({ data: { projects: projectsContent = [] } }) => {
     return (
         <SectionWrapper id="portfolio" type="dark">
             <div className="container text-center">
