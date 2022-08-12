@@ -49,6 +49,6 @@
     }
 
     &Picture {
-        @apply -z-[1] w-full h-full object-contain;
+        @apply -z-[1] w-full h-full object-fill;
     }
 }
