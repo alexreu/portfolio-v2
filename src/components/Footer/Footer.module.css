@@ -1,5 +1,5 @@
 .footer {
-    @apply py-8 bg-black;
+    @apply py-8 bg-black font-main;
 
     &Picture {
 
