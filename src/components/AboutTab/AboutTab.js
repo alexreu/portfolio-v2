@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import styles from "./AboutTab.module.css";
 import { Button } from "../Button";
+import { id } from "../../modules/idGenerator";
 
-export const AboutTab = ({ data: { about: navTabsContent } }) => {
+export const AboutTab = ({ navTabsContent }) => {
     const aboutTabContent = useRef(null);
     const [currentTab, setCurrentTab] = useState("skills");
     const [tabContent, setTabContent] = useState(navTabsContent.filter(e => e.id === currentTab));
@@ -34,20 +35,20 @@ export const AboutTab = ({ data: { about: navTabsContent } }) => {
     return (
         <div className="mt-7">
             <ul className={styles.tabList} role="tablist">
-                {navTabsContent.map((tab, index) => (
-                    <li key={index}>
-                        <a
+                {navTabsContent.map(tab => (
+                    <li key={id()}>
+                        <Button
+                            type="button"
                             key={tab.id}
                             id={tab.id}
                             onClick={() => handleTabClick(tab.id)}
-                            aria-selected={currentTab === tab.id}
                             aria-controls="aboutTabContent"
                             className={`${
                                 currentTab === tab.id ? "bg-primary text-white" : "text-grey dark:text-white"
                             } inline-block px-[13.5px] -my-px -mx-0.5 lg:px-6 py-2 lg:py-3 text-sm font-semibold rounded-full hover:cursor-pointer transition-200`}
                         >
                             {tab.title}
-                        </a>
+                        </Button>
                     </li>
                 ))}
             </ul>

@@ -3,8 +3,8 @@ import { SectionWrapper } from "../../SectionWrapper";
 import { Heading } from "../../Heading";
 import { SectionSubtitle } from "../../SectionSubtitle";
 import { ServiceCard } from "../../ServiceCard";
-
-export const ServicesSection = ({ data: { services = [] } }) => {
+import { id } from "../../../modules/idGenerator";
+export const ServicesSection = ({ services }) => {
     return (
         <SectionWrapper id="services">
             <div className="container text-center">
@@ -20,8 +20,8 @@ export const ServicesSection = ({ data: { services = [] } }) => {
                     alteration.
                 </p>
                 <ul className="md:grid grid-cols-2 lg:grid-cols-3 gap-8 mdd:space-y-6 mt-10">
-                    {services.map(({ icon, title, description }, index) => (
-                        <li key={`${title}'-'${index}`}>
+                    {services.map(({ icon, title, description }) => (
+                        <li key={id()}>
                             <ServiceCard icon={icon} title={title} description={description} />
                         </li>
                     ))}

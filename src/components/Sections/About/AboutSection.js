@@ -29,7 +29,7 @@ export const AboutSection = ({ data }) => {
                         pariatur, corporis sequi quam ad sit ipsum sint, nesciunt ullam exercitationem distinctio
                         numquam iste excepturi eius eaque!
                     </p>
-                    <AboutTab data={data} />
+                    <AboutTab navTabsContent={data} />
                 </div>
             </div>
         </section>

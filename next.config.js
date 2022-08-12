@@ -4,6 +4,7 @@ const nextConfig = {
     images: {
         formats: ["image/avif", "image/webp"],
     },
+    experimental: { esmExternals: false },
 };
 
 module.exports = nextConfig;
