@@ -1,0 +1,73 @@
+.resume {
+    &Wrapper {
+        @apply flex items-center justify-center;
+        @apply w-screen h-screen p-8 overflow-hidden;
+        @apply bg-background-dark-light font-sub;
+    }
+    &Content {
+        @apply flex;
+        @apply w-[595px] h-[842px] print:w-[210mm] print:h-[297mm];
+        @apply bg-white;
+    }
+    &LeftSide {
+        @apply flex flex-col w-2/5 h-full overflow-hidden;
+        @apply bg-yellow-resume print:bg-yellow-resume;
+        &ProfilPictureWrapper {
+            @apply inline-flex items-center justify-center mt-8 mb-4;
+            @apply w-[120px] h-[120px] overflow-hidden mx-auto;
+            @apply rounded-full border-4 border-white;
+        }
+        &Name {
+            @apply mb-4 text-center text-body text-3xl font-extrabold;
+        }
+        &Job {
+            @apply mb-4 py-4 bg-body text-center;
+            &Content {
+                @apply text-yellow-resume uppercase font-light italic text-xs;
+            }
+        }
+        &Heading {
+            @apply mb-4 text-body font-light uppercase text-lg text-center;
+        }
+
+        &ContactList {
+            @apply mb-4 pr-2 space-y-4;
+            & > li {
+                @apply flex items-center;
+                & > p {
+                    @apply pl-2 text-[12px] font-light;
+                }
+                & > span {
+                    @apply flex justify-end;
+                    @apply min-w-[40px] pr-1 bg-body text-sm;
+                    & > i {
+                        @apply text-yellow-resume;
+                    }
+                }
+            }
+        }
+        &SkillsList {
+            @apply mb-4 space-y-4;
+            & > li {
+                @apply w-3/5 px-2 py-1;
+                @apply bg-body text-right uppercase text-yellow-resume;
+                @apply font-light text-xs italic;
+            }
+        }
+        &OtherList {
+            @apply grid grid-cols-2 gap-4;
+            & > li {
+                @apply flex items-center pl-2;
+                @apply text-xs font-light;
+                & > span {
+                    @apply mr-2;
+                    @apply bg-body text-2xl p-1 font-normal;
+                    & > i {
+                        @apply text-yellow-resume;
+                    }
+                }
+            }
+        }
+    }
+    &RightSide {}
+}

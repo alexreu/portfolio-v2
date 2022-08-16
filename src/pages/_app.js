@@ -5,13 +5,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { ThemeProvider } from "../modules/theme";
 
 function MyApp({ Component, pageProps }) {
-    return (
-        <ThemeProvider>
-            <Layout>
-                <Component {...pageProps} />
-            </Layout>
-        </ThemeProvider>
-    );
+    const getLayout = Component.getLayout || (page => page);
+    return getLayout(<Component {...pageProps} />);
 }
 
 export default MyApp;

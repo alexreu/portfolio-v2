@@ -3,6 +3,8 @@ import { AboutSection, HomeSection, PortfolioSection, ServicesSection } from "..
 import { getDirectoryPath } from "../modules/getDirectoryPath/getDirectoryPath";
 import ressourceType from "../enums/RessourceType";
 import { getJsonContent } from "../modules/getJsonContent/getJsonContent";
+import Layout from "../components/Layout/Layout";
+import { ThemeProvider } from "../modules/theme";
 
 const Index = ({ about, services, projects }) => {
     return (
@@ -14,6 +16,12 @@ const Index = ({ about, services, projects }) => {
         </>
     );
 };
+
+Index.getLayout = page => (
+    <ThemeProvider>
+        <Layout>{page}</Layout>
+    </ThemeProvider>
+);
 
 export async function getStaticProps() {
     const { ABOUT, PROJECTS, SERVICES } = ressourceType;

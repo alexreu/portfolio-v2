@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./HomeSection.module.css";
 import { Heading } from "../../Heading";
+import Link from "next/link";
 
 export const HomeSection = () => {
     return (
@@ -19,9 +20,9 @@ export const HomeSection = () => {
                 <p className="mt-5 mb-7 text-base lg:text-[54px] text-white font-main leading-none">
                     basé à la Réunion.
                 </p>
-                <a href="#" className="btn btn-default text-white border-grey-light">
-                    Voir mon cv
-                </a>
+                <Link href="/resume">
+                    <a className="btn btn-default text-white border-grey-light">Voir mon cv</a>
+                </Link>
             </div>
         </section>
     );

@@ -37,7 +37,7 @@ module.exports = {
             "dark-body": "rgba(198, 201, 216, 0.75)",
             "background-light": "#F9F9F9",
             "background-dark-light": "#191919",
-
+            "yellow-resume": "rgb(217, 179, 88)",
             "primary-darkest": "#161414",
             "secondary-darkest": "#191919",
             black: "#1F1F25",
