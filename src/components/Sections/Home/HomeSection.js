@@ -20,7 +20,7 @@ export const HomeSection = () => {
                 <p className="mt-5 mb-7 text-base lg:text-[54px] text-white font-main leading-none">
                     basé à la Réunion.
                 </p>
-                <Link href="/resume">
+                <Link href="/resume" passHref>
                     <a className="btn btn-default text-white border-grey-light">Voir mon cv</a>
                 </Link>
             </div>

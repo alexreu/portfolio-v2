@@ -3,7 +3,7 @@ import styles from "./Resume.module.css";
 import ResumeLeftSide from "./ResumeLeftSide";
 import ResumeRightSide from "./ResumeRightSide";
 
-export const Resume = ({ data }) => {
+export const ResumeWrapper = ({ data }) => {
     return (
         <div className={styles.resumeWrapper}>
             <div className={styles.resumeContent}>

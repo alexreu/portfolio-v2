@@ -3,16 +3,16 @@ import Head from "next/head";
 import { Footer } from "../Footer";
 import { Navbar } from "../Navbar";
 
-function Layout({ showNavbar = true, showFooter = true, title, children }) {
+function Layout({ showNavbar = true, showFooter = true, title, children, ...props }) {
     return (
         <>
             <Head>
-                <title>Alexandre ADOLPHE | {title} </title>
-                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                <meta name="description" content="Alexandre ADOLPHE - Developpeur Front-End" />
+                <title>{`Alexandre ADOLPHE | ${title}`}</title>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" key="viewport" />
+                <meta name="description" content={`Alexandre ADOLPHE - ${title}`} key="description" />
             </Head>
             {showNavbar && <Navbar />}
-            <main className="mt-auto font-main">{children}</main>
+            <main {...props}>{children}</main>
             {showFooter && <Footer />}
         </>
     );

@@ -1,1 +1,1 @@
-export * from "./Resume";
+export * from "./ResumeWrapper";

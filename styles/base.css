@@ -4,6 +4,6 @@ html {
     scroll-behavior: smooth;
 }
 
-main section:last-of-type {
+main > section:last-of-type {
     @apply lg:pb-[220px];
 }

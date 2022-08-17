@@ -1,13 +1,14 @@
 import React from "react";
 import styles from "./Resume.module.css";
 import { Heading } from "../Heading";
-import Image from "next/image";
+import Image from "next/future/image";
+import profilePicture from "../../../public/images/resume-photo.png";
 
 const ResumeLeftSide = () => {
     return (
         <div className={styles.resumeLeftSide}>
             <div className={styles.resumeLeftSideProfilPictureWrapper}>
-                <Image src="/images/resume-photo.png" width={150} height={150} alt="" />
+                <Image src="/images/resume-photo.png" width={150} height={150} alt="" className="w-full h-auto" />
             </div>
             <Heading variant="h1" className={styles.resumeLeftSideName}>
                 Alexandre ADOLPHE

@@ -4,7 +4,12 @@ const nextConfig = {
     images: {
         formats: ["image/avif", "image/webp"],
     },
-    experimental: { esmExternals: false },
+    // experimental: { esmExternals: false },
+    experimental: {
+        images: {
+            allowFutureImage: true,
+        },
+    },
 };
 
 module.exports = nextConfig;

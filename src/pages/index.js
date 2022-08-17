@@ -19,7 +19,9 @@ const Index = ({ about, services, projects }) => {
 
 Index.getLayout = page => (
     <ThemeProvider>
-        <Layout title="Developpeur Front-End">{page}</Layout>
+        <Layout title="Developpeur Front-End" className="mt-auto font-main">
+            {page}
+        </Layout>
     </ThemeProvider>
 );
 
