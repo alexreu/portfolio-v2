@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "./Resume.module.css";
 import { Heading } from "../Heading";
 import { Timeline } from "../Timeline";

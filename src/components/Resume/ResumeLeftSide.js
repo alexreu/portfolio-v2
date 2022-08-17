@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "./Resume.module.css";
 import { Heading } from "../Heading";
 import Image from "next/image";
