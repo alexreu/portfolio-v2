@@ -1,0 +1,24 @@
+.timeline {
+    @apply relative space-y-4 my-5 ml-10;
+    &:before {
+        @apply absolute w-[4px] h-full left-0 top-0;
+        @apply bg-yellow-resume rounded-lg;
+
+        content: "";
+    }
+    &Child {
+        @apply relative pl-6;
+        &:before {
+            @apply absolute h-[12px] w-[12px] rounded-full;
+            @apply left-0 top-1/2 transform -translate-y-1/2 -translate-x-[4px];
+            @apply bg-yellow-resume;
+            content:"";
+        }
+        & h3 {
+            @apply font-bold text-base;
+        }
+        & p {
+            @apply text-sm font-light;
+        }
+    }
+}

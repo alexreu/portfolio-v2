@@ -27,7 +27,7 @@
       ]
     },
     {
-      "id": "experiencess",
+      "id": "experiences",
       "title": "Expériences",
       "content": [
         {
@@ -50,23 +50,28 @@
       "content": [
         {
           "title": "Bachelor CSI - niveau VI",
-          "description": "Concepteur de systèmes d'informations | 2019 - 2020"
+          "description": "Concepteur de systèmes d'informations | 2019 - 2020",
+          "date": "2019 - 2020"
         },
         {
           "title": "DWWW - niveau V",
-          "description": "Developpeur Web & Web Mobile | 2018 - 2019"
+          "description": "Developpeur Web & Web Mobile | 2018 - 2019",
+          "date": "2018 - 2019"
         },
         {
           "title": "Simplon Reunion - certification",
-          "description": "POEC Développeur Web | 2018"
+          "description": "POEC Développeur Web | 2018",
+          "date": "2018"
         },
         {
           "title": "CERT - niveau V",
-          "description": "Chargé d'Exploitation en Réseaux et Télécoms | 2015 - 2017"
+          "description": "Chargé d'Exploitation en Réseaux et Télécoms | 2015 - 2017",
+          "date": "2015 - 2017"
         },
         {
           "title": "Baccalauréat STI2D - niveau IV",
-          "description": "Spécialité ITEC: Innovation Technologique et Éco-Conception | 2014"
+          "description": "Spécialité ITEC: Innovation Technologique et Éco-Conception | 2014",
+          "date": "2014"
         }
       ]
     },

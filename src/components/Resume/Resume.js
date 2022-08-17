@@ -1,12 +1,13 @@
 import styles from "./Resume.module.css";
 import ResumeLeftSide from "./ResumeLeftSide";
+import ResumeRightSide from "./ResumeRightSide";
 
-export const Resume = () => {
+export const Resume = ({ data }) => {
     return (
         <div className={styles.resumeWrapper}>
             <div className={styles.resumeContent}>
                 <ResumeLeftSide />
-                <div className={styles.resumeRightSide}></div>
+                <ResumeRightSide data={data} />
             </div>
         </div>
     );

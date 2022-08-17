@@ -44,9 +44,9 @@ const ResumeLeftSide = () => {
                     Soft skills
                 </Heading>
                 <ul className={styles.resumeLeftSideSkillsList}>
-                    <li>télé travail</li>
-                    <li>fléxibilité</li>
-                    <li>investit</li>
+                    <li>Curiosité</li>
+                    <li>Persévérance</li>
+                    <li>Investit</li>
                 </ul>
             </section>
             <section id="other">

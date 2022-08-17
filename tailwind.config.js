@@ -38,6 +38,7 @@ module.exports = {
             "background-light": "#F9F9F9",
             "background-dark-light": "#191919",
             "yellow-resume": "rgb(217, 179, 88)",
+            "dark-resume": "rgb(42, 43, 41)",
             "primary-darkest": "#161414",
             "secondary-darkest": "#191919",
             black: "#1F1F25",
