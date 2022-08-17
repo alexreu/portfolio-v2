@@ -25,9 +25,17 @@ export const AboutSection = ({ data }) => {
                         À propos de moi
                     </Heading>
                     <p className="text-gray dark:text-dark-body text-lg leading-8 font-light font-main">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident iusto odio minus laborum
-                        pariatur, corporis sequi quam ad sit ipsum sint, nesciunt ullam exercitationem distinctio
-                        numquam iste excepturi eius eaque!
+                        Hello ! ☀️
+                        <br />
+                        Développeur front depuis 3 ans spécialisé dans l’intégration web et la création d’applications
+                        web avec ReactJs.
+                        <br />
+                        Je serai ravie de vous accompagner dans le développement de votre projet.
+                        <br />
+                        Je n’hésiterai pas à être force de proposition si nécessaire afin de vous aider dans la
+                        réalisation de celui-ci. N’hésitez pas à me contacter, afin de discuter de votre projet, je
+                        serai ravi de participer au développement de celui-ci !
+                        <br />À bientôt 👋
                     </p>
                     <AboutTab navTabsContent={data} />
                 </div>

@@ -21,7 +21,7 @@ export const HomeSection = () => {
                     basé à la Réunion.
                 </p>
                 <Link href="/resume" passHref>
-                    <a className="btn btn-default text-white border-grey-light">Voir mon cv</a>
+                    <a className="lgd:hidden btn btn-default text-white border-grey-light">Voir mon cv</a>
                 </Link>
             </div>
         </section>

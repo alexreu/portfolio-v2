@@ -18,8 +18,10 @@ export const Navbar = () => {
     const [scroll, setScroll] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
     const [underlineItem, setUnderlineItem] = useState(null);
+    const [colorTheme, setColorTheme] = useState("dark");
 
     useEffect(() => {
+        setColorTheme(theme);
         const onScroll = () => {
             const scrollCheck = window.scrollY > 120;
             const visibleSection = navContent.find(section => {
@@ -71,6 +73,7 @@ export const Navbar = () => {
     });
 
     const toggleTheme = () => {
+        setColorTheme(theme === "light" ? "dark" : "light");
         setTheme(theme === "light" ? "dark" : "light");
     };
 
@@ -120,8 +123,13 @@ export const Navbar = () => {
                             } inline-flex items-center justify-center h-10 w-10 bg-transparent rounded-full transition-200 hover:cursor-pointer hover:bg-[#9aa0a6]/[.157]`}
                         >
                             <i
-                                className={`bi-${theme === "dark" ? "sun" : "moon"} font-medium text-lg transition-200`}
+                                className={`bi-${
+                                    colorTheme === "dark" ? "sun" : "moon-stars"
+                                } font-medium text-lg transition-200`}
                             />
+                            <span className="sr-only">
+                                {colorTheme === "dark" ? "passer au theme clair" : "passer au theme fonce"}
+                            </span>
                         </Button>
                     </li>
                     <li className="inline-flex items-center">
