@@ -73,6 +73,7 @@ export const AboutTab = ({ navTabsContent }) => {
                         onClick={handleMoreButtonClick}
                     >
                         <i className="bi bi-chevron-down inline-flex"></i>
+                        <span className="sr-only">Déplier</span>
                     </Button>
                 </div>
             )}
