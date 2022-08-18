@@ -3,6 +3,7 @@ import Image from "next/image";
 import { AboutTab } from "../../AboutTab";
 import { Heading } from "../../Heading";
 import { SectionSubtitle } from "../../SectionSubtitle";
+import { motion } from "framer-motion";
 
 export const AboutSection = ({ data }) => {
     return (
@@ -33,8 +34,8 @@ export const AboutSection = ({ data }) => {
                         Je n’hésiterai pas à être force de proposition si nécessaire afin de vous aider dans la
                         réalisation de celui-ci. N’hésitez pas à me contacter, afin de discuter de votre projet, je
                         serai ravi de participer au développement de celui-ci !
-                        <br />
-                        <br />À bientôt <span>👋</span>
+                        <br />À bientôt
+                        <span className="text-heading ml-2">👋</span>
                     </p>
                     <AboutTab navTabsContent={data} />
                 </div>

@@ -34,7 +34,7 @@ export const AboutTab = ({ navTabsContent }) => {
 
     return (
         <div className="mt-7">
-            <ul className={styles.tabList} role="tablist">
+            <ul className={styles.tabList}>
                 {navTabsContent.map(tab => (
                     <li key={id()}>
                         <Button
@@ -52,18 +52,19 @@ export const AboutTab = ({ navTabsContent }) => {
                     </li>
                 ))}
             </ul>
-            <ul
-                ref={aboutTabContent}
-                id="aboutTabContent"
-                className={`${tabContentHeight >= 210 ? styles.folded : ""} ${styles.tabContent}`}
-            >
-                {tabContent[0].content.map((content, index) => (
-                    <li key={index} className="text-body dark:text-white text-base font-light">
-                        <span className="block font-medium text-heading dark:text-dark-body">{content.title}</span>
-                        {content.description}
-                    </li>
-                ))}
-            </ul>
+            <div id="aboutTabContent">
+                <ul
+                    ref={aboutTabContent}
+                    className={`${tabContentHeight >= 210 ? styles.folded : ""} ${styles.tabContent}`}
+                >
+                    {tabContent[0].content.map((content, index) => (
+                        <li key={index} className="text-body dark:text-white text-base font-light">
+                            <span className="block font-medium text-heading dark:text-dark-body">{content.title}</span>
+                            {content.description}
+                        </li>
+                    ))}
+                </ul>
+            </div>
             {displayShowMoreButton && (
                 <div className={styles.showMoreWrapper}>
                     <Button

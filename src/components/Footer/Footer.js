@@ -64,7 +64,7 @@ export const Footer = () => {
                     </ul>
                 </div>
                 <div className="mt-8 py-4 text-center border-t border-lighter font-light text-primary-light">
-                    <p>Copyright Alex Développement 2022 - Tous droits reservés</p>
+                    <p>Copyright Alex DevLab 2022 - Tous droits reservés</p>
                 </div>
             </div>
         </footer>

@@ -1,5 +1,5 @@
 .card {
-    @apply flex flex-col py-10 px-8;
+    @apply flex flex-col h-full py-10 px-8;
     @apply text-left bg-white rounded-lg;
     @apply transition-all duration-200 ease-in-out;
 

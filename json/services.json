@@ -1,34 +1,34 @@
 {
   "services": [
     {
-      "icon": "window",
-      "title": "Website Development",
-      "description": "It is a long established fact that a reader will be distracted by the readable content of a page."
+      "icon": "braces",
+      "title": "Développement front",
+      "description": "Création d'application web, avec NextJs / ReactJs."
     },
     {
       "icon": "window",
-      "title": "Website Development",
-      "description": "It is a long established fact that a reader will be distracted by the readable content of a page."
+      "title": "Intégration web",
+      "description": "Intégration web à partir de vos maquettes avec HTML / CSS / JavaScript."
     },
     {
-      "icon": "window",
-      "title": "Website Development",
-      "description": "It is a long established fact that a reader will be distracted by the readable content of a page."
+      "icon": "wordpress",
+      "title": "Création de site vitrine",
+      "description": "Création de votre site vitrine avec le cms Wordpress."
     },
     {
-      "icon": "window",
-      "title": "Website Development",
-      "description": "It is a long established fact that a reader will be distracted by the readable content of a page."
+      "icon": "graph-up-arrow",
+      "title": "SEO & Référencement naturel",
+      "description": "Optimisation de la qualité de votre site web pour le référencement naturel."
     },
     {
-      "icon": "window",
-      "title": "Website Development",
-      "description": "It is a long established fact that a reader will be distracted by the readable content of a page."
+      "icon": "universal-access",
+      "title": "Accessibilités",
+      "description": "Mise en place des bonnes pratiques pour un accès universel à votre site."
     },
     {
-      "icon": "window",
-      "title": "Website Development",
-      "description": "It is a long established fact that a reader will be distracted by the readable content of a page."
+      "icon": "layer-backward",
+      "title": "Développement back",
+      "description": "Possibilités d'intervention sur le back-end de vos application (PHP / JavaScript)"
     }
   ]
 }
