@@ -88,10 +88,12 @@ export const Navbar = () => {
         >
             <a href="#home" className="inline-flex items-center">
                 <Image
-                    src="/vercel.svg"
+                    src={
+                        scroll && colorTheme === "light" ? "/images/logo-text-dark.png" : "/images/logo-text-white.png"
+                    }
                     alt="logo"
-                    width={scroll ? "112px " : "170px"}
-                    height={scroll ? "50px " : "66px"}
+                    width={scroll ? "120px " : "140px"}
+                    height={scroll ? "60px " : "80px"}
                 />
                 <span className="sr-only">retour en haut de la page</span>
             </a>
