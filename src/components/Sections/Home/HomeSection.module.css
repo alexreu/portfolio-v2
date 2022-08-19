@@ -7,8 +7,5 @@
         @apply bg-black opacity-50;
         content: "";
     }
-    @screen lgd {
-      background-position-x: -5rem;
-      background-position-y: -10rem;
-    }
+
 }
