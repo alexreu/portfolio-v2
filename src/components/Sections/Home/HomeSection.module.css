@@ -1,14 +1,11 @@
 .homeBackground {
     @apply flex items-center h-[60vh] lg:h-screen relative;
-    @apply bg-cover lg:bg-center bg-fixed bg-no-repeat;
+    @apply bg-cover lg:bg-center xl:bg-fixed bg-no-repeat;
     background-image: url("/images/bg-head-compressed.webp");
     -webkit-background-size: cover;
     &::before {
         @apply z-0 w-full h-full absolute top-0 left-0;
         @apply bg-black opacity-50;
         content: "";
-    }
-    @screen lgd {
-        background-position: -5rem -10rem;
     }
 }
