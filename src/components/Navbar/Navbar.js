@@ -31,7 +31,9 @@ export const Navbar = () => {
                     return section;
                 }
             });
-            setUnderlineItem(visibleSection.anchor);
+            if (window.innerWidth >= 1024) {
+                setUnderlineItem(visibleSection.anchor);
+            }
 
             if (scrollCheck !== scroll) {
                 setScroll(scrollCheck);
@@ -54,15 +56,28 @@ export const Navbar = () => {
     }, [scroll, openMenu, underlineItem]);
 
     const handleToggleMenu = () => {
+        const {
+            body: { classList },
+        } = document;
         setOpenMenu(!openMenu);
-        document.body.classList.toggle("fixed");
-        document.body.classList.toggle("w-screen");
+        if (classList.contains("overflow-hidden")) {
+            classList.remove("overflow-hidden");
+        } else {
+            classList.add("overflow-hidden");
+        }
     };
 
     const navList = navContent.map(navItem => {
         const { anchor, label } = navItem;
+        const onItemClick = () => {
+            if (window.innerWidth < 1024) {
+                setOpenMenu(!openMenu);
+                document.body.classList.remove("overflow-hidden");
+            }
+        };
         return (
             <MenuItem
+                onClick={onItemClick}
                 anchor={anchor}
                 label={label}
                 scroll={scroll}
@@ -105,7 +120,7 @@ export const Navbar = () => {
                     styles.mobilePopUp
                 }`}
             >
-                <ul className="flex lgd:flex-col lg:justify-end items-stretch lgd:gap-y-3 lg:gap-x-16 lgd:overflow-hidden lgd:bg-white lgd:dark:bg-primary-darkest lg:min-h-[64px] lgd:px-4 text-[22px] transition-200">
+                <ul className="flex lgd:flex-col lg:justify-end items-stretch lgd:z-[9999] lgd:gap-y-3 lg:gap-x-16 lgd:overflow-hidden lgd:bg-white lgd:dark:bg-primary-darkest lg:min-h-[64px] lgd:px-4 text-[22px] transition-200">
                     <li className="lg:hidden">
                         <Button
                             type="button"
@@ -130,7 +145,7 @@ export const Navbar = () => {
                                 } font-medium text-lg transition-200`}
                             />
                             <span className="sr-only">
-                                {colorTheme === "dark" ? "passer au theme clair" : "passer au theme fonce"}
+                                {colorTheme === "dark" ? "activer le theme clair" : "activer le theme fonce"}
                             </span>
                         </Button>
                     </li>

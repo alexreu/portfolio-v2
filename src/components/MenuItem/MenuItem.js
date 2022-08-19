@@ -1,6 +1,6 @@
 import React from "react";
 
-export const MenuItem = ({ anchor, label, scroll, isUnderline }) => {
+export const MenuItem = ({ anchor, label, scroll, isUnderline, onClick }) => {
     return (
         <li
             key={anchor}
@@ -10,6 +10,7 @@ export const MenuItem = ({ anchor, label, scroll, isUnderline }) => {
             } lgd:py-2 lgd:w-full transition-200 duration-300 dark:hover:text-primary hover:text-primary lgd:border-b border-grey-light`}
         >
             <a
+                onClick={onClick}
                 href={`#${anchor}`}
                 className={`${
                     isUnderline ? "before:!w-full text-primary" : ""

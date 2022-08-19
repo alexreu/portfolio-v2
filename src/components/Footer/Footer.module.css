@@ -2,7 +2,7 @@
     @apply py-8 bg-black font-main;
 
     &Picture {
-
+        @apply object-cover object-center;
         &Wrapper {
             @apply col-span-1 flex items-end justify-start relative;
             @apply min-h-[350px] lg:-mt-[120px] lgd:mb-8 p-12 overflow-hidden rounded-lg;
