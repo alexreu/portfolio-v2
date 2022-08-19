@@ -9,8 +9,8 @@ export const PortfolioSection = ({ projects }) => {
         <SectionWrapper id="portfolio" type="dark">
             <div className="container text-center">
                 <SectionHead title="Mes derniers projets" subtitle="Tous mes projets">
-                    There are many variations of passages of Lorem Ipsum available, but the majority have suffered
-                    alteration.
+                    Retrouvez les projets les plus récents sur lesquels j&apos;ai eu l&apos;opportunité de travailler durant
+                    ces dernières années.
                 </SectionHead>
                 <ul className="md:grid grid-cols-2 lg:grid-cols-3 gap-8 mdd:space-y-6 mt-10">
                     {projects.map(project => {
