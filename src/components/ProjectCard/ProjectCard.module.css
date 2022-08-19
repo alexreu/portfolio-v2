@@ -7,7 +7,7 @@
         @apply absolute bottom-0 left-0 w-full h-[85%];
         @apply transition-all duration-300 ease-in-out;
         content: "";
-        background: linear-gradient(to bottom, rgba(15, 15, 15, 0), rgba(15, 15, 15, 0.75) 100%);
+        background: linear-gradient(to bottom, rgba(15, 15, 15, 0), rgba(15, 15, 15, 0.9) 100%);
     }
 
     &::after {
@@ -35,7 +35,7 @@
 
     &Title {
         @apply mb-4;
-        @apply text-3xl font-semibold text-white
+        @apply text-2xl text-left font-semibold text-white
     }
 
     &Subtitle {
@@ -49,6 +49,6 @@
     }
 
     &Picture {
-        @apply -z-[1] w-full h-full object-fill;
+        @apply -z-[1] w-full h-full object-cover object-top;
     }
 }
