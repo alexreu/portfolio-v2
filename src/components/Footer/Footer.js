@@ -24,6 +24,20 @@ const socialLinks = [
         url: "#",
         icon: "linkedin",
     },
+    {
+        id: id(),
+        title: "Mentions Légales",
+        url: "/legal-mentions",
+        icon: "shield-fill-check",
+        isPage: true,
+    },
+    {
+        id: id(),
+        title: "Politique de confidentialités",
+        url: "/confidentiality-policy",
+        icon: "lock-fill",
+        isPage: true,
+    },
 ];
 export const Footer = () => {
     return (
@@ -51,26 +65,14 @@ export const Footer = () => {
                                 </li>
                             );
                         })}
-                        <li className="flex">
-                            <div className="inline-flex items-center text-sm lg:text-base text-white font-light">
-                                <i className="bi bi-shield-check inline-flex items-center mr-4 lg:mr-8 text-xl"></i>
-                                <Link href="/legal-mentions">
-                                    <a className="transform transition-all ease-in duration-200 hover:-translate-y-[3px] hover:text-primary">
-                                        Mentions Légales
-                                    </a>
-                                </Link>
-                                <span className="mx-1">,</span>
-                                <Link href="/confidentiality-policy">
-                                    <a className="transform transition-all ease-in duration-200 hover:-translate-y-[3px] hover:text-primary">
-                                        Politique de confidentialités
-                                    </a>
-                                </Link>
-                            </div>
-                        </li>
                     </ul>
                 </div>
                 <div className="mt-8 py-4 text-center border-t border-lighter font-light text-primary-light">
-                    <p>Copyright Alex DevLab 2022 - Tous droits reservés</p>
+                    <p className="flex items-center justify-center lgd:flex-col gap-2">
+                        <span>Copyright Alex DevLab 2022</span>
+                        <span className="lgd:hidden">-</span>
+                        <span>Tous droits reservés</span>
+                    </p>
                 </div>
             </div>
         </footer>

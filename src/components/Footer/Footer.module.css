@@ -5,7 +5,7 @@
         @apply object-cover object-center;
         &Wrapper {
             @apply col-span-1 flex items-end justify-start relative;
-            @apply min-h-[350px] lg:-mt-[120px] lgd:mb-8 p-12 overflow-hidden rounded-lg;
+            @apply min-h-[250px] lg:min-h-[350px] lg:-mt-[120px] lgd:mb-8 p-4 lg:p-12 overflow-hidden rounded-lg;
 
             &::after {
                 @apply absolute bottom-0 left-0 w-full h-[85%];
@@ -16,7 +16,7 @@
         }
 
         &Content {
-            @apply relative z-10 text-4xl text-white text-opacity-75;
+            @apply w-full relative z-10 text-2xl lg:text-4xl text-white text-opacity-75;
         }
     }
 

@@ -7,7 +7,7 @@ export const HomeSection = () => {
     return (
         <section id="home" className={styles.homeBackground}>
             <div className="container relative z-10">
-                <span className="inline-flex w-full mb-5 font-sub text-grey-light text-base uppercase opacity-70 tracking-[4px]">
+                <span className="inline-flex w-full mb-2 lg:mb-5 font-sub text-grey-light text-base uppercase opacity-70 tracking-[4px]">
                     Freelance
                 </span>
                 <Heading
