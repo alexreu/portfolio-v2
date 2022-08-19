@@ -2,7 +2,7 @@
   "projects": [
     {
       "title": "Age Village",
-      "subtitle": "Refonte",
+      "subtitle": "Twig / Tailwindcss / AlpineJs",
       "picture": "age-village",
       "link": {
         "title": "Voir le site",
@@ -11,7 +11,7 @@
     },
     {
       "title": "Alliance Pro",
-      "subtitle": "Developpement",
+      "subtitle": "Twig / Tailwindcss / AlpineJs",
       "picture": "alliance-pro",
       "link": {
         "title": "Voir le site",
@@ -20,7 +20,7 @@
     },
     {
       "title": "Alliance Villes Emploi",
-      "subtitle": "Refonte",
+      "subtitle": "Twig / Tailwindcss / AlpineJs",
       "picture": "alliance-ville-emploie",
       "link": {
         "title": "Voir le site",
@@ -29,7 +29,7 @@
     },
     {
       "title": "Club FACE",
-      "subtitle": "Developpement",
+      "subtitle": "Twig / Tailwindcss / AlpineJs",
       "picture": "club-face",
       "link": {
         "title": "Voir le site",
@@ -38,7 +38,7 @@
     },
     {
       "title": "Allianz Site Agent",
-      "subtitle": "Refonte Menu",
+      "subtitle": "ReactJs / Nunjucks / Css",
       "picture": "allianz-site-agent",
       "link": {
         "title": "Voir le site",
@@ -47,7 +47,7 @@
     },
     {
       "title": "Generation Vélo",
-      "subtitle": "Developpement",
+      "subtitle": "Twig / Tailwindcss / AlpineJs",
       "picture": "fub",
       "link": {
         "title": "Voir le site",
