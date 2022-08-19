@@ -13,6 +13,7 @@ export const ProjectCard = ({ title, subtitle, link, picture }) => {
                 src={`${IMAGE_DIR_PREFIX}${picture}${IMAGE_EXTENSION}`}
                 layout="fill"
                 alt=""
+                priority={true}
                 className={`${styles.projectCardPicture}`}
             />
             <div className={styles.projectCardContent}>

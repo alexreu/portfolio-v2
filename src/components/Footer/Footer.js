@@ -31,7 +31,13 @@ export const Footer = () => {
             <div className="container">
                 <div className="lg:grid grid-cols-2 gap-10">
                     <div className={styles.footerPictureWrapper}>
-                        <Image src="/images/contact-us.jpg" alt="" layout="fill" className={styles.footerPicture} />
+                        <Image
+                            src="/images/contact-us.jpg"
+                            alt=""
+                            layout="fill"
+                            className={styles.footerPicture}
+                            priority={true}
+                        />
                         <div className={styles.footerPictureContent}>
                             Restons en <span className="font-semibold">contact !</span>
                         </div>
