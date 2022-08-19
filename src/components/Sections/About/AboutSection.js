@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 export const AboutSection = ({ data }) => {
     return (
         <section id="about" className="bg-white dark:bg-primary-darkest py-[80px] lg:py-[120px]">
-            <div className="container lg:grid grid-cols-12 items-baseline gap-x-12">
+            <div className="container lg:grid grid-cols-12 gap-x-12">
                 <div className="col-span-5 relative rounded-lg overflow-hidden min-h-[300px] lg:min-h-[637px]">
                     <Image
                         src="/images/about-me.jpg"
