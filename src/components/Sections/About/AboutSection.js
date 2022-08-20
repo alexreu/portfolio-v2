@@ -29,11 +29,11 @@ export const AboutSection = ({ data }) => {
                         Développeur front depuis 3 ans spécialisé dans l’intégration web et la création d’applications
                         web avec ReactJs.
                         <br />
-                        Je serai ravie de vous accompagner dans le développement de votre projet.
+                        Je serais ravi de vous accompagner dans le développement de votre projet.
                         <br />
                         Je n’hésiterai pas à être force de proposition si nécessaire afin de vous aider dans la
                         réalisation de celui-ci. N’hésitez pas à me contacter, afin de discuter de votre projet, je
-                        serai ravi de participer au développement de celui-ci !
+                        serais ravi de participer au développement de celui-ci !
                         <br />À bientôt
                         <span className="text-heading ml-2">👋</span>
                     </p>

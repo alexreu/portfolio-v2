@@ -16,7 +16,7 @@ export const ServicesSection = ({ services }) => {
                     Mes services
                 </Heading>
                 <p className="lg:px-[25%] text-lg text-gray dark:text-dark-body">
-                    Afin de répondre à tous vos besoins, voici les différents services que je vous proposes pour la
+                    Afin de répondre à tous vos besoins, voici les différents services que je vous propose pour la
                     réalisation de votre projet.
                 </p>
                 <ul className="md:grid grid-cols-2 lg:grid-cols-3 gap-8 mdd:space-y-6 mt-10">
