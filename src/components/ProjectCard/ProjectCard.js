@@ -8,7 +8,7 @@ export const ProjectCard = ({ title, subtitle, link, picture }) => {
     const IMAGE_DIR_PREFIX = "/images/projects/";
     const IMAGE_EXTENSION = ".png";
     return (
-        <a href={url} className={styles.projectCardLink} target="_blank" rel="noreferrer noopener">
+        <a href={url} target="_blank" rel="noreferrer noopener">
             <div className={`${styles.projectCard}`}>
                 <Image
                     src={`${IMAGE_DIR_PREFIX}${picture}${IMAGE_EXTENSION}`}
