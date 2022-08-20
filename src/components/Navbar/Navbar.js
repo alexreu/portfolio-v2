@@ -67,17 +67,18 @@ export const Navbar = () => {
         }
     };
 
+    const handleMenuItemClick = () => {
+        if (window.innerWidth < 1170) {
+            setOpenMenu(!openMenu);
+            document.body.classList.remove("overflow-hidden");
+        }
+    };
+
     const navList = navContent.map(navItem => {
         const { anchor, label } = navItem;
-        const onItemClick = () => {
-            if (window.innerWidth < 1024) {
-                setOpenMenu(!openMenu);
-                document.body.classList.remove("overflow-hidden");
-            }
-        };
         return (
             <MenuItem
-                onClick={onItemClick}
+                onClick={handleMenuItemClick}
                 anchor={anchor}
                 label={label}
                 scroll={scroll}
@@ -155,6 +156,7 @@ export const Navbar = () => {
                     <li className="inline-flex items-center">
                         <a
                             href="#contact"
+                            onClick={handleMenuItemClick}
                             className={`btn btn-default ${
                                 scroll
                                     ? "text-grey-dark dark:text-white border-grey-light hover:text-white"
