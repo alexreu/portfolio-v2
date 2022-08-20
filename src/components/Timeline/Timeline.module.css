@@ -1,5 +1,5 @@
 .timeline {
-    @apply relative space-y-4 my-5 ml-10;
+    @apply flex flex-col print:gap-7 gap-4 relative print:my-8 my-5 ml-10;
     &:before {
         @apply absolute w-[4px] h-full left-0 top-0;
         @apply bg-yellow-resume rounded-lg;
@@ -15,10 +15,10 @@
             content:"";
         }
         & h3 {
-            @apply font-bold text-base;
+            @apply font-bold print:text-lg text-base;
         }
         & p {
-            @apply text-sm font-light;
+            @apply print:text-base text-sm font-light;
         }
     }
 }
