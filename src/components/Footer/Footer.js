@@ -68,7 +68,7 @@ export const Footer = () => {
                     </ul>
                 </div>
                 <div className="mt-8 py-4 text-center border-t border-lighter font-light text-primary-light">
-                    <p className="flex items-center justify-center lgd:flex-col gap-2">
+                    <p className="flex items-center justify-center landscape:flex-row lgd:flex-col gap-2">
                         <span>Copyright Alex DevLab 2022</span>
                         <span className="lgd:hidden">-</span>
                         <span>Tous droits reservés</span>

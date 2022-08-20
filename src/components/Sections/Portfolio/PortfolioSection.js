@@ -9,10 +9,10 @@ export const PortfolioSection = ({ projects }) => {
         <SectionWrapper id="portfolio" type="dark">
             <div className="container text-center">
                 <SectionHead title="Mes derniers projets" subtitle="Tous mes projets">
-                    Retrouvez les projets les plus récents sur lesquels j&apos;ai eu l&apos;opportunité de travailler durant
-                    ces dernières années.
+                    Retrouvez les projets les plus récents sur lesquels j&apos;ai eu l&apos;opportunité de travailler
+                    durant ces dernières années.
                 </SectionHead>
-                <ul className="md:grid grid-cols-2 lg:grid-cols-3 gap-8 mdd:space-y-6 mt-10">
+                <ul className="md:grid grid-cols-2 lg:grid-cols-3 gap-8 mdd:space-y-8 mt-10">
                     {projects.map(project => {
                         const { title, subtitle, picture, link } = project;
                         return (

@@ -15,18 +15,18 @@
     }
 }
 .mobilePopUp {
-    @apply lgd:fixed lgd:h-screen left-0 top-0 z-[10000] overflow-hidden;
+    @apply xld:fixed xld:h-screen left-0 top-0 z-[10000] overflow-hidden;
     @apply transform transition-all ease-in-out duration-300;
     & > ul {
-        @apply lgd:w-full lgd:max-w-[310px] lgd:h-full;
+        @apply xld:w-full xld:max-w-[310px] xld:h-full;
     }
     &::after {
-        @apply lg:hidden absolute -z-[1] top-0 left-0 w-full h-full;
+        @apply xl:hidden absolute -z-[1] top-0 left-0 w-full h-full;
         @apply bg-black bg-opacity-80;
         content: '';
     }
 }
-@screen lg {
+@screen xl {
     .headerSticky {
         animation: sticky .95s ease forwards;
     }

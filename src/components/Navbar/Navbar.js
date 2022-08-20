@@ -99,7 +99,7 @@ export const Navbar = () => {
                 scroll
                     ? `${styles.headerSticky} fixed top-0 bg-white dark:bg-primary-darkest shadow-lg`
                     : "absolute top-0 bg-transparent"
-            } flex items-center justify-between z-[9999] w-full min-h-[64px] px-8 lg:px-16 transition-all duration-300 ease-in-out`}
+            } flex items-center justify-between z-[9999] w-full min-h-[64px] px-8 xl:px-16 transition-all duration-300 ease-in-out`}
         >
             <a href="#home" className="inline-flex items-center">
                 <Image
@@ -116,15 +116,18 @@ export const Navbar = () => {
             <nav
                 role="navigation"
                 aria-label="navigation-principal"
-                className={`${openMenu ? "lgd:w-screen lgd:translate-x-0" : "lgd:w-0 lgd:-translate-x-full"} ${
+                className={`${openMenu ? "xld:w-screen xld:translate-x-0" : "xld:w-0 xld:-translate-x-full"} ${
                     styles.mobilePopUp
                 }`}
             >
-                <ul className="flex lgd:flex-col lg:justify-end items-stretch lgd:z-[9999] lgd:gap-y-3 lg:gap-x-16 lgd:overflow-hidden lgd:bg-white lgd:dark:bg-primary-darkest lg:min-h-[64px] lgd:px-4 text-[22px] transition-200">
-                    <li className="lg:hidden">
+                <ul
+                    className="flex xld:flex-col xl:justify-end items-stretch xld:z-[9999] landscape:gap-y-1 xld:gap-y-3 xl:gap-x-16
+                xld:overflow-hidden xld:bg-white xld:dark:bg-primary-darkest xl:min-h-[64px] xld:px-4 text-[22px] transition-200"
+                >
+                    <li className="xl:hidden">
                         <Button
                             type="button"
-                            style="flex items-center justify-center lg:hidden ml-auto"
+                            style="flex items-center justify-center xl:hidden ml-auto"
                             onClick={handleToggleMenu}
                         >
                             <i className="bi bi-x text-[35px] dark:text-white" />
@@ -136,7 +139,7 @@ export const Navbar = () => {
                             onClick={toggleTheme}
                             type="button"
                             style={`${
-                                scroll ? "text-black dark:text-white" : "text-black lgd:dark:text-white lg:text-white"
+                                scroll ? "text-black dark:text-white" : "text-black xld:dark:text-white xl:text-white"
                             } inline-flex items-center justify-center h-10 w-10 bg-transparent rounded-full transition-200 hover:cursor-pointer hover:bg-[#9aa0a6]/[.157]`}
                         >
                             <i
@@ -155,7 +158,7 @@ export const Navbar = () => {
                             className={`btn btn-default ${
                                 scroll
                                     ? "text-grey-dark dark:text-white border-grey-light hover:text-white"
-                                    : "text-grey-dark dark:text-white lg:text-white border-grey-light lg:border-[hsla(0,0%,100%,.2)]"
+                                    : "text-grey-dark dark:text-white xl:text-white border-grey-light xl:border-[hsla(0,0%,100%,.2)]"
                             }`}
                         >
                             Contact

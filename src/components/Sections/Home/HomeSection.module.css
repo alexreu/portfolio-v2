@@ -1,5 +1,5 @@
 .homeBackground {
-    @apply flex items-center h-[60vh] lg:h-screen relative;
+    @apply flex items-center h-[60vh] landscape:h-screen lg:h-screen relative;
     @apply bg-cover lg:bg-center xl:bg-fixed bg-no-repeat;
     background-image: url("/images/bg-head-compressed.webp");
     -webkit-background-size: cover;
