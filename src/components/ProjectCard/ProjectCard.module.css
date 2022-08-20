@@ -18,6 +18,7 @@
     }
 
     &:hover {
+        @apply cursor-pointer;
         transform: translateZ(0) scale(1.08);
 
         &::before {
@@ -46,6 +47,11 @@
     &Link {
         @apply text-sm px-6 py-2 tracking-wide rounded-lg;
         @apply text-white border-2 border-white border-opacity-30;
+        @apply transition-all duration-300 ease-in-out;
+        &:hover, :focus {
+            @apply bg-primary border-primary shadow-lg;
+            @apply transform -translate-y-2;
+        }
     }
 
     &Picture {

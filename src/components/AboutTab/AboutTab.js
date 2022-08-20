@@ -45,7 +45,7 @@ export const AboutTab = ({ navTabsContent }) => {
                             aria-controls="aboutTabContent"
                             className={`${
                                 currentTab === tab.id ? "bg-primary text-white" : "text-grey dark:text-white"
-                            } inline-block px-[13.5px] -my-px -mx-0.5 lg:px-6 py-2 lg:py-3 text-sm font-semibold  rounded-full hover:cursor-pointer transition-200`}
+                            } inline-block px-[13.5px] -my-px -mx-0.5 lg:px-6 py-2 lg:py-3 text-sm font-semibold rounded-full hover:cursor-pointer transition-200`}
                         >
                             {tab.title}
                         </Button>
