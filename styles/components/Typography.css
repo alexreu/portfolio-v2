@@ -1,0 +1,5 @@
+.heading {
+    &2 {
+        @apply text-2xl lg:text-4xl font-bold;
+    }
+}

@@ -25,13 +25,13 @@ export const Navbar = () => {
         const onScroll = () => {
             const scrollCheck = window.scrollY > 120;
             const visibleSection = navContent.find(section => {
-                const bounding = document.querySelector(`section#${section.anchor}`).getClientRects();
-                const [{ bottom }] = bounding;
+                const bounding = document.querySelector(`section#${section.anchor}`)?.getClientRects();
+                const [{ bottom }] = bounding ?? [{}];
                 if (bottom >= 64) {
                     return section;
                 }
             });
-            if (window.innerWidth >= 1024) {
+            if (window.innerWidth >= 1024 && visibleSection) {
                 setUnderlineItem(visibleSection.anchor);
             }
 

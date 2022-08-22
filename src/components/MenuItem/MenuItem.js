@@ -11,7 +11,7 @@ export const MenuItem = ({ anchor, label, scroll, isUnderline, onClick }) => {
         >
             <a
                 onClick={onClick}
-                href={`#${anchor}`}
+                href={`/#${anchor}`}
                 className={`${
                     isUnderline ? "before:xl:!w-full xl:text-primary" : ""
                 } custom-underline inline-flex items-center h-full gap-x-4 font-medium text-base`}

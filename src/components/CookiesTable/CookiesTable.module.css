@@ -1,0 +1,19 @@
+.cookiesTable {
+    @apply text-body;
+    &Figure {
+        @apply mt-8;
+    }
+    &Head {
+        @apply bg-midgray-lighter;
+        & tr {
+            & th {
+                @apply p-2 text-white;
+            }
+        }
+    }
+    &Body {
+        &tr {
+           @apply even:bg-midgray-lighter;
+        }
+    }
+}

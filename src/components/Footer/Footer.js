@@ -58,10 +58,10 @@ export const Footer = () => {
                     </div>
                     <ul className={styles.footerSocialList}>
                         {socialLinks.map(link => {
-                            const { id, title, icon, url } = link;
+                            const { id, title, icon, url, isPage } = link;
                             return (
                                 <li key={id}>
-                                    <SocialLink icon={icon} title={title} url={url} />
+                                    <SocialLink icon={icon} title={title} url={url} isPage={isPage} />
                                 </li>
                             );
                         })}
