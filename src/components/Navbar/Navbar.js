@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { ThemeContext } from "../../modules/theme";
 import styles from "./Navbar.module.css";
 import { BurgerButton } from "../BurgerButton";
@@ -14,6 +15,7 @@ const navContent = [
 ];
 
 export const Navbar = () => {
+    const { pathname } = useRouter();
     const { theme, setTheme } = useContext(ThemeContext);
     const [scroll, setScroll] = useState(false);
     const [openMenu, setOpenMenu] = useState(false);
@@ -83,6 +85,7 @@ export const Navbar = () => {
                 label={label}
                 scroll={scroll}
                 key={anchor}
+                pathName={pathname}
                 isUnderline={anchor !== "home" && anchor === underlineItem}
             />
         );
@@ -99,13 +102,15 @@ export const Navbar = () => {
             className={`${
                 scroll
                     ? `${styles.headerSticky} fixed top-0 bg-white dark:bg-primary-darkest shadow-lg`
-                    : "absolute top-0 bg-transparent"
+                    : `absolute top-0 ${pathname === "/" ? "bg-transparent" : "bg-white dark:bg-primary-darkest"}`
             } flex items-center justify-between z-[9999] w-full min-h-[64px] px-8 xl:px-16 transition-all duration-300 ease-in-out`}
         >
-            <a href="#home" className="inline-flex items-center">
+            <a href="/#home" className="inline-flex items-center">
                 <Image
                     src={
-                        scroll && colorTheme === "light" ? "/images/logo-text-dark.png" : "/images/logo-text-white.png"
+                        (scroll && colorTheme === "light") || pathname !== "/"
+                            ? "/images/logo-text-dark.png"
+                            : "/images/logo-text-white.png"
                     }
                     alt="logo"
                     width={scroll ? "120px " : "140px"}
@@ -140,7 +145,11 @@ export const Navbar = () => {
                             onClick={toggleTheme}
                             type="button"
                             style={`${
-                                scroll ? "text-black dark:text-white" : "text-black xld:dark:text-white xl:text-white"
+                                scroll
+                                    ? "text-black dark:text-white"
+                                    : `text-black xld:dark:text-white ${
+                                          pathname === "/" ? "xl:text-white" : "xl:text-black xl:dark:text-white"
+                                      }`
                             } inline-flex items-center justify-center h-10 w-10 bg-transparent rounded-full transition-200 hover:cursor-pointer hover:bg-[#9aa0a6]/[.157]`}
                         >
                             <i
@@ -160,7 +169,11 @@ export const Navbar = () => {
                             className={`btn btn-default ${
                                 scroll
                                     ? "text-grey-dark dark:text-white border-grey-light hover:text-white"
-                                    : "text-grey-dark dark:text-white xl:text-white border-grey-light xl:border-[hsla(0,0%,100%,.2)]"
+                                    : `text-grey-dark dark:text-white ${
+                                          pathname === "/" ? "xl:text-white" : "xl-text-dark"
+                                      } border-grey-light ${
+                                          pathname === "/" ? "xl:border-[hsla(0,0%,100%,.2)]" : "xl:border-grey-light"
+                                      }`
                             }`}
                         >
                             Contact

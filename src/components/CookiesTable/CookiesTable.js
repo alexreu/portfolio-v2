@@ -6,10 +6,12 @@ export const CookiesTable = ({ head, content }) => {
     return (
         <figure className={style.cookiesTableFigure}>
             <table className={`${style.cookiesTable} dark:text-white`}>
-                <thead className={style.cookiesTableHead}>
+                <thead className={`${style.cookiesTableHead} dark:bg-midgray-lighter`}>
                     <tr>
                         {head.map(e => (
-                            <th key={id()}>{e}</th>
+                            <th key={id()} className="dark:text-white">
+                                {e}
+                            </th>
                         ))}
                     </tr>
                 </thead>
@@ -17,7 +19,7 @@ export const CookiesTable = ({ head, content }) => {
                     {content.map(e => {
                         const { cookie, object, duration } = e;
                         return (
-                            <tr key={id()} className="even:bg-midgray-lighter even:text-white">
+                            <tr key={id()} className={`${style.cookiesTableBodyRow} even:dark:bg-midgray-lighter`}>
                                 <td>{cookie}</td>
                                 <td>{object}</td>
                                 <td>{duration}</td>

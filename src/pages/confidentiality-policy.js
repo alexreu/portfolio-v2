@@ -11,11 +11,11 @@ const confidentialityPolicy = () => {
         <SectionWrapper id="confidentialityPolicy" className="min-h-screen">
             <div className="container">
                 <SectionHead title="Politique d'utilisation des cookies" />
-                <span className="block w-full border border-white"></span>
+                <span className="block w-full border border-darkest dark:border-white"></span>
                 <Heading variant="h2" className="heading2 text-heading dark:text-white mt-10 mb-5">
                     Que sont les cookies ?
                 </Heading>
-                <p className="text-light">
+                <p className="text-darkest dark:text-light">
                     Un cookie est un fichier qui est téléchargé sur votre terminal (ordinateur ou dispositif mobile)
                     dans le but de garder en mémoire des données qui pourront par la suite être mises à jour et
                     récupérées par l’entité responsable de leur installation. Les informations obtenues par le biais des
@@ -26,7 +26,7 @@ const confidentialityPolicy = () => {
                 <Heading variant="h2" className="heading2 text-heading dark:text-white mt-10 mb-5">
                     Type de cookies utilisés sur le site internet
                 </Heading>
-                <p className="text-light">
+                <p className="text-darkest dark:text-light">
                     Sur notre Site Internet, nous utilisons le système de mesure d’audience Google Analytics. Ce système
                     de mesure est un outil d’analyse web de Google LLC. (ci-après « Google »), dont le siège est à 1600
                     Amphitheatre Parkway, Mountain View, Californie 94043 (États-Unis d’Amérique). Google Analytics nous
@@ -69,7 +69,7 @@ const confidentialityPolicy = () => {
                 <Heading variant="h2" className="heading2 text-heading dark:text-white mt-10 mb-5">
                     Refus et révocation du consent
                 </Heading>
-                <p className="text-light">
+                <p className="text-darkest dark:text-light">
                     Vous pouvez refuser l’utilisation des cookies sur ce site Internet et révoquer votre consentement en
                     utilisant l’outil indiqué ci-dessous:
                 </p>
@@ -79,7 +79,7 @@ const confidentialityPolicy = () => {
                 <Heading variant="h2" className="heading2 mt-10 mb-5 text-heading dark:text-white">
                     Modification de la politique des cookies
                 </Heading>
-                <p className="text-light">
+                <p className="text-darkest dark:text-light">
                     Il est possible que nous mettions à jour à l’avenir la Politique de Cookies de notre Site Internet.
                     C’est pourquoi nous vous recommandons de la consulter chaque fois que vous accédez à notre Site
                     Internet, afin de vous tenir informé comme il se doit de la façon dont nous utilisons les cookies,
@@ -88,7 +88,7 @@ const confidentialityPolicy = () => {
                 <Heading variant="h2" className="heading2 mt-10 mb-5 text-heading dark:text-white">
                     Contact
                 </Heading>
-                <p className="text-light">
+                <p className="text-darkest dark:text-light">
                     Si vous avez des questions, des remarques ou des suggestions concernant la Politique de Cookies,
                     veuillez nous écrire à l’adresse suivante: privacy@garrigues.com.
                 </p>
