@@ -1,8 +1,7 @@
 import React from "react";
 import styles from "./Resume.module.css";
 import { Heading } from "../Heading";
-import Image from "next/future/image";
-import profilePicture from "../../../public/images/resume-photo.png";
+import Image from "next/image";
 
 const ResumeLeftSide = () => {
     return (

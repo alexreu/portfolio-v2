@@ -5,11 +5,11 @@ const nextConfig = {
         formats: ["image/avif", "image/webp"],
     },
     // experimental: { esmExternals: false },
-    experimental: {
-        images: {
-            allowFutureImage: true,
-        },
-    },
+    // experimental: {
+    //     images: {
+    //         allowFutureImage: true,
+    //     },
+    // },
 };
 
 module.exports = nextConfig;

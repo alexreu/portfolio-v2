@@ -3,7 +3,6 @@ import styles from "./Footer.module.css";
 import Image from "next/image";
 import { SocialLink } from "../SocialLink";
 import { id } from "../../modules/idGenerator";
-import Link from "next/link";
 
 const socialLinks = [
     {
@@ -21,23 +20,23 @@ const socialLinks = [
     {
         id: id(),
         title: "Linkedin",
-        url: "#",
+        url: "https://www.linkedin.com/in/alexandre-adolphe-817059146/",
         icon: "linkedin",
     },
-    {
-        id: id(),
-        title: "Mentions Légales",
-        url: "/legal-mentions",
-        icon: "shield-fill-check",
-        isPage: true,
-    },
-    {
-        id: id(),
-        title: "Politique de confidentialités",
-        url: "/confidentiality-policy",
-        icon: "lock-fill",
-        isPage: true,
-    },
+    // {
+    //     id: id(),
+    //     title: "Mentions Légales",
+    //     url: "/legal-mentions",
+    //     icon: "shield-fill-check",
+    //     isPage: true,
+    // },
+    // {
+    //     id: id(),
+    //     title: "Politique de confidentialités",
+    //     url: "/confidentiality-policy",
+    //     icon: "lock-fill",
+    //     isPage: true,
+    // },
 ];
 export const Footer = () => {
     return (
@@ -69,7 +68,7 @@ export const Footer = () => {
                 </div>
                 <div className="mt-8 py-4 text-center border-t border-lighter font-light text-primary-light">
                     <p className="flex items-center justify-center landscape:flex-row lgd:flex-col gap-2">
-                        <span>Copyright Alex DevLab 2022</span>
+                        <span>© Copyright Alex DevLab 2022</span>
                         <span className="lgd:hidden">-</span>
                         <span>Tous droits reservés</span>
                     </p>
