@@ -9,7 +9,7 @@ function Document() {
                     name="description"
                     content="Développeur Freelance basé à l'île de la Réunion. Intégration de vos maquettes, développement de vos interfaces front. N'hésitez pas à me contacter pour tous vos projets."
                 />
-                <meta property="og:title" content="Alex DevLab - Portfolio" />
+                <meta property="og:title" content="Alexandre ADOLPHE | Portfolio" />
                 <meta
                     property="og:description"
                     content="Développeur Freelance basé à l'île de la Réunion. Intégration de vos maquettes, développement de vos interfaces front. N'hésitez pas à me contacter pour tous vos projets."
