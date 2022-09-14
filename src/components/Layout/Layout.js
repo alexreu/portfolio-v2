@@ -7,7 +7,7 @@ function Layout({ showNavbar = true, showFooter = true, title, children, ...prop
     return (
         <>
             <Head>
-                <title>{`Alexandre ADOLPHE | ${title}`}</title>
+                <title>{`AlexDevLab | ${title}`}</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" key="viewport" />
                 <meta name="description" content={`Alexandre ADOLPHE - ${title}`} key="description" />
             </Head>
