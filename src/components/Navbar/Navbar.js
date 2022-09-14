@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ThemeContext } from "../../modules/theme";
@@ -6,6 +6,7 @@ import styles from "./Navbar.module.css";
 import { BurgerButton } from "../BurgerButton";
 import { Button } from "../Button";
 import { MenuItem } from "../MenuItem";
+import Link from "next/link";
 
 const navContent = [
     { label: "Accueil", anchor: "home" },
@@ -105,19 +106,21 @@ export const Navbar = () => {
                     : `absolute top-0 ${pathname === "/" ? "bg-transparent" : "bg-white dark:bg-primary-darkest"}`
             } flex items-center justify-between z-[9999] w-full min-h-[64px] px-8 xl:px-16 transition-all duration-300 ease-in-out`}
         >
-            <a href="/#home" className="inline-flex items-center">
-                <Image
-                    src={
-                        (scroll && colorTheme === "light") || pathname !== "/"
-                            ? "/images/logo-text-dark.png"
-                            : "/images/logo-text-white.png"
-                    }
-                    alt="logo"
-                    width={scroll ? "120px " : "140px"}
-                    height={scroll ? "60px " : "80px"}
-                />
-                <span className="sr-only">retour en haut de la page</span>
-            </a>
+            <Link href="/#home" passHref>
+                <a className="inline-flex items-center">
+                    <Image
+                        src={
+                            (scroll && colorTheme === "light") || pathname !== "/"
+                                ? "/images/logo-text-dark.png"
+                                : "/images/logo-text-white.png"
+                        }
+                        alt="logo"
+                        width={scroll ? "120px " : "140px"}
+                        height={scroll ? "60px " : "80px"}
+                    />
+                    <span className="sr-only">retour en haut de la page</span>
+                </a>
+            </Link>
             <BurgerButton onClick={handleToggleMenu} style={scroll ? "text-black dark:text-white" : "text-white"} />
             <nav
                 role="navigation"
