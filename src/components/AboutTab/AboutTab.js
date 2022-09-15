@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import styles from "./AboutTab.module.css";
 import { Button } from "../Button";
 import { id } from "../../modules/idGenerator";
@@ -9,6 +10,7 @@ export const AboutTab = ({ navTabsContent }) => {
     const [tabContent, setTabContent] = useState(navTabsContent.filter(e => e.id === currentTab));
     const [displayShowMoreButton, setDisplayShowMoreButton] = useState(false);
     const [tabContentHeight, setTabContentHeight] = useState(210);
+    const [tabFold, setTabFold] = useState(true);
 
     const handleTabClick = tabId => {
         setCurrentTab(tabId);
@@ -18,12 +20,16 @@ export const AboutTab = ({ navTabsContent }) => {
     };
 
     const handleMoreButtonClick = () => {
-        const {
-            current: { classList },
-        } = aboutTabContent;
-        classList.toggle(styles.full);
+        // const {
+        //     current: { classList },
+        // } = aboutTabContent;
+        // classList.toggle(styles.full);
+        setTabFold(!tabFold);
     };
-
+    const variants = {
+        fold: { maxHeight: 210 },
+        unFold: { maxHeight: 400 },
+    };
     useEffect(() => {
         const aboutTabContentHeight = aboutTabContent.current.getClientRects()[0].height;
         if (tabContentHeight !== aboutTabContentHeight || tabContentHeight === 210) {
@@ -53,9 +59,13 @@ export const AboutTab = ({ navTabsContent }) => {
                 ))}
             </ul>
             <div id="aboutTabContent">
-                <ul
+                <motion.ul
                     ref={aboutTabContent}
                     className={`${tabContentHeight >= 210 ? styles.folded : ""} ${styles.tabContent}`}
+                    variants={variants}
+                    initial="fold"
+                    animate={tabFold ? "fold" : "unFold"}
+                    transition={{ duration: 0.8, type: "tween", ease: "circOut" }}
                 >
                     {tabContent[0].content.map((content, index) => (
                         <li key={index} className="text-body dark:text-white text-base font-light">
@@ -63,7 +73,7 @@ export const AboutTab = ({ navTabsContent }) => {
                             {content.description}
                         </li>
                     ))}
-                </ul>
+                </motion.ul>
             </div>
             {displayShowMoreButton && (
                 <div className={styles.showMoreWrapper}>
