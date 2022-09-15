@@ -23,20 +23,6 @@ const socialLinks = [
         url: "https://www.linkedin.com/in/alexandre-adolphe-817059146/",
         icon: "linkedin",
     },
-    // {
-    //     id: id(),
-    //     title: "Mentions Légales",
-    //     url: "/legal-mentions",
-    //     icon: "shield-fill-check",
-    //     isPage: true,
-    // },
-    // {
-    //     id: id(),
-    //     title: "Politique de confidentialités",
-    //     url: "/confidentiality-policy",
-    //     icon: "lock-fill",
-    //     isPage: true,
-    // },
 ];
 export const Footer = () => {
     return (
