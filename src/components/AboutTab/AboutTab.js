@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import styles from "./AboutTab.module.css";
 import { Button } from "../Button";
@@ -82,7 +82,11 @@ export const AboutTab = ({ navTabsContent }) => {
                         style={`btn z-[2] mx-auto rounded-full p-2 bg-primary text-white border-primary`}
                         onClick={handleMoreButtonClick}
                     >
-                        <i className="bi bi-chevron-down inline-flex"></i>
+                        <i
+                            className={`bi bi-chevron-down inline-flex transform ${
+                                !tabFold && "-rotate-180"
+                            } transition-200`}
+                        ></i>
                         <span className="sr-only">Déplier</span>
                     </Button>
                 </div>
