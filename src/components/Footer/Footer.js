@@ -54,9 +54,11 @@ export const Footer = () => {
                 </div>
                 <div className="mt-8 py-4 text-center border-t border-lighter font-light text-primary-light">
                     <p className="flex items-center justify-center landscape:flex-row lgd:flex-col gap-2">
-                        <span>© Copyright Alex DevLab 2022</span>
+                        <span>© Copyright AlexDevLab 2022</span>
                         <span className="lgd:hidden">-</span>
-                        <span>Tous droits reservés</span>
+                        <span>
+                            Créer et conçu par <strong>AlexDevLab</strong>. Tous droits reservés
+                        </span>
                     </p>
                 </div>
             </div>

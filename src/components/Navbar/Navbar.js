@@ -131,7 +131,7 @@ export const Navbar = () => {
             >
                 <ul
                     className="flex xld:flex-col xl:justify-end items-stretch xld:z-[9999] landscape:gap-y-1 xld:gap-y-3 xl:gap-x-16
-                xld:overflow-hidden xld:bg-white xld:dark:bg-primary-darkest xl:min-h-[64px] xld:px-4 text-[22px] transition-200"
+                xld:overflow-hidden xl:px-4 xld:bg-white xld:dark:bg-primary-darkest xl:min-h-[64px] xld:px-4 text-[22px] transition-200"
                 >
                     <li className="xl:hidden">
                         <Button
@@ -172,7 +172,7 @@ export const Navbar = () => {
                             onClick={handleMenuItemClick}
                             className={`btn btn-default ${
                                 scroll
-                                    ? "text-grey-dark dark:text-white border-grey-light hover:text-grey-dark dark:hover:text-white focus:text-white dark:focus:text-white"
+                                    ? "text-grey-dark dark:text-white border-grey-light hover:text-white dark:hover:text-white focus:text-white dark:focus:text-white"
                                     : `text-grey-dark dark:text-white ${
                                           pathname === "/" ? "xl:text-white" : "xl:text-dark"
                                       } border-grey-light ${
