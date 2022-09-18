@@ -55,7 +55,7 @@ export const AboutTab = ({ navTabsContent }) => {
                             initial="unSelected"
                             animate={currentTab === tab.id ? "selected" : "unSelected"}
                             transition={{ type: "spring", damping: 12, mass: 0.5 }}
-                            className="inline-block px-[13.5px] -my-px -mx-0.5 lg:px-6 py-2 lg:py-3 text-sm font-semibold rounded-full hover:cursor-pointer"
+                            className="inline-block px-[13.5px] -my-px -mx-0.5 lg:px-6 py-2 lg:py-3 text-sm dark:!text-white font-semibold rounded-full hover:cursor-pointer"
                         >
                             {tab.title}
                         </motion.button>

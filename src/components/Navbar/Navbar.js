@@ -115,8 +115,8 @@ export const Navbar = () => {
                                 : "/images/logo-text-white.png"
                         }
                         alt="logo"
-                        width={scroll ? "120px " : "140px"}
-                        height={scroll ? "60px " : "80px"}
+                        width={scroll ? 120 : 140}
+                        height={scroll ? 60 : 80}
                     />
                     <span className="sr-only">retour en haut de la page</span>
                 </a>

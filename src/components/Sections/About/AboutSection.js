@@ -14,6 +14,8 @@ export const AboutSection = ({ data }) => {
                         src={aboutMe}
                         className={"h-full object-cover object-left rounded-lg overflow-hidden"}
                         alt=""
+                        height={747}
+                        width={446}
                     />
                 </div>
                 <div className="col-span-7 lgd:pt-10">
