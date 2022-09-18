@@ -7,3 +7,7 @@ html {
 main > section:last-of-type {
     @apply lg:pb-[220px];
 }
+
+*:focus {
+    @apply outline-none;
+}

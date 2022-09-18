@@ -153,7 +153,8 @@ export const Navbar = () => {
                                     : `text-black xld:dark:text-white ${
                                           pathname === "/" ? "xl:text-white" : "xl:text-black xl:dark:text-white"
                                       }`
-                            } inline-flex items-center justify-center h-10 w-10 bg-transparent rounded-full transition-200 hover:cursor-pointer hover:bg-[#9aa0a6]/[.157]`}
+                            } inline-flex items-center justify-center h-10 w-10 bg-transparent rounded-full transition-200 
+                            hover:cursor-pointer hover:bg-[#9aa0a6]/[.157] focus:cursor-pointer focus:bg-[#9aa0a6]/[.157]`}
                         >
                             <i
                                 className={`bi-${
@@ -171,9 +172,9 @@ export const Navbar = () => {
                             onClick={handleMenuItemClick}
                             className={`btn btn-default ${
                                 scroll
-                                    ? "text-grey-dark dark:text-white border-grey-light hover:text-white"
+                                    ? "text-grey-dark dark:text-white border-grey-light hover:text-grey-dark dark:hover:text-white focus:text-white dark:focus:text-white"
                                     : `text-grey-dark dark:text-white ${
-                                          pathname === "/" ? "xl:text-white" : "xl-text-dark"
+                                          pathname === "/" ? "xl:text-white" : "xl:text-dark"
                                       } border-grey-light ${
                                           pathname === "/" ? "xl:border-[hsla(0,0%,100%,.2)]" : "xl:border-grey-light"
                                       }`

@@ -1,12 +1,6 @@
 .card {
     @apply flex flex-col h-full py-10 px-8;
     @apply text-left bg-white rounded-lg;
-    @apply transition-all duration-200 ease-in-out;
-
-    &:hover {
-        @apply transform -translate-y-[5px];
-        box-shadow: 0 10px 15px 0 rgba(253,71,102,0.2);
-    }
 
     &Heading {
         @apply mb-5;

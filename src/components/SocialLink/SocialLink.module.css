@@ -1,11 +1,11 @@
 .socialLink {
     @apply inline-flex items-center gap-4 lg:gap-8;
-    @apply transition-all duration-200 ease-in;
+    @apply transition-all duration-200 ease-in-out;
 
-    &:hover {
-        & .socialLinkContent, .socialLinkIcon  {
+    &:hover, :focus {
+        & .socialLinkContent, .socialLinkIcon {
             @apply text-primary;
-            @apply transform -translate-y-[3px];
+            @apply transform translate-x-[5px];
         }
     }
 

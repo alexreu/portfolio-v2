@@ -10,7 +10,7 @@
         content: "";
     }
 
-    &:hover::before {
+    &:hover::before, :focus::before {
         @apply w-full;
     }
 }

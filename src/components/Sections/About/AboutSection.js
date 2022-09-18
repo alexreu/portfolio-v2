@@ -3,7 +3,6 @@ import Image from "next/image";
 import { AboutTab } from "../../AboutTab";
 import { Heading } from "../../Heading";
 import { SectionSubtitle } from "../../SectionSubtitle";
-import { motion } from "framer-motion";
 
 export const AboutSection = ({ data }) => {
     return (

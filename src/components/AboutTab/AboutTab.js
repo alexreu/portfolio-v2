@@ -50,8 +50,10 @@ export const AboutTab = ({ navTabsContent }) => {
                             onClick={() => handleTabClick(tab.id)}
                             aria-controls="aboutTabContent"
                             className={`${
-                                currentTab === tab.id ? "bg-primary text-white" : "text-grey dark:text-white"
-                            } inline-block px-[13.5px] -my-px -mx-0.5 lg:px-6 py-2 lg:py-3 text-sm font-semibold rounded-full hover:cursor-pointer transition-200`}
+                                currentTab === tab.id
+                                    ? "bg-primary text-white"
+                                    : "text-grey dark:text-white hover:text-primary dark:hover:text-primary focus:text-primary dark:focus:text-primary"
+                            } inline-block px-[13.5px] -my-px -mx-0.5 lg:px-6 py-2 lg:py-3 text-sm font-semibold rounded-full transition-200 hover:cursor-pointer`}
                         >
                             {tab.title}
                         </Button>
@@ -79,7 +81,8 @@ export const AboutTab = ({ navTabsContent }) => {
                 <div className={styles.showMoreWrapper}>
                     <Button
                         type="button"
-                        style={`btn z-[2] mx-auto rounded-full p-2 bg-primary text-white border-primary`}
+                        style={`btn z-[2] mx-auto rounded-full p-2 bg-primary text-white border-primary transition-200 
+                        hover:bg-white dark:hover:bg-background-dark-light hover:text-primary dark:hover:text-primary focus:bg-white dark:focus:bg-background-dark-light focus:text-primary`}
                         onClick={handleMoreButtonClick}
                     >
                         <i
