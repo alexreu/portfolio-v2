@@ -1,10 +1,19 @@
 import { Head, Html, Main, NextScript } from "next/document";
+import React from "react";
 
 function Document() {
     return (
         <Html lang="fr">
             <Head>
                 <link rel="shortcut icon" href="/images/favicon.ico" />
+                <link
+                    rel="stylesheet"
+                    href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+                />
+                <link
+                    rel="stylesheet"
+                    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap"
+                />
                 <meta
                     name="keywords"
                     content="developpeur, developer, alexandre adolphe, alex devlab, alexdevlab freelance, developpeur front, front-end developer, ile de la reunion"
