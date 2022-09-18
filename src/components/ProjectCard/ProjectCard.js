@@ -18,10 +18,9 @@ export const ProjectCard = ({ title, subtitle, link, picture }) => {
             >
                 <Image
                     src={`${IMAGE_DIR_PREFIX}${picture}${IMAGE_EXTENSION}`}
-                    width={380}
-                    height={560}
+                    width={358}
+                    height={500}
                     alt=""
-                    priority={true}
                     className="absolute bottom-0 left-0 !h-full -z-[1] object-cover object-bottom"
                 />
                 <div className="flex flex-col justify-end items-start h-full relative z-10 mt-auto">

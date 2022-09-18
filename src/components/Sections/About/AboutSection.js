@@ -1,8 +1,9 @@
 import React from "react";
-import Image from "next/image";
+import Image from "next/future/image";
 import { AboutTab } from "../../AboutTab";
 import { Heading } from "../../Heading";
 import { SectionSubtitle } from "../../SectionSubtitle";
+import aboutMe from "../../../../public/images/about-me.jpg";
 
 export const AboutSection = ({ data }) => {
     return (
@@ -10,9 +11,8 @@ export const AboutSection = ({ data }) => {
             <div className="container lg:grid grid-cols-12 gap-x-12">
                 <div className="col-span-5 relative rounded-lg overflow-hidden min-h-[300px] lg:max-h-[747px]">
                     <Image
-                        src="/images/about-me.jpg"
-                        className={"object-cover object-center rounded-lg overflow-hidden"}
-                        layout="fill"
+                        src={aboutMe}
+                        className={"h-full object-cover object-left rounded-lg overflow-hidden"}
                         alt=""
                     />
                 </div>

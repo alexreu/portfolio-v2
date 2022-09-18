@@ -1,8 +1,9 @@
 import React from "react";
 import styles from "./Footer.module.css";
-import Image from "next/image";
+import Image from "next/future/image";
 import { SocialLink } from "../SocialLink";
 import { id } from "../../modules/idGenerator";
+import contactUs from "../../../public/images/contact-us.jpg";
 
 const socialLinks = [
     {
@@ -30,13 +31,7 @@ export const Footer = () => {
             <div className="container">
                 <div className="lg:grid grid-cols-2 gap-10">
                     <div className={styles.footerPictureWrapper}>
-                        <Image
-                            src="/images/contact-us.jpg"
-                            alt=""
-                            layout="fill"
-                            className={styles.footerPicture}
-                            priority={true}
-                        />
+                        <Image src={contactUs} alt="" className={styles.footerPicture} priority={true} />
                         <div className={styles.footerPictureContent}>
                             Restons en <span className="font-semibold">contact !</span>
                         </div>

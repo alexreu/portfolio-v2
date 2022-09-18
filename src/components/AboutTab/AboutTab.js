@@ -20,16 +20,18 @@ export const AboutTab = ({ navTabsContent }) => {
     };
 
     const handleMoreButtonClick = () => {
-        // const {
-        //     current: { classList },
-        // } = aboutTabContent;
-        // classList.toggle(styles.full);
         setTabFold(!tabFold);
     };
-    const variants = {
+    const tabContentVariants = {
         fold: { maxHeight: 210 },
         unFold: { maxHeight: 400 },
     };
+
+    const tabControlVariants = {
+        selected: { backgroundColor: "#FD4766", color: "#FFFFFF" },
+        unSelected: { color: "rgba(29,29,36,.75)" },
+    };
+
     useEffect(() => {
         const aboutTabContentHeight = aboutTabContent.current.getClientRects()[0].height;
         if (tabContentHeight !== aboutTabContentHeight || tabContentHeight === 210) {
@@ -43,20 +45,20 @@ export const AboutTab = ({ navTabsContent }) => {
             <ul className={styles.tabList}>
                 {navTabsContent.map(tab => (
                     <li key={id()}>
-                        <Button
+                        <motion.button
                             type="button"
                             key={tab.id}
                             id={tab.id}
                             onClick={() => handleTabClick(tab.id)}
                             aria-controls="aboutTabContent"
-                            className={`${
-                                currentTab === tab.id
-                                    ? "bg-primary text-white"
-                                    : "text-grey dark:text-white hover:text-primary dark:hover:text-primary focus:text-primary dark:focus:text-primary"
-                            } inline-block px-[13.5px] -my-px -mx-0.5 lg:px-6 py-2 lg:py-3 text-sm font-semibold rounded-full transition-200 hover:cursor-pointer`}
+                            variants={tabControlVariants}
+                            initial="unSelected"
+                            animate={currentTab === tab.id ? "selected" : "unSelected"}
+                            transition={{ type: "spring", damping: 12, mass: 0.5 }}
+                            className="inline-block px-[13.5px] -my-px -mx-0.5 lg:px-6 py-2 lg:py-3 text-sm font-semibold rounded-full hover:cursor-pointer"
                         >
                             {tab.title}
-                        </Button>
+                        </motion.button>
                     </li>
                 ))}
             </ul>
@@ -64,7 +66,7 @@ export const AboutTab = ({ navTabsContent }) => {
                 <motion.ul
                     ref={aboutTabContent}
                     className={`${tabContentHeight >= 210 ? styles.folded : ""} ${styles.tabContent}`}
-                    variants={variants}
+                    variants={tabContentVariants}
                     initial="fold"
                     animate={tabFold ? "fold" : "unFold"}
                     transition={{ duration: 0.8, type: "tween", ease: "circOut" }}
