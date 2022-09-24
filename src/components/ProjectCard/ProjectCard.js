@@ -11,9 +11,9 @@ export const ProjectCard = ({ title, subtitle, link, picture }) => {
     return (
         <a href={url} target="_blank" rel="noreferrer noopener" className="group">
             <div
-                className={`${styles.projectCard} flex items-center min-h-[500px] w-full relative z-0 p-10 overflow-hidden rounded-lg transform 
+                className={`${styles.projectCard} flex items-center min-h-[500px] w-full relative z-0 p-10 overflow-hidden  transform 
                 transition-all duration-300 ease-in-out group-hover:cursor-pointer group-hover:before:opacity-0 group-hover:after:opacity-100
-                group-hover:scale-[1.08] group-hover:translate-x-0 group-hover:translate-y-0 group-focus:scale-[1.08] group-focus:translate-x-0 group-focus:translate-y-0
+                group-hover:scale-[1.05] group-hover:translate-x-0 group-hover:translate-y-0 group-focus:scale-[1.05] group-focus:translate-x-0 group-focus:translate-y-0
                 group-focus:cursor-pointer group-focus:before:opacity-0 group-focus:after:opacity-100`}
             >
                 <Image
@@ -21,7 +21,7 @@ export const ProjectCard = ({ title, subtitle, link, picture }) => {
                     width={358}
                     height={500}
                     alt=""
-                    className="absolute bottom-0 left-0 !h-full -z-[1] object-cover object-bottom"
+                    className="absolute bottom-0 left-0 w-full h-full -z-[1] object-cover object-bottom"
                 />
                 <div className="flex flex-col justify-end items-start h-full relative z-10 mt-auto">
                     <span className="mb-4 text-white opacity-70 font-light text-base">{subtitle}</span>
