@@ -32,6 +32,12 @@ export const AboutTab = ({ navTabsContent }) => {
         unSelected: { color: "rgba(29,29,36,.75)" },
     };
 
+    const spring = {
+        type: "spring",
+        stiffness: 500,
+        damping: 30,
+    };
+
     useEffect(() => {
         const aboutTabContentHeight = aboutTabContent.current.getClientRects()[0].height;
         if (tabContentHeight !== aboutTabContentHeight || tabContentHeight === 210) {
@@ -44,22 +50,30 @@ export const AboutTab = ({ navTabsContent }) => {
         <div className="mt-7">
             <ul className={styles.tabList}>
                 {navTabsContent.map(tab => (
-                    <li key={id()}>
-                        <motion.button
+                    <motion.li
+                        key={tab.title}
+                        className={`relative px-[13.5px] -my-px -mx-0.5 lg:px-6 py-3 lg:py-3 text-sm d ${
+                            currentTab === tab.id && "text-white"
+                        }`}
+                    >
+                        <button
                             type="button"
+                            aria-controls="aboutTabContent"
+                            onClick={() => handleTabClick(tab.id)}
                             key={tab.id}
                             id={tab.id}
-                            onClick={() => handleTabClick(tab.id)}
-                            aria-controls="aboutTabContent"
-                            variants={tabControlVariants}
-                            initial="unSelected"
-                            animate={currentTab === tab.id ? "selected" : "unSelected"}
-                            transition={{ type: "spring", damping: 12, mass: 0.5 }}
-                            className="inline-block px-[13.5px] -my-px -mx-0.5 lg:px-6 py-2 lg:py-3 text-sm dark:!text-white font-semibold rounded-full hover:cursor-pointer"
+                            className="relative z-[2] hover:cursor-pointer font-semibold ark:!text-white"
                         >
                             {tab.title}
-                        </motion.button>
-                    </li>
+                        </button>
+                        {currentTab === tab.id ? (
+                            <motion.div
+                                layoutId="underline"
+                                transition={spring}
+                                className="absolute z-[1] w-full h-full top-0 left-0 right-0 rounded-full bg-primary"
+                            />
+                        ) : null}
+                    </motion.li>
                 ))}
             </ul>
             <div id="aboutTabContent">
