@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { BackToTop } from "../components/BackToTop";
 import "../../styles/globals.css";
 import "../../styles/utilities.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -9,6 +10,7 @@ function MyApp({ Component, pageProps }) {
     return getLayout(
         <>
             <Component {...pageProps} />
+            <BackToTop />
         </>,
     );
 }
