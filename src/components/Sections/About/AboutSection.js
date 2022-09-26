@@ -9,12 +9,12 @@ export const AboutSection = ({ data }) => {
     return (
         <section id="about" className="bg-white dark:bg-primary-darkest py-[80px] lg:py-[120px]">
             <div className="container lg:grid grid-cols-12 gap-x-12">
-                <div className="col-span-5 relative rounded-lg overflow-hidden min-h-[300px] lg:max-h-[747px]">
+                <div className="col-span-5 relative rounded-lg overflow-hidden min-h-[300px] lg:max-h-[691px]">
                     <Image
                         src={aboutMe}
-                        className={"object-cover object-left rounded-lg overflow-hidden"}
+                        className={"h-full object-cover object-left rounded-lg overflow-hidden"}
                         alt=""
-                        height={747}
+                        height={691}
                         width={446}
                     />
                 </div>
