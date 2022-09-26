@@ -12,7 +12,7 @@ export const AboutSection = ({ data }) => {
                 <div className="col-span-5 relative rounded-lg overflow-hidden min-h-[300px] lg:max-h-[747px]">
                     <Image
                         src={aboutMe}
-                        className={"h-full object-cover object-left rounded-lg overflow-hidden"}
+                        className={"object-cover object-left rounded-lg overflow-hidden"}
                         alt=""
                         height={747}
                         width={446}
