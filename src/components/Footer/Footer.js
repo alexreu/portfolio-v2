@@ -24,6 +24,12 @@ const socialLinks = [
         url: "https://www.linkedin.com/in/alexandre-adolphe-817059146/",
         icon: "linkedin",
     },
+    {
+        id: id(),
+        title: "Profil freelance malt",
+        url: "https://www.malt.fr/profile/alexandreadolphe",
+        icon: "person-workspace",
+    },
 ];
 export const Footer = () => {
     return (
