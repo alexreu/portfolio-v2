@@ -12,12 +12,12 @@ const socialLinks = [
         url: "mailto:alexandre.adolphepro@gmail.com",
         icon: "envelope",
     },
-    {
-        id: id(),
-        title: "06.92.15.06.79",
-        url: "tel:+262692150679",
-        icon: "phone",
-    },
+    // {
+    //     id: id(),
+    //     title: "06.92.15.06.79",
+    //     url: "tel:+262692150679",
+    //     icon: "phone",
+    // },
     {
         id: id(),
         title: "Linkedin",
