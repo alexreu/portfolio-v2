@@ -24,24 +24,29 @@ export const AboutTab = ({ navTabsContent }) => {
                 {navTabsContent.map(tab => {
                     const { id, title } = tab;
                     return (
-                        <motion.li key={id} className={`relative text-sm ${currentTab === id && "text-white"}`}>
+                        <motion.li key={id} className={`relative text-sm`}>
                             <button
                                 type="button"
                                 aria-controls={id}
                                 onClick={() => handleTabClick(id)}
                                 key={id}
                                 id={id}
-                                className="relative z-[2] px-[13.5px] -my-px -mx-0.5 lg:px-6 py-3 lg:py-3 hover:cursor-pointer font-semibold dark:!text-white"
+                                className={`relative z-[2] px-[13.5px] -my-px -mx-0.5 lg:px-6 py-3 lg:py-3 rounded-full transition-200
+                                hover:cursor-pointer hover:text-primary dark:hover:text-primary font-semibold dark:text-white outline-0 focus:text-primary dark:focus:text-primary ${
+                                    currentTab === id
+                                        ? "text-white hover:text-tertiary dark:hover:text-tertiary dark:focus:text-white focus:text-white"
+                                        : ""
+                                }`}
                             >
                                 {title}
                             </button>
-                            {currentTab === id ? (
+                            {currentTab === id && (
                                 <motion.div
                                     layoutId="background"
                                     transition={spring}
                                     className="absolute z-[1] w-full h-full top-0 left-0 right-0 rounded-full bg-primary"
                                 />
-                            ) : null}
+                            )}
                         </motion.li>
                     );
                 })}
