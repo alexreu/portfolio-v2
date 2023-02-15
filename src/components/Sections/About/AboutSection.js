@@ -6,6 +6,7 @@ import { SectionSubtitle } from "../../SectionSubtitle";
 import aboutMe from "../../../../public/images/about-me.jpg";
 
 export const AboutSection = ({ data }) => {
+    const experience = new Date().getFullYear() - 2020;
     return (
         <section id="about" className="bg-white dark:bg-primary-darkest py-[80px] lg:py-[120px]">
             <div className="container lg:grid grid-cols-12 gap-x-12">
@@ -27,7 +28,7 @@ export const AboutSection = ({ data }) => {
                         À propos de moi
                     </Heading>
                     <p className="text-gray dark:text-dark-body text-lg leading-8 font-light font-main">
-                        Développeur front depuis 3 ans spécialisé dans l’intégration web et la création d’applications
+                        Développeur front depuis {experience} ans spécialisé dans l’intégration web et la création d’applications
                         web avec ReactJs.
                         <br />
                         Je serais ravi de vous accompagner dans le développement de votre projet.

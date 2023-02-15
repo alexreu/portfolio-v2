@@ -12,12 +12,6 @@ const socialLinks = [
         url: "mailto:alexandre.adolphepro@gmail.com",
         icon: "envelope",
     },
-    // {
-    //     id: id(),
-    //     title: "06.92.15.06.79",
-    //     url: "tel:+262692150679",
-    //     icon: "phone",
-    // },
     {
         id: id(),
         title: "Linkedin",
@@ -32,6 +26,7 @@ const socialLinks = [
     },
 ];
 export const Footer = () => {
+    const currentYear = new Date().getFullYear();
     return (
         <footer className={styles.footer} id="contact">
             <div className="container">
@@ -62,7 +57,7 @@ export const Footer = () => {
                 </div>
                 <div className="mt-8 py-4 text-center border-t border-lighter font-light text-primary-light">
                     <p className="flex items-center justify-center landscape:flex-row lgd:flex-col gap-2">
-                        <span>© Copyright AlexDevLab 2022</span>
+                        <span>© Copyright AlexDevLab {currentYear}</span>
                         <span className="lgd:hidden">-</span>
                         <span>
                             Créer et conçu par <strong>AlexDevLab</strong>. Tous droits reservés
