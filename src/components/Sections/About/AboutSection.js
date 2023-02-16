@@ -6,7 +6,7 @@ import { SectionSubtitle } from "../../SectionSubtitle";
 import aboutMe from "../../../../public/images/about-me.jpg";
 
 export const AboutSection = ({ data }) => {
-    const experience = new Date().getFullYear() - 2020;
+    const experience = new Date().getFullYear() - 2019;
     return (
         <section id="about" className="bg-white dark:bg-primary-darkest py-[80px] lg:py-[120px]">
             <div className="container lg:grid grid-cols-12 gap-x-12">
