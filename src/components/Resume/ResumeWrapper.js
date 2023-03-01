@@ -20,11 +20,9 @@ export const ResumeWrapper = ({ data }) => {
                     <i className="bi bi-printer-fill"></i>
                     <span className="sr-only">Imprimer le cv</span>
                 </Button>
-                <Link href="/">
-                    <a className={styles.resumeActionButton}>
+                <Link href="/" className={styles.resumeActionButton}>
                         <i className="bi bi-arrow-left"></i>
                         <span className="sr-only">Retourner au portfolio</span>
-                    </a>
                 </Link>
             </div>
         </div>
