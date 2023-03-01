@@ -60,7 +60,7 @@ export const Footer = () => {
                         <span>© Copyright AlexDevLab {currentYear}</span>
                         <span className="lgd:hidden">-</span>
                         <span>
-                            Créer et conçu par <strong>AlexDevLab</strong>. Tous droits reservés
+                            Créer et conçu par <strong>AlexDevLab</strong>. Tous droits reservés.
                         </span>
                     </p>
                 </div>
