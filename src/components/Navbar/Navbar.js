@@ -107,19 +107,17 @@ export const Navbar = () => {
             } flex items-center justify-between z-[9999] w-full min-h-[64px] px-8 xl:px-16 transition-all duration-300 ease-in-out`}
         >
             <Link href="/#home" className="inline-flex items-center">
-
-                    <Image
-                        src={
-                            (scroll && colorTheme === "light") || pathname !== "/"
-                                ? "/images/logo-text-dark.png"
-                                : "/images/logo-text-white.png"
-                        }
-                        alt="logo"
-                        width={scroll ? 120 : 140}
-                        height={scroll ? 60 : 80}
-                    />
-                    <span className="sr-only">retour en haut de la page</span>
-
+                <Image
+                    src={
+                        (scroll && colorTheme === "light") || pathname !== "/"
+                            ? "/images/logo-text-dark.png"
+                            : "/images/logo-text-white.png"
+                    }
+                    alt="logo"
+                    width={scroll ? 120 : 140}
+                    height={scroll ? 60 : 80}
+                />
+                <span className="sr-only">retour en haut de la page</span>
             </Link>
             <BurgerButton onClick={handleToggleMenu} style={scroll ? "text-black dark:text-white" : "text-white"} />
             <nav
@@ -167,7 +165,7 @@ export const Navbar = () => {
                         </Button>
                     </li>
                     <li className="inline-flex items-center">
-                        <a
+                        <Link
                             href="#contact"
                             onClick={handleMenuItemClick}
                             className={`btn btn-default ${
@@ -181,7 +179,7 @@ export const Navbar = () => {
                             }`}
                         >
                             Contact
-                        </a>
+                        </Link>
                     </li>
                 </ul>
             </nav>
