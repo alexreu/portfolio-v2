@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Footer.module.css";
-import Image from "next/future/image";
+import Image from "next/image";
 import { SocialLink } from "../SocialLink";
 import { id } from "../../modules/idGenerator";
 import contactUs from "../../../public/images/contact-us.jpg";

@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/future/image";
+import Image from "next/image";
 import { AboutTab } from "../../AboutTab";
 import { Heading } from "../../Heading";
 import { SectionSubtitle } from "../../SectionSubtitle";

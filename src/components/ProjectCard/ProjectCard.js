@@ -1,6 +1,6 @@
 import React from "react";
 import { Heading } from "../Heading";
-import Image from "next/future/image";
+import Image from "next/image";
 import styles from "./ProjectCard.module.css";
 
 export const ProjectCard = ({ title, subtitle, link, picture }) => {
