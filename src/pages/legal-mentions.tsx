@@ -1,13 +1,12 @@
-import { ThemeProvider } from "../modules/theme";
+import { getInitialTheme, ThemeProvider } from "../modules/theme";
 import Layout from "../components/Layout/Layout";
-import confidentialityPolicy from "./confidentiality-policy";
 
 const legalMentions = () => {
     return <section className="h-screen bg-dark"></section>;
 };
 
 legalMentions.getLayout = page => (
-    <ThemeProvider>
+    <ThemeProvider initialTheme={getInitialTheme()}>
         <Layout title="Mentions légales">{page}</Layout>
     </ThemeProvider>
 );

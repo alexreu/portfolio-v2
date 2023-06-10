@@ -11,7 +11,10 @@ export const BackToTop = () => {
         });
 
         return () => {
-            document.removeEventListener("scroll", () => {});
+            document.removeEventListener("scroll", () => {
+                const scrollCheck = window.scrollY > 120;
+                if (scrollCheck !== showBackToTopButton) setShowBackToTopButton(scrollCheck);
+            });
         };
     });
 

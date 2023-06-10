@@ -1,6 +1,16 @@
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext, FC, ReactNode } from "react";
 
-const getInitialTheme = () => {
+
+interface ThemeContextProps {
+    theme: string;
+    setTheme: (theme: string) => void | null;
+}
+
+interface ThemeProviderProps {
+    initialTheme: string;
+    children: ReactNode;
+}
+export const getInitialTheme = () => {
     if (typeof window === "object") {
         const storedPrefs = window?.localStorage.getItem("color-theme");
 
@@ -17,9 +27,9 @@ const getInitialTheme = () => {
     }
 };
 
-export const ThemeContext = createContext();
+export const ThemeContext = createContext<ThemeContextProps>({theme: getInitialTheme(), setTheme: null});
 
-export const ThemeProvider = ({ initialTheme, children }) => {
+export const ThemeProvider: FC<ThemeProviderProps> = ({ initialTheme, children }) => {
     const [theme, setTheme] = useState(getInitialTheme);
 
     const rawSetTheme = rawTheme => {

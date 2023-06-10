@@ -4,7 +4,7 @@ import { getDirectoryPath } from "../modules/getDirectoryPath/getDirectoryPath";
 import ressourceType from "../enums/RessourceType";
 import { getJsonContent } from "../modules/getJsonContent/getJsonContent";
 import Layout from "../components/Layout/Layout";
-import { ThemeProvider } from "../modules/theme";
+import { getInitialTheme, ThemeProvider } from "../modules/theme";
 
 const Index = ({ about, services, projects }) => {
     return (
@@ -18,7 +18,7 @@ const Index = ({ about, services, projects }) => {
 };
 
 Index.getLayout = page => (
-    <ThemeProvider>
+    <ThemeProvider initialTheme={getInitialTheme()}>
         <Layout title="Developpeur Front-End" className="mt-auto font-main">
             {page}
         </Layout>

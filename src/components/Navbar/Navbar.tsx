@@ -56,7 +56,7 @@ export const Navbar = () => {
             document.removeEventListener("scroll", onScroll);
             window.removeEventListener("resize", onWindowResize);
         };
-    }, [scroll, openMenu, underlineItem]);
+    }, [scroll, openMenu, underlineItem, theme]);
 
     const handleToggleMenu = () => {
         const {
@@ -166,7 +166,7 @@ export const Navbar = () => {
                     </li>
                     <li className="inline-flex items-center">
                         <Link
-                            href="#contact"
+                            href="/#contact"
                             onClick={handleMenuItemClick}
                             className={`btn btn-default ${
                                 scroll
