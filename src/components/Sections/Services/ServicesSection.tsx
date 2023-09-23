@@ -1,10 +1,15 @@
-import React from "react";
+import React, { FC } from "react";
 import { SectionWrapper } from "../../SectionWrapper";
 import { Heading } from "../../Heading";
 import { SectionSubtitle } from "../../SectionSubtitle";
 import { ServiceCard } from "../../ServiceCard";
 import { id } from "../../../modules/idGenerator";
-export const ServicesSection = ({ services }) => {
+
+type ServicesSectionProps = {
+    services: { icon: string; title: string; description: string }[];
+};
+
+export const ServicesSection: FC<ServicesSectionProps> = ({ services }) => {
     return (
         <SectionWrapper id="services">
             <div className="container text-center">

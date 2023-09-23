@@ -1,8 +1,12 @@
-import React from "react";
+import React, { FC } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-export const AboutTabItem = ({ item }) => {
-    const [{ content }] = item || {};
+type AboutTabItemProps = {
+    item?: { id: string; title: string; content: [{ title: string; description: string }] }[];
+};
+
+export const AboutTabItem: FC<AboutTabItemProps> = ({ item }) => {
+    const [{ content }] = item ?? [];
     return (
         <motion.ul layoutId="about" className="pt-5 space-y-4 overflow-hidden font-main">
             {content &&

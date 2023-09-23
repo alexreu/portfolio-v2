@@ -1,8 +1,14 @@
 import { Heading } from "../Heading";
 import { SectionSubtitle } from "../SectionSubtitle";
 import styles from "./SectionHead.module.css";
+import { FC, HTMLAttributes } from "react";
 
-export const SectionHead = ({ title, subtitle, children }) => {
+type SectionHead = {
+    title: string;
+    subtitle?: string;
+} & HTMLAttributes<HTMLElement>;
+
+export const SectionHead: FC<SectionHead> = ({ title, subtitle, children }) => {
     return (
         <>
             {subtitle && <SectionSubtitle>{subtitle}</SectionSubtitle>}

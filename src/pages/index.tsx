@@ -6,7 +6,13 @@ import { getJsonContent } from "../modules/getJsonContent/getJsonContent";
 import Layout from "../components/Layout/Layout";
 import { getInitialTheme, ThemeProvider } from "../modules/theme";
 
-const Index = ({ about, services, projects }) => {
+type IndexProps = {
+    about: { id: string; title: string }[];
+    services: { icon: string; title: string; description: string }[];
+    projects: { title: string; subtitle: string; picture: string; link: { title: string; url: string } }[];
+};
+
+const Index = ({ about, services, projects }: IndexProps) => {
     return (
         <>
             <HomeSection />

@@ -1,10 +1,14 @@
-import React from "react";
+import React, { FC } from "react";
 import { SectionWrapper } from "../../SectionWrapper";
 import { SectionHead } from "../../SectionHead";
 import { ProjectCard } from "../../ProjectCard";
 import { id } from "../../../modules/idGenerator";
 
-export const PortfolioSection = ({ projects }) => {
+type PortfolioSectionProps = {
+    projects: { title: string; subtitle: string; picture: string; link: { title: string; url: string } }[];
+};
+
+export const PortfolioSection: FC<PortfolioSectionProps> = ({ projects }) => {
     return (
         <SectionWrapper id="portfolio" type="dark">
             <div className="container text-center">

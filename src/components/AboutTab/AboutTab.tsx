@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { motion } from "framer-motion";
 import { AboutTabItem } from "../AboutTabItem";
 
-export const AboutTab = ({ navTabsContent }) => {
+type AboutTabProps = {
+    navTabsContent: { id: string; title: string; content: [{ title: string; description: string }] }[];
+};
+
+export const AboutTab: FC<AboutTabProps> = ({ navTabsContent }) => {
     const [currentTab, setCurrentTab] = useState("skills");
 
     const handleTabClick = tabId => {
@@ -52,7 +56,7 @@ export const AboutTab = ({ navTabsContent }) => {
                 })}
             </ul>
             <div id={currentTab}>
-                <AboutTabItem item={navTabsContent.filter(e => e.id === currentTab)} />
+                <AboutTabItem item={navTabsContent.filter(content => content.id === currentTab)} />
             </div>
         </div>
     );
