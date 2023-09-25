@@ -1,7 +1,16 @@
-import React from "react";
+import React, { FC } from "react";
 import Link from "next/link";
 
-export const MenuItem = ({ anchor, label, scroll, isUnderline, onClick, pathName }) => {
+type MenuItemProps = {
+    anchor: string;
+    label: string;
+    scroll: boolean;
+    isUnderline: boolean;
+    onClick: () => void;
+    pathName: string;
+};
+
+export const MenuItem: FC<MenuItemProps> = ({ anchor, label, scroll, isUnderline, onClick, pathName }) => {
     return (
         <li
             key={anchor}

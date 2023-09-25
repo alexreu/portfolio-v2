@@ -11,18 +11,21 @@ const socialLinks = [
         title: "alexandre.adolphepro@gmail.com",
         url: "mailto:alexandre.adolphepro@gmail.com",
         icon: "envelope",
+        isPage: false,
     },
     {
         id: id(),
         title: "Linkedin",
         url: "https://www.linkedin.com/in/alexandre-adolphe-817059146/",
         icon: "linkedin",
+        isPage: false,
     },
     {
         id: id(),
         title: "Profil freelance malt",
         url: "https://www.malt.fr/profile/alexandreadolphe",
         icon: "person-workspace",
+        isPage: false,
     },
 ];
 export const Footer = () => {

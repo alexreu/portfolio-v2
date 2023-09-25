@@ -1,9 +1,15 @@
-import React from "react";
+import React, { FC, HTMLAttributes } from "react";
 import Head from "next/head";
 import { Footer } from "../Footer";
 import { Navbar } from "../Navbar";
 
-function Layout({ showNavbar = true, showFooter = true, title, children, ...props }) {
+type LayoutProps = {
+    showNavbar?: boolean;
+    showFooter?: boolean;
+    title: string;
+} & HTMLAttributes<HTMLElement>;
+
+export const Layout: FC<LayoutProps> = ({ showNavbar = true, showFooter = true, title, children, ...props }) => {
     return (
         <>
             <Head>
@@ -16,6 +22,4 @@ function Layout({ showNavbar = true, showFooter = true, title, children, ...prop
             {showFooter && <Footer />}
         </>
     );
-}
-
-export default Layout;
+};

@@ -29,7 +29,7 @@ export const Navbar = () => {
             const scrollCheck = window.scrollY > 120;
             const visibleSection = navContent.find(section => {
                 const bounding = document.querySelector(`section#${section.anchor}`)?.getClientRects();
-                const [{ bottom }] = bounding ?? [{}];
+                const [{ bottom }] = bounding ?? [];
                 if (bottom >= 64) {
                     return section;
                 }
@@ -133,7 +133,7 @@ export const Navbar = () => {
                 >
                     <li className="xl:hidden">
                         <Button
-                            type="button"
+                            typeof="button"
                             style="flex items-center justify-center xl:hidden ml-auto"
                             onClick={handleToggleMenu}
                         >
@@ -144,7 +144,7 @@ export const Navbar = () => {
                     <li className="inline-flex items-center">
                         <Button
                             onClick={toggleTheme}
-                            type="button"
+                            typeof="button"
                             style={`${
                                 scroll
                                     ? "text-black dark:text-white"

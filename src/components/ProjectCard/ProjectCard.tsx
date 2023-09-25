@@ -1,15 +1,23 @@
-import React from "react";
+import React, { FC, HTMLAttributes } from "react";
 import { Heading } from "../Heading";
 import Image from "next/image";
 import styles from "./ProjectCard.module.css";
 
-export const ProjectCard = ({ title, subtitle, link, picture }) => {
+type ProjectCardProps = {
+    title: string;
+    subtitle: string;
+    link: { url: string; title: string };
+    picture: string;
+} & HTMLAttributes<HTMLLinkElement> &
+    HTMLAttributes<HTMLAnchorElement>;
+
+export const ProjectCard: FC<ProjectCardProps> = ({ title, subtitle, link, picture, ...props }) => {
     const { url, title: linkTitle } = link;
     const IMAGE_DIR_PREFIX = "/images/projects/";
     const IMAGE_EXTENSION = ".png";
 
     return (
-        <a href={url} target="_blank" rel="noreferrer noopener" className="group">
+        <a href={url} target="_blank" rel="noreferrer noopener" className="group" {...props}>
             <div
                 className={`${styles.projectCard} flex items-center min-h-[500px] w-full relative z-0 p-10 overflow-hidden  transform 
                 transition-all duration-300 ease-in-out group-hover:cursor-pointer group-hover:before:opacity-0 group-hover:after:opacity-100

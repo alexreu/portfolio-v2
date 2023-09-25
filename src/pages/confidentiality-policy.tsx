@@ -1,5 +1,5 @@
 import { Heading } from "../components/Heading";
-import Layout from "../components/Layout/Layout";
+import { Layout } from "../components/Layout";
 import { ThemeProvider } from "../modules/theme";
 import { SectionWrapper } from "../components/SectionWrapper";
 import { SectionHead } from "../components/SectionHead";

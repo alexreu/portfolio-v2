@@ -1,7 +1,7 @@
 import React, { FC, HTMLAttributes } from "react";
 
 type ButtonProps = {
-    style: string;
+    style?: string;
 } & HTMLAttributes<HTMLButtonElement>;
 export const Button: FC<ButtonProps> = ({ style, children, ...props }) => {
     return (
