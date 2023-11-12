@@ -3,7 +3,7 @@ import { AboutSection, HomeSection, PortfolioSection, ServicesSection } from "..
 import { getDirectoryPath } from "../modules/getDirectoryPath/getDirectoryPath";
 import ressourceType from "../enums/RessourceType";
 import { getJsonContent } from "../modules/getJsonContent/getJsonContent";
-import Layout from "../components/Layout/Layout";
+import { Layout } from "../components/Layout";
 import { getInitialTheme, ThemeProvider } from "../modules/theme";
 
 type IndexProps = {
