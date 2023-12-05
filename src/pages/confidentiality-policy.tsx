@@ -1,6 +1,6 @@
 import { Heading } from "../components/Heading";
 import { Layout } from "../components/Layout";
-import { ThemeProvider } from "../modules/theme";
+import { getInitialTheme, ThemeProvider } from "../modules/theme";
 import { SectionWrapper } from "../components/SectionWrapper";
 import { SectionHead } from "../components/SectionHead";
 import { Button } from "../components/Button";
@@ -98,7 +98,7 @@ const confidentialityPolicy = () => {
 };
 
 confidentialityPolicy.getLayout = page => (
-    <ThemeProvider>
+    <ThemeProvider initialTheme={getInitialTheme()}>
         <Layout title="Politique de confidentialité">{page}</Layout>
     </ThemeProvider>
 );

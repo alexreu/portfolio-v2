@@ -1,5 +1,5 @@
 import { getInitialTheme, ThemeProvider } from "../modules/theme";
-import Layout from "../components/Layout/Layout";
+import { Layout } from "../components/Layout";
 
 const legalMentions = () => {
     return <section className="h-screen bg-dark"></section>;

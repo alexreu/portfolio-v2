@@ -3,7 +3,7 @@ import { ResumeWrapper } from "../components/Resume";
 import ressourceType from "../enums/RessourceType";
 import { getDirectoryPath } from "../modules/getDirectoryPath/getDirectoryPath";
 import { getJsonContent } from "../modules/getJsonContent/getJsonContent";
-import Layout from "../components/Layout/Layout";
+import { Layout } from "../components/Layout";
 import { Loader } from "../components/Loader";
 
 const Resume = ({ about }) => {

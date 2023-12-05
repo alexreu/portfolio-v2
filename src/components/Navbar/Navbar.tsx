@@ -29,7 +29,8 @@ export const Navbar = () => {
             const scrollCheck = window.scrollY > 120;
             const visibleSection = navContent.find(section => {
                 const bounding = document.querySelector(`section#${section.anchor}`)?.getClientRects();
-                const [{ bottom }] = bounding ?? [];
+                const bottom = bounding?.[0]?.bottom;
+
                 if (bottom >= 64) {
                     return section;
                 }

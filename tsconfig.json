@@ -5,10 +5,10 @@
       "dom.iterable",
       "esnext"
     ],
+    "target": "ES2015",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
-    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "incremental": true,
     "esModuleInterop": true,

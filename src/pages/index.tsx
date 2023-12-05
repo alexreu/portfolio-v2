@@ -3,11 +3,11 @@ import { AboutSection, HomeSection, PortfolioSection, ServicesSection } from "..
 import { getDirectoryPath } from "../modules/getDirectoryPath/getDirectoryPath";
 import ressourceType from "../enums/RessourceType";
 import { getJsonContent } from "../modules/getJsonContent/getJsonContent";
-import Layout from "../components/Layout/Layout";
+import { Layout } from "../components/Layout";
 import { getInitialTheme, ThemeProvider } from "../modules/theme";
 
 type IndexProps = {
-    about: { id: string; title: string }[];
+    about: { id: string; title: string; content: [{ title: string; description: string }] }[];
     services: { icon: string; title: string; description: string }[];
     projects: { title: string; subtitle: string; picture: string; link: { title: string; url: string } }[];
 };

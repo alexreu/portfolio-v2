@@ -6,7 +6,7 @@ import { SectionSubtitle } from "../../SectionSubtitle";
 import aboutMe from "../../../../public/images/about-me.jpg";
 
 type AboutSectionProps = {
-    data: { id: string; title: string }[];
+    data: { id: string; title: string; content: [{ title: string; description: string }] }[];
 };
 
 export const AboutSection: FC<AboutSectionProps> = ({ data }) => {

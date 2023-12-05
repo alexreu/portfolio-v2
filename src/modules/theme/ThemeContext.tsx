@@ -1,39 +1,37 @@
 import { useState, useEffect, createContext, FC, ReactNode } from "react";
 
-
 interface ThemeContextProps {
     theme: string;
-    setTheme: (theme: string) => void | null;
+    setTheme: (theme: string) => void;
 }
 
 interface ThemeProviderProps {
     initialTheme: string;
     children: ReactNode;
 }
+
 export const getInitialTheme = () => {
-    if (typeof window === "object") {
-        const storedPrefs = window?.localStorage.getItem("color-theme");
-
-        if (typeof storedPrefs === "string") {
-            return storedPrefs;
-        }
-        const userMedia = window.matchMedia("(prefers-color-scheme: dark)");
-
-        if (userMedia.matches) {
-            return "dark";
-        }
-
-        return "light";
+    if (typeof window !== "undefined") {
+        const storedPrefs = window.localStorage.getItem("color-theme");
+        return typeof storedPrefs === "string"
+            ? storedPrefs
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
     }
+    return "light";
 };
 
-export const ThemeContext = createContext<ThemeContextProps>({theme: getInitialTheme(), setTheme: null});
+export const ThemeContext = createContext<ThemeContextProps>({
+    theme: "light",
+    setTheme: () => "light",
+});
 
 export const ThemeProvider: FC<ThemeProviderProps> = ({ initialTheme, children }) => {
-    const [theme, setTheme] = useState(getInitialTheme);
+    const [theme, setTheme] = useState(() => getInitialTheme());
 
-    const rawSetTheme = rawTheme => {
-        const root = window.document.documentElement;
+    const rawSetTheme = (rawTheme: string) => {
+        const root = document.documentElement;
         const isDark = rawTheme === "dark";
 
         root.classList.remove(isDark ? "light" : "dark");
@@ -42,13 +40,15 @@ export const ThemeProvider: FC<ThemeProviderProps> = ({ initialTheme, children }
         localStorage.setItem("color-theme", rawTheme);
     };
 
-    if (initialTheme) {
-        rawSetTheme(initialTheme);
-    }
-
     useEffect(() => {
         rawSetTheme(theme);
     }, [theme]);
+
+    useEffect(() => {
+        if (initialTheme) {
+            rawSetTheme(initialTheme);
+        }
+    }, [initialTheme]);
 
     return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
 };
