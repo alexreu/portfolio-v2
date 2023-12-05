@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { BackToTop } from "../components/BackToTop";
 import "../../styles/globals.css";
