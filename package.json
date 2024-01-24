@@ -14,7 +14,8 @@
     "framer-motion": "^7.10.3",
     "next": "^14.0.3",
     "react": "^18.2.0",
-    "react-aria": "^3.30.0",
+    "react-aria": "^3.31.1",
+    "react-aria-components": "^1.0.1",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
