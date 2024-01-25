@@ -1,9 +1,8 @@
 import React, { ReactNode } from "react";
 import { Metadata } from "next";
+import { Providers } from "./providers";
 
 import "../styles/globals.css";
-import { ThemeProvider, getInitialTheme } from "../src/modules/theme";
-
 //TODO - Continue migration page router -> app router
 
 export const metadata: Metadata = {
@@ -34,12 +33,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
     return (
-        <html lang="fr">
-            {/*<ThemeProvider initialTheme={getInitialTheme()}>*/}
+        <html lang="fr" suppressHydrationWarning>
             <body>
-                <main>{children}</main>
+                <Providers>{children}</Providers>
             </body>
-            {/*</ThemeProvider>*/}
         </html>
     );
 }
