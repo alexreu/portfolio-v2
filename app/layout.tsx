@@ -6,13 +6,6 @@ import { ThemeProvider, getInitialTheme } from "../src/modules/theme";
 
 //TODO - Continue migration page router -> app router
 
-type Props = {
-    children: ReactNode;
-    about: object;
-    services: object;
-    projects: object;
-};
-
 export const metadata: Metadata = {
     title: "Alexandre Adolphe - AlexDevLab | Developpeur front île de la réunion 🏝️",
     description:
@@ -39,7 +32,7 @@ export const metadata: Metadata = {
     },
 };
 
-export default function RootLayout({ children }: Props) {
+export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="fr">
             {/*<ThemeProvider initialTheme={getInitialTheme()}>*/}
