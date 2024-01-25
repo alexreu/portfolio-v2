@@ -1,4 +1,4 @@
-import { HomeSection } from "../src/components/Sections";
+import { HomeSection, AboutSection, ServicesSection, PortfolioSection } from "../src/components/Sections";
 import React, { Suspense } from "react";
 import ressourceType from "../src/enums/RessourceType";
 import { getDirectoryPath } from "../src/modules/getDirectoryPath/getDirectoryPath";
@@ -23,9 +23,9 @@ export default async function Index() {
         <Suspense fallback={"Loading ..."}>
             <main>
                 <HomeSection />
-                {/*<AboutSection data={about} />*/}
-                {/*<ServicesSection services={services} />*/}
-                {/*<PortfolioSection projects={projects} />*/}
+                <AboutSection data={data.about} />
+                <ServicesSection services={data.services} />
+                <PortfolioSection projects={data.projects} />
             </main>
         </Suspense>
     );
