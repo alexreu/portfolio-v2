@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, createContext, FC, ReactNode } from "react";
 
 interface ThemeContextProps {

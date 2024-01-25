@@ -2,8 +2,17 @@ import React, { ReactNode } from "react";
 import { Metadata } from "next";
 
 import "../styles/globals.css";
+import { ThemeProvider, getInitialTheme } from "../src/modules/theme";
 
 //TODO - Continue migration page router -> app router
+
+type Props = {
+    children: ReactNode;
+    about: object;
+    services: object;
+    projects: object;
+};
+
 export const metadata: Metadata = {
     title: "Alexandre Adolphe - AlexDevLab | Developpeur front île de la réunion 🏝️",
     description:
@@ -30,10 +39,14 @@ export const metadata: Metadata = {
     },
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: Props) {
     return (
         <html lang="fr">
-            <body>{children}</body>
+            {/*<ThemeProvider initialTheme={getInitialTheme()}>*/}
+            <body>
+                <main>{children}</main>
+            </body>
+            {/*</ThemeProvider>*/}
         </html>
     );
 }
