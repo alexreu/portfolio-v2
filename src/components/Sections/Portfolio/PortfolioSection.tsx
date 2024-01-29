@@ -6,7 +6,7 @@ import { SectionHead } from "../../SectionHead";
 import { ProjectCard } from "../../ProjectCard";
 import { id } from "../../../modules/idGenerator";
 
-type PortfolioSectionProps = {
+export type PortfolioSectionProps = {
     projects: { title: string; subtitle: string; picture: string; link: { title: string; url: string } }[];
 };
 

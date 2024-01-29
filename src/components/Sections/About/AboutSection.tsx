@@ -7,7 +7,7 @@ import { Heading } from "../../Heading";
 import { SectionSubtitle } from "../../SectionSubtitle";
 import aboutMe from "../../../../public/images/about-me.jpg";
 
-type AboutSectionProps = {
+export type AboutSectionProps = {
     data: { id: string; title: string; content: [{ title: string; description: string }] }[];
 };
 

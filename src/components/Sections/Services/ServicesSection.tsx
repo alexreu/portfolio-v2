@@ -6,7 +6,7 @@ import { SectionSubtitle } from "../../SectionSubtitle";
 import { ServiceCard } from "../../ServiceCard";
 import { id } from "../../../modules/idGenerator";
 
-type ServicesSectionProps = {
+export type ServicesSectionProps = {
     services: { icon: string; title: string; description: string }[];
 };
 
