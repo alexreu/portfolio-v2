@@ -1,7 +1,7 @@
-enum RessourceType {
+enum ResourceType {
     ABOUT = "about",
     SERVICES = "services",
     PROJECTS = "projects",
 }
 
-export default RessourceType;
+export default ResourceType;

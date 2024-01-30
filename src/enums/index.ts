@@ -1,3 +1,3 @@
-import RessourceType from "./RessourceType";
+import ResourceType from "./ResourceType";
 
-export { RessourceType };
+export { ResourceType };

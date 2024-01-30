@@ -1,10 +1,10 @@
 import { getDirectoryPath } from "../../modules/getDirectoryPath/getDirectoryPath";
 import { promises as fs } from "fs";
-import { RessourceType } from "../../enums";
+import { ResourceType } from "../../enums";
 
 const handler = async (req, res) => {
     const jsonDirectory = getDirectoryPath("json");
-    const fileContent = await fs.readFile(`${jsonDirectory}/${RessourceType.ABOUT}.json`, "utf-8");
+    const fileContent = await fs.readFile(`${jsonDirectory}/${ResourceType.ABOUT}.json`, "utf-8");
     res.status(200).json(fileContent);
 };
 

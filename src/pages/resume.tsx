@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ResumeWrapper } from "../components/Resume";
-import ressourceType from "../enums/RessourceType";
+import ressourceType from "../enums/ResourceType";
 import { getDirectoryPath } from "../modules/getDirectoryPath/getDirectoryPath";
 import { getJsonContent } from "../modules/getJsonContent/getJsonContent";
 import { Layout } from "../components/Layout";

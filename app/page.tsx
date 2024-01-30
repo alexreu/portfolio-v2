@@ -1,4 +1,4 @@
-import ressourceType from "../src/enums/RessourceType";
+import ressourceType from "../src/enums/ResourceType";
 import { getDirectoryPath } from "../src/modules/getDirectoryPath/getDirectoryPath";
 import { getJsonContent } from "../src/modules/getJsonContent/getJsonContent";
 import { AboutSection, PortfolioSection, ServicesSection } from "../src/components/Sections";
