@@ -1,8 +1,8 @@
 import { promises as fs } from "fs";
 import { RessourceType } from "../../enums";
-import { AboutSectionProps, PortfolioSectionProps, ServicesSectionProps } from "../../components/Sections";
+import { AboutData, ProjectsData, ServicesData } from "../../../app/page";
 
-type SectionData = AboutSectionProps | ServicesSectionProps | PortfolioSectionProps;
+type SectionData = AboutData | ProjectsData | ServicesData;
 
 export const getJsonContent = async (jsonDirectory: string, ressourceType: RessourceType): Promise<SectionData> => {
     try {

@@ -1,16 +1,16 @@
 "use client";
 
-import React, { FC } from "react";
+import React from "react";
 import { SectionWrapper } from "../../SectionWrapper";
 import { SectionHead } from "../../SectionHead";
 import { ProjectCard } from "../../ProjectCard";
 import { id } from "../../../modules/idGenerator";
 
-export type PortfolioSectionProps = {
-    projects: { title: string; subtitle: string; picture: string; link: { title: string; url: string } }[];
+export type Props = {
+    data: { title: string; subtitle: string; picture: string; link: { title: string; url: string } }[];
 };
 
-export const PortfolioSection: FC<PortfolioSectionProps> = ({ projects }) => {
+export const PortfolioSection = ({ data }: Props) => {
     return (
         <SectionWrapper id="portfolio" type="dark">
             <div className="container text-center">
@@ -19,7 +19,7 @@ export const PortfolioSection: FC<PortfolioSectionProps> = ({ projects }) => {
                     durant ces dernières années.
                 </SectionHead>
                 <ul className="md:grid grid-cols-2 lg:grid-cols-3 gap-8 mdd:space-y-8 mt-10">
-                    {projects.map(project => {
+                    {data.map(project => {
                         const { title, subtitle, picture, link } = project;
                         return (
                             <li key={id()}>

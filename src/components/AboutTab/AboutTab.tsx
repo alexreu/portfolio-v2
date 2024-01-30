@@ -8,8 +8,8 @@ type AboutTabProps = {
 
 export const AboutTab: FC<AboutTabProps> = ({ navTabsContent }) => {
     const [currentTab, setCurrentTab] = useState("skills");
-
-    const handleTabClick = tabId => {
+    console.log({ navTabsContent });
+    const handleTabClick = (tabId: string) => {
         setCurrentTab(tabId);
     };
 

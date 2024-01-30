@@ -1,16 +1,17 @@
 "use client";
-import React, { FC } from "react";
+import React from "react";
 import { SectionWrapper } from "../../SectionWrapper";
 import { Heading } from "../../Heading";
 import { SectionSubtitle } from "../../SectionSubtitle";
 import { ServiceCard } from "../../ServiceCard";
 import { id } from "../../../modules/idGenerator";
+import { ServicesData } from "../../../../app/page";
 
-export type ServicesSectionProps = {
-    services: { icon: string; title: string; description: string }[];
+export type Props = {
+    data: { icon: string; title: string; description: string }[];
 };
 
-export const ServicesSection: FC<ServicesSectionProps> = ({ services }) => {
+export const ServicesSection = ({ data }: Props) => {
     return (
         <SectionWrapper id="services">
             <div className="container text-center">
@@ -26,7 +27,7 @@ export const ServicesSection: FC<ServicesSectionProps> = ({ services }) => {
                     réalisation de votre projet.
                 </p>
                 <ul className="md:grid grid-cols-2 lg:grid-cols-3 gap-8 mdd:space-y-6 mt-10">
-                    {services.map(({ icon, title, description }) => (
+                    {data.map(({ icon, title, description }) => (
                         <li key={id()}>
                             <ServiceCard icon={icon} title={title} description={description} />
                         </li>

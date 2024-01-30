@@ -1,17 +1,17 @@
 "use client";
 
-import React, { FC } from "react";
+import React from "react";
 import Image from "next/image";
 import { AboutTab } from "../../AboutTab";
 import { Heading } from "../../Heading";
 import { SectionSubtitle } from "../../SectionSubtitle";
 import aboutMe from "../../../../public/images/about-me.jpg";
 
-export type AboutSectionProps = {
+export type Props = {
     data: { id: string; title: string; content: [{ title: string; description: string }] }[];
 };
 
-export const AboutSection: FC<AboutSectionProps> = ({ data }) => {
+export const AboutSection = ({ data }: Props) => {
     const experience = new Date().getFullYear() - 2019;
     return (
         <section id="about" className="bg-white dark:bg-primary-darkest py-[80px] lg:py-[120px]">
