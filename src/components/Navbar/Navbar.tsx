@@ -18,10 +18,10 @@ const navContent = [
 export const Navbar = () => {
     const { pathname } = useRouter();
     const { theme, setTheme } = useContext(ThemeContext);
-    const [scroll, setScroll] = useState(false);
-    const [openMenu, setOpenMenu] = useState(false);
-    const [underlineItem, setUnderlineItem] = useState(null);
-    const [colorTheme, setColorTheme] = useState("dark");
+    const [scroll, setScroll] = useState<boolean>(false);
+    const [openMenu, setOpenMenu] = useState<boolean>(false);
+    const [underlineItem, setUnderlineItem] = useState<string | null>(null);
+    const [colorTheme, setColorTheme] = useState<string>("dark");
 
     useEffect(() => {
         setColorTheme(theme);
@@ -78,21 +78,6 @@ export const Navbar = () => {
         }
     };
 
-    const navList = navContent.map(navItem => {
-        const { anchor, label } = navItem;
-        return (
-            <MenuItem
-                onClick={handleMenuItemClick}
-                anchor={anchor}
-                label={label}
-                scroll={scroll}
-                key={anchor}
-                pathName={pathname}
-                isUnderline={anchor !== "home" && anchor === underlineItem}
-            />
-        );
-    });
-
     const toggleTheme = () => {
         setColorTheme(theme === "light" ? "dark" : "light");
         setTheme(theme === "light" ? "dark" : "light");
@@ -141,7 +126,20 @@ export const Navbar = () => {
                             <i className="bi bi-x text-[35px] dark:text-white" />
                         </Button>
                     </li>
-                    {navList}
+                    {navContent.map(navItem => {
+                        const { anchor, label } = navItem;
+                        return (
+                            <MenuItem
+                                onClick={handleMenuItemClick}
+                                anchor={anchor}
+                                label={label}
+                                scroll={scroll}
+                                key={anchor}
+                                pathName={pathname}
+                                isUnderline={anchor !== "home" && anchor === underlineItem}
+                            />
+                        );
+                    })}
                     <li className="inline-flex items-center">
                         <Button
                             onClick={toggleTheme}

@@ -1,1 +1,3 @@
-export * from "./HomeSection";
+import { HomeSection } from "./HomeSection";
+
+export { HomeSection };

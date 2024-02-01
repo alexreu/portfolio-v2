@@ -1,1 +1,3 @@
-export * from "./AboutSection";
+import { AboutSection } from "./AboutSection";
+
+export { AboutSection };

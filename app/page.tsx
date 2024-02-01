@@ -1,9 +1,8 @@
 import ressourceType from "../src/enums/ResourceType";
 import { getDirectoryPath } from "../src/modules/getDirectoryPath/getDirectoryPath";
 import { getJsonContent } from "../src/modules/getJsonContent/getJsonContent";
-import { AboutSection, PortfolioSection, ServicesSection } from "../src/components/Sections";
+import { AboutSection, PortfolioSection, ServicesSection, HomeSection } from "../src/components/Sections";
 import { Suspense } from "react";
-import { HomeSection } from "../src/components/Sections";
 
 export type AboutResource = { id: string; title: string; content: [{ title: string; description: string }] };
 export type ProjectResource = {

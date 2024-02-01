@@ -1,1 +1,3 @@
-export * from "./PortfolioSection";
+import { PortfolioSection } from "./PortfolioSection";
+
+export { PortfolioSection };
