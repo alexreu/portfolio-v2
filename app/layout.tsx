@@ -35,7 +35,11 @@ export const metadata: Metadata = {
     },
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+type Props = {
+    children: ReactNode;
+};
+
+export default function RootLayout({ children }: Props) {
     return (
         <html lang="fr" suppressHydrationWarning>
             <body>

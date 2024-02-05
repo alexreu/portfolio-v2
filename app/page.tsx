@@ -3,6 +3,8 @@ import { getDirectoryPath } from "../src/modules/getDirectoryPath/getDirectoryPa
 import { getJsonContent } from "../src/modules/getJsonContent/getJsonContent";
 import { AboutSection, PortfolioSection, ServicesSection, HomeSection } from "../src/components/Sections";
 import { Suspense } from "react";
+import { Navbar } from "../src/components/Navbar";
+import { Footer } from "../src/components/Footer";
 
 export type AboutResource = { id: string; title: string; content: [{ title: string; description: string }] };
 export type ProjectResource = {
@@ -32,12 +34,14 @@ export default async function Index() {
     const { about, services, projects } = await getData();
     return (
         <Suspense fallback={"Loading ..."}>
+            <Navbar />
             <main>
                 <HomeSection />
                 <AboutSection data={about} />
                 <ServicesSection data={services} />
                 <PortfolioSection data={projects} />
             </main>
+            <Footer />
         </Suspense>
     );
 }

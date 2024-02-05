@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { ThemeContext } from "../../modules/theme";
 import styles from "./Navbar.module.css";
 import { BurgerButton } from "../BurgerButton";
