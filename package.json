@@ -10,6 +10,9 @@
     "ts-lint": "tsc --noEmit --incremental"
   },
   "dependencies": {
+    "@mdi/js": "^7.4.47",
+    "@mdi/react": "^1.6.1",
+    "@pictogrammers/memory": "^1.5.0",
     "bootstrap-icons": "^1.11.2",
     "framer-motion": "^7.10.3",
     "next": "^14.0.3",

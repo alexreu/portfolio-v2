@@ -1,9 +1,11 @@
-import React from "react";
+import React, { HTMLAttributes } from "react";
 import { Button } from "../Button";
 
-export const BurgerButton = ({ onClick, style }) => {
+type Props = HTMLAttributes<HTMLButtonElement>;
+
+export const BurgerButton = ({ className, ...props }: Props) => {
     return (
-        <Button onClick={onClick} typeof="button" style={`flex items-center relative xl:hidden p-1 ${style}`}>
+        <Button typeof="button" className={`flex items-center relative xl:hidden p-1 ${className}`} {...props}>
             <i className="bi bi-list text-[35px]" />
             <span className="sr-only">Ouvrir le menu</span>
         </Button>
