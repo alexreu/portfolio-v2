@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
-import { ThemeContext } from "../../modules/theme";
+import { usePathname } from "next/navigation";
 import styles from "./Navbar.module.css";
 import { BurgerButton } from "../BurgerButton";
 import { Button } from "../Button";
@@ -11,7 +10,7 @@ import { MenuItem } from "../MenuItem";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import Icon from "@mdi/react";
-import { mdiWeatherNight, mdiLightbulbOnOutline } from "@mdi/js";
+import { mdiWeatherNight, mdiLightbulbOnOutline,  mdiClose } from "@mdi/js";
 
 const navContent = [
     { label: "Accueil", anchor: "home" },
@@ -21,23 +20,22 @@ const navContent = [
 ];
 
 export const Navbar = () => {
-    const router = useRouter();
     const pathname = usePathname();
     const { theme, setTheme } = useTheme();
     const [scroll, setScroll] = useState<boolean>(false);
     const [openMenu, setOpenMenu] = useState<boolean>(false);
     const [underlineItem, setUnderlineItem] = useState<string | null>(null);
-    const [colorTheme, setColorTheme] = useState<string>("dark");
 
     useEffect(() => {
-        setColorTheme(theme);
+        theme ? setTheme(theme) : setTheme("light");
+
         const onScroll = () => {
             const scrollCheck = window.scrollY > 120;
             const visibleSection = navContent.find(section => {
                 const bounding = document.querySelector(`section#${section.anchor}`)?.getClientRects();
                 const bottom = bounding?.[0]?.bottom;
 
-                if (bottom >= 64) {
+                if (bottom && bottom >= 64) {
                     return section;
                 }
             });
@@ -85,16 +83,19 @@ export const Navbar = () => {
     };
 
     const toggleTheme = () => {
-        setColorTheme(theme === "light" ? "dark" : "light");
         setTheme(theme === "light" ? "dark" : "light");
     };
 
-    const headerClasses = scroll
-        ? `${styles.headerSticky} fixed top-0 bg-white dark:bg-primary-darkest shadow-lg`
-        : `absolute top-0 ${pathname === "/" ? "bg-transparent" : "bg-white dark:bg-primary-darkest"}`;
+    const headerClasses = useMemo(() => {
+        if(scroll || window.scrollY > 120) {
+            return `${styles.headerSticky} fixed top-0 bg-white dark:bg-primary-darkest shadow-lg`
+        } else {
+            return `absolute top-0 ${pathname === "/" ? "bg-transparent" : "bg-white dark:bg-primary-darkest"}`
+        }
+    }, [pathname, scroll])
 
     const logoSrc =
-        (scroll && colorTheme === "light") || pathname !== "/"
+        (scroll && theme === "light") || pathname !== "/"
             ? "/images/logo-text-dark.png"
             : "/images/logo-text-white.png";
 
@@ -111,7 +112,7 @@ export const Navbar = () => {
         >
             <Link href="/#home" className="inline-flex items-center">
                 <Image src={logoSrc} alt="logo" width={scroll ? 120 : 140} height={scroll ? 60 : 80} />
-                <span className="sr-only">retour en haut de la page</span>
+                <span className="sr-only">retourner à accueil</span>
             </Link>
             <BurgerButton onClick={handleToggleMenu} className={burgerButtonClasses} />
             <nav role="navigation" aria-label="navigation-principal" className={`${navClasses} ${styles.mobilePopUp}`}>
@@ -119,13 +120,14 @@ export const Navbar = () => {
                     className="flex xld:flex-col xl:justify-end items-stretch xld:z-[9999] landscape:gap-y-1 xld:gap-y-3 xl:gap-x-16
                 xld:overflow-hidden xl:px-4 xld:bg-white xld:dark:bg-primary-darkest xl:min-h-[64px] xld:px-4 text-[22px] transition-200"
                 >
-                    <li className="xl:hidden">
+                    <li className="xl:hidden pt-3">
                         <Button
                             typeof="button"
-                            className="flex items-center justify-center xl:hidden ml-auto"
+                            className="flex items-center justify-center ml-auto p-1 rounded-full transition-all ease-in-out duration-200 hover:bg-[#9aa0a6]/[.157] focus-visible:bg-[#9aa0a6]/[.157] focus-visible:ring focus-visible:ring-primary focus-visible:outline-none"
                             onClick={handleToggleMenu}
                         >
-                            <i className="bi bi-x text-[35px] dark:text-white" />
+                            <Icon path={mdiClose} size="24px" className="dark:fill-white" />
+                            <span className="sr-only">fermer le menu mobile</span>
                         </Button>
                     </li>
                     {navContent.map(navItem => {
@@ -154,14 +156,8 @@ export const Navbar = () => {
                             ) : (
                                 <Icon path={mdiLightbulbOnOutline} size={1} />
                             )}
-
-                            <i
-                                className={`bi-${
-                                    colorTheme === "dark" ? "sun" : "moon-stars"
-                                } font-medium text-lg transition-200`}
-                            />
                             <span className="sr-only">
-                                {colorTheme === "dark" ? "activer le theme clair" : "activer le theme sombre"}
+                                {theme === "light" ? "activer le theme sombre" : "activer le theme clair"}
                             </span>
                         </Button>
                     </li>

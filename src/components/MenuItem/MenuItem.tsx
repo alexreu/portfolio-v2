@@ -28,7 +28,7 @@ export const MenuItem = ({ anchor, label, scroll, isUnderline, onClick, pathName
                 className={`${linkClasses} custom-underline inline-flex items-center h-full gap-x-4 font-medium text-base dark:hover:text-primary hover:text-primary 
             dark:focus:text-primary focus:text-primary`}
             >
-                <span>{label}</span>
+                {label}
             </Link>
         </li>
     );
