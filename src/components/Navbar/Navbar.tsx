@@ -61,7 +61,7 @@ export const Navbar = () => {
             document.removeEventListener("scroll", onScroll);
             window.removeEventListener("resize", onWindowResize);
         };
-    }, [scroll, openMenu, underlineItem, theme]);
+    }, [scroll, openMenu, underlineItem, theme, setTheme]);
 
     const handleToggleMenu = () => {
         const {

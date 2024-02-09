@@ -5,7 +5,6 @@ import { Heading } from "../../Heading";
 import { SectionSubtitle } from "../../SectionSubtitle";
 import { ServiceCard } from "../../ServiceCard";
 import { id } from "../../../modules/idGenerator";
-import { ServicesData } from "../../../../app/page";
 
 export type Props = {
     data: { icon: string; title: string; description: string }[];
