@@ -33,14 +33,14 @@ export const ServicesSection = () => {
                         <ServiceCard
                             icon={<Wallpaper size={42} className="stroke-primary" />}
                             title="Intégration web"
-                            description="Intégration web à partir de vos maquettes avec HTML / CSS / JavaScript."
+                            description="Intégration web à partir de vos maquettes en HTML / CSS / JavaScript."
                         />
                     </li>
                     <li>
                         <ServiceCard
                             icon={<MousePointerSquare size={42} className="stroke-primary" />}
                             title="Création de site vitrine"
-                            description="Création de votre site vitrine avec NextJs / Headless CMS."
+                            description="Création de votre site vitrine sous NextJs / Headless CMS."
                         />
                     </li>
                     <li>
