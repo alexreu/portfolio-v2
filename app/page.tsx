@@ -4,6 +4,8 @@ import { getJsonContent } from "../src/modules/getJsonContent/getJsonContent";
 import { AboutSection, PortfolioSection, ServicesSection, HomeSection } from "../src/components/Sections";
 import { Navbar } from "../src/components/Navbar";
 import { Footer } from "../src/components/Footer";
+import { BackToTop } from "../src/components/BackToTop";
+import React from "react";
 
 export type AboutResource = { id: string; title: string; content: [{ title: string; description: string }] };
 export type ProjectResource = {
@@ -42,6 +44,7 @@ export default async function Page() {
                 <PortfolioSection data={projects} />
             </main>
             <Footer />
+            <BackToTop />
         </>
     );
 }

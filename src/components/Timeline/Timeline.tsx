@@ -19,7 +19,7 @@ export const Timeline = ({ data }) => {
                                 {date && <span className="ml-2 text-yellow-resume">{date}</span>}
                             </Heading>
                         )}
-                        {data.id === "experiences" && <p>{description}</p>}
+                        {(data.id === "experiences" || data.id === "education") && <p>{description}</p>}
                     </li>
                 );
             })}

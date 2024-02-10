@@ -2,12 +2,13 @@ import React from "react";
 import styles from "./Resume.module.css";
 import { Heading } from "../Heading";
 import Image from "next/image";
+import { Home, Send, Link as LinkIcon, Gamepad2, Music, Dumbbell, CarFront } from "lucide-react";
 
 const ResumeLeftSide = () => {
     return (
         <div className={styles.resumeLeftSide}>
             <div className={styles.resumeLeftSideProfilPictureWrapper}>
-                <Image src="/images/resume-photo.png" width={150} height={150} alt="" className="w-full h-auto" />
+                <Image src="/images/resume-photo.png" width={150} height={150} alt="" className="h-auto w-full" />
             </div>
             <Heading variant="h1" className={styles.resumeLeftSideName}>
                 Alexandre ADOLPHE
@@ -22,19 +23,19 @@ const ResumeLeftSide = () => {
                 <ul className={styles.resumeLeftSideContactList}>
                     <li>
                         <span>
-                            <i className="bi bi-send-fill"></i>
+                            <Send size={14} className="stroke-yellow-resume" />
                         </span>
                         <p>alexandre.adolphepro@gmail.com</p>
                     </li>
                     <li>
                         <span>
-                            <i className="bi bi-house-door-fill"></i>
+                            <Home size={14} className="stroke-yellow-resume" />
                         </span>
                         <p>Sainte Suzanne</p>
                     </li>
                     <li>
                         <span>
-                            <i className="bi bi-terminal-fill"></i>
+                            <LinkIcon size={14} className="stroke-yellow-resume" />
                         </span>
                         <p>www.alexdevlab.com</p>
                     </li>
@@ -57,25 +58,25 @@ const ResumeLeftSide = () => {
                 <ul className={styles.resumeLeftSideOtherList}>
                     <li>
                         <span>
-                            <i className="bi bi-controller"></i>
+                            <Gamepad2 size={16} className="stroke-yellow-resume" />
                         </span>
                         Jeux video
                     </li>
                     <li>
                         <span>
-                            <i className="bi bi-music-note-beamed"></i>
+                            <Music size={16} className="stroke-yellow-resume" />
                         </span>
-                        Guitare
+                        Musique
                     </li>
                     <li>
                         <span>
-                            <i className="bi bi-bicycle"></i>
+                            <Dumbbell size={16} className="stroke-yellow-resume" />
                         </span>
                         Sports
                     </li>
                     <li>
                         <span>
-                            <i className="bi bi-car-front"></i>
+                            <CarFront size={16} className="stroke-yellow-resume" />
                         </span>
                         Permis & Véhicule
                     </li>

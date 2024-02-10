@@ -2,7 +2,7 @@
     &Wrapper {
         @apply flex items-center justify-center relative;
         @apply w-screen h-screen p-5 overflow-hidden;
-        @apply bg-background-dark-light font-sub;
+        @apply bg-background-dark-light print:bg-white font-sub;
     }
     &ActionButton {
         @apply inline-flex items-center p-4 rounded-full;
@@ -88,15 +88,6 @@
         &Heading {
             @apply flex items-center justify-between flex-row-reverse;
             @apply pl-[22px];
-            & h2 {
-                @apply w-full ml-[22px] pl-4 py-2;
-                @apply text-white bg-dark-resume uppercase;
-                @apply rounded-tl-lg rounded-bl-lg
-            }
-            & i {
-                @apply inline-flex items-center;
-                @apply text-[40px] text-yellow-resume;
-            }
         }
         & section {
             @apply flex flex-col h-full;

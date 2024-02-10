@@ -3,10 +3,7 @@ import { Metadata } from "next";
 import { Providers } from "./providers";
 
 import "../styles/globals.css";
-import { BackToTop } from "../src/components/BackToTop";
 import { Poppins, Inter, Montserrat } from "next/font/google";
-
-//TODO - Continue migration page router -> app router
 
 type Props = {
     children: ReactNode;
@@ -68,10 +65,7 @@ export default function RootLayout({ children }: Props) {
             suppressHydrationWarning
         >
             <body>
-                <Providers>
-                    {children}
-                    <BackToTop />
-                </Providers>
+                <Providers>{children}</Providers>
             </body>
         </html>
     );

@@ -1,9 +1,8 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { ResumeWrapper } from "../../src/components/Resume";
 import ressourceType from "../../src/enums/ResourceType";
 import { getDirectoryPath } from "../../src/modules/getDirectoryPath/getDirectoryPath";
 import { getJsonContent } from "../../src/modules/getJsonContent/getJsonContent";
-import { Loader } from "../../src/components/Loader";
 import { AboutResource, ProjectResource, ServicesResource } from "../page";
 
 const getData = async () => {
@@ -20,9 +19,5 @@ const getData = async () => {
 export default async function Page() {
     const { about } = await getData();
 
-    return (
-        <Suspense fallback={<Loader />}>
-            <ResumeWrapper data={about} />
-        </Suspense>
-    );
+    return <ResumeWrapper data={about} />;
 }
