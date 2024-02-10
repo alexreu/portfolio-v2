@@ -2,7 +2,6 @@ import ressourceType from "../src/enums/ResourceType";
 import { getDirectoryPath } from "../src/modules/getDirectoryPath/getDirectoryPath";
 import { getJsonContent } from "../src/modules/getJsonContent/getJsonContent";
 import { AboutSection, PortfolioSection, ServicesSection, HomeSection } from "../src/components/Sections";
-import { Suspense } from "react";
 import { Navbar } from "../src/components/Navbar";
 import { Footer } from "../src/components/Footer";
 
@@ -30,18 +29,19 @@ const getData = async () => {
 };
 
 // eslint-disable-next-line @next/next/no-async-client-component
-export default async function Index() {
-    const { about, services, projects } = await getData();
+export default async function Page() {
+    const { about, projects } = await getData();
+
     return (
-        <Suspense fallback={"Loading ..."}>
+        <>
             <Navbar />
             <main>
                 <HomeSection />
                 <AboutSection data={about} />
-                <ServicesSection data={services} />
+                <ServicesSection />
                 <PortfolioSection data={projects} />
             </main>
             <Footer />
-        </Suspense>
+        </>
     );
 }

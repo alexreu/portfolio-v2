@@ -11,9 +11,9 @@ module.exports = {
             center: true,
         },
         fontFamily: {
-            main: ["Poppins", "sans-serif"],
-            sub: ["Cookie", "sans-serif"],
-            montserrat: ["Montserrat", "sans-serif"],
+            main: ["var(--font-poppins)", "sans-serif"],
+            sub: ["var(--font-inter)", "sans-serif"],
+            montserrat: ["var(--font-montserrat)", "sans-serif"],
         },
         colors: {
             primary: "#FD4766",
@@ -46,6 +46,7 @@ module.exports = {
             "grey-dark": "#191919",
             "grey-light": "#E6E6E6",
             "border-dark": "rgba(255,255,255,0.2)",
+            current: "currentColor",
         },
         extend: {
             screens: {

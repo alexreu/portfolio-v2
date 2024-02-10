@@ -36,7 +36,7 @@ const ResumeLeftSide = () => {
                         <span>
                             <i className="bi bi-terminal-fill"></i>
                         </span>
-                        <p>www.alexandreadolphe.com</p>
+                        <p>www.alexdevlab.com</p>
                     </li>
                 </ul>
             </section>

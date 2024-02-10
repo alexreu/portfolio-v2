@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { motion } from "framer-motion";
 import styles from "./Loader.module.css";
@@ -5,8 +7,8 @@ import styles from "./Loader.module.css";
 export const Loader = () => {
     return (
         <div className={styles.loaderWrapper}>
-            <h1 className="mb-6 text-[50px] text-white font-main font-bold tracking-widest">Alex Developpement</h1>
-            <div className="flex items-center justify-center h-[100px] w-[100px]">
+            <h1 className="mb-6 font-main text-[50px] font-bold tracking-widest text-white">Alex DevLab</h1>
+            <div className="flex h-[100px] w-[100px] items-center justify-center">
                 <motion.div
                     className={styles.loader}
                     initial={{ opacity: 1, width: 0, height: 0 }}
@@ -16,7 +18,7 @@ export const Loader = () => {
                     }}
                 ></motion.div>
             </div>
-            <span className="mt-6 text-white font-bold uppercase text-lg tracking-widest font-main">
+            <span className="mt-6 font-main text-lg font-bold uppercase tracking-widest text-white">
                 Chargement en cours...
             </span>
         </div>

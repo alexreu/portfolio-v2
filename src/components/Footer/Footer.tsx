@@ -2,64 +2,57 @@ import React from "react";
 import styles from "./Footer.module.css";
 import Image from "next/image";
 import { SocialLink } from "../SocialLink";
-import { id } from "../../modules/idGenerator";
 import contactUs from "../../../public/images/contact-us.jpg";
+import { SendHorizontal, CircleUser, Linkedin } from "lucide-react";
 
-const socialLinks = [
-    {
-        id: id(),
-        title: "alexandre.adolphepro@gmail.com",
-        url: "mailto:alexandre.adolphepro@gmail.com",
-        icon: "envelope",
-        isPage: false,
-    },
-    {
-        id: id(),
-        title: "Linkedin",
-        url: "https://www.linkedin.com/in/alexandre-adolphe-817059146/",
-        icon: "linkedin",
-        isPage: false,
-    },
-    {
-        id: id(),
-        title: "Profil freelance malt",
-        url: "https://www.malt.fr/profile/alexandreadolphe",
-        icon: "person-workspace",
-        isPage: false,
-    },
-];
 export const Footer = () => {
     const currentYear = new Date().getFullYear();
     return (
-        <footer className={styles.footer} id="contact">
+        <footer className="bg-black py-8 font-main" id="contact">
             <div className="container">
-                <div className="lg:grid grid-cols-2 gap-10">
+                <div className="grid-cols-2 gap-10 lg:grid">
                     <div className={styles.footerPictureWrapper}>
                         <Image
                             src={contactUs}
                             alt=""
-                            className={styles.footerPicture}
+                            className="absolute bottom-0 left-0 h-full w-full object-cover object-center"
                             priority={true}
                             width={549}
                             height={350}
                         />
-                        <div className={styles.footerPictureContent}>
+                        <div className="relative z-10 w-full text-2xl text-white text-opacity-75 lg:text-4xl">
                             Restons en <span className="font-semibold">contact !</span>
                         </div>
                     </div>
-                    <ul className={styles.footerSocialList}>
-                        {socialLinks.map(link => {
-                            const { id, title, icon, url, isPage } = link;
-                            return (
-                                <li key={id}>
-                                    <SocialLink icon={icon} title={title} url={url} isPage={isPage} />
-                                </li>
-                            );
-                        })}
+                    <ul className="col-span-1 flex flex-col justify-center gap-8">
+                        <li>
+                            <SocialLink
+                                icon={<SendHorizontal />}
+                                title="alexandre.adolphepro@gmail.com"
+                                url="mailto:alexandre.adolphepro@gmail.com"
+                                isPage={false}
+                            />
+                        </li>
+                        <li>
+                            <SocialLink
+                                icon={<Linkedin />}
+                                title="Linkedin"
+                                url="https://www.linkedin.com/in/alexandre-adolphe-817059146/"
+                                isPage={false}
+                            />
+                        </li>
+                        <li>
+                            <SocialLink
+                                icon={<CircleUser />}
+                                title="Profil freelance malt"
+                                url="https://www.malt.fr/profile/alexandreadolphe"
+                                isPage={false}
+                            />
+                        </li>
                     </ul>
                 </div>
-                <div className="mt-8 py-4 text-center border-t border-lighter font-light text-primary-light">
-                    <p className="flex items-center justify-center landscape:flex-row lgd:flex-col gap-2">
+                <div className="mt-8 border-t border-lighter py-4 text-center font-light text-primary-light">
+                    <p className="flex items-center justify-center gap-2 lgd:flex-col landscape:flex-row">
                         <span>© Copyright AlexDevLab {currentYear}</span>
                         <span className="lgd:hidden">-</span>
                         <span>

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { ChevronUp } from "lucide-react";
 
 export const BackToTop = () => {
     const [showBackToTopButton, setShowBackToTopButton] = useState(false);
@@ -36,13 +37,16 @@ export const BackToTop = () => {
 
     return (
         <motion.button
-            className={`fixed inline-flex items-center z-[999] bottom-[30px] right-[30px] p-3 bg-primary text-white rounded-full border-2 border-primary transition-all duration-200 ease-in-out hover:bg-white hover:border-primary hover:text-primary`}
+            className={`group fixed bottom-[30px] right-[30px] z-[999] inline-flex items-center rounded-full border-2 border-primary bg-primary p-3 text-white transition-all duration-200 ease-in-out hover:border-primary hover:bg-white hover:text-primary`}
             onClick={handleClick}
             variants={variants}
             initial="initial"
             animate={showBackToTopButton ? "animate" : "initial"}
         >
-            <i className="bi bi-chevron-up inline-flex items-center"></i>
+            <ChevronUp
+                size={24}
+                className="stroke-white transition duration-200 ease-in-out group-hover:stroke-primary"
+            />
             <span className="sr-only">Retourner en haut</span>
         </motion.button>
     );

@@ -1,4 +1,4 @@
-import { getDirectoryPath } from "../../modules/getDirectoryPath/getDirectoryPath";
+import { getDirectoryPath } from "../getDirectoryPath/getDirectoryPath";
 import { promises } from "fs";
 import { ResourceType } from "../../enums";
 const handler = async (req, res) => {

@@ -9,20 +9,20 @@ export const HomeSection = () => {
     return (
         <section id="home" className={styles.homeBackground}>
             <div className="container relative z-10">
-                <span className="inline-flex w-full mb-2 lg:mb-5 font-sub text-grey-light text-base uppercase opacity-70 tracking-[4px]">
+                <span className="mb-2 inline-flex w-full font-sub text-base uppercase tracking-[4px] text-grey-light opacity-70 lg:mb-5">
                     Freelance
                 </span>
                 <Heading
                     variant="h1"
-                    className="flex items-center flex-col text-white text-[30px] lg:text-[58px] lg:leading-[75px] font-montserrat font-black"
+                    className="inline-flex flex-col items-center gap-5 font-montserrat text-3xl font-black text-white lg:text-6xl"
                 >
                     <span className="w-full">Alex DevLab</span>
                     <span className="w-full text-primary">Developpeur JS.</span>
                 </Heading>
-                <p className="mt-5 mb-7 text-base lg:text-[54px] text-white font-main leading-none">
+                <p className="mb-7 mt-5 font-main text-base leading-none text-white lg:text-[54px]">
                     basé à la Réunion.
                 </p>
-                <Link href="/resume" className="lgd:hidden btn btn-default text-white border-grey-light">
+                <Link href="/resume" className="btn btn-default border-grey-light text-white lgd:hidden">
                     Voir mon cv
                 </Link>
             </div>

@@ -9,8 +9,7 @@ import { Button } from "../Button";
 import { MenuItem } from "../MenuItem";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import Icon from "@mdi/react";
-import { mdiWeatherNight, mdiLightbulbOnOutline,  mdiClose } from "@mdi/js";
+import { Sun, Moon, X } from "lucide-react";
 
 const navContent = [
     { label: "Accueil", anchor: "home" },
@@ -27,8 +26,6 @@ export const Navbar = () => {
     const [underlineItem, setUnderlineItem] = useState<string | null>(null);
 
     useEffect(() => {
-        theme ? setTheme(theme) : setTheme("light");
-
         const onScroll = () => {
             const scrollCheck = window.scrollY > 120;
             const visibleSection = navContent.find(section => {
@@ -87,12 +84,12 @@ export const Navbar = () => {
     };
 
     const headerClasses = useMemo(() => {
-        if(scroll || window.scrollY > 120) {
-            return `${styles.headerSticky} fixed top-0 bg-white dark:bg-primary-darkest shadow-lg`
+        if (scroll || (typeof window !== "undefined" && window.scrollY > 120)) {
+            return `${styles.headerSticky} fixed top-0 bg-white dark:bg-primary-darkest shadow-lg`;
         } else {
-            return `absolute top-0 ${pathname === "/" ? "bg-transparent" : "bg-white dark:bg-primary-darkest"}`
+            return `absolute top-0 ${pathname === "/" ? "bg-transparent" : "bg-white dark:bg-primary-darkest"}`;
         }
-    }, [pathname, scroll])
+    }, [pathname, scroll]);
 
     const logoSrc =
         (scroll && theme === "light") || pathname !== "/"
@@ -108,7 +105,7 @@ export const Navbar = () => {
     return (
         <header
             role="banner"
-            className={`${headerClasses} flex items-center justify-between z-[9999] w-full min-h-[64px] px-8 xl:px-16 transition-all duration-300 ease-in-out`}
+            className={`${headerClasses} z-[9999] flex min-h-[64px] w-full items-center justify-between px-8 transition-all duration-300 ease-in-out xl:px-16`}
         >
             <Link href="/#home" className="inline-flex items-center">
                 <Image src={logoSrc} alt="logo" width={scroll ? 120 : 140} height={scroll ? 60 : 80} />
@@ -117,16 +114,16 @@ export const Navbar = () => {
             <BurgerButton onClick={handleToggleMenu} className={burgerButtonClasses} />
             <nav role="navigation" aria-label="navigation-principal" className={`${navClasses} ${styles.mobilePopUp}`}>
                 <ul
-                    className="flex xld:flex-col xl:justify-end items-stretch xld:z-[9999] landscape:gap-y-1 xld:gap-y-3 xl:gap-x-16
-                xld:overflow-hidden xl:px-4 xld:bg-white xld:dark:bg-primary-darkest xl:min-h-[64px] xld:px-4 text-[22px] transition-200"
+                    className="transition-200 flex items-stretch text-[22px] xl:min-h-[64px] xl:justify-end xl:gap-x-16 xl:px-4
+                xld:z-[9999] xld:flex-col xld:gap-y-3 xld:overflow-hidden xld:bg-white xld:px-4 xld:dark:bg-primary-darkest landscape:gap-y-1"
                 >
-                    <li className="xl:hidden pt-3">
+                    <li className="pt-3 xl:hidden">
                         <Button
                             typeof="button"
-                            className="flex items-center justify-center ml-auto p-1 rounded-full transition-all ease-in-out duration-200 hover:bg-[#9aa0a6]/[.157] focus-visible:bg-[#9aa0a6]/[.157] focus-visible:ring focus-visible:ring-primary focus-visible:outline-none"
+                            className="ml-auto flex items-center justify-center rounded-full p-1 transition-all duration-200 ease-in-out hover:bg-[#9aa0a6]/[.157] focus-visible:bg-[#9aa0a6]/[.157] focus-visible:outline-none focus-visible:ring focus-visible:ring-primary"
                             onClick={handleToggleMenu}
                         >
-                            <Icon path={mdiClose} size="24px" className="dark:fill-white" />
+                            <X size={24} className="dark:fill-white" />
                             <span className="sr-only">fermer le menu mobile</span>
                         </Button>
                     </li>
@@ -148,14 +145,10 @@ export const Navbar = () => {
                         <Button
                             onClick={toggleTheme}
                             typeof="button"
-                            className={`${toggleThemeClasses} inline-flex items-center justify-center h-10 w-10 bg-transparent rounded-full transition-200 
+                            className={`${toggleThemeClasses} bg-transparent transition-200 inline-flex h-10 w-10 items-center justify-center rounded-full 
                             hover:cursor-pointer hover:bg-[#9aa0a6]/[.157] focus:cursor-pointer focus:bg-[#9aa0a6]/[.157]`}
                         >
-                            {theme === "light" ? (
-                                <Icon path={mdiWeatherNight} size={1} />
-                            ) : (
-                                <Icon path={mdiLightbulbOnOutline} size={1} />
-                            )}
+                            {theme === "light" ? <Moon size={24} /> : <Sun size={24} />}
                             <span className="sr-only">
                                 {theme === "light" ? "activer le theme sombre" : "activer le theme clair"}
                             </span>
@@ -167,7 +160,7 @@ export const Navbar = () => {
                             onClick={handleMenuItemClick}
                             className={`btn btn-default ${
                                 scroll
-                                    ? "text-grey-dark dark:text-white border-grey-light hover:text-white dark:hover:text-white focus:text-white dark:focus:text-white"
+                                    ? "border-grey-light text-grey-dark hover:text-white focus:text-white dark:text-white dark:hover:text-white dark:focus:text-white"
                                     : `text-grey-dark dark:text-white ${
                                           pathname === "/" ? "xl:text-white" : "xl:text-dark"
                                       } border-grey-light ${

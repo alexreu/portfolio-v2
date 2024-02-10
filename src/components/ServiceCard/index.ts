@@ -1,1 +1,3 @@
-export * from "./ServiceCard";
+import { ServiceCard } from "./ServiceCard";
+
+export { ServiceCard };

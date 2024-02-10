@@ -1,4 +1,4 @@
-import { getDirectoryPath } from "../../modules/getDirectoryPath/getDirectoryPath";
+import { getDirectoryPath } from "../getDirectoryPath/getDirectoryPath";
 import { promises as fs } from "fs";
 import { ResourceType } from "../../enums";
 

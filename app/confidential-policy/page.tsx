@@ -1,10 +1,10 @@
-import { Heading } from "../components/Heading";
-import { Layout } from "../components/Layout";
-import { getInitialTheme, ThemeProvider } from "../modules/theme";
-import { SectionWrapper } from "../components/SectionWrapper";
-import { SectionHead } from "../components/SectionHead";
-import { Button } from "../components/Button";
-import { CookiesTable } from "../components/CookiesTable";
+import { Heading } from "../../src/components/Heading";
+// import { Layout } from "../components/Layout";
+// import { getInitialTheme, ThemeProvider } from "../../src/modules/theme";
+import { SectionWrapper } from "../../src/components/SectionWrapper";
+import { SectionHead } from "../../src/components/SectionHead";
+import { Button } from "../../src/components/Button";
+import { CookiesTable } from "../../src/components/CookiesTable";
 
 const confidentialityPolicy = () => {
     return (
@@ -97,10 +97,10 @@ const confidentialityPolicy = () => {
     );
 };
 
-confidentialityPolicy.getLayout = page => (
-    <ThemeProvider initialTheme={getInitialTheme()}>
-        <Layout title="Politique de confidentialité">{page}</Layout>
-    </ThemeProvider>
-);
+// confidentialityPolicy.getLayout = page => (
+//     <ThemeProvider initialTheme={getInitialTheme()}>
+//         <Layout title="Politique de confidentialité">{page}</Layout>
+//     </ThemeProvider>
+// );
 
 export default confidentialityPolicy;
