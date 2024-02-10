@@ -1,8 +1,5 @@
 .footer {
-    @apply py-8 bg-black font-main;
-
     &Picture {
-        @apply object-cover object-center absolute left-0 bottom-0 w-full h-full;
         &Wrapper {
             @apply col-span-1 flex items-end justify-start relative;
             @apply min-h-[250px] lg:min-h-[350px] lg:-mt-[120px] lgd:mb-8 p-4 lg:p-12 overflow-hidden rounded-lg;
@@ -14,19 +11,5 @@
                 background: linear-gradient(to bottom, rgba(15, 15, 15, 0), rgba(15, 15, 15, 0.75) 100%);
             }
         }
-
-        &Content {
-            @apply w-full relative z-10 text-2xl lg:text-4xl text-white text-opacity-75;
-        }
-    }
-
-    &Social {
-
-        &List {
-            @apply flex flex-col justify-center col-span-1 gap-8;
-        }
-    }
-
-    &Copyright {
     }
 }

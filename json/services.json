@@ -1,34 +1,34 @@
 {
   "services": [
     {
-      "icon": "braces",
-      "title": "Développement front",
-      "description": "Création d'application web, avec NextJs / ReactJs."
+      "icon": "mdiCodeBraces",
+      "title": "<h1>Développement front</h1>",
+      "description": "Création d'application web avec NextJs."
     },
     {
-      "icon": "window",
+      "icon": "mdiMonitor",
       "title": "Intégration web",
       "description": "Intégration web à partir de vos maquettes avec HTML / CSS / JavaScript."
     },
     {
-      "icon": "wordpress",
+      "icon": "mdiReact",
       "title": "Création de site vitrine",
-      "description": "Création de votre site vitrine avec le cms Wordpress."
+      "description": "Création de votre site vitrine avec NextJs / Headless CMS."
     },
     {
-      "icon": "graph-up-arrow",
+      "icon": "mdiTrendingUp",
       "title": "SEO & Référencement naturel",
       "description": "Optimisation de la qualité de votre site web pour le référencement naturel."
     },
     {
-      "icon": "universal-access",
+      "icon": "mdiHuman",
       "title": "Accessibilités",
       "description": "Mise en place des bonnes pratiques pour un accès universel à votre site."
     },
     {
-      "icon": "layer-backward",
+      "icon": "mdiServer",
       "title": "Développement back",
-      "description": "Possibilités d'intervention sur le back-end de vos application (PHP / JavaScript)"
+      "description": "Possibilités d'intervention sur le back-end de vos application javascript"
     }
   ]
 }

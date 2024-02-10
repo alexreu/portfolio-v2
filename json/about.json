@@ -6,15 +6,11 @@
       "content": [
         {
           "title": "Front End - Javascript",
-          "description": "jQuery, AlpineJs, ReactJs, NextJs"
+          "description": "ReactJs, NextJs"
         },
         {
           "title": "Front End - CSS",
-          "description": "CSS3, SASS, Bootstrap, Tailwind"
-        },
-        {
-          "title": "Back End - PHP",
-          "description": "Laravel, Drupal"
+          "description": "CSS, SASS, Tailwind"
         },
         {
           "title": "Back End - Javascript",
@@ -39,11 +35,7 @@
           "description": "2018 - 2022"
         },
         {
-          "title": "Stage Colipays - Intégrateur",
-          "description": "2018"
-        },
-        {
-          "title": "Atout Pc's - Technicien informatique & réseau",
+          "title": "AtoutPc's - Technicien informatique",
           "description": "2015 - 2017"
         }
       ]
@@ -54,28 +46,19 @@
       "content": [
         {
           "title": "Bachelor CSI - niveau VI",
-          "description": "Concepteur de systèmes d'informations | 2019 - 2020",
-          "date": "2019 - 2020"
+          "description": "2019 - 2020"
         },
         {
           "title": "DWWW - niveau V",
-          "description": "Developpeur Web & Web Mobile | 2018 - 2019",
-          "date": "2018 - 2019"
-        },
-        {
-          "title": "Simplon Reunion - certification",
-          "description": "POEC Développeur Web | 2018",
-          "date": "2018"
+          "description": "2018 - 2019"
         },
         {
           "title": "CERT - niveau V",
-          "description": "Chargé d'Exploitation en Réseaux et Télécoms | 2015 - 2017",
-          "date": "2015 - 2017"
+          "description": "2015 - 2017"
         },
         {
           "title": "Baccalauréat STI2D - niveau IV",
-          "description": "Spécialité ITEC: Innovation Technologique et Éco-Conception | 2014",
-          "date": "2014"
+          "description": "2014"
         }
       ]
     },

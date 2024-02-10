@@ -3,6 +3,10 @@
 @import './components/Button.css';
 @import './components/Typography.css';
 
+/** Utilities **/
+@import './utilities.css';
+
 /** Other tailwind rules **/
 @tailwind components;
 @tailwind utilities;
+
