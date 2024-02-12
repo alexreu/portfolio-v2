@@ -8,10 +8,10 @@ import { SendHorizontal, CircleUser, Linkedin } from "lucide-react";
 export const Footer = () => {
     const currentYear = new Date().getFullYear();
     return (
-        <footer className="bg-black py-8 font-main" id="contact">
+        <footer className="font-main bg-black py-8" id="contact">
             <div className="container">
                 <div className="grid-cols-2 gap-10 lg:grid">
-                    <div className={styles.footerPictureWrapper}>
+                    {/* <div className={styles.footerPictureWrapper}>
                         <Image
                             src={contactUs}
                             alt=""
@@ -23,7 +23,7 @@ export const Footer = () => {
                         <div className="relative z-10 w-full text-2xl text-white text-opacity-75 lg:text-4xl">
                             Restons en <span className="font-semibold">contact !</span>
                         </div>
-                    </div>
+                    </div> */}
                     <ul className="col-span-1 flex flex-col justify-center gap-8">
                         <li>
                             <SocialLink
@@ -51,8 +51,8 @@ export const Footer = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="mt-8 border-t border-lighter py-4 text-center font-light text-primary-light">
-                    <p className="flex items-center justify-center gap-2 lgd:flex-col landscape:flex-row">
+                <div className="border-lighter text-primary-light mt-8 border-t py-4 text-center font-light">
+                    <p className="lgd:flex-col flex items-center justify-center gap-2 landscape:flex-row">
                         <span>© Copyright AlexDevLab {currentYear}</span>
                         <span className="lgd:hidden">-</span>
                         <span>

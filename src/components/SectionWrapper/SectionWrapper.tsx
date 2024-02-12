@@ -10,7 +10,7 @@ export const SectionWrapper: FC<SectionWrapper> = ({ type, className, id, childr
     const sectionColor =
         type === "dark" ? "bg-white dark:bg-primary-darkest" : "bg-background-light dark:bg-background-dark-light";
     return (
-        <section id={id} className={`py-[80px] lg:py-[120px] ${sectionColor} ${className}`}>
+        <section id={id} className={`py-20 lg:py-28 ${sectionColor} ${className}`}>
             {children}
         </section>
     );
