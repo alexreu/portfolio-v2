@@ -7,6 +7,8 @@ import { Footer } from "../src/components/Footer";
 import { BackToTop } from "../src/components/BackToTop";
 import React from "react";
 import { ParticlesContainer } from "@/components/particles-container";
+import { MousePointer } from "@/components/mouse-pointer";
+import { Home } from "@/components/home";
 
 export type AboutResource = { id: string; title: string; content: [{ title: string; description: string }] };
 export type ProjectResource = {
@@ -38,8 +40,13 @@ export default async function Page() {
     return (
         <>
             {/*<Navbar />*/}
-            <main className="h-screen w-screen overflow-hidden">
+            <main className="h-screen w-screen">
                 <ParticlesContainer />
+                <MousePointer />
+                <section className="container relative z-40 flex h-full w-full items-center justify-center overflow-auto px-32 py-32">
+                    <nav></nav>
+                    <Home />
+                </section>
                 {/*<HomeSection />*/}
                 {/*<AboutSection data={about} />*/}
                 {/*<ServicesSection />*/}

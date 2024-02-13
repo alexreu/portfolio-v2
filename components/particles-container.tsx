@@ -45,7 +45,7 @@ export const ParticlesContainer = () => {
                     density: {
                         enable: true,
                     },
-                    value: 80,
+                    value: 130,
                 },
                 opacity: {
                     value: 0.5,
