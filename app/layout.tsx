@@ -4,6 +4,7 @@ import { Providers } from "./providers";
 
 import "./globals.css";
 import { Poppins, Inter, Montserrat } from "next/font/google";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 type Props = {
     children: ReactNode;
@@ -65,7 +66,9 @@ export default function RootLayout({ children }: Props) {
             suppressHydrationWarning
         >
             <body>
-                <Providers>{children}</Providers>
+                <Providers>
+                    <AntdRegistry>{children}</AntdRegistry>
+                </Providers>
             </body>
         </html>
     );
