@@ -23,13 +23,13 @@ export const ParticlesContainer = () => {
         () => ({
             background: {
                 color: {
-                    value: "#000",
+                    value: "#0A090D",
                 },
             },
             fpsLimit: 120,
             particles: {
                 color: {
-                    value: "#f97316",
+                    value: "#FD4766",
                 },
                 move: {
                     direction: "bottom",

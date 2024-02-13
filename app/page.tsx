@@ -45,17 +45,17 @@ export default async function Page() {
                 <MousePointer />
                 <section className="relative z-40 h-full w-full">
                     <div className="container p-28">
-                        <nav className="mb-5 flex w-full items-center justify-between rounded-md bg-white px-8 py-3">
-                            <a href="#" className="font-bold text-black">
+                        <nav className="mb-5 flex w-full items-center justify-between rounded-xl bg-card px-8 py-3 opacity-100 backdrop-blur-xl">
+                            <a href="#" className="font-bold text-primary">
                                 Logo
                             </a>
-                            <ul className="flex gap-5 text-black">
+                            <ul className="flex gap-5 text-white">
                                 <li>Menu</li>
                                 <li>Menu</li>
                                 <li>Menu</li>
                                 <li>Menu</li>
                             </ul>
-                            <button className="rounded-lg bg-orange-600 px-4 py-2 text-white">Contact</button>
+                            <button className="rounded-lg bg-primary px-4 py-2 text-white">Contact</button>
                         </nav>
                         <Home />
                     </div>
