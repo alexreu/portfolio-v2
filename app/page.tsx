@@ -6,6 +6,7 @@ import { Navbar } from "../src/components/Navbar";
 import { Footer } from "../src/components/Footer";
 import { BackToTop } from "../src/components/BackToTop";
 import React from "react";
+import { ParticlesContainer } from "@/components/particles-container";
 
 export type AboutResource = { id: string; title: string; content: [{ title: string; description: string }] };
 export type ProjectResource = {
@@ -36,15 +37,16 @@ export default async function Page() {
 
     return (
         <>
-            <Navbar />
-            <main>
-                <HomeSection />
-                <AboutSection data={about} />
-                <ServicesSection />
-                <PortfolioSection data={projects} />
+            {/*<Navbar />*/}
+            <main className="h-screen w-screen overflow-hidden">
+                <ParticlesContainer />
+                {/*<HomeSection />*/}
+                {/*<AboutSection data={about} />*/}
+                {/*<ServicesSection />*/}
+                {/*<PortfolioSection data={projects} />*/}
             </main>
-            <Footer />
-            <BackToTop />
+            {/*<Footer />*/}
+            {/*<BackToTop />*/}
         </>
     );
 }

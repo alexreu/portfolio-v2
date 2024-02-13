@@ -22,7 +22,10 @@
         "name": "next"
       }
     ],
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": [
     "next-env.d.ts",
@@ -32,5 +35,5 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
 }

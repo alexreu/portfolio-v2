@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { Metadata } from "next";
 import { Providers } from "./providers";
 
-import "../styles/globals.css";
+import "./globals.css";
 import { Poppins, Inter, Montserrat } from "next/font/google";
 
 type Props = {
