@@ -43,9 +43,22 @@ export default async function Page() {
             <main className="h-screen w-screen">
                 <ParticlesContainer />
                 <MousePointer />
-                <section className="container relative z-40 flex h-full w-full items-center justify-center overflow-auto px-32 py-32">
-                    <nav></nav>
-                    <Home />
+                <section className="relative z-40 h-full w-full">
+                    <div className="container p-28">
+                        <nav className="mb-5 flex w-full items-center justify-between rounded-md bg-white px-8 py-3">
+                            <a href="#" className="font-bold text-black">
+                                Logo
+                            </a>
+                            <ul className="flex gap-5 text-black">
+                                <li>Menu</li>
+                                <li>Menu</li>
+                                <li>Menu</li>
+                                <li>Menu</li>
+                            </ul>
+                            <button className="rounded-lg bg-orange-600 px-4 py-2 text-white">Contact</button>
+                        </nav>
+                        <Home />
+                    </div>
                 </section>
                 {/*<HomeSection />*/}
                 {/*<AboutSection data={about} />*/}
