@@ -6,6 +6,10 @@ import { motion } from "framer-motion";
 
 export const ProfileCard = () => {
     const MotionLink = motion(Link);
+    const iconVariants = {
+        initial: { display: "none", opacity: 0, translateX: -20 },
+        hover: { display: "block", opacity: 1, translateX: 0 },
+    };
 
     return (
         <Card
@@ -17,12 +21,18 @@ export const ProfileCard = () => {
                     className="mx-auto mt-6 h-40 w-40 rounded-full bg-primary bg-[url('/images/resume-photo.png')]
                         bg-cover bg-center"
                 ></div>
-                <h1 className="rounded-xl bg-primary p-3 text-lg font-medium tracking-wide text-white">
-                    <MotionLink className="inline-flex w-full items-center justify-between gap-4" href="#">
+                <h1>
+                    <MotionLink
+                        className="inline-flex w-full items-center justify-between gap-3 rounded-xl bg-primary p-3
+                            text-lg font-medium tracking-wide text-white transition-all duration-200 ease-in-out"
+                        href="#"
+                        whileHover="hover"
+                        initial="initial"
+                    >
                         <span>I'm Alexandre</span>
-                        <span>
+                        <motion.span variants={iconVariants}>
                             <Send size={22} />
-                        </span>
+                        </motion.span>
                     </MotionLink>
                 </h1>
                 {/*<CardDescription>Card Description</CardDescription>*/}

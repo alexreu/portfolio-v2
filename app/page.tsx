@@ -1,10 +1,6 @@
 import ressourceType from "../src/enums/ResourceType";
 import { getDirectoryPath } from "../src/modules/getDirectoryPath/getDirectoryPath";
 import { getJsonContent } from "../src/modules/getJsonContent/getJsonContent";
-import { AboutSection, PortfolioSection, ServicesSection, HomeSection } from "../src/components/Sections";
-import { Navbar } from "../src/components/Navbar";
-import { Footer } from "../src/components/Footer";
-import { BackToTop } from "../src/components/BackToTop";
 import React from "react";
 import { ParticlesContainer } from "@/components/particles-container";
 import { MousePointer } from "@/components/mouse-pointer";
@@ -102,7 +98,7 @@ export default async function Page() {
                                         px-4 py-2 font-medium text-white transition-all duration-200 ease-in-out
                                         hover:bg-white hover:text-primary"
                                 >
-                                    Let's Talks
+                                    Let's Talk
                                     <MoveUpRight size={18} strokeWidth={3} />
                                 </Link>
                             </nav>
