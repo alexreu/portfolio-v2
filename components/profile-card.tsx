@@ -1,24 +1,42 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
 import Link from "next/link";
+import { ArrowRight, Code, Send } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const ProfileCard = () => {
     return (
-        <Card className="col-span-3 col-start-1 row-span-2 row-start-1 flex flex-col items-center opacity-100 backdrop-blur-xl">
-            <div className="mx-auto mt-6 h-36 w-36 rounded-full bg-primary bg-[url('/images/resume-photo.png')] bg-cover bg-center"></div>
-            <CardHeader>
-                <CardTitle className="text-primary">
-                    <Link className="rounded-xl bg-primary p-3 text-white" href="#">
-                        AlexDevLab
+        <Card
+            className="col-span-3 col-start-1 row-span-2 row-start-1 flex flex-col items-center opacity-100
+                backdrop-blur-xl"
+        >
+            <CardHeader className="flex flex-col items-center gap-6">
+                <div
+                    className="mx-auto mt-6 h-40 w-40 rounded-full bg-primary bg-[url('/images/resume-photo.png')]
+                        bg-cover bg-center"
+                ></div>
+                <h1 className="rounded-xl bg-primary p-3 text-lg font-medium tracking-wide text-white">
+                    <Link className="inline-flex w-full items-center justify-between gap-4" href="#">
+                        <span>I'm Alexandre</span>
+                        <span>
+                            <Send size={22} />
+                        </span>
                     </Link>
-                </CardTitle>
-                <CardDescription>Card Description</CardDescription>
+                </h1>
+                {/*<CardDescription>Card Description</CardDescription>*/}
             </CardHeader>
-            <CardContent>
-                <p>Card Content</p>
-            </CardContent>
-            <CardFooter>
-                <p>Card Footer</p>
+            {/*<CardContent>*/}
+            {/*    <p>Card Content</p>*/}
+            {/*</CardContent>*/}
+            <CardFooter className="mt-auto w-full">
+                <Link
+                    href="/contact"
+                    className="inline-flex w-full justify-between font-medium text-white transition-all duration-200
+                        ease-in-out hover:text-primary"
+                >
+                    <span>A propos</span>
+                    <ArrowRight strokeWidth={1} />
+                </Link>
             </CardFooter>
         </Card>
     );

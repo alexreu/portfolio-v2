@@ -72,7 +72,7 @@
     @apply scroll-smooth;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply font-main bg-background text-foreground;
   }
   .bg-card {
     background: linear-gradient(153deg, rgba(255, 255, 255, 0.12) -65.62%, rgba(255, 255, 255, 0.04) 83.28%) !important;
