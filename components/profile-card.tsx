@@ -7,8 +7,12 @@ import { motion } from "framer-motion";
 export const ProfileCard = () => {
     const MotionLink = motion(Link);
     const iconVariants = {
-        initial: { display: "none", opacity: 0, translateX: -20 },
-        hover: { display: "block", opacity: 1, translateX: 0 },
+        initial: { opacity: 0, translateX: -15 },
+        hover: { opacity: 1, translateX: 0 },
+    };
+    const linkVariants = {
+        initial: { width: "153px" },
+        hover: { width: "187px" },
     };
 
     return (
@@ -23,14 +27,20 @@ export const ProfileCard = () => {
                 ></div>
                 <h1>
                     <MotionLink
-                        className="inline-flex w-full items-center justify-between gap-3 rounded-xl bg-primary p-3
-                            text-lg font-medium tracking-wide text-white transition-all duration-200 ease-in-out"
+                        className="relative flex w-full items-center gap-3 rounded-xl bg-primary p-3 text-lg font-medium
+                            tracking-wide text-white"
                         href="#"
+                        variants={linkVariants}
                         whileHover="hover"
                         initial="initial"
+                        layout
                     >
                         <span>I'm Alexandre</span>
-                        <motion.span variants={iconVariants}>
+                        <motion.span
+                            className="absolute right-3"
+                            variants={iconVariants}
+                            transition={{ duration: 0.3, type: "tween" }}
+                        >
                             <Send size={22} />
                         </motion.span>
                     </MotionLink>
