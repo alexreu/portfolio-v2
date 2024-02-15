@@ -1,10 +1,12 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Code, Send } from "lucide-react";
+import { ArrowRight, Send } from "lucide-react";
 import { motion } from "framer-motion";
 
 export const ProfileCard = () => {
+    const MotionLink = motion(Link);
+
     return (
         <Card
             className="col-span-3 col-start-1 row-span-2 row-start-1 flex flex-col items-center opacity-100
@@ -16,12 +18,12 @@ export const ProfileCard = () => {
                         bg-cover bg-center"
                 ></div>
                 <h1 className="rounded-xl bg-primary p-3 text-lg font-medium tracking-wide text-white">
-                    <Link className="inline-flex w-full items-center justify-between gap-4" href="#">
+                    <MotionLink className="inline-flex w-full items-center justify-between gap-4" href="#">
                         <span>I'm Alexandre</span>
                         <span>
                             <Send size={22} />
                         </span>
-                    </Link>
+                    </MotionLink>
                 </h1>
                 {/*<CardDescription>Card Description</CardDescription>*/}
             </CardHeader>
