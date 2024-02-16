@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 export const ProfileCard = () => {
     const MotionLink = motion(Link);
     const iconVariants = {
-        initial: { opacity: 0, translateX: -15 },
+        initial: { opacity: 0, translateX: -5 },
         hover: { opacity: 1, translateX: 0 },
     };
     const linkVariants = {
@@ -39,17 +39,13 @@ export const ProfileCard = () => {
                         <motion.span
                             className="absolute right-3"
                             variants={iconVariants}
-                            transition={{ duration: 0.3, type: "tween" }}
+                            transition={{ duration: 0.4, type: "spring" }}
                         >
                             <Send size={22} />
                         </motion.span>
                     </MotionLink>
                 </h1>
-                {/*<CardDescription>Card Description</CardDescription>*/}
             </CardHeader>
-            {/*<CardContent>*/}
-            {/*    <p>Card Content</p>*/}
-            {/*</CardContent>*/}
             <CardFooter className="mt-auto w-full">
                 <Link
                     href="/contact"

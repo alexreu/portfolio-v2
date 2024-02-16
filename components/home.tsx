@@ -1,37 +1,17 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
 import { ProfileCard } from "@/components/profile-card";
+import { TitleCard } from "@/components/title-card";
+import { SocialCard } from "@/components/social-card";
 
 export const Home = () => {
     return (
-        <div className=" grid h-full w-full grid-cols-12 grid-rows-5 gap-5">
+        <div className=" grid w-full grid-cols-12 grid-rows-5 gap-5">
             <ProfileCard />
-            <Card className="col-span-3 opacity-100 backdrop-blur-xl">
-                <CardHeader>
-                    <CardTitle className="text-primary">Card Title</CardTitle>
-                    <CardDescription>Card Description</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <p>Card Content</p>
-                </CardContent>
-                <CardFooter>
-                    <p>Card Footer</p>
-                </CardFooter>
-            </Card>
-            <Card className="col-span-3 opacity-100 backdrop-blur-xl">
-                <CardHeader>
-                    <CardTitle className="text-primary">Card Title</CardTitle>
-                    <CardDescription>Card Description</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <p>Card Content</p>
-                </CardContent>
-                <CardFooter>
-                    <p>Card Footer</p>
-                </CardFooter>
-            </Card>
+            <TitleCard />
+            <SocialCard />
             <Card className="col-span-3 row-span-1 opacity-100 backdrop-blur-xl">
                 <CardHeader>
                     <CardTitle className="text-primary">Card Title</CardTitle>
