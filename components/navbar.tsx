@@ -7,7 +7,7 @@ export const Navbar = () => {
     return (
         <header role="banner">
             <nav
-                className="mb-5 flex w-full items-center justify-between rounded-xl bg-card px-8 py-3 opacity-100
+                className="mb-10 flex w-full items-center justify-between rounded-xl bg-card px-8 py-3 opacity-100
                     backdrop-blur-xl"
             >
                 <Link href="#" className="font-bold text-primary">

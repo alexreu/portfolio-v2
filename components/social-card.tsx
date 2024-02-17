@@ -37,7 +37,7 @@ export const SocialCard = () => {
                                 href="#"
                                 className="group relative rounded-full p-9 text-white transition-all duration-500
                                     ease-in-out"
-                                title="Profile Freelance"
+                                title="Profil Freelance"
                             >
                                 <span className="sr-only">consulter mon profil freelance sur la plateforme codeur</span>
                                 <Circle

@@ -30,13 +30,13 @@ export const Home = () => {
                     <CardDescription>Card Description</CardDescription>
                 </CardHeader>
             </Card>
-            <Card className="col-span-6 row-span-2 opacity-100 backdrop-blur-xl">
+            <Card className="col-span-6 row-span-1 opacity-100 backdrop-blur-xl">
                 <CardHeader>
                     <CardTitle className="text-primary">Card Title</CardTitle>
                     <CardDescription>Card Description</CardDescription>
                 </CardHeader>
             </Card>
-            <Card className="col-span-6 row-span-2 opacity-100 backdrop-blur-xl">
+            <Card className="col-span-6 row-span-1 opacity-100 backdrop-blur-xl">
                 <CardHeader>
                     <CardTitle className="text-primary">Card Title</CardTitle>
                     <CardDescription>Card Description</CardDescription>
