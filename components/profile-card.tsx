@@ -1,7 +1,7 @@
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Send } from "lucide-react";
+import { MoveRight, Send, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 export const ProfileCard = () => {
@@ -17,7 +17,7 @@ export const ProfileCard = () => {
 
     return (
         <Card
-            className="col-span-3 col-start-1 row-span-2 row-start-1 flex flex-col items-center opacity-100
+            className="relative col-span-3 col-start-1 row-span-3 row-start-1 flex flex-col items-center opacity-100
                 backdrop-blur-xl"
         >
             <CardHeader className="flex flex-col items-center gap-6">
@@ -49,13 +49,18 @@ export const ProfileCard = () => {
             <CardFooter className="mt-auto w-full">
                 <Link
                     href="/contact"
-                    className="inline-flex w-full justify-between font-medium text-white transition-all duration-200
-                        ease-in-out hover:text-primary"
+                    className="inline-flex w-full justify-between py-2 font-medium text-white transition-all
+                        duration-200 ease-in-out hover:text-primary"
                 >
                     <span>A propos</span>
-                    <ArrowRight strokeWidth={1} />
+                    <MoveRight strokeWidth={1} />
                 </Link>
             </CardFooter>
+            <Sparkles
+                className="absolute right-1 top-1 rotate-90 animate-pulse stroke-muted-foreground"
+                size={58}
+                strokeWidth={0.5}
+            />
         </Card>
     );
 };

@@ -37,20 +37,18 @@ export default function Page() {
     return (
         <>
             <main
-                className="w-screen relative m-0 flex h-screen overflow-auto p-0 before:absolute before:-left-52 before:-top-52 before:z-10 before:h-[500px]
-                    before:w-[500px] before:rounded-full before:bg-white before:opacity-20 before:blur-[200px]
-                    before:content-[''] after:absolute after:-bottom-52 after:-right-52 after:z-10 after:h-[500px]
-                    after:w-[500px] after:rounded-full after:bg-primary after:opacity-20 after:blur-[200px]
-                    after:content-['']"
+                className="relative m-0 flex h-screen w-screen p-0 before:absolute before:-left-52 before:-top-52
+                    before:z-10 before:h-[500px] before:w-[500px] before:rounded-full before:bg-white before:opacity-20
+                    before:blur-[200px] before:content-[''] after:absolute after:-bottom-52 after:-right-52 after:z-10
+                    after:h-[500px] after:w-[500px] after:rounded-full after:bg-primary after:opacity-20
+                    after:blur-[200px] after:content-['']"
             >
                 <ParticlesContainer />
                 <MousePointer />
 
-                <div className="container z-20 py-20">
-                            
-                        <Navbar />
-                        <Home />
-                
+                <div className="container z-20 h-full py-20">
+                    <Navbar />
+                    <Home />
                 </div>
             </main>
         </>
