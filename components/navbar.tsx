@@ -40,7 +40,7 @@ export const Navbar = () => {
                     className="inline-flex items-center justify-between gap-2 rounded-full bg-primary px-4 py-2
                         font-medium text-white transition-all duration-200 ease-in-out hover:bg-white hover:text-primary"
                 >
-                    Let's Talk
+                    Let&#39;s Talk
                     <MoveUpRight size={18} strokeWidth={3} />
                 </Link>
             </nav>

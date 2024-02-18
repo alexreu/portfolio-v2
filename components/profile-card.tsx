@@ -35,7 +35,7 @@ export const ProfileCard = () => {
                         initial="initial"
                         layout
                     >
-                        <span>I'm Alexandre</span>
+                        <span>I&#39;m Alexandre</span>
                         <motion.span
                             className="absolute right-3"
                             variants={iconVariants}
