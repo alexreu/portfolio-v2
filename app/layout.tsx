@@ -1,9 +1,10 @@
 import React, { ReactNode } from "react";
 import { Metadata } from "next";
-import { Providers } from "./providers";
 
 import "./globals.css";
-import { Poppins, Inter, Montserrat } from "next/font/google";
+import { Inter, Montserrat, Poppins } from "next/font/google";
+import { ParticlesContainer } from "@/components/particles-container";
+import { MousePointer } from "@/components/mouse-pointer";
 
 type Props = {
     children: ReactNode;
@@ -65,7 +66,9 @@ export default function RootLayout({ children }: Props) {
             suppressHydrationWarning
         >
             <body>
-                <Providers>{children}</Providers>
+                <ParticlesContainer />
+                <MousePointer />
+                {children}
             </body>
         </html>
     );

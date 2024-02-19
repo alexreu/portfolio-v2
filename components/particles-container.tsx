@@ -2,22 +2,38 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { type Container, type ISourceOptions } from "@tsparticles/engine";
+import { type ISourceOptions } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim";
+import { GlobalLoading } from "@/components/global-loading";
+import { AnimatePresence } from "framer-motion";
 
 export const ParticlesContainer = () => {
     const [init, setInit] = useState(false);
+    const [progress, setProgress] = useState(0);
+
     useEffect(() => {
-        initParticlesEngine(async engine => {
-            await loadSlim(engine);
-        }).then(() => {
+        const loadParticlesEngine = async () => {
+            await initParticlesEngine(async engine => {
+                await loadSlim(engine);
+            });
+        };
+
+        loadParticlesEngine().then(() => {
             setInit(true);
         });
     }, []);
 
-    const particlesLoaded = async (container?: Container): Promise<void> => {
-        console.log(container);
-    };
+    useEffect(() => {
+        let interval: NodeJS.Timer | undefined;
+
+        if (progress < 100) {
+            interval = setInterval(() => {
+                setProgress(prev => (prev < 100 ? prev + 1 : prev));
+            }, 10);
+        }
+
+        return () => clearInterval(interval);
+    }, [progress]);
 
     const options: ISourceOptions = useMemo(
         () => ({
@@ -45,7 +61,7 @@ export const ParticlesContainer = () => {
                     density: {
                         enable: true,
                     },
-                    value: 130,
+                    value: 60,
                 },
                 opacity: {
                     value: 0.5,
@@ -59,12 +75,16 @@ export const ParticlesContainer = () => {
             },
             detectRetina: true,
         }),
-        [],
+        []
     );
 
-    if (init) {
-        return <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={options} />;
-    }
-
-    return <></>;
+    return (
+        <AnimatePresence>
+            {init && progress === 100 ? (
+                <Particles id="tsparticles" options={options} className="h-scree fixed left-0 top-0 w-screen" />
+            ) : (
+                <GlobalLoading progress={progress} />
+            )}
+        </AnimatePresence>
+    );
 };
