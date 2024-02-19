@@ -20,11 +20,7 @@ export const ProfileCard = () => {
             className="relative col-span-3 col-start-1 row-span-3 row-start-1 flex flex-col items-center opacity-100
                 backdrop-blur-xl"
         >
-            <CardHeader className="flex flex-col items-center gap-6">
-                <div
-                    className="mx-auto mt-6 h-40 w-40 rounded-full bg-primary bg-[url('/images/resume-photo.png')]
-                        bg-cover bg-center"
-                ></div>
+            <CardHeader className="mt-auto flex flex-col-reverse items-center gap-6">
                 <h1>
                     <MotionLink
                         className="relative flex w-full items-center gap-3 rounded-xl bg-primary p-3 text-lg font-medium
@@ -45,6 +41,10 @@ export const ProfileCard = () => {
                         </motion.span>
                     </MotionLink>
                 </h1>
+                <div
+                    className="mx-auto mt-6 h-40 w-40 rounded-full bg-primary bg-[url('/images/resume-photo.png')]
+                        bg-cover bg-center"
+                ></div>
             </CardHeader>
             <CardFooter className="mt-auto w-full">
                 <Link

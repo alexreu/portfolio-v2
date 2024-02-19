@@ -37,7 +37,7 @@ export const ServicesCard = () => {
                     className="inline-flex w-full justify-between py-2 font-medium text-white transition-all
                         duration-200 ease-in-out hover:text-primary"
                 >
-                    Tous les services
+                    Tous mes services
                     <MoveRight strokeWidth={1} />
                 </Link>
             </CardContent>
