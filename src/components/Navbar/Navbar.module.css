@@ -1,43 +1,43 @@
-.menuItem {
-    @apply flex items-center w-full;
-    @apply text-white-base text-[16px] font-bold uppercase;
-    &::before,
-    &::after {
-        @apply h-[1px] w-full top-1/2;
-        @apply bg-white-base opacity-50 transform translate-y-1/2;
-        content: '';
-    }
-    &::before {
-        @apply mr-4 left-0;
-    }
-    &::after {
-        @apply ml-4 right-0;
-    }
-}
-.mobilePopUp {
-    @apply xld:fixed xld:h-screen left-0 top-0 z-[10000] overflow-hidden;
-    @apply transform transition-all ease-in-out duration-300;
-    & > ul {
-        @apply xld:w-full xld:max-w-[310px] xld:h-full;
-    }
-    &::after {
-        @apply xl:hidden absolute -z-[1] top-0 left-0 w-full h-full;
-        @apply bg-dark-base bg-opacity-80;
-        content: '';
-    }
-}
-@screen xl {
-    .headerSticky {
-        animation: sticky .95s ease forwards;
-    }
-}
+/*.menuItem {*/
+/*    @apply flex items-center w-full;*/
+/*    @apply text-white-base text-[16px] font-bold uppercase;*/
+/*    &::before,*/
+/*    &::after {*/
+/*        @apply h-[1px] w-full top-1/2;*/
+/*        @apply bg-white-base opacity-50 transform translate-y-1/2;*/
+/*        content: '';*/
+/*    }*/
+/*    &::before {*/
+/*        @apply mr-4 left-0;*/
+/*    }*/
+/*    &::after {*/
+/*        @apply ml-4 right-0;*/
+/*    }*/
+/*}*/
+/*.mobilePopUp {*/
+/*    @apply xld:fixed xld:h-screen left-0 top-0 z-[10000] overflow-hidden;*/
+/*    @apply transform transition-all ease-in-out duration-300;*/
+/*    & > ul {*/
+/*        @apply xld:w-full xld:max-w-[310px] xld:h-full;*/
+/*    }*/
+/*    &::after {*/
+/*        @apply xl:hidden absolute -z-[1] top-0 left-0 w-full h-full;*/
+/*        @apply bg-dark-base bg-opacity-80;*/
+/*        content: '';*/
+/*    }*/
+/*}*/
+/*@screen xl {*/
+/*    .headerSticky {*/
+/*        animation: sticky .95s ease forwards;*/
+/*    }*/
+/*}*/
 
-@keyframes sticky {
-    from {
-        transform: translateY(-100%);
-    }
+/*@keyframes sticky {*/
+/*    from {*/
+/*        transform: translateY(-100%);*/
+/*    }*/
 
-    to {
-        transform: translateY(0);
-    }
-}
+/*    to {*/
+/*        transform: translateY(0);*/
+/*    }*/
+/*}*/
