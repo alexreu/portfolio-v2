@@ -10,6 +10,7 @@ import { AnimatePresence } from "framer-motion";
 export const ParticlesContainer = () => {
     const [init, setInit] = useState(false);
     const [progress, setProgress] = useState(0);
+    const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
         const loadParticlesEngine = async () => {
@@ -30,6 +31,10 @@ export const ParticlesContainer = () => {
             interval = setInterval(() => {
                 setProgress(prev => (prev < 100 ? prev + 1 : prev));
             }, 10);
+        }
+
+        if (progress === 100) {
+            setIsVisible(false);
         }
 
         return () => clearInterval(interval);
@@ -79,12 +84,9 @@ export const ParticlesContainer = () => {
     );
 
     return (
-        <AnimatePresence>
-            {init && progress === 100 ? (
-                <Particles id="tsparticles" options={options} className="h-scree fixed left-0 top-0 w-screen" />
-            ) : (
-                <GlobalLoading progress={progress} />
-            )}
-        </AnimatePresence>
+        <>
+            <AnimatePresence mode="wait">{isVisible && <GlobalLoading progress={progress} />}</AnimatePresence>
+            <Particles id="tsparticles" options={options} className="fixed left-0 top-0 h-screen w-screen" />
+        </>
     );
 };

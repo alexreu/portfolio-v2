@@ -22,10 +22,15 @@ export const SocialCard = () => {
                             className="absolute bottom-0 left-0 h-full w-full stroke-muted-foreground"
                             strokeWidth={0.3}
                         />
-                        <Linkedin size={24} className="group-hover:stroke-primary group-focus:stroke-primary" />
+                        <Linkedin
+                            size={24}
+                            strokeWidth={1}
+                            className="fill-white group-hover:fill-primary group-hover:stroke-primary
+                                group-focus:fill-primary group-focus:stroke-primary"
+                        />
                         <Crosshair
                             className="absolute bottom-0 left-0 h-full w-full stroke-muted-foreground opacity-0
-                                transition-all duration-300 ease-in-out group-hover:rotate-45 group-hover:stroke-primary
+                                transition-all duration-500 ease-in-out group-hover:rotate-45 group-hover:stroke-primary
                                 group-hover:opacity-100 group-focus:rotate-45 group-focus:stroke-primary
                                 group-focus:opacity-100"
                             strokeWidth={0.3}
@@ -46,7 +51,7 @@ export const SocialCard = () => {
                         <Code size={24} className="group-hover:stroke-primary group-focus:stroke-primary" />
                         <Crosshair
                             className="absolute bottom-0 left-0 h-full w-full stroke-muted-foreground opacity-0
-                                transition-all duration-300 ease-in-out group-hover:rotate-45 group-hover:stroke-primary
+                                transition-all duration-500 ease-in-out group-hover:rotate-45 group-hover:stroke-primary
                                 group-hover:opacity-100 group-focus:rotate-45 group-focus:stroke-primary
                                 group-focus:opacity-100"
                             strokeWidth={0.3}
