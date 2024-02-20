@@ -8,11 +8,12 @@ import { GlobalLoading } from "@/components/global-loading";
 import { AnimatePresence } from "framer-motion";
 
 export const ParticlesContainer = () => {
-    const [init, setInit] = useState(false);
     const [progress, setProgress] = useState(0);
-    const [isVisible, setIsVisible] = useState(true);
+    const [isLoaderVisible, setIsLoaderVisible] = useState(true);
 
     useEffect(() => {
+        let interval: NodeJS.Timer | undefined;
+
         const loadParticlesEngine = async () => {
             await initParticlesEngine(async engine => {
                 await loadSlim(engine);
@@ -20,25 +21,18 @@ export const ParticlesContainer = () => {
         };
 
         loadParticlesEngine().then(() => {
-            setInit(true);
+            if (progress >= 100) {
+                setIsLoaderVisible(false);
+            }
         });
-    }, []);
-
-    useEffect(() => {
-        let interval: NodeJS.Timer | undefined;
 
         if (progress < 100) {
             interval = setInterval(() => {
                 setProgress(prev => (prev < 100 ? prev + 1 : prev));
-            }, 10);
+            }, 1);
         }
-
-        if (progress === 100 && init) {
-            setIsVisible(false);
-        }
-
         return () => clearInterval(interval);
-    }, [init, progress]);
+    }, [progress]);
 
     const options: ISourceOptions = useMemo(
         () => ({
@@ -85,7 +79,7 @@ export const ParticlesContainer = () => {
 
     return (
         <>
-            <AnimatePresence mode="wait">{isVisible && <GlobalLoading progress={progress} />}</AnimatePresence>
+            <AnimatePresence mode="wait">{isLoaderVisible && <GlobalLoading progress={progress} />}</AnimatePresence>
             <Particles id="tsparticles" options={options} className="fixed left-0 top-0 h-screen w-screen" />
         </>
     );
