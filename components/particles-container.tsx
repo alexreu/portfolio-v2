@@ -33,12 +33,12 @@ export const ParticlesContainer = () => {
             }, 10);
         }
 
-        if (progress === 100) {
+        if (progress === 100 && init) {
             setIsVisible(false);
         }
 
         return () => clearInterval(interval);
-    }, [progress]);
+    }, [init, progress]);
 
     const options: ISourceOptions = useMemo(
         () => ({
