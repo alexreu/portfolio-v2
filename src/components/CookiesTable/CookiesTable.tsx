@@ -2,7 +2,12 @@ import React from "react";
 import style from "./CookiesTable.module.css";
 import { id } from "../../modules/idGenerator";
 
-export const CookiesTable = ({ head, content }) => {
+type Props = {
+    head: string[];
+    content: Record<string, string>[];
+};
+
+export const CookiesTable = ({ head, content }: Props) => {
     return (
         <figure className={style.cookiesTableFigure}>
             <table className={`${style.cookiesTable} dark:text-white`}>
@@ -16,16 +21,13 @@ export const CookiesTable = ({ head, content }) => {
                     </tr>
                 </thead>
                 <tbody className={style.cookiesTableBody}>
-                    {content.map(e => {
-                        const { cookie, object, duration } = e;
-                        return (
-                            <tr key={id()} className={`${style.cookiesTableBodyRow} even:dark:bg-midgray-lighter`}>
-                                <td>{cookie}</td>
-                                <td>{object}</td>
-                                <td>{duration}</td>
-                            </tr>
-                        );
-                    })}
+                    {content.map(({ cookie, object, duration }) => (
+                        <tr key={id()} className={`${style.cookiesTableBodyRow} even:dark:bg-midgray-lighter`}>
+                            <td>{cookie}</td>
+                            <td>{object}</td>
+                            <td>{duration}</td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </figure>
