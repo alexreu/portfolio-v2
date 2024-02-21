@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "start:dev": "concurrently \"next dev -p 3002\" \"cd studio && sanity dev\"",
-    "start:prod": "concurrently \"next start\" \"cd studio && sanity start\" ",
-    "build": "echo 'Building Sanity to public/studio' && cd studio && sanity build ../public/studio -y && cd .. && next build",
+    "start:prod": "concurrently \" echo 'Build Next' start\" \"cd studio && echo 'Build Studio' sanity start\" ",
+    "build": "echo 'Building Sanity to public/studio' && cd studio && sanity build ../public/studio -y && sanity deploy && cd .. && next build",
     "start": "vercel start:prod",
     "lint": "next lint",
     "ts-lint": "tsc --noEmit --incremental"
