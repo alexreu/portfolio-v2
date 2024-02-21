@@ -1,9 +1,19 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { MoveUpRight } from "lucide-react";
 import React from "react";
+import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
+    const pathname = usePathname();
+    const studioRegex = /^\/studio(?:\/\w+)?$/;
+
+    if (studioRegex.test(pathname)) {
+        return <></>;
+    }
+
     return (
         <header role="banner">
             <nav

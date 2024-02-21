@@ -10,7 +10,6 @@ import { ServicesCard } from "@/components/services-card";
 import { SkillsCard } from "@/components/skills-card";
 import { GetInTouchCard } from "@/components/get-in-touch-card";
 import { OffersCard } from "@/components/offers-card";
-import { client } from "@/lib/sanity/client";
 
 type HomepageContent = {
     _id: string;
@@ -22,9 +21,9 @@ type HomepageContent = {
 
 // eslint-disable-next-line @next/next/no-async-client-component
 export default async function Page() {
-    const homepageContent = await client.fetch<HomepageContent[]>(`*[_type == "homepage"]`);
+    // const homepageContent = await client.fetch<HomepageContent[]>(`*[_type == "homepage"]`);
 
-    console.log(homepageContent);
+    // console.log(homepageContent);
 
     return (
         <AnimatePresence mode="wait">

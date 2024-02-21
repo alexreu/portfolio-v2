@@ -8,5 +8,5 @@ export const client = createClient({
     projectId,
     dataset,
     apiVersion,
-    useCdn: true, // if you're using ISR or only static generation at build time then you can set this to `false` to guarantee no stale content
+    useCdn: false, // if you're using ISR or only static generation at build time then you can set this to `false` to guarantee no stale content
 });
