@@ -1,18 +1,18 @@
-import { Heading } from "../../src/components/Heading";
+import { Heading } from "../../../src/components/Heading";
 // import { Layout } from "../components/Layout";
 // import { getInitialTheme, ThemeProvider } from "../../src/modules/theme";
-import { SectionWrapper } from "../../src/components/SectionWrapper";
-import { SectionHead } from "../../src/components/SectionHead";
-import { Button } from "../../src/components/Button";
-import { CookiesTable } from "../../src/components/CookiesTable";
+import { SectionWrapper } from "../../../src/components/SectionWrapper";
+import { SectionHead } from "../../../src/components/SectionHead";
+import { Button } from "../../../src/components/Button";
+import { CookiesTable } from "../../../src/components/CookiesTable";
 
 const confidentialityPolicy = () => {
     return (
         <SectionWrapper id="confidentialityPolicy" className="min-h-screen">
             <div className="container">
                 <SectionHead title="Politique d'utilisation des cookies" />
-                <span className="block w-full border border-darkest dark:border-white"></span>
-                <Heading variant="h2" className="heading2 text-heading dark:text-white mt-10 mb-5">
+                <span className="border-darkest block w-full border dark:border-white"></span>
+                <Heading variant="h2" className="heading2 text-heading mb-5 mt-10 dark:text-white">
                     Que sont les cookies ?
                 </Heading>
                 <p className="text-darkest dark:text-light">
@@ -23,7 +23,7 @@ const confidentialityPolicy = () => {
                     Internet, les pages affichées, le temps que vous passez à consulter le Site Internet, ou encore les
                     sites visités juste avant et tout de suite après le nôtre.
                 </p>
-                <Heading variant="h2" className="heading2 text-heading dark:text-white mt-10 mb-5">
+                <Heading variant="h2" className="heading2 text-heading mb-5 mt-10 dark:text-white">
                     Type de cookies utilisés sur le site internet
                 </Heading>
                 <p className="text-darkest dark:text-light">
@@ -66,17 +66,17 @@ const confidentialityPolicy = () => {
                         },
                     ]}
                 />
-                <Heading variant="h2" className="heading2 text-heading dark:text-white mt-10 mb-5">
+                <Heading variant="h2" className="heading2 text-heading mb-5 mt-10 dark:text-white">
                     Refus et révocation du consent
                 </Heading>
                 <p className="text-darkest dark:text-light">
                     Vous pouvez refuser l’utilisation des cookies sur ce site Internet et révoquer votre consentement en
                     utilisant l’outil indiqué ci-dessous:
                 </p>
-                <Button className="btn btn-default mt-5 text-grey-dark dark:text-white border-grey-light hover:text-white">
+                <Button className="btn btn-default text-grey-dark border-grey-light mt-5 hover:text-white dark:text-white">
                     Configurateur des cookies
                 </Button>
-                <Heading variant="h2" className="heading2 mt-10 mb-5 text-heading dark:text-white">
+                <Heading variant="h2" className="heading2 text-heading mb-5 mt-10 dark:text-white">
                     Modification de la politique des cookies
                 </Heading>
                 <p className="text-darkest dark:text-light">
@@ -85,7 +85,7 @@ const confidentialityPolicy = () => {
                     Internet, afin de vous tenir informé comme il se doit de la façon dont nous utilisons les cookies,
                     et à quelles fins.
                 </p>
-                <Heading variant="h2" className="heading2 mt-10 mb-5 text-heading dark:text-white">
+                <Heading variant="h2" className="heading2 text-heading mb-5 mt-10 dark:text-white">
                     Contact
                 </Heading>
                 <p className="text-darkest dark:text-light">

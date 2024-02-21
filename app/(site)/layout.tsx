@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { Metadata } from "next";
 
-import "./globals.css";
+import "../globals.css";
 import { Inter, Montserrat, Poppins } from "next/font/google";
 import { ParticlesContainer } from "@/components/particles-container";
 import { MousePointer } from "@/components/mouse-pointer";

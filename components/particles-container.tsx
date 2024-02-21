@@ -6,12 +6,9 @@ import { type ISourceOptions } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim";
 import { GlobalLoading } from "@/components/global-loading";
 import { AnimatePresence } from "framer-motion";
-import { usePathname } from "next/navigation";
 
 export const ParticlesContainer = () => {
-    const pathname = usePathname();
     const [isLoaderVisible, setIsLoaderVisible] = useState(true);
-    const studioRegex = /^\/studio(?:\/\w+)?$/;
 
     useEffect(() => {
         const loadParticlesEngine = async () => {
@@ -67,12 +64,6 @@ export const ParticlesContainer = () => {
         }),
         []
     );
-
-    console.log({ pathname });
-
-    if (studioRegex.test(pathname)) {
-        return <></>;
-    }
 
     return (
         <>
