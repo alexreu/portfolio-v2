@@ -6,8 +6,8 @@ import { Blend, Circle, Code, Crosshair, Linkedin } from "lucide-react";
 export const SocialCard = () => {
     return (
         <Card
-            className="relative col-span-3 row-span-1 flex flex-col items-start justify-center gap-3 p-4 opacity-100
-                backdrop-blur-xl"
+            className="relative col-span-1 flex flex-col items-start justify-center gap-3 p-4 opacity-100
+                backdrop-blur-xl lg:col-span-3 lg:row-span-1"
         >
             <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">Social</h1>
             <ul className="flex w-full justify-evenly">
@@ -24,7 +24,7 @@ export const SocialCard = () => {
                         />
                         <Linkedin
                             size={24}
-                            strokeWidth={1}
+                            strokeWidth={0}
                             className="fill-white group-hover:fill-primary group-hover:stroke-primary
                                 group-focus:fill-primary group-focus:stroke-primary"
                         />

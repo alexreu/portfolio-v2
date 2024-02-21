@@ -1,12 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
-import { Progress } from "@/components/ui/progress";
+import Image from "next/image";
+import { Loader2 } from "lucide-react";
 
-type Props = {
-    progress?: number;
-};
-
-export const GlobalLoading = ({ progress }: Props) => {
+export const GlobalLoading = () => {
     return (
         <motion.div
             animate={{ opacity: 1 }}
@@ -16,10 +13,13 @@ export const GlobalLoading = ({ progress }: Props) => {
                 justify-center bg-black"
         >
             <div className="container flex w-full flex-col items-center justify-center gap-3">
-                <h1 className="text-xl tracking-wider text-white">
-                    Chargement <span className="animate-pulse">...</span>
-                </h1>
-                <Progress className="max-w-96 bg-white" value={progress} max={100} />
+                <div className="relative flex h-48 w-48 items-center justify-center">
+                    <Image src="/images/logo-white-8.png" alt="" width={160} height={160} />
+                    <Loader2
+                        className="absolute left-0 top-0 h-full w-full animate-spin stroke-primary"
+                        strokeWidth={1}
+                    />
+                </div>
             </div>
         </motion.div>
     );

@@ -7,7 +7,7 @@ import Autoplay from "embla-carousel-autoplay";
 
 export const SkillsCard = () => {
     return (
-        <Card className="col-span-6 row-span-1 opacity-100 backdrop-blur-xl">
+        <Card className="col-span-1 opacity-100 backdrop-blur-xl lg:col-span-6 lg:row-span-1">
             <CardHeader>
                 <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">Skills & tools</h1>
             </CardHeader>

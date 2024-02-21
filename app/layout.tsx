@@ -5,6 +5,7 @@ import "./globals.css";
 import { Inter, Montserrat, Poppins } from "next/font/google";
 import { ParticlesContainer } from "@/components/particles-container";
 import { MousePointer } from "@/components/mouse-pointer";
+import { Navbar } from "@/components/navbar";
 
 type Props = {
     children: ReactNode;
@@ -68,7 +69,20 @@ export default function RootLayout({ children }: Props) {
             <body>
                 <ParticlesContainer />
                 <MousePointer />
-                {children}
+                <main
+                    className="relative m-0 h-screen w-screen overflow-hidden bg-transparent p-0 before:absolute
+                        before:-left-52 before:-top-52 before:z-10 before:h-[500px] before:w-[500px] before:rounded-full
+                        before:bg-white before:opacity-20 before:blur-[200px] before:content-[''] after:absolute
+                        after:-bottom-52 after:-right-52 after:z-10 after:h-[500px] after:w-[500px] after:rounded-full
+                        after:bg-primary after:opacity-20 after:blur-[200px] after:content-['']"
+                >
+                    <div className="h-full w-full flex-col overflow-y-auto overflow-x-hidden">
+                        <div className="container">
+                            <Navbar />
+                            {children}
+                        </div>
+                    </div>
+                </main>
             </body>
         </html>
     );

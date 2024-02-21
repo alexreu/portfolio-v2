@@ -4,8 +4,8 @@ import { Sparkles } from "lucide-react";
 export const ExperienceCard = () => {
     return (
         <Card
-            className="relative col-span-3 row-span-3 flex flex-col items-center justify-center gap-12 opacity-100
-                backdrop-blur-xl"
+            className="relative col-span-1 flex flex-col items-center justify-center gap-12 opacity-100 backdrop-blur-xl
+                lg:col-span-3 lg:row-span-3"
         >
             <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">Experiences</h1>
             <ul className="flex flex-col gap-12">

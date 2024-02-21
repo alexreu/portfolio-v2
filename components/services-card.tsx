@@ -5,7 +5,10 @@ import Link from "next/link";
 
 export const ServicesCard = () => {
     return (
-        <Card className="col-span-6 col-start-4 row-span-2 row-start-2 flex flex-col opacity-100 backdrop-blur-xl">
+        <Card
+            className="col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:col-span-6 lg:col-start-4 lg:row-span-2
+                lg:row-start-2"
+        >
             <CardHeader>
                 <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">Services</h1>
             </CardHeader>

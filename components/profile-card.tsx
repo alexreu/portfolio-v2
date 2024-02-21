@@ -17,8 +17,8 @@ export const ProfileCard = () => {
 
     return (
         <Card
-            className="relative col-span-3 col-start-1 row-span-3 row-start-1 flex flex-col items-center opacity-100
-                backdrop-blur-xl"
+            className="relative col-span-1 flex flex-col items-center opacity-100 backdrop-blur-xl lg:col-span-3
+                lg:col-start-1 lg:row-span-3 lg:row-start-1"
         >
             <CardHeader className="mt-auto flex flex-col-reverse items-center gap-6">
                 <h1>
