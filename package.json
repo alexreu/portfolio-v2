@@ -1,6 +1,6 @@
 {
   "name": "portfolio",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "start:dev": "concurrently \"next dev -p 3002\" \"cd studio && sanity dev\"",
@@ -21,6 +21,7 @@
     "@sanity/image-url": "^1.0.2",
     "@sanity/types": "^3.25",
     "@sanity/ui": "^2.0",
+    "@sanity/vision": "^3.29.1",
     "@tsparticles/engine": "^3.2.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.2.1",
@@ -39,7 +40,7 @@
     "react-aria": "^3.31.1",
     "react-aria-components": "^1.0.1",
     "react-dom": "^18.2.0",
-    "sanity": "^3.25",
+    "sanity": "^3.29.1",
     "sharp": "^0.33.2",
     "styled-components": "^6.0",
     "tailwind-merge": "^2.2.1",
