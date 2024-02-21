@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3002",
-    "build": "next build",
-    "start": "next start",
+    "start:dev": "concurrently \"next dev -p 3002\" \"cd studio && sanity dev\"",
+    "start:prod": "concurrently \"next start\" \"cd studio && sanity start\" ",
+    "build": "echo 'Building Sanity to public/studio' && cd studio && sanity build ../public/studio -y && cd .. && next build",
+    "start": "vercel start:prod",
     "lint": "next lint",
     "ts-lint": "tsc --noEmit --incremental"
   },
@@ -49,6 +50,7 @@
     "@types/react": "18.2.8",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "autoprefixer": "^10.4.17",
+    "concurrently": "^8.2.2",
     "eslint": "^8.56.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-next": "^14.1.0",
