@@ -1,27 +1,53 @@
-export default {
+import { Home, Key } from "lucide-react";
+
+const homepage = {
     name: "homepage",
-    title: "Contenu de la page d'accueil",
+    title: "Page d'accueil",
     type: "document",
+    icon: Home,
     fields: [
         {
-            name: "job",
+            name: "firstname",
+            title: "Prénom",
             type: "string",
-            title: "Poste"
+            validation: rule => rule.required(),
         },
         {
-            name: "years_of_experiences",
-            type: "number",
-            title: "Années d'expériences"
+            name: "profileImage",
+            title: "Photo de profil",
+            type: "image",
+            description: "Importer une photo de profil.",
+            options: { hotspot: true },
+            fields: [
+                {
+                    name: "alt",
+                    title: "Alt",
+                    type: "string",
+                },
+            ],
         },
         {
-            name: "number_of_projects",
-            type: "number",
-            title: "Nombre de projets réalisé"
+            name: "job",
+            title: "Poste",
+            type: "string",
         },
         {
-            name: "number_of_happy_customers",
-            type: "number",
-            title: "Nombre de clients satisfait"
-        }
-    ]
-}
+            name: "keyFigures",
+            title: "Chiffres clés",
+            description: "Chiffres clés de l'activitée",
+            icon: Key,
+            type: "array",
+            of: [
+                {
+                    type: "object",
+                    fields: [
+                        { name: "keyFigure", title: "Chiffre clé", type: "string" },
+                        { name: "keyFigureDescription", title: "Description", type: "string" },
+                    ],
+                },
+            ],
+        },
+    ],
+};
+
+export default homepage;
