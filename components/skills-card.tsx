@@ -1,11 +1,10 @@
-import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import AutoScroll from "embla-carousel-auto-scroll";
-import { Code2, Database, Github, Gitlab, Terminal } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
+import { Code2, Database, Github, Gitlab, Terminal } from "lucide-react";
 
-export const SkillsCard = () => {
+export const SkillsCard = ({skills}) => {
     return (
         <Card className="col-span-1 opacity-100 backdrop-blur-xl lg:col-span-6 lg:row-span-1">
             <CardHeader>

@@ -1,10 +1,13 @@
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
-import React from "react";
-import Link from "next/link";
-import { MoveRight, Send, Sparkles } from "lucide-react";
+import { HomepageData } from "@/lib/types";
 import { motion } from "framer-motion";
+import { MoveRight, Send, Sparkles } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
-export const ProfileCard = () => {
+type Props = Pick<HomepageData, "firstname" | "profilePicture">;
+
+export const ProfileCard = ({ profilePicture, firstname }: Props) => {
     const MotionLink = motion(Link);
     const iconVariants = {
         initial: { opacity: 0, translateX: -5 },
@@ -31,7 +34,7 @@ export const ProfileCard = () => {
                         initial="initial"
                         layout
                     >
-                        <span>I&#39;m Alexandre</span>
+                        <span>I&#39;m {firstname}</span>
                         <motion.span
                             className="absolute right-3"
                             variants={iconVariants}
@@ -41,10 +44,11 @@ export const ProfileCard = () => {
                         </motion.span>
                     </MotionLink>
                 </h1>
-                <div
-                    className="mx-auto mt-6 h-40 w-40 rounded-full bg-primary bg-[url('/images/resume-photo.png')]
-                        bg-cover bg-center"
-                ></div>
+                {profilePicture.image && (
+                    <div className="mx-auto mt-6 h-40 w-40 rounded-full bg-primary">
+                        <Image src={profilePicture.image} alt="" width={160} height={160} />
+                    </div>
+                )}
             </CardHeader>
             <CardFooter className="mt-auto w-full">
                 <Link

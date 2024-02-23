@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 
-export const ExperienceCard = () => {
+export const ExperienceCard = ({keyFigures}) => {
     return (
         <Card
             className="relative col-span-1 flex flex-col items-center justify-center gap-12 opacity-100 backdrop-blur-xl

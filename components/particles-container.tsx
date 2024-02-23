@@ -1,25 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { type ISourceOptions } from "@tsparticles/engine";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
-import { GlobalLoading } from "@/components/global-loading";
-import { AnimatePresence } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
 
 export const ParticlesContainer = () => {
-    const [isLoaderVisible, setIsLoaderVisible] = useState(true);
+    const [init, setInit] = useState(false);
 
     useEffect(() => {
         const loadParticlesEngine = async () => {
             await initParticlesEngine(async engine => {
-                await loadSlim(engine);
+                await loadSlim(engine).then(() => {
+                    setInit(true);
+                });
             });
         };
 
-        loadParticlesEngine().then(() => {
-            setIsLoaderVisible(false);
-        });
+        loadParticlesEngine();
     }, []);
 
     const options: ISourceOptions = useMemo(
@@ -65,10 +63,7 @@ export const ParticlesContainer = () => {
         []
     );
 
-    return (
-        <>
-            <AnimatePresence mode="wait">{isLoaderVisible && <GlobalLoading />}</AnimatePresence>
-            <Particles id="tsparticles" options={options} className="fixed left-0 top-0 h-screen w-screen" />
-        </>
-    );
+    if(init) {
+        return <Particles id="tsparticles" options={options} className="fixed left-0 top-0 h-screen w-screen" />
+    }
 };
