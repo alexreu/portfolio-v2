@@ -1,11 +1,11 @@
-import React, { ReactNode } from "react";
 import { Metadata } from "next";
+import { ReactNode } from "react";
 
-import "../globals.css";
-import { Inter, Montserrat, Poppins } from "next/font/google";
-import { ParticlesContainer } from "@/components/particles-container";
 import { MousePointer } from "@/components/mouse-pointer";
 import { Navbar } from "@/components/navbar";
+import { ParticlesContainer } from "@/components/particles-container";
+import { Inter, Montserrat, Poppins } from "next/font/google";
+import "../globals.css";
 
 type Props = {
     children: ReactNode;
@@ -76,8 +76,8 @@ export default function RootLayout({ children }: Props) {
                         after:-bottom-52 after:-right-52 after:z-10 after:h-[500px] after:w-[500px] after:rounded-full
                         after:bg-primary after:opacity-20 after:blur-[200px] after:content-['']"
                 >
-                    <div className="h-full w-full flex-col overflow-y-auto overflow-x-hidden scroll-smooth">
-                        <div className="container">
+                    <div className="h-full w-full overflow-y-auto overflow-x-hidden scroll-smooth">
+                        <div className="flex flex-col container py-10">
                             <Navbar />
                             {children}
                         </div>

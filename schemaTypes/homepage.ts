@@ -13,7 +13,7 @@ const homepage = {
             validation: rule => rule.required(),
         },
         {
-            name: "profileImage",
+            name: "profilePicture",
             title: "Photo de profil",
             type: "image",
             description: "Importer une photo de profil.",
@@ -30,6 +30,7 @@ const homepage = {
             name: "job",
             title: "Poste",
             type: "string",
+            validation: rule => rule.required(),
         },
         {
             name: "keyFigures",
@@ -41,8 +42,37 @@ const homepage = {
                 {
                     type: "object",
                     fields: [
-                        { name: "keyFigure", title: "Chiffre clé", type: "string" },
-                        { name: "keyFigureDescription", title: "Description", type: "string" },
+                        {
+                            name: "keyFigure",
+                            title: "Chiffre clé",
+                            type: "string",
+                            validation: rule => rule.required(),
+                        },
+                        {
+                            name: "keyFigureDescription",
+                            title: "Description",
+                            type: "string",
+                            validation: rule => rule.required(),
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            name: "skills",
+            title: "Compétences",
+            description: "List des compétences",
+            type: "array",
+            of: [
+                {
+                    type: "object",
+                    fields: [
+                        {
+                            name: "skill",
+                            title: "Titre de la compétence",
+                            type: "string",
+                            validation: rule => rule.required(),
+                        },
                     ],
                 },
             ],
