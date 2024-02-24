@@ -5,11 +5,14 @@ import Link from "next/link";
 
 export const GetInTouchCard = () => {
     return (
-        <Card className="relative col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:col-span-3 lg:row-span-1">
+        <Card
+            className="relative order-7 col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:order-none
+                lg:col-span-3 lg:row-span-1"
+        >
             <CardHeader>
                 <h1 className="inline-flex flex-col gap-5 text-2xl font-semibold leading-none tracking-wide text-white">
                     <span>Work</span>
-                    <span className="ml-5">
+                    <span className="ml-16 lg:ml-5">
                         With <span className="text-primary">me</span>... !
                     </span>
                 </h1>

@@ -76,8 +76,8 @@ export default function RootLayout({ children }: Props) {
                         after:-bottom-52 after:-right-52 after:z-10 after:h-[500px] after:w-[500px] after:rounded-full
                         after:bg-primary after:opacity-20 after:blur-[200px] after:content-['']"
                 >
-                    <div className="h-full w-full overflow-y-auto overflow-x-hidden scroll-smooth">
-                        <div className="flex flex-col container py-10">
+                    <div className="flex h-full w-full overflow-y-auto overflow-x-hidden scroll-smooth">
+                        <div className="container m-auto flex flex-col py-10">
                             <Navbar />
                             {children}
                         </div>

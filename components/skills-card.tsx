@@ -4,9 +4,9 @@ import AutoScroll from "embla-carousel-auto-scroll";
 import Autoplay from "embla-carousel-autoplay";
 import { Code2, Database, Github, Gitlab, Terminal } from "lucide-react";
 
-export const SkillsCard = ({skills}) => {
+export const SkillsCard = ({ skills }) => {
     return (
-        <Card className="col-span-1 opacity-100 backdrop-blur-xl lg:col-span-6 lg:row-span-1">
+        <Card className="order-6 col-span-1 opacity-100 backdrop-blur-xl lg:order-none lg:col-span-6 lg:row-span-1">
             <CardHeader>
                 <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">Skills & tools</h1>
             </CardHeader>
@@ -18,20 +18,30 @@ export const SkillsCard = ({skills}) => {
                     plugins={[Autoplay({}), AutoScroll({})]}
                 >
                     <CarouselContent>
-                        <CarouselItem className="basis-1/3">
-                            <p className="rounded-lg border p-2 text-center text-sm text-muted">Developpement web</p>
+                        <CarouselItem className="md:basis-1/2 xl:basis-1/3">
+                            <p className="rounded-lg border p-2 text-center text-xs text-muted lg:text-sm">
+                                Developpement web
+                            </p>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/3">
-                            <p className="rounded-lg border p-2 text-center text-sm text-muted">Seo & Referencement</p>
+                        <CarouselItem className="md:basis-1/2 xl:basis-1/3">
+                            <p className="rounded-lg border p-2 text-center text-xs text-muted lg:text-sm">
+                                Seo & Referencement
+                            </p>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/3">
-                            <p className="rounded-lg border p-2 text-center text-sm text-muted">Integration web</p>
+                        <CarouselItem className="md:basis-1/2 xl:basis-1/3">
+                            <p className="rounded-lg border p-2 text-center text-xs text-muted lg:text-sm">
+                                Integration web
+                            </p>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/3">
-                            <p className="rounded-lg border p-2 text-center text-sm text-muted">Responsive</p>
+                        <CarouselItem className="md:basis-1/2 xl:basis-1/3">
+                            <p className="rounded-lg border p-2 text-center text-xs text-muted lg:text-sm">
+                                Responsive
+                            </p>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/3">
-                            <p className="rounded-lg border p-2 text-center text-sm text-muted">Site vitrine</p>
+                        <CarouselItem className="md:basis-1/2 xl:basis-1/3">
+                            <p className="rounded-lg border p-2 text-center text-xs text-muted lg:text-sm">
+                                Site vitrine
+                            </p>
                         </CarouselItem>
                     </CarouselContent>
                 </Carousel>
@@ -42,7 +52,7 @@ export const SkillsCard = ({skills}) => {
                     plugins={[Autoplay({}), AutoScroll({ direction: "backward" })]}
                 >
                     <CarouselContent>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -50,7 +60,7 @@ export const SkillsCard = ({skills}) => {
                                 <Github />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -58,7 +68,7 @@ export const SkillsCard = ({skills}) => {
                                 <Gitlab />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -66,7 +76,7 @@ export const SkillsCard = ({skills}) => {
                                 <Code2 />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -74,7 +84,7 @@ export const SkillsCard = ({skills}) => {
                                 <Database />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -82,7 +92,7 @@ export const SkillsCard = ({skills}) => {
                                 <Terminal />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -90,7 +100,7 @@ export const SkillsCard = ({skills}) => {
                                 <Github />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -98,7 +108,7 @@ export const SkillsCard = ({skills}) => {
                                 <Gitlab />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -106,7 +116,7 @@ export const SkillsCard = ({skills}) => {
                                 <Github />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -114,7 +124,7 @@ export const SkillsCard = ({skills}) => {
                                 <Gitlab />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -122,7 +132,7 @@ export const SkillsCard = ({skills}) => {
                                 <Code2 />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -130,7 +140,7 @@ export const SkillsCard = ({skills}) => {
                                 <Database />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -138,7 +148,7 @@ export const SkillsCard = ({skills}) => {
                                 <Terminal />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -146,7 +156,7 @@ export const SkillsCard = ({skills}) => {
                                 <Github />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -154,7 +164,7 @@ export const SkillsCard = ({skills}) => {
                                 <Gitlab />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -162,7 +172,7 @@ export const SkillsCard = ({skills}) => {
                                 <Code2 />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"
@@ -170,7 +180,7 @@ export const SkillsCard = ({skills}) => {
                                 <Database />
                             </span>
                         </CarouselItem>
-                        <CarouselItem className="basis-1/12">
+                        <CarouselItem className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
                             <span
                                 className="inline-flex items-center justify-center rounded-lg border p-2 text-center
                                     text-sm text-muted"

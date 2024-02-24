@@ -17,15 +17,15 @@ import { AnimatePresence, motion } from "framer-motion";
 export default async function Home() {
     const homepageData: HomepageData[] = await getHomepageData();
     const { firstname, job, keyFigures, skills, profilePicture } = homepageData[0];
-    console.log(profilePicture);
+
     return (
         <AnimatePresence mode="wait">
-            {homepageData ? (                
+            {homepageData ? (
                 <motion.section
                     className="z-20 grid h-full w-full grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-12 lg:grid-rows-4"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1, type: "tween" }}
+                    transition={{ duration: 0.7, type: "tween" }}
                 >
                     <ProfileCard profilePicture={profilePicture} firstname={firstname} />
                     <TitleCard job={job} />

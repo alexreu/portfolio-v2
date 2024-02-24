@@ -5,7 +5,7 @@ export const getHomepageData = async () => {
     return client.fetch(groq`*[_type == "homepage"]{
         _id,
         firstname,
-        profilePicture,
+        profilePicture {alt, "image": asset->url},
         job,
         keyFigures,
         skills

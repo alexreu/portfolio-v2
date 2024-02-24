@@ -5,11 +5,14 @@ import { MoveRight, Sparkles } from "lucide-react";
 
 export const OffersCard = () => {
     return (
-        <Card className="relarive col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:col-span-3 lg:row-span-1">
+        <Card
+            className="relarive order-8 col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:order-none
+                lg:col-span-3 lg:row-span-1"
+        >
             <CardHeader>
                 <h1 className="inline-flex flex-col gap-5 text-2xl font-semibold leading-none tracking-wide text-white">
                     <span>Votre site vitrine</span>
-                    <span className="ml-5">
+                    <span className="ml-16 lg:ml-5">
                         à partir de <span className="text-primary">499 €</span>
                     </span>
                 </h1>
