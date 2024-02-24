@@ -66,7 +66,7 @@ export default function RootLayout({ children }: Props) {
             className={`${poppins.variable} ${inter.variable} ${montserrat.variable}`}
             suppressHydrationWarning
         >
-            <body>
+            <body className="bg-[#0A090D]">
                 <ParticlesContainer />
                 <MousePointer />
                 <main

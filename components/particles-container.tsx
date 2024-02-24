@@ -63,7 +63,14 @@ export const ParticlesContainer = () => {
         []
     );
 
-    if(init) {
-        return <Particles id="tsparticles" options={options} className="fixed left-0 top-0 h-screen w-screen" />
+    if (init) {
+        return (
+            <Particles
+                id="tsparticles"
+                key="tsparticlesContainer"
+                options={options}
+                className="fixed left-0 top-0 h-screen w-screen"
+            />
+        );
     }
 };

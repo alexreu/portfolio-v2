@@ -12,33 +12,55 @@ import { TitleCard } from "@/components/title-card";
 import { getHomepageData } from "@/lib/sanity/sanity.query";
 import { HomepageData } from "@/lib/types";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 // eslint-disable-next-line @next/next/no-async-client-component
-export default async function Home() {
-    const homepageData: HomepageData[] = await getHomepageData();
-    const { firstname, job, keyFigures, skills, profilePicture } = homepageData[0];
+export default function Home() {
+    const [homepageData, setHomepageData] = useState<HomepageData | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data: HomepageData[] = await getHomepageData();
+                setHomepageData(data[0]);
+            } catch (error) {
+                console.error("Error fetching homepage data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const { firstname, job, keyFigures, skills, profilePicture } = homepageData ?? {};
+
+    if (loading)
+        return (
+            <AnimatePresence initial={false}>
+                <GlobalLoading />
+            </AnimatePresence>
+        );
 
     return (
-        <AnimatePresence mode="wait">
-            {homepageData ? (
-                <motion.section
-                    className="z-20 grid h-full w-full grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-12 lg:grid-rows-4"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.7, type: "tween" }}
-                >
-                    <ProfileCard profilePicture={profilePicture} firstname={firstname} />
-                    <TitleCard job={job} />
-                    <SocialCard />
-                    <ExperienceCard keyFigures={keyFigures} />
-                    <ServicesCard />
-                    <SkillsCard skills={skills} />
-                    <GetInTouchCard />
-                    <OffersCard />
-                </motion.section>
-            ) : (
-                <GlobalLoading />
-            )}
+        <AnimatePresence>
+            <motion.section
+                className="z-20 grid h-full w-full grid-cols-1 place-items-stretch gap-5 md:grid-cols-2 lg:grid-cols-12
+                    lg:grid-rows-4"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, type: "tween" }}
+            >
+                <ProfileCard profilePicture={profilePicture} firstname={firstname} />
+                <TitleCard job={job} />
+                <SocialCard />
+                <ExperienceCard keyFigures={keyFigures} />
+                <ServicesCard />
+                <SkillsCard skills={skills} />
+                <GetInTouchCard />
+                <OffersCard />
+            </motion.section>
         </AnimatePresence>
     );
 }

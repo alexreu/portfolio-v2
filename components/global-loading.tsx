@@ -8,7 +8,7 @@ export const GlobalLoading = () => {
         <motion.div
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1, type: "tween" }}
+            transition={{ duration: 0.5, type: "tween" }}
             className="pointer-events-none absolute left-0 top-0 z-[9999] flex h-screen w-screen items-center
                 justify-center bg-black"
         >

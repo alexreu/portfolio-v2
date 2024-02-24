@@ -7,17 +7,20 @@ export const GetInTouchCard = () => {
     return (
         <Card
             className="relative order-7 col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:order-none
-                lg:col-span-3 lg:row-span-1"
+                lg:col-span-3 lg:row-span-1 lg:justify-center"
         >
             <CardHeader>
-                <h1 className="inline-flex flex-col gap-5 text-2xl font-semibold leading-none tracking-wide text-white">
+                <h1
+                    className="inline-flex flex-col gap-5 text-2xl font-semibold leading-none tracking-wide text-white
+                        lg:text-xl xl:text-2xl"
+                >
                     <span>Work</span>
                     <span className="ml-16 lg:ml-5">
                         With <span className="text-primary">me</span>... !
                     </span>
                 </h1>
             </CardHeader>
-            <CardFooter className="mt-auto">
+            <CardFooter className="xl:mt-auto">
                 <Link
                     href="/contact"
                     className="inline-flex w-full justify-between py-2 font-medium text-white transition-all
