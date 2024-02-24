@@ -17,10 +17,11 @@ import {
 } from "lucide-react";
 
 type Props = {
-    skills?: { skillTitle: string; _key: string }[];
+    skills?: { skill: string; _key: string }[];
 };
 
 export const SkillsCard = ({ skills }: Props) => {
+    console.log(skills);
     const tools = {
         linkedin: <Linkedin />,
         code2: <Code2 />,
@@ -53,10 +54,10 @@ export const SkillsCard = ({ skills }: Props) => {
                             plugins={[Autoplay({}), AutoScroll({})]}
                         >
                             <CarouselContent>
-                                {skills.map(({ skillTitle, _key }) => (
+                                {skills.map(({ skill, _key }) => (
                                     <CarouselItem key={_key} className="md:basis-1/2 xl:basis-1/3">
                                         <p className="rounded-lg border p-2 text-center text-xs text-muted lg:text-sm">
-                                            {skillTitle}
+                                            {skill}
                                         </p>
                                     </CarouselItem>
                                 ))}

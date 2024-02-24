@@ -6,5 +6,5 @@ export type HomepageData = {
     };
     job: string;
     keyFigures: { keyFigure: string; keyFigureDescription: string; _key: string }[];
-    skills: { skillTitle: string; _key: string }[];
+    skills: { skill: string; _key: string }[];
 };
