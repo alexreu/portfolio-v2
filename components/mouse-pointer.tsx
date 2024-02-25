@@ -18,7 +18,7 @@ export const MousePointer = () => {
 
     return (
         <motion.div
-            className="fixed left-0 top-0 h-10 w-10 rounded-full border-2 border-primary"
+            className="fixed left-0 top-0 hidden h-10 w-10 rounded-full border-2 border-primary xl:flex"
             variants={variants}
             animate="default"
             transition={{

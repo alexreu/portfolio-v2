@@ -15,7 +15,7 @@ export const GetInTouchCard = () => {
                         lg:text-xl xl:text-2xl"
                 >
                     <span>Work</span>
-                    <span className="ml-16 lg:ml-5">
+                    <span className="ml-12 lg:ml-5">
                         With <span className="text-primary">me</span>... !
                     </span>
                 </h1>

@@ -15,7 +15,7 @@ export const OffersCard = () => {
                         lg:text-xl xl:text-2xl"
                 >
                     <span>Votre site vitrine</span>
-                    <span className="ml-16 lg:ml-0 xl:ml-5">
+                    <span className="ml-12 lg:ml-0 xl:ml-5">
                         à partir de <span className="text-primary">499 €</span>
                     </span>
                 </h1>
