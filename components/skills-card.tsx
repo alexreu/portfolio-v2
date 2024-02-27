@@ -42,7 +42,9 @@ export const SkillsCard = ({ skills }: Props) => {
                 lg:row-span-1"
         >
             <CardHeader className="w-full self-start">
-                <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">Skills & tools</h1>
+                <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">
+                    Skills & tools <span className="sr-only">compétences et outils</span>
+                </h1>
             </CardHeader>
             <CardContent className="my-auto flex flex-col">
                 <div className="flex flex-col gap-8">
