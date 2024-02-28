@@ -1,0 +1,46 @@
+import { CircleDollarSign } from "lucide-react";
+
+const pricing = {
+    name: "pricing",
+    title: "Page tarifs",
+    type: "document",
+    icon: CircleDollarSign,
+    fields: [
+        {
+            name: "offerTitle",
+            title: "Titre de l'offre",
+            type: "string",
+            validation: rule => rule.required(),
+        },
+        {
+            name: "fixedPrice",
+            title: "Tarif fixe",
+            type: "number",
+        },
+        {
+            name: "monthlyPrice",
+            title: "Tarif mensuel",
+            type: "number",
+        },
+        {
+            name: "offerContent",
+            title: "Contenu de l'offre",
+            type: "array",
+            of: [
+                {
+                    type: "object",
+                    fields: [
+                        {
+                            name: "offerContentItem",
+                            title: "Item",
+                            type: "string",
+                            validation: rule => rule.required(),
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+};
+
+export default pricing;
