@@ -23,6 +23,12 @@ const pricing = {
             type: "number",
         },
         {
+            name: "isOfferCustom",
+            title: "Offre custom ?",
+            type: "boolean",
+            initialValue: false,
+        },
+        {
             name: "offerContent",
             title: "Contenu de l'offre",
             type: "array",

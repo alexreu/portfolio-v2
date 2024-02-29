@@ -11,3 +11,14 @@ export const getHomepageData = async () => {
         skills
     }`);
 };
+
+export const getPricingPageData = async () => {
+    return client.fetch(groq`*[_type == "pricing"]{
+        _id,
+        fixedPrice,
+        monthlyPrice,
+        isOfferCustom,
+        offerContent,
+        offerTitle
+    }`);
+};
