@@ -17,7 +17,7 @@ export default function Pricing() {
         const fetchData = async () => {
             try {
                 const data: PricingPageData[] = await getPricingPageData();
-                setPricingPageData(data[0]);
+                setPricingPageData(data);
             } catch (error) {
                 console.error("Error fetching pricing page data:", error);
             } finally {
@@ -27,8 +27,6 @@ export default function Pricing() {
 
         fetchData();
     }, []);
-
-    const { offerTitle, offerContent, isOfferCustom, fixedPrice, monthlyPrice } = pricingPageData ?? {};
 
     const MotionLink = motion(Link);
     const iconVariants = {
@@ -42,9 +40,16 @@ export default function Pricing() {
 
     return (
         <div className="grid grid-cols-12 grid-rows-3 gap-5">
-            <PricingCard title="Offre basique" fixedPrice="499" monthPrice="45" content={[]} />
-            <PricingCard title="Offre premium" fixedPrice="1299" monthPrice="64" content={[]} />
-            <PricingCard title="Offre sur mesure" isCustom content={[]} />
+            {pricingPageData?.map(({ _id, offerTitle, offerContent, isOfferCustom, monthlyPrice, fixedPrice }) => (
+                <PricingCard
+                    key={_id}
+                    title={offerTitle}
+                    fixedPrice={fixedPrice}
+                    monthPrice={monthlyPrice}
+                    content={offerContent}
+                    isCustom={isOfferCustom}
+                />
+            ))}
             <Card
                 className="relative col-span-12 row-span-2 row-start-3 mt-5 flex flex-col items-center gap-6 opacity-100
                     backdrop-blur-xl"

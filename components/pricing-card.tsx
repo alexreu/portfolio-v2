@@ -2,9 +2,9 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 
 type Props = {
     title: string;
-    monthPrice?: string;
-    fixedPrice?: string;
-    content: string[];
+    monthPrice?: number;
+    fixedPrice?: number;
+    content: { _key: string; offerContentItem: string }[];
     isCustom?: boolean;
 };
 export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }: Props) => {
@@ -34,14 +34,9 @@ export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }
             </CardHeader>
             <CardContent className="mt-auto">
                 <ul className="flex flex-col gap-4">
-                    {content.map((item, i) => (
-                        <li key={i}>{item}</li>
+                    {content.map(({ _key, offerContentItem }) => (
+                        <li key={_key}>{offerContentItem}</li>
                     ))}
-                    <li>Maquettes pré-défini</li>
-                    <li>Modification de la couleur et du logo</li>
-                    <li>Hébergement + nom de domaine</li>
-                    <li>Maintenance</li>
-                    <li>Accès à un espace d&apos;administration</li>
                 </ul>
             </CardContent>
             <CardFooter></CardFooter>
