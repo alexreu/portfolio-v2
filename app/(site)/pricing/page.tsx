@@ -1,13 +1,12 @@
 "use client";
 
 import { PricingCard } from "@/components/pricing-card";
-import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Blend, Send } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { PricingPageData } from "@/lib/types";
 import { getPricingPageData } from "@/lib/sanity/sanity.query";
+import { PricingPageData } from "@/lib/types";
+import { Blend, Send } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Pricing() {
     const [pricingPageData, setPricingPageData] = useState<PricingPageData[] | null>(null);
@@ -28,18 +27,8 @@ export default function Pricing() {
         fetchData();
     }, []);
 
-    const MotionLink = motion(Link);
-    const iconVariants = {
-        initial: { opacity: 0, translateX: -5 },
-        hover: { opacity: 1, translateX: 0 },
-    };
-    const linkVariants = {
-        initial: { width: "150px" },
-        hover: { width: "181px" },
-    };
-
     return (
-        <div className="grid grid-cols-12 grid-rows-3 gap-5">
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
             {pricingPageData?.map(({ _id, offerTitle, offerContent, isOfferCustom, monthlyPrice, fixedPrice }) => (
                 <PricingCard
                     key={_id}
@@ -51,33 +40,26 @@ export default function Pricing() {
                 />
             ))}
             <Card
-                className="relative col-span-12 row-span-2 row-start-3 mt-5 flex flex-col items-center gap-6 opacity-100
-                    backdrop-blur-xl"
+                className="item-center relative mt-5 flex flex-col items-center justify-center gap-6 opacity-100
+                    backdrop-blur-xl xl:col-span-12"
             >
                 <CardHeader>
-                    <h1 className="text-3xl font-semibold capitalize text-white">
+                    <h1 className="text-center text-3xl font-semibold capitalize text-white">
                         Pour toutes autres questions / demandes
                     </h1>
                 </CardHeader>
                 <CardContent>
-                    <MotionLink
-                        className="relative flex w-full items-center gap-3 rounded-xl bg-primary p-3 text-lg font-medium
-                            tracking-wide text-white"
+                    <Link
+                        className="relative flex w-full items-center gap-3 rounded-xl border border-primary bg-primary
+                            p-3 text-base font-medium tracking-wide text-white transition-all duration-300 ease-in-out
+                            hover:border-primary hover:bg-white hover:text-primary"
                         href="#"
-                        variants={linkVariants}
-                        whileHover="hover"
-                        initial="initial"
-                        layout
                     >
                         <span>Me contacter</span>
-                        <motion.span
-                            className="absolute right-3"
-                            variants={iconVariants}
-                            transition={{ duration: 0.4, type: "spring" }}
-                        >
+                        <span>
                             <Send size={22} />
-                        </motion.span>
-                    </MotionLink>
+                        </span>
+                    </Link>
                 </CardContent>
                 <Blend
                     className="absolute right-1 top-1 rotate-90 stroke-muted-foreground opacity-50"
@@ -85,6 +67,35 @@ export default function Pricing() {
                     strokeWidth={0.5}
                 />
             </Card>
+            {/* <Card
+                className="relative col-span-1 mt-5 flex flex-col items-center justify-center gap-6 opacity-100
+                    backdrop-blur-xl xl:col-span-6 xl:row-span-2 xl:row-start-3"
+            >
+                <CardHeader>
+                    <h1 className="text-center text-3xl font-semibold capitalize text-white">
+                        N&apos;hésitez pas a consulter mon profil de freelance sur la plateforme{" "}
+                        <span className="text-primary">Malt</span>
+                    </h1>
+                </CardHeader>
+                <CardContent>
+                    <Link
+                        className="relative flex w-full items-center gap-3 rounded-xl border border-primary bg-primary
+                            p-3 text-base font-medium tracking-wide text-white transition-all duration-300 ease-in-out
+                            hover:border-primary hover:bg-white hover:text-primary"
+                        href="#"
+                    >
+                        <span>Voir mon profil</span>
+                        <span>
+                            <Send size={22} />
+                        </span>
+                    </Link>
+                </CardContent>
+                <Blend
+                    className="absolute right-1 top-1 rotate-90 stroke-muted-foreground opacity-50"
+                    size={58}
+                    strokeWidth={0.5}
+                />
+            </Card> */}
         </div>
     );
 }

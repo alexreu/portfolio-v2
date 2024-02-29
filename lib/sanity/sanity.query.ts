@@ -13,7 +13,7 @@ export const getHomepageData = async () => {
 };
 
 export const getPricingPageData = async () => {
-    return client.fetch(groq`*[_type == "pricing"]{
+    return client.fetch(groq`*[_type == "pricing"] | order(_createdAt asc) {
         _id,
         fixedPrice,
         monthlyPrice,
