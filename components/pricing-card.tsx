@@ -36,7 +36,7 @@ export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }
                                 <span className="text-base text-muted-foreground">HT</span>
                             </span>
                             <span className="inline-flex items-center gap-2 text-lg tracking-wider">
-                                <span className="font-medium">{monthPrice}€</span>
+                                + <span className="font-medium">{monthPrice}€</span>
                                 <span className="text-sm text-muted-foreground">HT /mois</span>
                             </span>
                         </p>
