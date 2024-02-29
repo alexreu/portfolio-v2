@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 
 export default function Pricing() {
     const [pricingPageData, setPricingPageData] = useState<PricingPageData[] | null>(null);
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -20,7 +20,7 @@ export default function Pricing() {
             } catch (error) {
                 console.error("Error fetching pricing page data:", error);
             } finally {
-                setLoading(false);
+                // setLoading(false);
             }
         };
 
