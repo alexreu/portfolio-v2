@@ -6,6 +6,7 @@ import { Navbar } from "@/components/navbar";
 import { ParticlesContainer } from "@/components/particles-container";
 import { Inter, Montserrat, Poppins } from "next/font/google";
 import "../globals.css";
+import { Footer } from "@/components/footer";
 
 type Props = {
     children: ReactNode;
@@ -80,6 +81,7 @@ export default function RootLayout({ children }: Props) {
                         <div className="container m-auto flex flex-col py-10">
                             <Navbar />
                             {children}
+                            <Footer />
                         </div>
                     </div>
                 </main>

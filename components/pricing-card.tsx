@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Check, Sparkle } from "lucide-react";
+import { motion } from "framer-motion";
 
 type Props = {
     title: string;
@@ -10,8 +11,12 @@ type Props = {
 };
 
 export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }: Props) => {
+    const MotionCard = motion(Card);
     return (
-        <Card
+        <MotionCard
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, velocity: 1 }}
             className="col-span-1 flex flex-col divide-y-2 text-white opacity-100 backdrop-blur-xl transition-all
                 duration-300 ease-in-out hover:shadow-md hover:shadow-primary xl:col-span-4 xl:row-span-2"
         >
@@ -58,6 +63,6 @@ export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }
                 </ul>
             </CardContent>
             {/* <CardFooter></CardFooter> */}
-        </Card>
+        </MotionCard>
     );
 };

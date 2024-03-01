@@ -15,7 +15,6 @@ export default function Pricing() {
     const [loading, setLoading] = useState(true);
 
     const MotionCard = motion(Card);
-    const MotionPrincingCard = motion(PricingCard);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,7 +32,7 @@ export default function Pricing() {
     }, []);
 
     return (
-        <motion.div className="grid grid-cols-1 gap-5 xl:grid-cols-12" layout>
+        <motion.div className="grid grid-cols-1 gap-5 xl:grid-cols-12" layout="preserve-aspect">
             <AnimatePresence initial={false} mode="wait">
                 {loading
                     ? new Array(3).fill(null).map((_, i) => (
@@ -44,10 +43,7 @@ export default function Pricing() {
                       ))
                     : pricingPageData?.map(
                           ({ _id, offerTitle, offerContent, isOfferCustom, monthlyPrice, fixedPrice }) => (
-                              <MotionPrincingCard
-                                  initial={{ opacity: 0, scale: 0 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  transition={{ duration: 300 }}
+                              <PricingCard
                                   key={_id}
                                   title={offerTitle}
                                   fixedPrice={fixedPrice}
