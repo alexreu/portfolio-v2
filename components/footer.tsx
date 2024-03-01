@@ -10,7 +10,7 @@ export const Footer = () => {
         { title: "Tarifs", link: "/pricing" },
     ];
     return (
-        <footer className="mt-9 flex justify-between py-4">
+        <footer className="mt-20 flex justify-between py-4">
             <div>
                 <p className="font-medium text-white">
                     Copyright © {currentYear} AlexDevLab | Designed By <span className="text-primary">AlexDevLab</span>
