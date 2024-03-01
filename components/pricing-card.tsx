@@ -12,8 +12,8 @@ type Props = {
 export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }: Props) => {
     return (
         <Card
-            className="col-span-1 flex flex-col divide-y-2 text-white opacity-100 backdrop-blur-xl xl:col-span-4
-                xl:row-span-2"
+            className="col-span-1 flex flex-col divide-y-2 text-white opacity-100 backdrop-blur-xl transition-all
+                duration-300 ease-in-out hover:shadow-md hover:shadow-primary xl:col-span-4 xl:row-span-2"
         >
             <CardHeader className="min-h-48 gap-2">
                 <h2 className="inline-flex items-center gap-2 text-2xl font-semibold text-primary">
