@@ -16,9 +16,10 @@ export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }
         <MotionCard
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, velocity: 1 }}
+            transition={{ duration: 0.3, type: "tween", ease: "easeInOut" }}
             className="col-span-1 flex flex-col divide-y-2 text-white opacity-100 backdrop-blur-xl transition-all
-                duration-300 ease-in-out hover:shadow-md hover:shadow-primary xl:col-span-4 xl:row-span-2"
+                duration-300 ease-in-out hover:scale-[1.03] hover:shadow-[0_0_16px_-2px] hover:shadow-primary
+                xl:col-span-4 xl:row-span-2"
         >
             <CardHeader className="min-h-48 gap-2">
                 <h2 className="inline-flex items-center gap-2 text-2xl font-semibold text-primary">
