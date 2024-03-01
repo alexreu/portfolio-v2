@@ -35,8 +35,8 @@ export default function Pricing() {
         <LayoutGroup>
             <motion.div
                 className="grid grid-cols-1 gap-5 xl:grid-cols-12"
-                layout="preserve-aspect"
-                transition={{ duration: 0.3, type: "tween" }}
+                transition={{ duration: 0.1, type: "spring" }}
+                layout
             >
                 <AnimatePresence initial={false} mode="wait">
                     {loading
