@@ -7,10 +7,15 @@ import { PricingPageData } from "@/lib/types";
 import { Blend, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { SkeletonCard } from "@/components/skeleton-card";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Pricing() {
     const [pricingPageData, setPricingPageData] = useState<PricingPageData[] | null>(null);
-    // const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
+
+    const MotionCard = motion(Card);
+    const MotionPrincingCard = motion(PricingCard);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -20,7 +25,7 @@ export default function Pricing() {
             } catch (error) {
                 console.error("Error fetching pricing page data:", error);
             } finally {
-                // setLoading(false);
+                setLoading(false);
             }
         };
 
@@ -28,17 +33,31 @@ export default function Pricing() {
     }, []);
 
     return (
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-12">
-            {pricingPageData?.map(({ _id, offerTitle, offerContent, isOfferCustom, monthlyPrice, fixedPrice }) => (
-                <PricingCard
-                    key={_id}
-                    title={offerTitle}
-                    fixedPrice={fixedPrice}
-                    monthPrice={monthlyPrice}
-                    content={offerContent}
-                    isCustom={isOfferCustom}
-                />
-            ))}
+        <motion.div className="grid grid-cols-1 gap-5 xl:grid-cols-12" layout>
+            <AnimatePresence initial={false} mode="wait">
+                {loading
+                    ? new Array(3).fill(null).map((_, i) => (
+                          <MotionCard key={i} className="col-span-1 xl:col-span-4" exit={{ opacity: 0 }}>
+                              <SkeletonCard numberOfSkeleton={1} isBig />
+                              <SkeletonCard numberOfSkeleton={6} />
+                          </MotionCard>
+                      ))
+                    : pricingPageData?.map(
+                          ({ _id, offerTitle, offerContent, isOfferCustom, monthlyPrice, fixedPrice }) => (
+                              <MotionPrincingCard
+                                  initial={{ opacity: 0, scale: 0 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ duration: 300 }}
+                                  key={_id}
+                                  title={offerTitle}
+                                  fixedPrice={fixedPrice}
+                                  monthPrice={monthlyPrice}
+                                  content={offerContent}
+                                  isCustom={isOfferCustom}
+                              />
+                          )
+                      )}
+            </AnimatePresence>
             <Card
                 className="item-center relative mt-5 flex flex-col items-center justify-center gap-6 opacity-100
                     backdrop-blur-xl xl:col-span-12"
@@ -96,6 +115,6 @@ export default function Pricing() {
                     strokeWidth={0.5}
                 />
             </Card> */}
-        </div>
+        </motion.div>
     );
 }
