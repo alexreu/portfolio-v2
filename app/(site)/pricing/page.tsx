@@ -1,13 +1,13 @@
 "use client";
 
-import { PricingCard } from "@/components/pricing-card";
+import { PricingCard } from "@/components/pricing-page/pricing-card";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getPricingPageData } from "@/lib/sanity/sanity.query";
 import { PricingPageData } from "@/lib/types";
 import { Blend, Send } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { SkeletonCard } from "@/components/skeleton-card";
+import { CardSkeleton } from "@/components/card-skeleton";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 
 export default function Pricing() {
@@ -42,8 +42,8 @@ export default function Pricing() {
                     {loading
                         ? new Array(3).fill(null).map((_, i) => (
                               <MotionCard key={i} className="col-span-1 xl:col-span-4" exit={{ opacity: 0 }}>
-                                  <SkeletonCard numberOfSkeleton={1} isBig />
-                                  <SkeletonCard numberOfSkeleton={6} />
+                                  <CardSkeleton numberOfSkeleton={1} isBig />
+                                  <CardSkeleton numberOfSkeleton={6} />
                               </MotionCard>
                           ))
                         : pricingPageData?.map(

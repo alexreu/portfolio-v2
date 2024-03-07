@@ -6,7 +6,7 @@ type Props = {
     isBig?: boolean;
 } & HTMLAttributes<HTMLDivElement>;
 
-export const SkeletonCard = ({ numberOfSkeleton = 3, isBig, ...props }: Props) => {
+export const CardSkeleton = ({ numberOfSkeleton = 3, isBig, ...props }: Props) => {
     return (
         <div className="flex flex-col items-center justify-center space-y-4 p-6" {...props}>
             {new Array(numberOfSkeleton).fill(0).map((_, i) => (

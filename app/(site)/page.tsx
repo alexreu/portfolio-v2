@@ -1,14 +1,14 @@
 "use client";
 
-import { ExperienceCard } from "@/components/experience-card";
-import { GetInTouchCard } from "@/components/get-in-touch-card";
+import { ExperienceCard } from "@/components/home-page/experience-card";
+import { GetInTouchCard } from "@/components/home-page/get-in-touch-card";
 import { GlobalLoading } from "@/components/global-loading";
-import { OffersCard } from "@/components/offers-card";
-import { ProfileCard } from "@/components/profile-card";
-import { ServicesCard } from "@/components/services-card";
-import { SkillsCard } from "@/components/skills-card";
-import { SocialCard } from "@/components/social-card";
-import { TitleCard } from "@/components/title-card";
+import { OffersCard } from "@/components/home-page/offers-card";
+import { ProfileCard } from "@/components/home-page/profile-card";
+import { ServicesCard } from "@/components/home-page/services-card";
+import { SkillsCard } from "@/components/home-page/skills-card";
+import { SocialCard } from "@/components/home-page/social-card";
+import { TitleCard } from "@/components/home-page/title-card";
 import { getHomepageData } from "@/lib/sanity/sanity.query";
 import { HomepageData } from "@/lib/types";
 import { AnimatePresence, motion } from "framer-motion";

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
-import { SkeletonCard } from "@/components/skeleton-card";
+import { CardSkeleton } from "@/components/card-skeleton";
 
 type Props = {
     keyFigures?: { keyFigure: string; keyFigureDescription: string; _key: string }[];
@@ -16,7 +16,7 @@ export const ExperienceCard = ({ keyFigures }: Props) => {
                 <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">Experiences</h1>
             </CardHeader>
             {!keyFigures ? (
-                <SkeletonCard numberOfSkeleton={5} />
+                <CardSkeleton numberOfSkeleton={5} />
             ) : (
                 <CardContent className="w-full flex-1 pb-12 lg:p-6">
                     <ul className="flex h-full flex-col justify-center gap-12">
