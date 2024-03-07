@@ -22,7 +22,8 @@ const about = defineType({
                         {
                             name: "description",
                             title: "Description",
-                            type: "block",
+                            type: "array",
+                            of: [{ type: "block" }],
                             validation: rule => rule.required(),
                         },
                     ],
@@ -61,6 +62,7 @@ const about = defineType({
                             options: {
                                 format: "YYYY",
                             },
+                            hidden: ({ document }) => !!document?.isCurrentJob,
                         },
                     ],
                 }),
