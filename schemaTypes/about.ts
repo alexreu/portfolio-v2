@@ -1,39 +1,43 @@
 import { defineArrayMember, defineField, defineType } from "@sanity/types";
 
 const about = defineType({
-    name: "About",
+    name: "about",
     title: "Page à propos",
     type: "document",
     fields: [
         defineField({
+            name: "title",
+            readOnly: true,
+            type: "string",
+            hidden: true,
+            initialValue: "À propos",
+        }),
+        {
             name: "presentation",
             title: "Présentation",
-            type: "array",
-            of: [
-                defineArrayMember({
-                    type: "object",
-                    fields: [
-                        {
-                            name: "title",
-                            title: "Titre",
-                            type: "text",
-                            validation: rule => rule.required(),
-                        },
-                        {
-                            name: "description",
-                            title: "Description",
-                            type: "array",
-                            of: [{ type: "block" }],
-                            validation: rule => rule.required(),
-                        },
-                    ],
-                }),
+            type: "object",
+            fields: [
+                {
+                    name: "title",
+                    title: "Titre",
+                    rows: 3,
+                    type: "text",
+                    validation: rule => rule.required(),
+                },
+                {
+                    name: "description",
+                    title: "Description",
+                    type: "text",
+                    rows: 7,
+                    validation: rule => rule.required(),
+                },
             ],
-        }),
+        },
         defineField({
             name: "experiences",
             title: "Experiences",
             type: "array",
+            options: { layout: "tags" },
             of: [
                 defineArrayMember({
                     type: "object",
@@ -42,27 +46,79 @@ const about = defineType({
                             name: "isCurrentJob",
                             title: "Poste en cours ?",
                             type: "boolean",
-                            options: {
-                                default: false,
-                            },
+                            initialValue: false,
                         },
                         {
                             name: "startYear",
                             title: "Année de début",
-                            type: "date",
-                            options: {
-                                format: "YYYY",
-                            },
+                            type: "number",
                             validation: rule => rule.required(),
                         },
                         {
                             name: "endYear",
                             title: "Année de fin",
-                            type: "date",
-                            options: {
-                                format: "YYYY",
-                            },
-                            hidden: ({ document }) => !!document?.isCurrentJob,
+                            type: "number",
+                            hidden: ({ parent }) => parent.isCurrentJob,
+                        },
+                        {
+                            name: "job",
+                            title: "Poste",
+                            type: "string",
+                            validation: rule => rule.required(),
+                        },
+                        {
+                            name: "company",
+                            title: "Enterprise",
+                            type: "string",
+                            validation: rule => rule.required(),
+                        },
+                    ],
+                }),
+            ],
+        }),
+        defineField({
+            name: "services",
+            title: "What i do ?",
+            type: "array",
+            of: [
+                defineArrayMember({
+                    type: "object",
+                    fields: [
+                        {
+                            name: "service",
+                            title: "Service",
+                            type: "string",
+                            validation: rule => rule.required(),
+                        },
+                    ],
+                }),
+            ],
+        }),
+        defineField({
+            name: "education",
+            title: "Diplômes",
+            type: "array",
+            of: [
+                defineArrayMember({
+                    type: "object",
+                    fields: [
+                        {
+                            name: "yearOfGraduation",
+                            title: "Année d'obtention",
+                            type: "number",
+                            validation: rule => rule.required(),
+                        },
+                        {
+                            name: "graduationTitle",
+                            title: "Nom du diplôme",
+                            type: "string",
+                            validation: rule => rule.required(),
+                        },
+                        {
+                            name: "trainingLocation",
+                            title: "Lieu de la formation",
+                            type: "string",
+                            validation: rule => rule.required(),
                         },
                     ],
                 }),

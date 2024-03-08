@@ -22,3 +22,14 @@ export const getPricingPageData = async () => {
         offerTitle
     }`);
 };
+
+export const getAboutPageData = async () => {
+    return client.fetch(groq`*[_type == "about"][0]{
+        _id,
+        presentation,
+        experiences,
+        services,
+        education,
+        "homepageData": *[_type == "homepage"][0]{keyFigures, profilePicture {alt, "image": asset->url}, }
+    }`);
+};

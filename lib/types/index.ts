@@ -17,3 +17,19 @@ export type PricingPageData = {
     offerTitle: string;
     offerContent: { _key: string; offerContentItem: string }[];
 };
+
+export type AboutPageData = {
+    _id: string;
+    presentation: { title: string; description: string };
+    experiences: {
+        _key: string;
+        isCurrentJob: boolean;
+        startYear: number;
+        endYear?: number;
+        job: string;
+        company: string;
+    }[];
+    services: { _key: string; service: string }[];
+    education: { _key: string; yearOfGraduation: number; graduationTitle: string; trainingLocation: string }[];
+    homePageData: { keyFigure: Pick<HomepageData, "keyFigures">; profilePicture: Pick<HomepageData, "profilePicture"> };
+};
