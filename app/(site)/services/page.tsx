@@ -1,3 +1,3 @@
 export default function Services() {
-    return <></>;
+    return <div className="grid grid-cols-12"></div>;
 }
