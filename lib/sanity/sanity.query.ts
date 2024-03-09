@@ -30,6 +30,6 @@ export const getAboutPageData = async () => {
         experiences,
         services,
         education,
-        "homepageData": *[_type == "homepage"][0]{keyFigures, profilePicture {alt, "image": asset->url}, }
+        "homePageData": *[_type == "homepage"][0]{keyFigures, profilePicture {alt, "image": asset->url}, }
     }`);
 };

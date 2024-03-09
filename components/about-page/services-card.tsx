@@ -1,18 +1,18 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { ChevronRight, Sparkles } from "lucide-react";
 import React from "react";
-import { CardTitle } from "@/components/card-title";
-import { AnimatePresence, motion } from "framer-motion";
 import { AboutPageData } from "@/lib/types";
+import { AnimatePresence, motion } from "framer-motion";
 import { CardSkeleton } from "@/components/card-skeleton";
 
 type Props = {
     isLoading: boolean;
-    data?: AboutPageData["education"];
+    data?: AboutPageData["services"];
 };
 
-export const EducationCard = ({ isLoading, data }: Props) => {
+export const ServicesCard = ({ isLoading, data }: Props) => {
     return (
-        <Card className="relative col-span-6 flex flex-col justify-center opacity-100 backdrop-blur-xl">
+        <Card className="relative col-span-3 flex flex-col justify-center opacity-100 backdrop-blur-xl">
             <AnimatePresence mode="wait">
                 {isLoading ? (
                     <motion.div
@@ -21,7 +21,7 @@ export const EducationCard = ({ isLoading, data }: Props) => {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.3, type: "tween" }}
                     >
-                        <CardSkeleton numberOfSkeleton={6} />
+                        <CardSkeleton numberOfSkeleton={5} />
                     </motion.div>
                 ) : (
                     <motion.div
@@ -30,19 +30,25 @@ export const EducationCard = ({ isLoading, data }: Props) => {
                         transition={{ duration: 0.3, type: "tween" }}
                     >
                         <CardHeader>
-                            <CardTitle>Education</CardTitle>
+                            <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">
+                                What i do
+                            </h1>
                         </CardHeader>
                         <CardContent>
-                            <ul className="grid grid-cols-2 gap-y-6">
-                                {data?.map(({ _key, yearOfGraduation, graduationTitle, trainingLocation }) => (
-                                    <li key={_key} className="col-span-1 flex flex-col">
-                                        <span className="text-muted-foreground">{yearOfGraduation}</span>
-                                        <span className="text-xl text-white">{graduationTitle}</span>
-                                        <span className="text-muted-foreground">{trainingLocation}</span>
+                            <ul className="flex flex-col justify-center gap-5">
+                                {data?.map(({ service, _key }) => (
+                                    <li key={_key} className="flex gap-2 text-sm tracking-wide text-white">
+                                        <ChevronRight />
+                                        <p>{service}</p>
                                     </li>
                                 ))}
                             </ul>
                         </CardContent>
+                        <Sparkles
+                            className="absolute right-1 top-1 rotate-90 stroke-muted-foreground opacity-50"
+                            size={58}
+                            strokeWidth={0.5}
+                        />
                     </motion.div>
                 )}
             </AnimatePresence>

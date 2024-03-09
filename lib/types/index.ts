@@ -31,5 +31,5 @@ export type AboutPageData = {
     }[];
     services: { _key: string; service: string }[];
     education: { _key: string; yearOfGraduation: number; graduationTitle: string; trainingLocation: string }[];
-    homePageData: { keyFigure: Pick<HomepageData, "keyFigures">; profilePicture: Pick<HomepageData, "profilePicture"> };
+    homePageData: { profilePicture: HomepageData["profilePicture"]; keyFigures: HomepageData["keyFigures"] };
 };

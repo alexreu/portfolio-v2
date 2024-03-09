@@ -9,7 +9,7 @@ export const GetInTouchCard = () => {
             className="relative order-7 col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:order-none
                 lg:col-span-3 lg:row-span-1 lg:justify-center"
         >
-            <CardHeader>
+            <CardHeader className="xl:mt-auto">
                 <h1
                     className="inline-flex flex-col gap-5 text-2xl font-semibold leading-none tracking-wide text-white
                         lg:text-xl xl:text-2xl"

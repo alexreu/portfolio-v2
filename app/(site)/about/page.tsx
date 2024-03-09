@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { PresentationCard } from "@/components/about-page/presentation-card";
 import { ProfilePictureCard } from "@/components/about-page/profile-picture-card";
 import { ExperiencesCard } from "@/components/about-page/experiences-card";
-import { SkillsCard } from "@/components/about-page/skills-card";
+import { ServicesCard } from "@/components/about-page/services-card";
 import { KeyFigures } from "@/components/about-page/key-figures";
 import { SocialCard } from "@/components/home-page/social-card";
 import { EducationCard } from "@/components/about-page/education-card";
@@ -21,7 +21,6 @@ export default function About() {
             try {
                 const data = await getAboutPageData();
                 setAboutPageData(data);
-                console.log(data);
             } catch (error) {
                 console.error("Error fetching about data: ", error);
             } finally {
@@ -32,18 +31,18 @@ export default function About() {
         fetchData();
     }, []);
 
-    const { presentation, homePageData, experiences, services, education, _id } = aboutPageData ?? {};
+    const { presentation, homePageData, experiences, services, education } = aboutPageData ?? {};
 
     return (
         <div className="grid grid-cols-12 gap-5">
-            <PresentationCard isLoading={loading} presentation={presentation} />
+            <PresentationCard isLoading={loading} data={presentation} />
             <ProfilePictureCard isLoading={loading} data={homePageData?.profilePicture} />
             <ExperiencesCard isLoading={loading} data={experiences} />
-            <SkillsCard isLoading={loading} data={services} />
-            <KeyFigures isLoading={loading} data={homePageData?.keyFigure} />
-            <SocialCard isLoading={loading} />
+            <ServicesCard isLoading={loading} data={services} />
+            <KeyFigures isLoading={loading} data={homePageData?.keyFigures} />
+            <SocialCard />
             <EducationCard isLoading={loading} data={education} />
-            <GetInTouchCard isLoading={loading} />
+            <GetInTouchCard />
         </div>
     );
 }

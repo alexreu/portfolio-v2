@@ -5,10 +5,11 @@ import { AboutPageData } from "@/lib/types";
 import { CardSkeleton } from "@/components/card-skeleton";
 import { AnimatePresence, motion } from "framer-motion";
 
-type Props = { isLoading: boolean } & Pick<AboutPageData, "presentation">;
+type Props = { isLoading: boolean; data?: AboutPageData["presentation"] };
 
-export const PresentationCard = ({ presentation, isLoading }: Props) => {
-    console.log({ presentation });
+export const PresentationCard = ({ data, isLoading }: Props) => {
+    const { title, description } = data ?? {};
+
     return (
         <Card className="relative col-span-8 flex flex-col p-8 opacity-100 backdrop-blur-xl">
             <AnimatePresence mode="wait">
@@ -28,13 +29,16 @@ export const PresentationCard = ({ presentation, isLoading }: Props) => {
                         transition={{ duration: 0.3, type: "tween" }}
                     >
                         <CardHeader>
-                            <h1 className="inline-flex flex-col gap-3 text-3xl font-semibold tracking-wide text-white">
-                                {presentation.title}
+                            <h1
+                                className="inline-flex flex-col gap-3 whitespace-pre-line text-3xl font-semibold
+                                    tracking-wide text-white"
+                            >
+                                {title}
                             </h1>
                         </CardHeader>
                         <CardContent>
                             <p className="text-justify text-base font-light leading-relaxed text-white opacity-80">
-                                {presentation.description}
+                                {description}
                             </p>
                         </CardContent>
                         <Sparkles
@@ -45,6 +49,22 @@ export const PresentationCard = ({ presentation, isLoading }: Props) => {
                     </motion.div>
                 )}
             </AnimatePresence>
+            {/*<AnimatePresence mode="wait">*/}
+            {/*    {isLoading ? (*/}
+            {/*        <motion.div*/}
+            {/*            initial={{ opacity: 1 }}*/}
+            {/*            animate={{ opacity: 0 }}*/}
+            {/*            exit={{ opacity: 0 }}*/}
+            {/*            transition={{ duration: 0.3, type: "tween" }}*/}
+            {/*        ><CardSkeleton numberOfSkeleton={1} /></motion.div>*/}
+            {/*    ) : (*/}
+            {/*        <motion.div*/}
+            {/*            initial={{ opacity: 0 }}*/}
+            {/*            animate={{ opacity: 1 }}*/}
+            {/*            transition={{ duration: 0.3, type: "tween" }}*/}
+            {/*        ></motion.div>*/}
+            {/*    )}*/}
+            {/*</AnimatePresence>*/}
         </Card>
     );
 };
