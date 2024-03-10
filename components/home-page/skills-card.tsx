@@ -21,7 +21,6 @@ type Props = {
 };
 
 export const SkillsCard = ({ skills }: Props) => {
-    console.log(skills);
     const tools = {
         linkedin: <Linkedin />,
         code2: <Code2 />,
@@ -53,7 +52,7 @@ export const SkillsCard = ({ skills }: Props) => {
                             opts={{
                                 loop: true,
                             }}
-                            plugins={[Autoplay({}), AutoScroll({})]}
+                            plugins={[Autoplay({}), AutoScroll({ speed: 1 })]}
                         >
                             <CarouselContent>
                                 {skills.map(({ skill, _key }) => (
@@ -70,7 +69,7 @@ export const SkillsCard = ({ skills }: Props) => {
                         opts={{
                             loop: true,
                         }}
-                        plugins={[Autoplay({}), AutoScroll({ direction: "backward" })]}
+                        plugins={[Autoplay({}), AutoScroll({ direction: "backward", speed: 1 })]}
                     >
                         <CarouselContent>
                             {Object.entries(tools).map(([key, tool]) => (

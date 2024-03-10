@@ -6,6 +6,13 @@ const services = defineType({
     type: "document",
     fields: [
         defineField({
+            name: "serviceIllustration",
+            title: "Illustration du service",
+            type: "image",
+            options: { hotspot: true },
+            validation: rule => rule.required(),
+        }),
+        defineField({
             name: "serviceTitle",
             title: "Titre du service",
             type: "string",

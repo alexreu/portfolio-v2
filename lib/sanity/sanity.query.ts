@@ -33,3 +33,12 @@ export const getAboutPageData = async () => {
         "homePageData": *[_type == "homepage"][0]{keyFigures, profilePicture {alt, "image": asset->url}, }
     }`);
 };
+
+export const getServicesPageData = async () => {
+    return client.fetch(groq`*[_type == "services"] | order(_createdAt asc) {
+        _id,
+        serviceTitle,
+        serviceDescription,
+        serviceIllustration {"image": asset->url},
+    }`);
+};

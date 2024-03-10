@@ -11,6 +11,7 @@ import { EducationCard } from "@/components/about-page/education-card";
 import { GetInTouchCard } from "@/components/home-page/get-in-touch-card";
 import { getAboutPageData } from "@/lib/sanity/sanity.query";
 import { AboutPageData } from "@/lib/types";
+import { motion } from "framer-motion";
 
 export default function About() {
     const [aboutPageData, setAboutPageData] = useState<AboutPageData | null>(null);
@@ -34,7 +35,12 @@ export default function About() {
     const { presentation, homePageData, experiences, services, education } = aboutPageData ?? {};
 
     return (
-        <div className="grid grid-cols-12 gap-5">
+        <motion.section
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, type: "tween" }}
+            className="grid grid-cols-12 gap-5"
+        >
             <PresentationCard isLoading={loading} data={presentation} />
             <ProfilePictureCard isLoading={loading} data={homePageData?.profilePicture} />
             <ExperiencesCard isLoading={loading} data={experiences} />
@@ -43,6 +49,6 @@ export default function About() {
             <SocialCard />
             <EducationCard isLoading={loading} data={education} />
             <GetInTouchCard />
-        </div>
+        </motion.section>
     );
 }

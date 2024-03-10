@@ -33,3 +33,10 @@ export type AboutPageData = {
     education: { _key: string; yearOfGraduation: number; graduationTitle: string; trainingLocation: string }[];
     homePageData: { profilePicture: HomepageData["profilePicture"]; keyFigures: HomepageData["keyFigures"] };
 };
+
+export type ServicesPageData = {
+    _id: string;
+    serviceIllustration: { image: string };
+    serviceTitle: string;
+    serviceDescription: string;
+};

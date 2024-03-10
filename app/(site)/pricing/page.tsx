@@ -33,9 +33,11 @@ export default function Pricing() {
 
     return (
         <LayoutGroup>
-            <motion.div
+            <motion.section
                 className="grid grid-cols-1 gap-5 xl:grid-cols-12"
-                transition={{ duration: 0.1, type: "spring" }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, type: "tween" }}
                 layout
             >
                 <AnimatePresence initial={false} mode="wait">
@@ -87,7 +89,7 @@ export default function Pricing() {
                         strokeWidth={0.5}
                     />
                 </Card>
-            </motion.div>
+            </motion.section>
         </LayoutGroup>
     );
 }
