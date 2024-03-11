@@ -18,12 +18,14 @@ type Inputs = {
 
 export default function ContactPage() {
     const {
-        register,
+        // register,
         handleSubmit,
-        formState: { errors },
+        // formState: { errors },
     } = useForm<Inputs>();
 
-    const onSubmit: SubmitHandler<Inputs> = data => {};
+    const onSubmit: SubmitHandler<Inputs> = data => {
+        console.log(data);
+    };
 
     return (
         <section className="grid grid-cols-12">
