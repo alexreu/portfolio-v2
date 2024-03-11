@@ -40,6 +40,7 @@
         "react-aria": "^3.32.1",
         "react-aria-components": "^1.1.1",
         "react-dom": "^18.2.0",
+      "react-hook-form": "^7.51.0",
         "sanity": "^3.30.0",
         "sharp": "^0.33.2",
         "styled-components": "^6.1.8",
