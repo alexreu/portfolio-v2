@@ -16,16 +16,28 @@ export const ContactForm = () => {
     const form = useForm<z.infer<typeof contactFormSchema>>({
         resolver: zodResolver(contactFormSchema),
         defaultValues: {
-            name: "",
+            firstname: "",
+            lastname: "",
             email: "",
-            phone: "",
             subject: "",
             message: "",
         },
     });
 
-    const onSubmit = (data: z.infer<typeof contactFormSchema>) => {
-        console.log(data);
+    const onSubmit = async (data: z.infer<typeof contactFormSchema>) => {
+        console.log({ data });
+        // try {
+        //     await fetch("/api/email", {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify(data),
+        //     });
+        //     form.reset();
+        // } catch (e) {
+        //     console.error(e);
+        // }
     };
 
     return (
@@ -35,24 +47,38 @@ export const ContactForm = () => {
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className="grid grid-cols-2 gap-8">
                             <FormField
-                                name="name"
+                                name="lastname"
                                 control={form.control}
-                                render={({ field }) => {
-                                    console.log({ field });
-                                    return (
-                                        <FormItem className="flex flex-col gap-3 font-medium text-white">
-                                            <FormLabel>Nom / Prénom</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="Nom / Prénom"
-                                                    className="rounded-xl p-6 focus:border-primary"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    );
-                                }}
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col gap-3 font-medium text-white">
+                                        <FormLabel>Nom</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Prénom"
+                                                className="rounded-xl p-6 focus:border-primary"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                name="firstname"
+                                control={form.control}
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col gap-3 font-medium text-white">
+                                        <FormLabel>Prénom</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Prénom"
+                                                className="rounded-xl p-6 focus:border-primary"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
 
                             <FormField
@@ -64,23 +90,7 @@ export const ContactForm = () => {
                                         <FormControl>
                                             <Input
                                                 placeholder="john@doe.com"
-                                                className="rounded-xl p-6 focus:border-primary"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                name="phone"
-                                control={form.control}
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-col gap-3 font-medium text-white">
-                                        <FormLabel>Téléphone (optionnel)</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="+262 123 456"
-                                                className="rounded-xl p-6 focus:border-primary"
+                                                className="h-12 rounded-xl px-6 py-4 focus:border-primary"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -114,6 +124,7 @@ export const ContactForm = () => {
                                             <Textarea
                                                 placeholder="Votre message"
                                                 className="col-span-2 rounded-xl p-6 focus:border-primary"
+                                                rows={6}
                                                 {...field}
                                             />
                                         </FormControl>

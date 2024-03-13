@@ -33,7 +33,7 @@ export default function ContactPage() {
                         </div>
                         <div className="flex flex-col gap-2 text-white">
                             <p className="text-xl font-semibold">Email</p>
-                            <p>alexandre.adolphepro@gmail.com</p>
+                            <p>contact@alexdevlab.com</p>
                         </div>
                     </li>
                     <li className="group inline-flex items-center gap-5">
