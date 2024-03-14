@@ -1,13 +1,4 @@
 import { z } from "zod";
-import { isPossibleNumber, parsePhoneNumberFromString } from "libphonenumber-js";
-
-const isValidPhoneNumber = (phone?: string) => {
-    if (!phone) return true;
-
-    console.log({ phone, possible: isPossibleNumber(phone) });
-    const parsedPhoneNumber = parsePhoneNumberFromString(phone);
-    return isPossibleNumber(phone);
-};
 
 export const contactFormSchema = z.object({
     lastname: z
