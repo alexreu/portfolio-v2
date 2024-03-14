@@ -1,7 +1,7 @@
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import React from "react";
-import Link from "next/link";
-import { MoveRight, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
+import { CardFooterLink } from "@/components/ui/card-footer-link";
 
 export const OffersCard = () => {
     return (
@@ -21,14 +21,7 @@ export const OffersCard = () => {
                 </h1>
             </CardHeader>
             <CardFooter className="xl:mt-auto">
-                <Link
-                    href="/pricing"
-                    className="inline-flex w-full justify-between py-2 font-medium text-white transition-all
-                        duration-200 ease-in-out hover:text-primary"
-                >
-                    Mes offres
-                    <MoveRight strokeWidth={1} />
-                </Link>
+                <CardFooterLink href="/pricing">Mes offres</CardFooterLink>
             </CardFooter>
             <Sparkles
                 className="absolute right-1 top-1 rotate-90 animate-pulse stroke-muted-foreground"

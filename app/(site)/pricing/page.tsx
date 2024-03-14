@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CardSkeleton } from "@/components/card-skeleton";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 export default function Pricing() {
     const [pricingPageData, setPricingPageData] = useState<PricingPageData[] | null>(null);
@@ -62,8 +63,8 @@ export default function Pricing() {
                           )}
                 </AnimatePresence>
                 <Card
-                    className="item-center relative mt-5 flex flex-col items-center justify-center gap-3 opacity-100
-                        backdrop-blur-xl xl:col-span-12 xl:gap-6"
+                    className="item-center relative mt-5 flex flex-col items-center justify-center gap-3 p-10
+                        opacity-100 backdrop-blur-xl xl:col-span-12"
                 >
                     <CardHeader>
                         <h1 className="text-center text-xl font-semibold capitalize text-white xl:text-3xl">
@@ -71,17 +72,14 @@ export default function Pricing() {
                         </h1>
                     </CardHeader>
                     <CardContent>
-                        <Link
-                            className="relative inline-flex w-full items-center gap-3 rounded-xl border border-primary
-                                bg-primary p-3 text-base font-medium tracking-wide text-white transition-all
-                                duration-300 ease-in-out hover:border-primary hover:bg-white hover:text-primary"
-                            href="#"
-                        >
-                            <span>Me contacter</span>
-                            <span>
-                                <Send size={22} />
-                            </span>
-                        </Link>
+                        <Button asChild>
+                            <Link className="relative inline-flex w-full items-center gap-3 rounded-xl" href="#">
+                                <span>Me contacter</span>
+                                <span>
+                                    <Send size={22} />
+                                </span>
+                            </Link>
+                        </Button>
                     </CardContent>
                     <Blend
                         className="absolute right-1 top-1 rotate-90 stroke-muted-foreground opacity-50"

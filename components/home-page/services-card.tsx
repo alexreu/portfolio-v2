@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import React from "react";
-import { FileCode2, MoveRight, PersonStanding, ThumbsUp, TrendingUp, Wallpaper } from "lucide-react";
-import Link from "next/link";
+import { FileCode2, PersonStanding, ThumbsUp, TrendingUp, Wallpaper } from "lucide-react";
+import { CardFooterLink } from "@/components/ui/card-footer-link";
 
 export const ServicesCard = () => {
     const services = [
@@ -52,14 +52,7 @@ export const ServicesCard = () => {
                     <span>Things I’m good at</span>
                     <ThumbsUp className="animate-bounce stroke-primary" size={32} strokeWidth={1} />
                 </h3>
-                <Link
-                    href="/services"
-                    className="inline-flex w-full justify-between py-2 font-medium text-white transition-all
-                        duration-200 ease-in-out hover:text-primary"
-                >
-                    Tous mes services
-                    <MoveRight strokeWidth={1} />
-                </Link>
+                <CardFooterLink href="/services">Tous mes services</CardFooterLink>
             </CardContent>
         </Card>
     );

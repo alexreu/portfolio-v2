@@ -1,8 +1,9 @@
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { MoveRight, Send, Sparkles } from "lucide-react";
+import { Send, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { CardFooterLink } from "@/components/ui/card-footer-link";
 
 type Props = {
     firstname?: string;
@@ -53,14 +54,7 @@ export const ProfileCard = ({ profilePicture, firstname }: Props) => {
                 )}
             </CardHeader>
             <CardFooter className="mt-auto w-full">
-                <Link
-                    href="/contact"
-                    className="inline-flex w-full justify-between py-2 font-medium text-white transition-all
-                        duration-200 ease-in-out hover:text-primary"
-                >
-                    <span>A propos</span>
-                    <MoveRight strokeWidth={1} />
-                </Link>
+                <CardFooterLink href="/about">A propos</CardFooterLink>
             </CardFooter>
             <Sparkles
                 className="absolute right-1 top-1 rotate-90 animate-pulse stroke-muted-foreground"

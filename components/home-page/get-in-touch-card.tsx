@@ -1,8 +1,8 @@
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import React, { ComponentPropsWithoutRef } from "react";
-import { Blend, MoveRight } from "lucide-react";
-import Link from "next/link";
+import { Blend } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CardFooterLink } from "@/components/ui/card-footer-link";
 
 type Props = ComponentPropsWithoutRef<"div">;
 
@@ -27,14 +27,7 @@ export const GetInTouchCard = ({ className }: Props) => {
                 </h1>
             </CardHeader>
             <CardFooter className="xl:mt-auto">
-                <Link
-                    href="/contact"
-                    className="inline-flex w-full justify-between py-2 font-medium text-white transition-all
-                        duration-200 ease-in-out hover:text-primary"
-                >
-                    <span>Get in touch</span>
-                    <MoveRight strokeWidth={1} />
-                </Link>
+                <CardFooterLink href="/contact">Get in touch</CardFooterLink>
             </CardFooter>
             <Blend
                 className="absolute right-1 top-1 rotate-90 stroke-muted-foreground opacity-50"

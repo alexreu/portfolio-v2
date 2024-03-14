@@ -62,7 +62,6 @@ export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }
                     ))}
                 </ul>
             </CardContent>
-            {/* <CardFooter></CardFooter> */}
         </MotionCard>
     );
 };

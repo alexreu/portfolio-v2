@@ -45,9 +45,11 @@ export const SocialCard = ({ className }: Props) => {
                 </li>
                 <li className="inline-flex">
                     <Link
-                        href="#"
+                        href="https://www.malt.fr/profile/alexandreadolphe"
                         className="group relative rounded-full p-7 text-white transition-all duration-500 ease-in-out"
                         title="Profil Freelance"
+                        target="_blank"
+                        rel="noopener noreferrer"
                     >
                         <span className="sr-only">consulter mon profil freelance sur la plateforme codeur</span>
                         <Circle
