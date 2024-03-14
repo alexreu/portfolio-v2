@@ -56,7 +56,7 @@ export const SkillsCard = ({ skills }: Props) => {
                         >
                             <CarouselContent>
                                 {skills.map(({ skill, _key }) => (
-                                    <CarouselItem key={_key} className="md:basis-1/2 xl:basis-1/3">
+                                    <CarouselItem key={_key} className="basis-1/3 md:basis-1/2 xl:basis-1/4">
                                         <p className="rounded-lg border p-2 text-center text-xs text-muted lg:text-sm">
                                             {skill}
                                         </p>

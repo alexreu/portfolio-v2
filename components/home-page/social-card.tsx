@@ -1,13 +1,19 @@
 import { Card } from "@/components/ui/card";
-import React from "react";
+import React, { ComponentPropsWithoutRef } from "react";
 import Link from "next/link";
 import { Blend, Circle, Code, Crosshair, Linkedin } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export const SocialCard = () => {
+type Props = ComponentPropsWithoutRef<"div">;
+
+export const SocialCard = ({ className }: Props) => {
     return (
         <Card
-            className="relative order-5 col-span-1 flex flex-col items-start justify-center gap-3 p-4 opacity-100
-                backdrop-blur-xl lg:order-none lg:col-span-3 lg:row-span-1"
+            className={cn(
+                `relative order-5 col-span-1 flex flex-col items-start justify-center gap-3 p-4 opacity-100
+                backdrop-blur-xl lg:order-none lg:col-span-3 lg:row-span-1`,
+                className
+            )}
         >
             <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">Social</h1>
             <ul className="flex w-full justify-evenly">

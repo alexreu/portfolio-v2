@@ -25,19 +25,18 @@ export const ContactForm = () => {
     });
 
     const onSubmit = async (data: z.infer<typeof contactFormSchema>) => {
-        console.log({ data });
-        // try {
-        //     await fetch("/api/email", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify(data),
-        //     });
-        //     form.reset();
-        // } catch (e) {
-        //     console.error(e);
-        // }
+        try {
+            await fetch("/api/email", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+            form.reset();
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     return (

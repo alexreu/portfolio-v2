@@ -32,7 +32,7 @@ export const ServicesCard = () => {
             </CardHeader>
             <CardContent className="flex flex-1 flex-col gap-12 md:gap-8 lg:gap-8 xl:gap-0">
                 <ul
-                    className="grid grid-cols-2 content-center justify-items-center gap-2 justify-self-auto
+                    className="grid grid-cols-2 content-center justify-items-center gap-8 justify-self-auto
                         lg:grid-cols-4 lg:gap-0"
                 >
                     {services.map(({ title, icons }) => (
@@ -40,12 +40,15 @@ export const ServicesCard = () => {
                             key={title}
                             className="flex w-full flex-col-reverse items-center gap-2 place-self-start text-center"
                         >
-                            <h2 className="text-xs font-medium text-white lg:text-sm">{title}</h2>
+                            <h2 className="text-xs font-medium text-white md:text-base lg:text-sm">{title}</h2>
                             {icons}
                         </li>
                     ))}
                 </ul>
-                <h3 className="my-auto inline-flex items-center gap-2 text-xl font-bold text-white xl:text-3xl">
+                <h3
+                    className="my-auto inline-flex items-center gap-2 text-xl font-bold text-white md:text-2xl
+                        xl:text-3xl"
+                >
                     <span>Things I’m good at</span>
                     <ThumbsUp className="animate-bounce stroke-primary" size={32} strokeWidth={1} />
                 </h3>

@@ -47,7 +47,7 @@ export default function Home() {
         <AnimatePresence>
             <motion.section
                 className="z-20 grid h-full w-full grid-cols-1 place-items-stretch gap-5 md:grid-cols-2 lg:grid-cols-12
-                    lg:grid-rows-4"
+                    xl:grid-rows-4"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, type: "tween" }}

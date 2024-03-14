@@ -12,7 +12,7 @@ type Props = {
 
 export const ExperiencesCard = ({ isLoading, data }: Props) => {
     return (
-        <Card className="relative col-span-4 flex flex-col justify-center opacity-100 backdrop-blur-xl">
+        <Card className="relative col-span-1 flex flex-col justify-center opacity-100 backdrop-blur-xl xl:col-span-4">
             <AnimatePresence mode="wait">
                 {isLoading ? (
                     <motion.div
@@ -37,20 +37,24 @@ export const ExperiencesCard = ({ isLoading, data }: Props) => {
                         <CardContent>
                             <ul className="flex flex-col justify-center gap-5">
                                 {data?.map(({ company, startYear, endYear, isCurrentJob, job, _key }) => (
-                                    <li key={_key} className="flex gap-1 text-sm tracking-wide text-white">
+                                    <li
+                                        key={_key}
+                                        className="flex gap-1 text-sm tracking-wide text-white md:col-span-2"
+                                    >
                                         <ChevronsRight />
-                                        <p className="inline-flex items-center gap-0.5">
+                                        <p className="inline-flex flex-wrap gap-0.5 xl:flex-nowrap ">
                                             <span className="pr-1">{`${startYear} // ${!isCurrentJob ? endYear : "Now"}`}</span>
                                             <span
-                                                className="relative pl-3 pr-1 before:absolute before:left-0
-                                                    before:top-1/2 before:h-[1px] before:w-2 before:bg-white
-                                                    before:content-['']"
+                                                className="relative before:absolute before:left-0 before:top-1/2
+                                                    before:hidden before:h-[1px] before:w-2 before:bg-white
+                                                    before:content-[''] md:pl-3 md:pr-1 md:before:block"
                                             >
                                                 {job}
                                             </span>
                                             <span
-                                                className="relative pl-3 before:absolute before:left-0 before:top-1/2
-                                                    before:h-[1px] before:w-2 before:bg-white before:content-['']"
+                                                className="relative before:absolute before:left-0 before:top-1/2
+                                                    before:hidden before:h-[1px] before:w-2 before:bg-white
+                                                    before:content-[''] xl:pl-3 xl:before:block"
                                             >
                                                 {company}
                                             </span>

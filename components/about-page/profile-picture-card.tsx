@@ -15,7 +15,10 @@ export const ProfilePictureCard = ({ isLoading, data }: Props) => {
     const { image } = data ?? {};
 
     return (
-        <Card className="relative col-span-4 flex flex-col justify-center opacity-100 backdrop-blur-xl">
+        <Card
+            className="relative order-first col-span-1 flex flex-col justify-center opacity-100 backdrop-blur-xl
+                md:order-none xl:col-span-4"
+        >
             <AnimatePresence mode="wait">
                 {isLoading ? (
                     <motion.div

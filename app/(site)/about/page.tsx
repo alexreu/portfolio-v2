@@ -39,14 +39,14 @@ export default function About() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, type: "tween" }}
-            className="grid grid-cols-12 gap-5"
+            className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-12"
         >
             <PresentationCard isLoading={loading} data={presentation} />
             <ProfilePictureCard isLoading={loading} data={homePageData?.profilePicture} />
             <ExperiencesCard isLoading={loading} data={experiences} />
             <ServicesCard isLoading={loading} data={services} />
             <KeyFigures isLoading={loading} data={homePageData?.keyFigures} />
-            <SocialCard />
+            <SocialCard className="lg:col-span-1 lg:row-span-1" />
             <EducationCard isLoading={loading} data={education} />
             <GetInTouchCard />
         </motion.section>

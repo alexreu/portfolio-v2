@@ -11,8 +11,8 @@ export const OffersCard = () => {
         >
             <CardHeader>
                 <h1
-                    className="inline-flex flex-col gap-5 text-2xl font-semibold leading-none tracking-wide text-white
-                        lg:text-xl xl:text-2xl"
+                    className="inline-flex flex-col gap-5 text-xl font-semibold leading-none tracking-wide text-white
+                        md:text-2xl lg:text-xl xl:text-2xl"
                 >
                     <span>Votre site vitrine</span>
                     <span className="ml-12 lg:ml-0 xl:ml-5">

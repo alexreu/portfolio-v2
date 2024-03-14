@@ -12,7 +12,7 @@ type Props = {
 
 export const ServicesCard = ({ isLoading, data }: Props) => {
     return (
-        <Card className="relative col-span-3 flex flex-col justify-center opacity-100 backdrop-blur-xl">
+        <Card className="relative col-span-1 flex flex-col justify-center opacity-100 backdrop-blur-xl xl:col-span-3">
             <AnimatePresence mode="wait">
                 {isLoading ? (
                     <motion.div

@@ -11,7 +11,7 @@ type Props = {
 
 export const KeyFigures = ({ isLoading, data }: Props) => {
     return (
-        <Card className="relative col-span-5 flex flex-col justify-center opacity-100 backdrop-blur-xl">
+        <Card className="relative col-span-1 flex flex-col justify-center opacity-100 backdrop-blur-xl xl:col-span-5">
             <AnimatePresence mode="wait">
                 {isLoading ? (
                     <motion.div
@@ -35,10 +35,12 @@ export const KeyFigures = ({ isLoading, data }: Props) => {
                                         key={_key}
                                         className="col-span-1 flex flex-col items-start justify-start gap-2 text-left"
                                     >
-                                        <span className="text-5xl font-medium tracking-normal text-white">
+                                        <span className="text-4xl font-medium tracking-normal text-white xl:text-5xl">
                                             {keyFigure}
                                         </span>
-                                        <span className="uppercase text-muted-foreground">{keyFigureDescription}</span>
+                                        <span className="text-xs uppercase text-muted-foreground xl:text-base">
+                                            {keyFigureDescription}
+                                        </span>
                                     </li>
                                 ))}
                             </ul>
