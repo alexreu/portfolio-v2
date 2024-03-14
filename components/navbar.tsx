@@ -23,7 +23,7 @@ export const Navbar = () => {
                 className="mb-10 flex w-full items-center justify-between rounded-xl bg-card px-8 py-3 opacity-100
                     backdrop-blur-xl"
             >
-                <Link href="#" className="font-bold text-primary">
+                <Link href="/" className="font-bold text-primary">
                     <Image src="/images/logo-text-white.png" alt="" width={110} height={100} />
                 </Link>
                 <ul className="hidden h-full gap-8 font-main text-base font-medium leading-3 text-white xl:flex">
