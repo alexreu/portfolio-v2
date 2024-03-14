@@ -2,39 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: 0 0% 20%;
-  --foreground: 224 71.4% 4.1%;
+@layer base {
+  :root {
+    --background: 0 0% 20%;
+    --foreground: 224 71.4% 4.1%;
 
-  --card: linear-gradient(153deg, rgba(255, 255, 255, 0.12) -65.62%, rgba(255, 255, 255, 0.04) 83.28%);
-  --card-foreground: 224 71.4% 4.1%;
+    --card: linear-gradient(153deg, rgba(255, 255, 255, 0.12) -65.62%, rgba(255, 255, 255, 0.04) 83.28%);
+    --card-foreground: 224 71.4% 4.1%;
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
 
-  --primary: 350 98%, 64%;
-  --primary-foreground: 210 20% 98%;
+    --primary: 350 98%, 64%;
+    --primary-foreground: 210 20% 98%;
 
-  --secondary: 220 14.3% 95.9%;
-  --secondary-foreground: 220.9 39.3% 11%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
 
-  --muted: 220 14.3% 95.9%;
-  --muted-foreground: 220 8.9% 46.1%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
 
-  --accent: 220 14.3% 95.9%;
-  --accent-foreground: 220.9 39.3% 11%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
 
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 20% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
 
-  --border: 0 0% 20%;
-  --input: 220 13% 91%;
-  --ring: 224 71.4% 4.1%;
+    --border: 0 0% 20%;
+    --input: 220 13% 91%;
+    --ring: 224 71.4% 4.1%;
 
-  --radius: 0.5rem;
-}
-
-/*@layer base {*/
+    --radius: 0.5rem;
+  }
 
   /*.dark {*/
   /*  --background: 224 71.4% 4.1%;*/
@@ -57,22 +56,18 @@
   /*  --input: 215 27.9% 16.9%;*/
   /*  --ring: 216 12.2% 83.9%;*/
   /*}*/
-/*}*/
+  * {
+    @apply border-border;
+    @apply scroll-smooth;
+    @apply focus:outline-none;
+    @apply focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4;
+  }
 
-* {
-  @apply border-border;
-  @apply scroll-smooth;
-  @apply focus:outline-none;
-  @apply focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4;
+  body {
+    @apply font-main bg-background text-foreground;
+  }
+
+  .bg-card {
+    background: linear-gradient(153deg, rgba(255, 255, 255, 0.12) -65.62%, rgba(255, 255, 255, 0.04) 83.28%) !important;
+  }
 }
-
-body {
-  @apply font-main bg-background text-foreground;
-}
-
-.bg-card {
-  background: linear-gradient(153deg, rgba(255, 255, 255, 0.12) -65.62%, rgba(255, 255, 255, 0.04) 83.28%) !important;
-}
-
-/*@layer base {*/
-/*}*/
