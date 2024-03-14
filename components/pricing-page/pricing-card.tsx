@@ -35,7 +35,7 @@ export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }
                 ) : (
                     <div className="mt-0 flex flex-col">
                         <p className="mt-0 inline-flex flex-col">
-                            <span>À partir de </span>
+                            <span>À partir de *</span>
                             <span className="my-1 inline-flex items-center gap-2">
                                 <span className="text-4xl font-semibold tracking-widest">{fixedPrice}€</span>
                                 <span className="text-base text-muted-foreground">HT</span>

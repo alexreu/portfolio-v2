@@ -91,6 +91,21 @@ export default function Pricing() {
                         strokeWidth={0.5}
                     />
                 </Card>
+
+                <ul className="col-span-1 flex flex-col gap-1.5 text-sm font-light text-white xl:col-span-12">
+                    <li className="inline-flex items-center gap-2 before:text-base before:content-['*']">
+                        Les tarifs indiqués sont des estimations et peuvent varier en fonction de la complexité du
+                        projet.
+                    </li>
+                    <li className="ml-4">
+                        Un devis personnalisé sera établi après discussion approfondie de vos besoins.
+                    </li>
+                    <li className="ml-4">
+                        La maintenance mensuelle inclut la correction de bugs, l&apos;ajout de petites fonctionnalités
+                        et la mise à jour des technologies.
+                    </li>
+                    <li className="ml-4">Des forfaits de maintenance plus complets peuvent être proposés.</li>
+                </ul>
             </motion.section>
         </LayoutGroup>
     );
