@@ -30,7 +30,7 @@ export default function Services() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, type: "tween" }}
-            className="grid grid-cols-1 gap-5 xl:grid-cols-12"
+            className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-12"
         >
             {servicePageData.map(({ serviceTitle, serviceDescription, serviceIllustration, _id }, i: number) => (
                 <ServiceCard

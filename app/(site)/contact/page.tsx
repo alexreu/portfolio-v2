@@ -12,18 +12,15 @@ export default function ContactPage() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, type: "tween" }}
-            className="grid grid-cols-12"
+            className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-12"
         >
-            <motion.div
-                initial={{ translateX: -200 }}
-                animate={{ translateX: 0 }}
-                transition={{ duration: 0.3, type: "tween" }}
-                className="col-span-4 flex flex-col gap-5"
-            >
-                <h1 className="font-semibold text-primary">Contact info</h1>
-                <h2 className="text-4xl font-semibold text-white">Get in touch</h2>
-                <p className="font-semibold text-muted-foreground">Don&apos;t be afraid !</p>
-                <ul className="flex flex-col gap-8">
+            <div className="col-span-1 flex flex-col gap-5 xl:col-span-4">
+                <div className="flex flex-col gap-5">
+                    <h1 className="font-semibold text-primary">Contact info</h1>
+                    <h2 className="text-4xl font-semibold text-white">Get in touch</h2>
+                    <p className="font-semibold text-muted-foreground">Don&apos;t be afraid !</p>
+                </div>
+                <ul className="flex flex-wrap justify-between gap-8 md:justify-start lg:flex-col lg:flex-nowrap">
                     <li className="group inline-flex items-center gap-5">
                         <div
                             className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-white
@@ -70,7 +67,7 @@ export default function ContactPage() {
                         </div>
                     </li>
                 </ul>
-            </motion.div>
+            </div>
             <ContactForm />
         </motion.section>
     );

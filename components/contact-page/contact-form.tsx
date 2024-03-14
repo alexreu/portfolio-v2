@@ -40,11 +40,11 @@ export const ContactForm = () => {
     };
 
     return (
-        <Card className="col-span-8 p-16 opacity-100 backdrop-blur-xl">
+        <Card className="col-span-1 mt-10 p-8 opacity-100 backdrop-blur-xl lg:col-span-2 xl:col-span-8 xl:mt-0 xl:p-16">
             <CardContent className="p-0">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <div className="grid grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
                             <FormField
                                 name="lastname"
                                 control={form.control}
@@ -117,7 +117,7 @@ export const ContactForm = () => {
                                 name="message"
                                 control={form.control}
                                 render={({ field }) => (
-                                    <FormItem className="col-span-2 flex flex-col gap-3 font-medium text-white">
+                                    <FormItem className="flex flex-col gap-3 font-medium text-white xl:col-span-2">
                                         <FormLabel>Votre message</FormLabel>
                                         <FormControl>
                                             <Textarea

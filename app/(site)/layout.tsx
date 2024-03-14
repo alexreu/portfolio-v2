@@ -76,7 +76,7 @@ export default function RootLayout({ children }: Props) {
                         before:rounded-full before:bg-white before:opacity-20 before:blur-[200px] before:content-['']
                         after:absolute after:-bottom-52 after:-right-52 after:z-10 after:h-[500px] after:w-[500px]
                         after:rounded-full after:bg-primary after:opacity-20 after:blur-[200px] after:content-['']
-                        sm:before:block"
+                        xl:before:block"
                 >
                     <div className="flex h-full w-full overflow-y-auto overflow-x-hidden scroll-smooth">
                         <div className="container m-auto flex flex-col py-10">

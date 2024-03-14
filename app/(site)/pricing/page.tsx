@@ -62,17 +62,17 @@ export default function Pricing() {
                           )}
                 </AnimatePresence>
                 <Card
-                    className="item-center relative mt-5 flex flex-col items-center justify-center gap-6 opacity-100
-                        backdrop-blur-xl xl:col-span-12"
+                    className="item-center relative mt-5 flex flex-col items-center justify-center gap-3 opacity-100
+                        backdrop-blur-xl xl:col-span-12 xl:gap-6"
                 >
                     <CardHeader>
-                        <h1 className="text-center text-3xl font-semibold capitalize text-white">
+                        <h1 className="text-center text-xl font-semibold capitalize text-white xl:text-3xl">
                             Pour toutes autres questions / demandes
                         </h1>
                     </CardHeader>
                     <CardContent>
                         <Link
-                            className="relative flex w-full items-center gap-3 rounded-xl border border-primary
+                            className="relative inline-flex w-full items-center gap-3 rounded-xl border border-primary
                                 bg-primary p-3 text-base font-medium tracking-wide text-white transition-all
                                 duration-300 ease-in-out hover:border-primary hover:bg-white hover:text-primary"
                             href="#"
