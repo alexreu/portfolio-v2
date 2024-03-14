@@ -3,10 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Menu, MoveUpRight } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export const Navbar = () => {
+    const [sheetOpen, setSheetOpen] = useState(false);
+
     const navLinks = [
         { title: "Accueil", link: "/" },
         { title: "A propos", link: "/about" },
@@ -23,7 +25,7 @@ export const Navbar = () => {
                 <Link href="#" className="font-bold text-primary">
                     <Image src="/images/logo-text-white.png" alt="" width={110} height={100} />
                 </Link>
-                <ul className="hidden h-full gap-5 font-main text-base font-medium leading-3 text-white xl:flex">
+                <ul className="hidden h-full gap-8 font-main text-base font-medium leading-3 text-white xl:flex">
                     {navLinks.map(({ title, link }, i) => (
                         <li className="h-full" key={`${title}-${i}`}>
                             <Link href={link} className="transition-all duration-200 ease-in-out hover:text-primary">
@@ -32,18 +34,19 @@ export const Navbar = () => {
                         </li>
                     ))}
                 </ul>
-                <Sheet>
+                <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                     <SheetTrigger className="text-white xl:hidden">
-                        <span className="sr-only">Déplier le menu</span>
+                        <span className="sr-only">Ouvrir le menu mobile</span>
                         <Menu size={32} className="stroke-white" />
                     </SheetTrigger>
-                    <SheetContent>
+                    <SheetContent side="right">
                         <ul className="mt-8 flex flex-col gap-5 font-main text-base font-medium leading-3 text-white">
                             {navLinks.map(({ title, link }, i) => (
                                 <li className="p-2" key={`${title}-${i}`}>
                                     <Link
                                         href={link}
                                         className="transition-all duration-200 ease-in-out hover:text-primary"
+                                        onClick={() => setSheetOpen(false)}
                                     >
                                         {title}
                                     </Link>
