@@ -51,7 +51,7 @@ export const SocialCard = ({ className }: Props) => {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <span className="sr-only">consulter mon profil freelance sur la plateforme codeur</span>
+                        <span className="sr-only">consulter mon profil freelance sur la plateforme malt</span>
                         <Circle
                             className="absolute bottom-0 left-0 h-full w-full stroke-muted-foreground"
                             strokeWidth={0.3}

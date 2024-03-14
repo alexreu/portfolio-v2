@@ -27,7 +27,9 @@ export const GetInTouchCard = ({ className }: Props) => {
                 </h1>
             </CardHeader>
             <CardFooter className="xl:mt-auto">
-                <CardFooterLink href="/contact">Get in touch</CardFooterLink>
+                <CardFooterLink href="/contact" aria-label="formulaire de contact">
+                    Get in touch
+                </CardFooterLink>
             </CardFooter>
             <Blend
                 className="absolute right-1 top-1 rotate-90 stroke-muted-foreground opacity-50"

@@ -31,10 +31,11 @@ export const ProfileCard = ({ profilePicture, firstname }: Props) => {
                     <MotionLink
                         className="relative flex w-full items-center gap-3 rounded-xl bg-primary p-3 text-lg font-medium
                             tracking-wide text-white"
-                        href="#"
+                        href="/contact"
                         variants={linkVariants}
                         whileHover="hover"
                         initial="initial"
+                        aria-label="formulaire de contact"
                         layout
                     >
                         <span>I&#39;m {firstname}</span>

@@ -104,7 +104,7 @@ export const ContactForm = () => {
                                         <FormLabel>Sujet</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="Votre sujet"
+                                                placeholder="Quel est votre demande"
                                                 className="rounded-xl p-6 focus:border-primary"
                                                 {...field}
                                             />
@@ -131,7 +131,11 @@ export const ContactForm = () => {
                                 )}
                             />
                         </div>
-                        <Button type="submit" className="mt-5 inline-flex gap-2 rounded-full">
+                        <Button
+                            type="submit"
+                            className="mt-5 inline-flex gap-2 rounded-full focus-visible:outline-2
+                                focus-visible:outline-offset-4 focus-visible:outline-primary"
+                        >
                             Envoyer
                             <MoveUpRight size={18} strokeWidth={3} />
                         </Button>

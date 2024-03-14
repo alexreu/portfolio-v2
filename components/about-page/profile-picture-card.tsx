@@ -1,6 +1,6 @@
 import { Card, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
-import { Blend } from "lucide-react";
+import { Blend, Square } from "lucide-react";
 import React from "react";
 import { AboutPageData } from "@/lib/types";
 import { AnimatePresence, motion } from "framer-motion";
@@ -36,8 +36,32 @@ export const ProfilePictureCard = ({ isLoading, data }: Props) => {
                         transition={{ duration: 0.3, type: "tween" }}
                     >
                         <CardHeader>
-                            <div className="mx-auto mt-6 h-48 w-48 rounded-full bg-primary">
-                                {image && <Image src={image} alt="" width={192} height={192} />}
+                            <div
+                                className="relative mx-auto inline-flex h-32 w-32 items-center justify-center border
+                                    border-primary sm:h-56 sm:w-56"
+                            >
+                                <div className="h-32 w-32 rounded-full bg-primary sm:h-56 sm:w-56">
+                                    {image && <Image src={image} alt="" width={224} height={224} />}
+                                </div>
+                                <Square fill="white" stroke="white" className="absolute -left-1.5 -top-1.5" size={12} />
+                                <Square
+                                    fill="white"
+                                    stroke="white"
+                                    className="absolute -right-1.5 -top-1.5"
+                                    size={12}
+                                />
+                                <Square
+                                    fill="white"
+                                    stroke="white"
+                                    className="absolute -bottom-1.5 -left-1.5"
+                                    size={12}
+                                />
+                                <Square
+                                    fill="white"
+                                    stroke="white"
+                                    className="absolute -bottom-1.5 -right-1.5"
+                                    size={12}
+                                />
                             </div>
                         </CardHeader>
                         <Blend

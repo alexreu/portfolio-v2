@@ -73,7 +73,11 @@ export default function Pricing() {
                     </CardHeader>
                     <CardContent>
                         <Button asChild>
-                            <Link className="relative inline-flex w-full items-center gap-3 rounded-xl" href="#">
+                            <Link
+                                className="relative inline-flex w-full items-center gap-3 rounded-xl
+                                    focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+                                href="#"
+                            >
                                 <span>Me contacter</span>
                                 <span>
                                     <Send size={22} />

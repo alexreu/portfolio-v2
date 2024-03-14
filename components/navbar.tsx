@@ -23,13 +23,16 @@ export const Navbar = () => {
                 className="mb-10 flex w-full items-center justify-between rounded-xl bg-card px-8 py-3 opacity-100
                     backdrop-blur-xl"
             >
-                <Link href="/" className="font-bold text-primary">
+                <Link href="/" className="rounded-xl font-bold text-primary" aria-label="retourner à la page d'accueil">
                     <Image src="/images/logo-text-white.png" alt="" width={110} height={100} />
                 </Link>
                 <ul className="hidden h-full gap-8 font-main text-base font-medium leading-3 text-white xl:flex">
                     {navLinks.map(({ title, link }, i) => (
                         <li className="h-full" key={`${title}-${i}`}>
-                            <Link href={link} className="transition-all duration-200 ease-in-out hover:text-primary">
+                            <Link
+                                href={link}
+                                className="transition-color rounded-lg duration-200 ease-in-out hover:text-primary"
+                            >
                                 {title}
                             </Link>
                         </li>
@@ -43,7 +46,7 @@ export const Navbar = () => {
                     <SheetContent side="right">
                         <ul className="mt-8 flex flex-col gap-5 font-main text-base font-medium leading-3 text-white">
                             {navLinks.map(({ title, link }, i) => (
-                                <li className="p-2" key={`${title}-${i}`}>
+                                <li className="rounded-lg p-2" key={`${title}-${i}`}>
                                     <Link
                                         href={link}
                                         className="transition-all duration-200 ease-in-out hover:text-primary"
@@ -64,8 +67,12 @@ export const Navbar = () => {
                         </ul>
                     </SheetContent>
                 </Sheet>
-                <Button className="inline-flex gap-2 rounded-full" asChild>
-                    <Link href="/contact">
+                <Button
+                    className="hidden gap-2 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4
+                        focus-visible:outline-primary xl:inline-flex"
+                    asChild
+                >
+                    <Link href="/contact" aria-label="formulaire de contact">
                         Let&#39;s Talk
                         <MoveUpRight size={18} strokeWidth={3} />
                     </Link>

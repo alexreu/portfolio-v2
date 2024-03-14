@@ -21,7 +21,9 @@ export const OffersCard = () => {
                 </h1>
             </CardHeader>
             <CardFooter className="xl:mt-auto">
-                <CardFooterLink href="/pricing">Mes offres</CardFooterLink>
+                <CardFooterLink href="/pricing" aria-label="consulter la page tarifs">
+                    Mes offres
+                </CardFooterLink>
             </CardFooter>
             <Sparkles
                 className="absolute right-1 top-1 rotate-90 animate-pulse stroke-muted-foreground"

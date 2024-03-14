@@ -8,7 +8,7 @@ type Props = ComponentPropsWithoutRef<typeof Link>;
 export const CardFooterLink = ({ className, children, ...props }: Props) => {
     return (
         <Link
-            className={cn("group inline-flex w-full justify-between py-2 font-medium text-white", className)}
+            className={cn("group inline-flex w-full justify-between rounded-lg py-2 font-medium text-white", className)}
             {...props}
         >
             <span className="transition-all duration-300 ease-in-out group-hover:text-primary">{children}</span>

@@ -70,6 +70,8 @@
   * {
     @apply border-border;
     @apply scroll-smooth;
+    @apply focus:outline-none;
+    @apply focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4;
   }
   body {
     @apply font-main bg-background text-foreground;

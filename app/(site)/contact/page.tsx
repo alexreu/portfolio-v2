@@ -59,8 +59,9 @@ export default function ContactPage() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 title="Profile freelance Alexandre ADOLPHE sur la plateforme MALT"
-                                className="inline-flex items-center gap-1 transition-all duration-300 ease-in-out
-                                    hover:text-primary"
+                                aria-label="voir mon profile freelance sur la plateforme MALT"
+                                className="inline-flex items-center gap-1 rounded-lg transition-all duration-300
+                                    ease-in-out hover:text-primary"
                             >
                                 <span>Voir le profil</span> <MoveUpRight size={16} />
                             </Link>

@@ -52,7 +52,9 @@ export const ServicesCard = () => {
                     <span>Things I’m good at</span>
                     <ThumbsUp className="animate-bounce stroke-primary" size={32} strokeWidth={1} />
                 </h3>
-                <CardFooterLink href="/services">Tous mes services</CardFooterLink>
+                <CardFooterLink href="/services" aria-label="consulter la page services">
+                    Tous mes services
+                </CardFooterLink>
             </CardContent>
         </Card>
     );

@@ -18,7 +18,10 @@ export const Footer = () => {
             <ul className="hidden h-full gap-5 font-main text-base font-medium leading-3 text-white xl:flex">
                 {navLinks.map(({ title, link }, i) => (
                     <li className="h-full" key={`${title}-${i}`}>
-                        <Link href={link} className="transition-all duration-200 ease-in-out hover:text-primary">
+                        <Link
+                            href={link}
+                            className="rounded-lg transition-colors duration-200 ease-in-out hover:text-primary"
+                        >
                             {title}
                         </Link>
                     </li>
