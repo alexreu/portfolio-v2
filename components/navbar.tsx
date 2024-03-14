@@ -58,7 +58,7 @@ export const Navbar = () => {
                             ))}
                             <li className="p-2">
                                 <Button className="inline-flex gap-2 rounded-full" asChild>
-                                    <Link href="/contact">
+                                    <Link href="/contact" onClick={() => setSheetOpen(false)}>
                                         Let&#39;s Talk
                                         <MoveUpRight size={18} strokeWidth={3} />
                                     </Link>
