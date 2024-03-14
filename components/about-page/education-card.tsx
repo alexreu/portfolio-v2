@@ -12,7 +12,10 @@ type Props = {
 
 export const EducationCard = ({ isLoading, data }: Props) => {
     return (
-        <Card className="relative col-span-1 flex flex-col justify-center opacity-100 backdrop-blur-xl xl:col-span-6">
+        <Card
+            className="relative col-span-1 flex flex-col justify-center opacity-100 backdrop-blur-xl lg:order-last
+                lg:col-span-3 xl:order-none xl:col-span-6"
+        >
             <AnimatePresence mode="wait">
                 {isLoading ? (
                     <motion.div
@@ -36,9 +39,13 @@ export const EducationCard = ({ isLoading, data }: Props) => {
                             <ul className="grid grid-cols-2 gap-y-6">
                                 {data?.map(({ _key, yearOfGraduation, graduationTitle, trainingLocation }) => (
                                     <li key={_key} className="col-span-1 flex flex-col">
-                                        <span className="text-muted-foreground">{yearOfGraduation}</span>
-                                        <span className="text-xl text-white">{graduationTitle}</span>
-                                        <span className="text-muted-foreground">{trainingLocation}</span>
+                                        <span className="text-xs text-muted-foreground lg:text-base">
+                                            {yearOfGraduation}
+                                        </span>
+                                        <span className="text-base text-white lg:text-xl">{graduationTitle}</span>
+                                        <span className="text-xs text-muted-foreground lg:text-base">
+                                            {trainingLocation}
+                                        </span>
                                     </li>
                                 ))}
                             </ul>

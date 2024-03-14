@@ -71,12 +71,12 @@ export default function RootLayout({ children }: Props) {
                 <ParticlesContainer />
                 <MousePointer />
                 <main
-                    className="relative m-0 h-screen w-screen overflow-hidden bg-transparent p-0 transition-all
-                        duration-300 before:absolute before:-left-52 before:-top-52 before:z-10 before:hidden
-                        before:h-[500px] before:w-[500px] before:rounded-full before:bg-white before:opacity-20
-                        before:blur-[200px] before:content-[''] after:absolute after:-bottom-52 after:-right-52
-                        after:z-10 after:h-[500px] after:w-[500px] after:rounded-full after:bg-primary after:opacity-20
-                        after:blur-[200px] after:content-[''] sm:before:block"
+                    className="relative m-0 h-screen w-screen overflow-hidden bg-transparent p-0 before:absolute
+                        before:-left-52 before:-top-52 before:z-10 before:hidden before:h-[500px] before:w-[500px]
+                        before:rounded-full before:bg-white before:opacity-20 before:blur-[200px] before:content-['']
+                        after:absolute after:-bottom-52 after:-right-52 after:z-10 after:h-[500px] after:w-[500px]
+                        after:rounded-full after:bg-primary after:opacity-20 after:blur-[200px] after:content-['']
+                        sm:before:block"
                 >
                     <div className="flex h-full w-full overflow-y-auto overflow-x-hidden scroll-smooth">
                         <div className="container m-auto flex flex-col py-10">

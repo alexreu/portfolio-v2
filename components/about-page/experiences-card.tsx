@@ -41,24 +41,20 @@ export const ExperiencesCard = ({ isLoading, data }: Props) => {
                                         key={_key}
                                         className="flex gap-1 text-sm tracking-wide text-white md:col-span-2"
                                     >
-                                        <ChevronsRight />
-                                        <p className="inline-flex flex-wrap gap-0.5 xl:flex-nowrap ">
-                                            <span className="pr-1">{`${startYear} // ${!isCurrentJob ? endYear : "Now"}`}</span>
-                                            <span
-                                                className="relative before:absolute before:left-0 before:top-1/2
-                                                    before:hidden before:h-[1px] before:w-2 before:bg-white
-                                                    before:content-[''] md:pl-3 md:pr-1 md:before:block"
-                                            >
-                                                {job}
-                                            </span>
-                                            <span
-                                                className="relative before:absolute before:left-0 before:top-1/2
-                                                    before:hidden before:h-[1px] before:w-2 before:bg-white
-                                                    before:content-[''] xl:pl-3 xl:before:block"
-                                            >
-                                                {company}
-                                            </span>
-                                        </p>
+                                        <ChevronsRight size={20} />
+                                        <div className="flex flex-col justify-center gap-2">
+                                            <p className="inline-flex gap-0.5 ">
+                                                <span className="pr-1">{`${startYear} / ${!isCurrentJob ? endYear : "Now"}`}</span>
+                                                <span
+                                                    className="relative before:absolute before:left-0 before:top-1/2
+                                                        before:hidden before:h-[1px] before:w-2 before:bg-white
+                                                        before:content-[''] xl:pl-3 xl:pr-1 xl:before:block"
+                                                >
+                                                    {job}
+                                                </span>
+                                            </p>
+                                            <p>{company}</p>
+                                        </div>
                                     </li>
                                 ))}
                             </ul>

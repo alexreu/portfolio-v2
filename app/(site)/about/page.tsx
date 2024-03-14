@@ -46,9 +46,9 @@ export default function About() {
             <ExperiencesCard isLoading={loading} data={experiences} />
             <ServicesCard isLoading={loading} data={services} />
             <KeyFigures isLoading={loading} data={homePageData?.keyFigures} />
-            <SocialCard className="lg:col-span-1 lg:row-span-1" />
+            <SocialCard className="lg:col-span-1 lg:row-span-1 xl:col-span-3" />
             <EducationCard isLoading={loading} data={education} />
-            <GetInTouchCard />
+            <GetInTouchCard className="lg:col-span-2 xl:col-span-3" />
         </motion.section>
     );
 }

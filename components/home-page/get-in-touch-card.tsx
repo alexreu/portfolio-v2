@@ -1,13 +1,19 @@
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
-import React from "react";
+import React, { ComponentPropsWithoutRef } from "react";
 import { Blend, MoveRight } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
-export const GetInTouchCard = () => {
+type Props = ComponentPropsWithoutRef<"div">;
+
+export const GetInTouchCard = ({ className }: Props) => {
     return (
         <Card
-            className="relative order-7 col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:order-none
-                lg:col-span-3 lg:row-span-1 lg:justify-center"
+            className={cn(
+                `relative order-7 col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:order-none lg:col-span-3
+                lg:row-span-1 lg:justify-center`,
+                className
+            )}
         >
             <CardHeader className="xl:mt-auto">
                 <h1

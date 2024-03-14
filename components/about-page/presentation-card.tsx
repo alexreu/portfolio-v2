@@ -29,16 +29,16 @@ export const PresentationCard = ({ data, isLoading }: Props) => {
                         transition={{ duration: 0.3, type: "tween" }}
                         className="flex flex-col gap-4 lg:gap-0"
                     >
-                        <CardHeader className="p-0 md:p-6">
+                        <CardHeader className="p-0 lg:p-6">
                             <h1
                                 className="inline-flex flex-col gap-3 text-xl font-semibold tracking-wide text-white
-                                    md:whitespace-pre-line md:text-3xl"
+                                    md:whitespace-pre-line lg:text-3xl"
                             >
                                 {title}
                             </h1>
                         </CardHeader>
-                        <CardContent className="p-0 md:p-6">
-                            <p className="text-base font-light leading-relaxed text-white opacity-80 md:text-justify">
+                        <CardContent className="p-0 lg:p-6">
+                            <p className="text-base font-light leading-relaxed text-white opacity-80 lg:text-justify">
                                 {description}
                             </p>
                         </CardContent>
