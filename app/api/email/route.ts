@@ -1,9 +1,9 @@
 import { postmarkClient } from "@/lib/postmark";
 import { NextRequest } from "next/server";
-import { EmailResource } from "@/lib/queries/email/email-resource";
+import { EmailTypes } from "@/lib/types/email.type";
 
 export async function POST(request: NextRequest) {
-    const res: EmailResource = await request.json();
+    const res: EmailTypes = await request.json();
     const { firstname, lastname, email, subject, message } = res;
 
     await postmarkClient.sendEmail({
