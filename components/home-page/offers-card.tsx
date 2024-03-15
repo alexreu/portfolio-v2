@@ -16,7 +16,7 @@ export const OffersCard = () => {
                 >
                     <span>Votre site vitrine</span>
                     <span className="ml-12 lg:ml-0 xl:ml-5">
-                        à partir de <span className="text-primary">499 €</span>
+                        à partir de <span className="text-primary">699 €</span>
                     </span>
                 </h1>
             </CardHeader>
