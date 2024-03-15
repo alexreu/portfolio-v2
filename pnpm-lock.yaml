@@ -53,6 +53,9 @@ dependencies:
   '@sanity/vision':
     specifier: ^3.29.1
     version: 3.30.0(@babel/runtime@7.23.9)(@codemirror/lint@6.5.0)(@codemirror/theme-one-dark@6.1.2)(@lezer/common@1.2.1)(codemirror@6.0.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)(styled-components@6.1.8)
+  '@tanstack/react-query':
+    specifier: ^5.28.2
+    version: 5.28.2(react@18.2.0)
   '@tsparticles/engine':
     specifier: ^3.2.2
     version: 3.2.2
@@ -71,6 +74,9 @@ dependencies:
   '@vercel/speed-insights':
     specifier: ^1.0.10
     version: 1.0.10(next@14.1.0)(react@18.2.0)
+  axios:
+    specifier: ^1.6.7
+    version: 1.6.7
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -2298,6 +2304,19 @@ packages:
     resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
     dependencies:
       tslib: 2.6.2
+    dev: false
+
+  /@tanstack/query-core@5.28.2:
+    resolution: {integrity: sha512-IvRjNUzoJ0Hn5OSpFkPtMY00zEm+EauCnSKOx/PJPOpME6ucM5hSisFdnIN9oU3WDw5lv6OFWDSpG0rM6lF9rw==}
+    dev: false
+
+  /@tanstack/react-query@5.28.2(react@18.2.0):
+    resolution: {integrity: sha512-t3th5v5bzyeiw+fzwKwbGVT3ux2qW4wDJRrLy4YLok0qrrEQUYcZ3xsC7dlxkPbFInrIGJ8qLsm1A2sbyy2XZA==}
+    peerDependencies:
+      react: ^18.0.0
+    dependencies:
+      '@tanstack/query-core': 5.28.2
+      react: 18.2.0
     dev: false
 
   /@tanstack/react-virtual@3.0.0-beta.54(react@18.2.0):

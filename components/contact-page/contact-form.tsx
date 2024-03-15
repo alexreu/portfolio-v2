@@ -4,15 +4,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { MoveUpRight } from "lucide-react";
-import React from "react";
+import { LoaderCircle, MoveUpRight } from "lucide-react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { contactFormSchema } from "@/lib/schemas/contact-form-schema";
+import { useToast } from "@/components/ui/use-toast";
 
 export const ContactForm = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const { toast } = useToast();
     const form = useForm<z.infer<typeof contactFormSchema>>({
         resolver: zodResolver(contactFormSchema),
         defaultValues: {
@@ -25,7 +28,8 @@ export const ContactForm = () => {
     });
 
     const onSubmit = async (data: z.infer<typeof contactFormSchema>) => {
-        try {
+        setIsLoading(true);
+        const sendEmail = async () =>
             await fetch("/api/email", {
                 method: "POST",
                 headers: {
@@ -33,10 +37,20 @@ export const ContactForm = () => {
                 },
                 body: JSON.stringify(data),
             });
-            form.reset();
-        } catch (e) {
-            console.error(e);
-        }
+        sendEmail()
+            .then(() => {
+                setIsLoading(false);
+                toast({
+                    title: "Demande envoyée avec succès",
+                });
+            })
+            .catch(error => {
+                toast({
+                    title: "Erreur lors de l'envoie du message. Veuillez reéssayer.",
+                    description: error.message,
+                    variant: "destructive",
+                });
+            });
     };
 
     return (
@@ -134,10 +148,15 @@ export const ContactForm = () => {
                         <Button
                             type="submit"
                             className="mt-5 inline-flex gap-2 rounded-full focus-visible:outline-2
-                                focus-visible:outline-offset-4 focus-visible:outline-primary"
+                                focus-visible:outline-offset-4 focus-visible:outline-primary disabled:cursor-not-allowed"
+                            disabled={isLoading}
                         >
                             Envoyer
-                            <MoveUpRight size={18} strokeWidth={3} />
+                            {isLoading ? (
+                                <LoaderCircle className="animate-spin stroke-white" />
+                            ) : (
+                                <MoveUpRight size={18} strokeWidth={3} />
+                            )}
                         </Button>
                     </form>
                 </Form>
