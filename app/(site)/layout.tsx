@@ -8,6 +8,8 @@ import { Poppins } from "next/font/google";
 import "../globals.css";
 import { Footer } from "@/components/footer";
 import { BackHome } from "@/components/back-home";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 
 type Props = {
     children: ReactNode;
@@ -58,6 +60,8 @@ export default function RootLayout({ children }: Props) {
     return (
         <html lang="fr" className={`${poppins.variable}`} suppressHydrationWarning>
             <body className="bg-[#0A090D]">
+                <SpeedInsights />
+                <Analytics />
                 <ParticlesContainer />
                 <MousePointer />
                 <main
