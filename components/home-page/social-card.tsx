@@ -19,9 +19,11 @@ export const SocialCard = ({ className }: Props) => {
             <ul className="flex w-full justify-evenly">
                 <li className="inline-flex">
                     <Link
-                        href="#"
+                        href="https://www.linkedin.com/in/alexandre-adolphe-817059146"
                         className="group relative rounded-full p-7 text-white transition-all duration-500 ease-in-out"
                         title="Profil Linkedin"
+                        target="_blank"
+                        rel="noopener noreferrer"
                     >
                         <span className="sr-only">consulter mon profil linkedin</span>
                         <Circle
