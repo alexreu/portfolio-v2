@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { LoaderCircle, MoveUpRight } from "lucide-react";
+import { Check, LoaderCircle, MoveUpRight } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -27,28 +27,36 @@ export const ContactForm = () => {
         },
     });
 
+    const sendEmail = async (data: z.infer<typeof contactFormSchema>) =>
+        await fetch("/api/email", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
     const onSubmit = async (data: z.infer<typeof contactFormSchema>) => {
         setIsLoading(true);
-        const sendEmail = async () =>
-            await fetch("/api/email", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
-        sendEmail()
+        sendEmail(data)
             .then(() => {
                 setIsLoading(false);
                 toast({
-                    title: "Demande envoyée avec succès",
+                    description: (
+                        <span className="inline-flex items-center gap-2 font-medium">
+                            Demande envoyée avec succès <Check stroke="stroke-primary" size={16} />
+                        </span>
+                    ),
                 });
             })
-            .catch(error => {
+            .catch(() => {
                 toast({
-                    title: "Erreur lors de l'envoie du message. Veuillez reéssayer.",
-                    description: error.message,
                     variant: "destructive",
+                    description: (
+                        <span className="inline-flex items-center gap-2 font-medium">
+                            Erreur de l&apos;envoie. Veuillez reéssayer.
+                        </span>
+                    ),
                 });
             });
     };
