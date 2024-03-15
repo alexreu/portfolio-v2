@@ -23,7 +23,11 @@ export const Navbar = () => {
                 className="mb-10 flex w-full items-center justify-between rounded-xl bg-card px-8 py-3 opacity-100
                     backdrop-blur-xl"
             >
-                <Link href="/" className="rounded-xl font-bold text-primary" aria-label="retourner à la page d'accueil">
+                <Link
+                    href="/"
+                    className="relative z-40 rounded-xl font-bold text-primary"
+                    aria-label="retourner à la page d'accueil"
+                >
                     <Image src="/images/logo-text-white.png" alt="" width={110} height={100} />
                 </Link>
                 <ul className="hidden h-full gap-8 font-main text-base font-medium leading-3 text-white xl:flex">

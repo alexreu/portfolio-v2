@@ -36,7 +36,10 @@ export const ServiceCard = ({ isLoading, title, description, illustration }: Pro
                                 <Image src={illustration} alt="" height={128} width={160} />
                             </div>
                         </CardHeader>
-                        <CardContent className="mt-auto whitespace-pre-line text-justify text-base text-white opacity-70">
+                        <CardContent
+                            className="mt-auto whitespace-pre-line text-left text-base text-white opacity-70
+                                lg:text-justify"
+                        >
                             <p>{description}</p>
                         </CardContent>
                     </motion.div>
