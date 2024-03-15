@@ -5,7 +5,7 @@
       "dom.iterable",
       "esnext"
     ],
-    "target": "ES2015",
+    "target": "ES2017",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -22,15 +22,18 @@
         "name": "next"
       }
     ],
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "next.config.js"  ],
   "exclude": [
     "node_modules"
-  ]
+  ],
 }
