@@ -10,6 +10,7 @@ import { Footer } from "@/components/footer";
 import { BackHome } from "@/components/back-home";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
+import { Toaster } from "@/components/ui/toaster";
 
 type Props = {
     children: ReactNode;
@@ -81,6 +82,7 @@ export default function RootLayout({ children }: Props) {
                         </div>
                     </div>
                 </main>
+                <Toaster />
             </body>
         </html>
     );

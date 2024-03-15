@@ -1,10 +1,9 @@
 import { postmarkClient } from "@/lib/postmark";
-import { contactFormSchema } from "@/lib/schemas/contact-form-schema";
-import { z } from "zod";
 import { NextRequest } from "next/server";
+import { EmailTypes } from "@/lib/types/email.type";
 
 export async function POST(request: NextRequest) {
-    const res: z.infer<typeof contactFormSchema> = await request.json();
+    const res: EmailTypes = await request.json();
     const { firstname, lastname, email, subject, message } = res;
 
     await postmarkClient.sendEmail({
