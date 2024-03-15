@@ -35,7 +35,7 @@ export default function Pricing() {
     return (
         <LayoutGroup>
             <motion.section
-                className="grid grid-cols-1 place-content-center gap-5 lg:grid-cols-4 xl:grid-cols-12"
+                className="grid grid-cols-1 place-content-center gap-5 xl:grid-cols-12"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, type: "tween" }}
@@ -44,11 +44,7 @@ export default function Pricing() {
                 <AnimatePresence initial={false} mode="wait">
                     {loading
                         ? new Array(3).fill(null).map((_, i) => (
-                              <MotionCard
-                                  key={i}
-                                  className="col-span-1 lg:col-span-2 xl:col-span-4"
-                                  exit={{ opacity: 0 }}
-                              >
+                              <MotionCard key={i} className="col-span-1 xl:col-span-4" exit={{ opacity: 0 }}>
                                   <CardSkeleton numberOfSkeleton={1} isBig />
                                   <CardSkeleton numberOfSkeleton={6} />
                               </MotionCard>
@@ -68,7 +64,7 @@ export default function Pricing() {
                 </AnimatePresence>
                 <Card
                     className="item-center relative col-span-1 mt-5 flex flex-col items-center justify-center gap-3 p-10
-                        opacity-100 backdrop-blur-xl lg:col-span-4 xl:col-span-12"
+                        opacity-100 backdrop-blur-xl xl:col-span-12"
                 >
                     <CardHeader>
                         <h1 className="text-center text-xl font-semibold capitalize text-white xl:text-3xl">
@@ -96,10 +92,7 @@ export default function Pricing() {
                     />
                 </Card>
 
-                <ul
-                    className="col-span-1 flex flex-col gap-1.5 text-sm font-light text-white lg:col-span-4
-                        xl:col-span-12"
-                >
+                <ul className="col-span-1 flex flex-col gap-1.5 text-sm font-light text-white xl:col-span-12">
                     <li className="inline-flex items-center gap-2 before:text-base before:content-['*']">
                         Les tarifs indiqués sont des estimations et peuvent varier en fonction de la complexité du
                         projet.
