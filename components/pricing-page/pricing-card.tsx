@@ -18,7 +18,7 @@ export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3, type: "tween", ease: "easeInOut" }}
             className="col-span-1 flex flex-col divide-y-2 text-white opacity-100 backdrop-blur-xl transition-all
-                duration-300 ease-in-out xl:col-span-4 xl:row-span-2"
+                duration-300 ease-in-out lg:col-span-2 xl:col-span-4 xl:row-span-2"
         >
             <CardHeader className="min-h-48 gap-2">
                 <h2 className="inline-flex items-center gap-2 text-2xl font-semibold text-primary">
