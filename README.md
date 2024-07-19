@@ -1,34 +1,67 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AlexDevLab Portfolio
+
+Welcome to the AlexDevLab portfolio project! This is a personal website showcasing the freelance services and work of AlexDevLab, a front-end developer based in Réunion Island.
+
+## Project Overview
+
+This portfolio is built using modern web technologies to create a responsive, interactive, and visually appealing showcase of skills, services, and contact information.
+
+### Key Features
+
+-   Responsive design for various screen sizes
+-   Interactive UI elements using Framer Motion
+-   Dynamic content management with Sanity CMS
+-   Contact form with email integration
+-   Performance optimizations with Next.js
+
+## Technologies Used
+
+-   Next.js
+-   React
+-   TypeScript
+-   Tailwind CSS
+-   Framer Motion
+-   Sanity CMS
+-   Vercel (for deployment)
 
 ## Getting Started
 
-First, run the development server:
+To run this project locally, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+1. Clone the repository
+2. Install dependencies:
+    ```
+    npm install
+    ```
+3. Set up environment variables (see `.env.example`)
+4. Run the development server:
+    ```
+    npm run dev
+    ```
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+The project follows a standard Next.js structure with some custom directories:
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+-   `app/`: Contains the main application pages and API routes
+-   `components/`: Reusable React components
+-   `lib/`: Utility functions and types
+-   `public/`: Static assets
+-   `studio/`: Sanity Studio configuration
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Deployment
 
-## Learn More
+This project is configured for easy deployment on Vercel. Simply connect your GitHub repository to Vercel for automatic deployments.
 
-To learn more about Next.js, take a look at the following resources:
+## Contact
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+For any inquiries or collaborations, please reach out through the contact form on the website or directly at contact@alexdevlab.com.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
+This project is private and not open for public use or distribution.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+© 2024 AlexDevLab. All rights reserved.
