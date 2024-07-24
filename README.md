@@ -31,12 +31,12 @@ To run this project locally, follow these steps:
 1. Clone the repository
 2. Install dependencies:
     ```
-    npm install
+    pnpm install
     ```
 3. Set up environment variables (see `.env.example`)
 4. Run the development server:
     ```
-    npm run dev
+    pnpm run dev
     ```
 5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
