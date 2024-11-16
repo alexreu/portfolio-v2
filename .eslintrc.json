@@ -1,14 +1,16 @@
 {
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
-  "plugins": [
-    "prettier",
-    "import",
-    "jsx-a11y",
-    "sort-imports-es6-autofix",
-    "@typescript-eslint"
-  ],
-  "rules": {
-    "@typescript-eslint/no-unused-vars": "error",
-    "@typescript-eslint/no-explicit-any": "error"
-  }
+    "extends": ["next", "next/typescript", "prettier"],
+    "plugins": ["import", "jsx-a11y", "sort-imports-es6-autofix"],
+    "rules": {
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/no-empty-object-type": "off",
+        "@typescript-eslint/no-unused-expressions": [
+            "error",
+            {
+                "allowShortCircuit": true,
+                "allowTernary": true
+            }
+        ]
+    }
 }
