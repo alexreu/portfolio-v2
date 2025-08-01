@@ -24,7 +24,7 @@ export const ServicesCard = () => {
     ];
     return (
         <Card
-            className="order-4 col-span-1 flex flex-col gap-5 opacity-100 backdrop-blur-xl lg:order-none lg:col-span-6
+            className="order-4 col-span-1 flex flex-col gap-5 opacity-100 backdrop-blur-xl lg:order-0 lg:col-span-6
                 lg:col-start-4 lg:row-span-1 lg:row-start-2 lg:gap-0 xl:row-span-2"
         >
             <CardHeader>

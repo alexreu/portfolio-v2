@@ -10,7 +10,7 @@ export const GetInTouchCard = ({ className }: Props) => {
     return (
         <Card
             className={cn(
-                `relative order-7 col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:order-none lg:col-span-3
+                `relative order-7 col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:order-0 lg:col-span-3
                 lg:row-span-1 lg:justify-center`,
                 className
             )}

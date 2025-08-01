@@ -1,10 +1,9 @@
 "use client";
 
-import { MapPin, MoveUpRight, Send, Share2 } from "lucide-react";
-import React from "react";
 import { ContactForm } from "@/components/contact-page/contact-form";
+import { MapPin, MoveUpRight, Send, Share2 } from "lucide-react";
+import { motion } from "motion/react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 export default function ContactPage() {
     return (

@@ -1,9 +1,8 @@
-import React from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { ChevronsRight, Layers } from "lucide-react";
-import { AboutPageData } from "@/lib/types";
-import { AnimatePresence, motion } from "framer-motion";
 import { CardSkeleton } from "@/components/card-skeleton";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { AboutPageData } from "@/lib/types";
+import { ChevronsRight, Layers } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
 type Props = {
     isLoading: boolean;
@@ -47,7 +46,7 @@ export const ExperiencesCard = ({ isLoading, data }: Props) => {
                                                 <span className="pr-1">{`${startYear} / ${!isCurrentJob ? endYear : "Now"}`}</span>
                                                 <span
                                                     className="relative before:absolute before:left-0 before:top-1/2
-                                                        before:hidden before:h-[1px] before:w-2 before:bg-white
+                                                        before:hidden before:h-px before:w-2 before:bg-white
                                                         before:content-[''] xl:pl-3 xl:pr-1 xl:before:block"
                                                 >
                                                     {job}

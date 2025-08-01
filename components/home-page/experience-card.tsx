@@ -9,7 +9,7 @@ type Props = {
 export const ExperienceCard = ({ keyFigures }: Props) => {
     return (
         <Card
-            className="relative order-3 col-span-1 flex flex-col gap-12 opacity-100 backdrop-blur-xl lg:order-none
+            className="relative order-3 col-span-1 flex flex-col gap-12 opacity-100 backdrop-blur-xl lg:order-0
                 lg:col-span-3 lg:row-span-2 lg:gap-0 xl:row-span-3"
         >
             <CardHeader>

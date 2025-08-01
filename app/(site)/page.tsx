@@ -1,8 +1,8 @@
 "use client";
 
+import { GlobalLoading } from "@/components/global-loading";
 import { ExperienceCard } from "@/components/home-page/experience-card";
 import { GetInTouchCard } from "@/components/home-page/get-in-touch-card";
-import { GlobalLoading } from "@/components/global-loading";
 import { OffersCard } from "@/components/home-page/offers-card";
 import { ProfileCard } from "@/components/home-page/profile-card";
 import { ServicesCard } from "@/components/home-page/services-card";
@@ -11,7 +11,7 @@ import { SocialCard } from "@/components/home-page/social-card";
 import { TitleCard } from "@/components/home-page/title-card";
 import { getHomepageData } from "@/lib/sanity/sanity.query";
 import { HomepageData } from "@/lib/types";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
 // eslint-disable-next-line @next/next/no-async-client-component

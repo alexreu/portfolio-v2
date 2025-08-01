@@ -11,7 +11,7 @@ export const SocialCard = ({ className }: Props) => {
         <Card
             className={cn(
                 `relative order-5 col-span-1 flex flex-col items-start justify-center gap-3 p-4 opacity-100
-                backdrop-blur-xl lg:order-none lg:col-span-3 lg:row-span-1`,
+                backdrop-blur-xl lg:order-0 lg:col-span-3 lg:row-span-1`,
                 className
             )}
         >

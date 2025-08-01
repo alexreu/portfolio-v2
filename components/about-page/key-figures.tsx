@@ -1,8 +1,7 @@
-import { Card, CardContent } from "@/components/ui/card";
-import React from "react";
-import { AboutPageData } from "@/lib/types";
-import { AnimatePresence, motion } from "framer-motion";
 import { CardSkeleton } from "@/components/card-skeleton";
+import { Card, CardContent } from "@/components/ui/card";
+import { AboutPageData } from "@/lib/types";
+import { AnimatePresence, motion } from "motion/react";
 
 type Props = {
     isLoading: boolean;

@@ -1,10 +1,9 @@
-import { Card, CardHeader } from "@/components/ui/card";
-import Image from "next/image";
-import { Blend, Square } from "lucide-react";
-import React from "react";
-import { AboutPageData } from "@/lib/types";
-import { AnimatePresence, motion } from "framer-motion";
 import { CardSkeleton } from "@/components/card-skeleton";
+import { Card, CardHeader } from "@/components/ui/card";
+import { AboutPageData } from "@/lib/types";
+import { Blend, Square } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
 
 type Props = {
     isLoading: boolean;
@@ -17,7 +16,7 @@ export const ProfilePictureCard = ({ isLoading, data }: Props) => {
     return (
         <Card
             className="relative order-first col-span-1 flex flex-col justify-center opacity-100 backdrop-blur-xl
-                md:order-none xl:col-span-4"
+                md:order-0 xl:col-span-4"
         >
             <AnimatePresence mode="wait">
                 {isLoading ? (
@@ -27,7 +26,7 @@ export const ProfilePictureCard = ({ isLoading, data }: Props) => {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.3, type: "tween" }}
                     >
-                        <CardSkeleton numberOfSkeleton={1} skeletonClassName="!h-48 !w-48 rounded-full" />
+                        <CardSkeleton numberOfSkeleton={1} skeletonClassName="h-48! w-48! rounded-full" />
                     </motion.div>
                 ) : (
                     <motion.div

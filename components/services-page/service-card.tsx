@@ -1,8 +1,7 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
 import { CardSkeleton } from "@/components/card-skeleton";
-import React from "react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { AnimatePresence, motion } from "motion/react";
+import Image from "next/image";
 
 type Props = {
     title: string;
