@@ -37,7 +37,7 @@ export const SkillsCard = ({ skills }: Props) => {
 
     return (
         <Card
-            className=" order-6 col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:order-none lg:col-span-6
+            className=" order-6 col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:order-0 lg:col-span-6
                 lg:row-span-1"
         >
             <CardHeader className="w-full self-start">

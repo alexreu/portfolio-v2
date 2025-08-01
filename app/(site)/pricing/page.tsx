@@ -1,15 +1,15 @@
 "use client";
 
+import { CardSkeleton } from "@/components/card-skeleton";
 import { PricingCard } from "@/components/pricing-page/pricing-card";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getPricingPageData } from "@/lib/sanity/sanity.query";
 import { PricingPageData } from "@/lib/types";
 import { Blend, Send } from "lucide-react";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { CardSkeleton } from "@/components/card-skeleton";
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 
 export default function Pricing() {
     const [pricingPageData, setPricingPageData] = useState<PricingPageData[] | null>(null);

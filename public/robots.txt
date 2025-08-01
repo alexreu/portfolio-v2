@@ -1,0 +1,15 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /studio
+Disallow: /_next
+Disallow: /images
+
+# Host
+Host: https://alexdevlab.com
+
+# Sitemaps
+Sitemap: https://alexdevlab.com/sitemap.xml

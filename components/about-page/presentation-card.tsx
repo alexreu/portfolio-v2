@@ -1,9 +1,8 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
-import React from "react";
-import { AboutPageData } from "@/lib/types";
 import { CardSkeleton } from "@/components/card-skeleton";
-import { AnimatePresence, motion } from "framer-motion";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { AboutPageData } from "@/lib/types";
+import { Sparkles } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
 type Props = { isLoading: boolean; data?: AboutPageData["presentation"] };
 

@@ -1,9 +1,9 @@
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { CardFooterLink } from "@/components/ui/card-footer-link";
 import { Send, Sparkles } from "lucide-react";
+import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { CardFooterLink } from "@/components/ui/card-footer-link";
 
 type Props = {
     firstname?: string;
@@ -11,19 +11,20 @@ type Props = {
 };
 
 export const ProfileCard = ({ profilePicture, firstname }: Props) => {
-    const MotionLink = motion(Link);
+    const MotionLink = motion.create(Link);
+
     const iconVariants = {
-        initial: { opacity: 0, translateX: -5 },
-        hover: { opacity: 1, translateX: 0 },
+        hidden: { opacity: 0, x: -10 },
+        visible: { opacity: 1, x: 0 },
     };
     const linkVariants = {
-        initial: { width: "153px" },
-        hover: { width: "187px" },
+        hidden: { width: "153px" },
+        visible: { width: "187px" },
     };
 
     return (
         <Card
-            className="relative order-1 col-span-1 flex flex-col items-center opacity-100 backdrop-blur-xl lg:order-none
+            className="relative order-1 col-span-1 flex flex-col items-center opacity-100 backdrop-blur-xl lg:order-0
                 lg:col-span-3 lg:col-start-1 lg:row-span-2 lg:row-start-1 xl:row-span-3"
         >
             <CardHeader className="mt-auto flex flex-col-reverse items-center gap-6">
@@ -32,17 +33,21 @@ export const ProfileCard = ({ profilePicture, firstname }: Props) => {
                         className="relative flex w-full items-center gap-3 rounded-xl bg-primary p-3 text-lg font-medium
                             tracking-wide text-white"
                         href="/contact"
+                        initial="hidden"
+                        whileHover="visible"
                         variants={linkVariants}
-                        whileHover="hover"
-                        initial="initial"
                         aria-label="formulaire de contact"
-                        layout
                     >
                         <span>I&#39;m {firstname}</span>
                         <motion.span
-                            className="absolute right-3"
+                            className="opacity-0 absolute right-3"
                             variants={iconVariants}
-                            transition={{ duration: 0.4, type: "spring" }}
+                            transition={{ 
+                                duration: 0.3, 
+                                type: "spring",
+                                stiffness: 400,
+                                damping: 25
+                            }}
                         >
                             <Send size={22} />
                         </motion.span>

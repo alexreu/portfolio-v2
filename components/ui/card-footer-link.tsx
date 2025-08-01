@@ -20,7 +20,7 @@ export const CardFooterLink = ({ className, children, ...props }: Props) => {
                 <LoaderCircle
                     strokeWidth={1}
                     size={38}
-                    className="absolute -top-[7px] right-0 -rotate-[145deg] transition-all duration-300 ease-in-out
+                    className="absolute -top-[7px] right-0 -rotate-145 transition-all duration-300 ease-in-out
                         group-hover:stroke-primary"
                 />
             </span>

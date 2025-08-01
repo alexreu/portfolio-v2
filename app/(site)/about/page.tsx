@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { EducationCard } from "@/components/about-page/education-card";
+import { ExperiencesCard } from "@/components/about-page/experiences-card";
+import { KeyFigures } from "@/components/about-page/key-figures";
 import { PresentationCard } from "@/components/about-page/presentation-card";
 import { ProfilePictureCard } from "@/components/about-page/profile-picture-card";
-import { ExperiencesCard } from "@/components/about-page/experiences-card";
 import { ServicesCard } from "@/components/about-page/services-card";
-import { KeyFigures } from "@/components/about-page/key-figures";
-import { SocialCard } from "@/components/home-page/social-card";
-import { EducationCard } from "@/components/about-page/education-card";
 import { GetInTouchCard } from "@/components/home-page/get-in-touch-card";
+import { SocialCard } from "@/components/home-page/social-card";
 import { getAboutPageData } from "@/lib/sanity/sanity.query";
 import { AboutPageData } from "@/lib/types";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 
 export default function About() {
     const [aboutPageData, setAboutPageData] = useState<AboutPageData | null>(null);

@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ServicesPageData } from "@/lib/types";
-import { getServicesPageData } from "@/lib/sanity/sanity.query";
 import { ServiceCard } from "@/components/services-page/service-card";
-import { motion } from "framer-motion";
+import { getServicesPageData } from "@/lib/sanity/sanity.query";
+import { ServicesPageData } from "@/lib/types";
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 
 export default function Services() {
     const [servicePageData, setServicePageData] = useState<ServicesPageData[] | []>(new Array(4).fill(Math.random()));

@@ -1,9 +1,8 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import React from "react";
-import { CardTitle } from "@/components/card-title";
-import { AnimatePresence, motion } from "framer-motion";
-import { AboutPageData } from "@/lib/types";
 import { CardSkeleton } from "@/components/card-skeleton";
+import { CardTitle } from "@/components/card-title";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { AboutPageData } from "@/lib/types";
+import { AnimatePresence, motion } from "motion/react";
 
 type Props = {
     isLoading: boolean;
@@ -14,7 +13,7 @@ export const EducationCard = ({ isLoading, data }: Props) => {
     return (
         <Card
             className="relative col-span-1 flex flex-col justify-center opacity-100 backdrop-blur-xl lg:order-last
-                lg:col-span-3 xl:order-none xl:col-span-6"
+                lg:col-span-3 xl:order-0 xl:col-span-6"
         >
             <AnimatePresence mode="wait">
                 {isLoading ? (

@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
 import { useMouse } from "@uidotdev/usehooks";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
+import { useMemo } from "react";
 
 export const MousePointer = () => {
     const [mouse] = useMouse();

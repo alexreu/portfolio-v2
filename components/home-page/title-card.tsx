@@ -10,7 +10,7 @@ export const TitleCard = ({ job }: Props) => {
     const [firstPart, secondPart] = useMemo(() => job?.split(" ") ?? [], [job]);
 
     return (
-        <Card className="order-2 col-span-1 opacity-100 backdrop-blur-xl lg:order-none lg:col-span-3">
+        <Card className="order-2 col-span-1 opacity-100 backdrop-blur-xl lg:order-0 lg:col-span-3">
             {!job ? (
                 <CardSkeleton />
             ) : (
