@@ -14,7 +14,7 @@ export const GlobalLoading = () => {
         >
             <div className="container flex w-full flex-col items-center justify-center gap-3">
                 <div className="relative flex h-48 w-48 items-center justify-center">
-                    <Image src="/images/logo-white-8.png" alt="" width={160} height={160} />
+                    <Image src="/images/logo-white-8.png" alt="Chargement" width={160} height={160} priority />
                     <Loader2
                         className="absolute left-0 top-0 h-full w-full animate-spin stroke-primary"
                         strokeWidth={1}

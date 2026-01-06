@@ -40,7 +40,7 @@ export const ProfilePictureCard = ({ isLoading, data }: Props) => {
                                     border-primary sm:h-56 sm:w-56"
                             >
                                 <div className="h-32 w-32 rounded-full bg-primary sm:h-56 sm:w-56">
-                                    {image && <Image src={image} alt="" width={224} height={224} />}
+                                    {image && <Image src={image} alt="Photo de profil" width={224} height={224} />}
                                 </div>
                                 <Square fill="white" stroke="white" className="absolute -left-1.5 -top-1.5" size={12} />
                                 <Square

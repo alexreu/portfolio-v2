@@ -55,7 +55,7 @@ export const ProfileCard = ({ profilePicture, firstname }: Props) => {
                 </h1>
                 {profilePicture?.image && (
                     <div className="mx-auto mt-6 h-40 w-40 rounded-full bg-primary">
-                        <Image src={profilePicture.image} alt="" width={160} height={160} />
+                        <Image src={profilePicture.image} alt={profilePicture?.alt || `Photo de profil de ${firstname}`} width={160} height={160} />
                     </div>
                 )}
             </CardHeader>

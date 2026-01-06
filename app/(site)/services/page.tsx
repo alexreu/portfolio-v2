@@ -7,7 +7,7 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 
 export default function Services() {
-    const [servicePageData, setServicePageData] = useState<ServicesPageData[] | []>(new Array(4).fill(Math.random()));
+    const [servicePageData, setServicePageData] = useState<ServicesPageData[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -16,7 +16,7 @@ export default function Services() {
                 const data: ServicesPageData[] = await getServicesPageData();
                 setServicePageData(data);
             } catch (error) {
-                console.error("Error fetching pricing page data:", error);
+                console.error("Error fetching services page data:", error);
             } finally {
                 setLoading(false);
             }
