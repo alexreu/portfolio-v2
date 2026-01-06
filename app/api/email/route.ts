@@ -1,16 +1,35 @@
 import { postmarkClient } from "@/lib/postmark";
-import { NextRequest } from "next/server";
-import { EmailTypes } from "@/lib/types/email.type";
+import { contactFormSchema } from "@/lib/schemas/contact-form-schema";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-    const res: EmailTypes = await request.json();
-    const { firstname, lastname, email, subject, message } = res;
+    try {
+        const body = await request.json();
 
-    await postmarkClient.sendEmail({
-        From: "contact@alexdevlab.com",
-        To: "contact@alexdevlab.com",
-        Subject: subject,
-        TextBody: `${firstname} ${lastname}\nContact information: ${email}\n ${message}`,
-        MessageStream: "portfolio-contact-form",
-    });
+        const result = contactFormSchema.safeParse(body);
+        if (!result.success) {
+            return NextResponse.json(
+                { error: "Validation failed", details: result.error.flatten() },
+                { status: 400 }
+            );
+        }
+
+        const { firstname, lastname, email, subject, message } = result.data;
+
+        await postmarkClient.sendEmail({
+            From: "contact@alexdevlab.com",
+            To: "contact@alexdevlab.com",
+            Subject: subject,
+            TextBody: `${firstname} ${lastname}\nContact information: ${email}\n ${message}`,
+            MessageStream: "portfolio-contact-form",
+        });
+
+        return NextResponse.json({ success: true }, { status: 200 });
+    } catch (error) {
+        console.error("Email sending failed:", error);
+        return NextResponse.json(
+            { error: "Failed to send email" },
+            { status: 500 }
+        );
+    }
 }

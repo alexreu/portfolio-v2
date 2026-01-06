@@ -1,3 +1,4 @@
+import { Rule } from "@sanity/types";
 import { CircleDollarSign } from "lucide-react";
 
 const pricing = {
@@ -10,7 +11,7 @@ const pricing = {
             name: "offerTitle",
             title: "Titre de l'offre",
             type: "string",
-            validation: rule => rule.required(),
+            validation: (rule: Rule) => rule.required(),
         },
         {
             name: "fixedPrice",
@@ -40,7 +41,7 @@ const pricing = {
                             name: "offerContentItem",
                             title: "Item",
                             type: "string",
-                            validation: rule => rule.required(),
+                            validation: (rule: Rule) => rule.required(),
                         },
                     ],
                 },

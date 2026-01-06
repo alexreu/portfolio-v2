@@ -1,3 +1,4 @@
+import { Rule } from "@sanity/types";
 import { Home, Key } from "lucide-react";
 
 const homepage = {
@@ -10,7 +11,7 @@ const homepage = {
             name: "firstname",
             title: "Prénom",
             type: "string",
-            validation: rule => rule.required(),
+            validation: (rule: Rule) => rule.required(),
         },
         {
             name: "profilePicture",
@@ -30,7 +31,7 @@ const homepage = {
             name: "job",
             title: "Poste",
             type: "string",
-            validation: rule => rule.required(),
+            validation: (rule: Rule) => rule.required(),
         },
         {
             name: "keyFigures",
@@ -46,13 +47,13 @@ const homepage = {
                             name: "keyFigure",
                             title: "Chiffre clé",
                             type: "string",
-                            validation: rule => rule.required(),
+                            validation: (rule: Rule) => rule.required(),
                         },
                         {
                             name: "keyFigureDescription",
                             title: "Description",
                             type: "string",
-                            validation: rule => rule.required(),
+                            validation: (rule: Rule) => rule.required(),
                         },
                     ],
                 },
@@ -71,7 +72,7 @@ const homepage = {
                             name: "skill",
                             title: "Titre de la compétence",
                             type: "string",
-                            validation: rule => rule.required(),
+                            validation: (rule: Rule) => rule.required(),
                         },
                     ],
                 },
