@@ -6,7 +6,7 @@ import { CardFooterLink } from "@/components/ui/card-footer-link";
 export const OffersCard = () => {
     return (
         <Card
-            className="relarive order-8 col-span-1 flex flex-col justify-center opacity-100 backdrop-blur-xl
+            className="relative order-8 col-span-1 flex flex-col justify-center opacity-100 backdrop-blur-xl
                 lg:order-0 lg:col-span-3 lg:row-span-1 lg:justify-end xl:justify-center"
         >
             <CardHeader className="p-6 lg:p-3 xl:p-6">

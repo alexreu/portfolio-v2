@@ -32,7 +32,7 @@ export const ServiceCard = ({ isLoading, title, description, illustration }: Pro
                         <CardHeader className="flex flex-col gap-3">
                             <h1 className="inline-flex flex-col gap-1 text-2xl font-semibold text-primary">{title}</h1>
                             <div className="inline-flex h-32 items-center">
-                                <Image src={illustration} alt="" height={128} width={160} />
+                                <Image src={illustration} alt={title} height={128} width={160} />
                             </div>
                         </CardHeader>
                         <CardContent

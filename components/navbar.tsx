@@ -28,7 +28,7 @@ export const Navbar = () => {
                     className="relative z-40 rounded-xl font-bold text-primary"
                     aria-label="retourner à la page d'accueil"
                 >
-                    <Image src="/images/logo-text-white.png" alt="" width={110} height={100} />
+                    <Image src="/images/logo-text-white.png" alt="AlexDevLab logo" width={110} height={100} priority />
                 </Link>
                 <ul className="hidden h-full gap-8 font-main text-base font-medium leading-3 text-white xl:flex">
                     {navLinks.map(({ title, link }, i) => (
@@ -43,8 +43,7 @@ export const Navbar = () => {
                     ))}
                 </ul>
                 <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-                    <SheetTrigger className="text-white xl:hidden">
-                        <span className="sr-only">Ouvrir le menu mobile</span>
+                    <SheetTrigger className="text-white xl:hidden" aria-label="Ouvrir le menu mobile">
                         <Menu size={32} className="stroke-white" />
                     </SheetTrigger>
                     <SheetContent side="right">
