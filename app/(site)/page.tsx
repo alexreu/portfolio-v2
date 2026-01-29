@@ -14,7 +14,6 @@ import { HomepageData } from "@/lib/types";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
-// eslint-disable-next-line @next/next/no-async-client-component
 export default function Home() {
     const [homepageData, setHomepageData] = useState<HomepageData | null>(null);
     const [loading, setLoading] = useState(true);

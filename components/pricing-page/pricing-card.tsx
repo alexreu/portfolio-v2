@@ -10,8 +10,9 @@ type Props = {
     isCustom?: boolean;
 };
 
+const MotionCard = motion(Card);
+
 export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }: Props) => {
-    const MotionCard = motion(Card);
     return (
         <MotionCard
             initial={{ opacity: 0 }}
