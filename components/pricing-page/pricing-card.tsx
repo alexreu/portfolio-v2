@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Check, Sparkle } from "lucide-react";
 import { motion } from "motion/react";
