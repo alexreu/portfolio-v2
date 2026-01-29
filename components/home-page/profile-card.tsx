@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { CardFooterLink } from "@/components/ui/card-footer-link";
 import { Send, Sparkles } from "lucide-react";

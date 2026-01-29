@@ -1,18 +1,10 @@
-"use client";
-
 import { ContactForm } from "@/components/contact-page/contact-form";
 import { MapPin, MoveUpRight, Send, Share2 } from "lucide-react";
-import { motion } from "motion/react";
 import Link from "next/link";
 
 export const ContactPageContent = () => {
     return (
-        <motion.section
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, type: "tween" }}
-            className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-12"
-        >
+        <section className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-12">
             <div className="col-span-1 flex flex-col gap-5 xl:col-span-4">
                 <div className="flex flex-col gap-5">
                     <h1 className="font-semibold text-primary">Contact info</h1>
@@ -69,6 +61,6 @@ export const ContactPageContent = () => {
                 </ul>
             </div>
             <ContactForm />
-        </motion.section>
+        </section>
     );
 };

@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
     reactStrictMode: true,
+    experimental: {
+        viewTransition: true,
+    },
     images: {
         formats: ["image/avif", "image/webp"],
         remotePatterns: [
