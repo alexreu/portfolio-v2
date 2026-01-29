@@ -1,9 +1,8 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
-import { CardSkeleton } from "@/components/card-skeleton";
 
 type Props = {
-    keyFigures?: { keyFigure: string; keyFigureDescription: string; _key: string }[];
+    keyFigures: { keyFigure: string; keyFigureDescription: string; _key: string }[];
 };
 
 export const ExperienceCard = ({ keyFigures }: Props) => {
@@ -15,20 +14,16 @@ export const ExperienceCard = ({ keyFigures }: Props) => {
             <CardHeader>
                 <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">Experiences</h1>
             </CardHeader>
-            {!keyFigures ? (
-                <CardSkeleton numberOfSkeleton={5} />
-            ) : (
-                <CardContent className="w-full flex-1 pb-12 lg:p-6">
-                    <ul className="flex h-full flex-col justify-center gap-12">
-                        {keyFigures.map(({ keyFigure, keyFigureDescription, _key }) => (
-                            <li key={_key} className="flex flex-col items-center justify-center gap-2 text-center">
-                                <span className="text-5xl font-medium tracking-normal text-white">{keyFigure}</span>
-                                <span className="uppercase text-muted-foreground">{keyFigureDescription}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </CardContent>
-            )}
+            <CardContent className="w-full flex-1 pb-12 lg:p-6">
+                <ul className="flex h-full flex-col justify-center gap-12">
+                    {keyFigures.map(({ keyFigure, keyFigureDescription, _key }) => (
+                        <li key={_key} className="flex flex-col items-center justify-center gap-2 text-center">
+                            <span className="text-5xl font-medium tracking-normal text-white">{keyFigure}</span>
+                            <span className="uppercase text-muted-foreground">{keyFigureDescription}</span>
+                        </li>
+                    ))}
+                </ul>
+            </CardContent>
             <Sparkles
                 className="absolute right-1 top-1 rotate-90 animate-pulse stroke-muted-foreground"
                 size={58}
