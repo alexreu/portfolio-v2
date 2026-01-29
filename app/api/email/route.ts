@@ -1,6 +1,7 @@
+import { NextRequest, NextResponse } from "next/server";
+
 import { postmarkClient } from "@/lib/postmark";
 import { contactFormSchema } from "@/lib/schemas/contact-form-schema";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
     try {
@@ -10,7 +11,7 @@ export async function POST(request: NextRequest) {
         if (!result.success) {
             return NextResponse.json(
                 { error: "Validation failed", details: result.error.flatten() },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
@@ -27,9 +28,6 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: true }, { status: 200 });
     } catch (error) {
         console.error("Email sending failed:", error);
-        return NextResponse.json(
-            { error: "Failed to send email" },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
     }
 }

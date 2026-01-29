@@ -1,5 +1,5 @@
-import { ServiceCard } from "@/components/services-page/service-card";
 import { ServicesPageData } from "@/lib/types";
+import { ServiceCard } from "@/components/services-page/service-card";
 
 type Props = {
     services: ServicesPageData[];

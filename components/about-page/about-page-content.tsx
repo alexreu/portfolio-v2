@@ -1,3 +1,4 @@
+import { AboutPageData } from "@/lib/types";
 import { EducationCard } from "@/components/about-page/education-card";
 import { ExperiencesCard } from "@/components/about-page/experiences-card";
 import { KeyFigures } from "@/components/about-page/key-figures";
@@ -6,7 +7,6 @@ import { ProfilePictureCard } from "@/components/about-page/profile-picture-card
 import { ServicesCard } from "@/components/about-page/services-card";
 import { GetInTouchCard } from "@/components/home-page/get-in-touch-card";
 import { SocialCard } from "@/components/home-page/social-card";
-import { AboutPageData } from "@/lib/types";
 
 type Props = {
     data: AboutPageData;

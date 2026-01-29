@@ -1,8 +1,8 @@
 "use client";
 
+import { useMemo } from "react";
 import { useMouse } from "@uidotdev/usehooks";
 import { motion } from "motion/react";
-import { useMemo } from "react";
 
 export const MousePointer = () => {
     const [mouse] = useMouse();
@@ -18,7 +18,7 @@ export const MousePointer = () => {
 
     return (
         <motion.div
-            className="fixed left-0 top-0 hidden h-8 w-8 rounded-full border-2 border-primary xl:flex"
+            className="border-primary fixed top-0 left-0 hidden h-8 w-8 rounded-full border-2 xl:flex"
             variants={variants}
             animate="default"
             transition={{

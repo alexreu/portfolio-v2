@@ -1,11 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { Menu, MoveUpRight } from "lucide-react";
 import React, { useState } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import Image from "next/image";
+import Link from "next/link";
+import { Menu, MoveUpRight } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export const Navbar = () => {
     const [sheetOpen, setSheetOpen] = useState(false);
@@ -19,23 +20,26 @@ export const Navbar = () => {
 
     return (
         <header role="banner">
-            <nav
-                className="mb-10 flex w-full items-center justify-between rounded-xl bg-card px-8 py-3 opacity-100
-                    backdrop-blur-xl"
-            >
+            <nav className="bg-card mb-10 flex w-full items-center justify-between rounded-xl px-8 py-3 opacity-100 backdrop-blur-xl">
                 <Link
                     href="/"
-                    className="relative z-40 rounded-xl font-bold text-primary"
+                    className="text-primary relative z-40 rounded-xl font-bold"
                     aria-label="retourner à la page d'accueil"
                 >
-                    <Image src="/images/logo-text-white.png" alt="AlexDevLab logo" width={110} height={100} priority />
+                    <Image
+                        src="/images/logo-text-white.png"
+                        alt="AlexDevLab logo"
+                        width={110}
+                        height={100}
+                        priority
+                    />
                 </Link>
-                <ul className="hidden h-full gap-8 font-main text-base font-medium leading-3 text-white xl:flex">
+                <ul className="font-main hidden h-full gap-8 text-base leading-3 font-medium text-white xl:flex">
                     {navLinks.map(({ title, link }, i) => (
                         <li className="h-full" key={`${title}-${i}`}>
                             <Link
                                 href={link}
-                                className="transition-color rounded-lg duration-200 ease-in-out hover:text-primary"
+                                className="transition-color hover:text-primary rounded-lg duration-200 ease-in-out"
                             >
                                 {title}
                             </Link>
@@ -43,16 +47,19 @@ export const Navbar = () => {
                     ))}
                 </ul>
                 <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-                    <SheetTrigger className="text-white xl:hidden" aria-label="Ouvrir le menu mobile">
+                    <SheetTrigger
+                        className="text-white xl:hidden"
+                        aria-label="Ouvrir le menu mobile"
+                    >
                         <Menu size={32} className="stroke-white" />
                     </SheetTrigger>
                     <SheetContent side="right">
-                        <ul className="mt-8 flex flex-col gap-5 font-main text-base font-medium leading-3 text-white">
+                        <ul className="font-main mt-8 flex flex-col gap-5 text-base leading-3 font-medium text-white">
                             {navLinks.map(({ title, link }, i) => (
                                 <li className="rounded-lg p-2" key={`${title}-${i}`}>
                                     <Link
                                         href={link}
-                                        className="transition-all duration-200 ease-in-out hover:text-primary"
+                                        className="hover:text-primary transition-all duration-200 ease-in-out"
                                         onClick={() => setSheetOpen(false)}
                                     >
                                         {title}
@@ -71,8 +78,7 @@ export const Navbar = () => {
                     </SheetContent>
                 </Sheet>
                 <Button
-                    className="hidden gap-2 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4
-                        focus-visible:outline-primary xl:inline-flex"
+                    className="focus-visible:outline-primary hidden gap-2 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 xl:inline-flex"
                     asChild
                 >
                     <Link href="/contact" aria-label="formulaire de contact">

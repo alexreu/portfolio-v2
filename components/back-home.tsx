@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 export const BackHome = () => {
     const pathname = usePathname();
@@ -15,12 +15,11 @@ export const BackHome = () => {
         <div>
             <Link
                 href="/"
-                className="group mb-10 inline-flex gap-2 rounded-lg font-semibold uppercase text-white
-                    focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+                className="group focus-visible:outline-primary mb-10 inline-flex gap-2 rounded-lg font-semibold text-white uppercase focus-visible:outline-2 focus-visible:outline-offset-4"
                 aria-label="retourner à la page d'accueil"
             >
-                <ArrowLeft className="stroke-white transition-colors duration-300 ease-in-out group-hover:stroke-primary" />
-                <span className="transition-colors duration-300 ease-in-out group-hover:text-primary">
+                <ArrowLeft className="group-hover:stroke-primary stroke-white transition-colors duration-300 ease-in-out" />
+                <span className="group-hover:text-primary transition-colors duration-300 ease-in-out">
                     Back{" "}
                     <span className="text-primary transition-colors duration-300 ease-in-out group-hover:text-white">
                         home
