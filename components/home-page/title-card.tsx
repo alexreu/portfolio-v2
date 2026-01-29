@@ -17,7 +17,7 @@ export const TitleCard = ({ job }: Props) => {
                 <CardHeader className="flex h-full justify-center">
                     <CardTitle className="inline-flex w-full flex-col gap-5 text-3xl lg:text-2xl xl:text-3xl">
                         <span className="text-white">{firstPart}</span>
-                        <span className="ml-auto text-muted-foreground">{secondPart}</span>
+                        <span className="text-muted-foreground ml-auto">{secondPart}</span>
                     </CardTitle>
                 </CardHeader>
             )}
