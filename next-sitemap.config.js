@@ -27,7 +27,11 @@ module.exports = {
     // Default transformation function
     transform: async (config, path) => {
         // Skip static files and assets
-        if (path.includes("/_next") || path.includes("/images") || path.match(/\.(woff2|jpg|png|gif|css|js)$/)) {
+        if (
+            path.includes("/_next") ||
+            path.includes("/images") ||
+            path.match(/\.(woff2|jpg|png|gif|css|js)$/)
+        ) {
             return null;
         }
         const priority = path === "/" ? 1 : config.priority;

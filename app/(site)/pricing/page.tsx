@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import { getPricingPageData } from "@/lib/sanity/sanity.query";
 import { PricingPageContent } from "@/components/pricing-page/pricing-page-content";
 

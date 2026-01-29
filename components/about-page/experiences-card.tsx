@@ -1,9 +1,10 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { AboutPageData } from "@/lib/types";
 import { ChevronsRight, Layers } from "lucide-react";
 import { motion } from "motion/react";
+
+import { AboutPageData } from "@/lib/types";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 type Props = {
     data: AboutPageData["experiences"];
@@ -18,7 +19,7 @@ export const ExperiencesCard = ({ data }: Props) => {
                 transition={{ duration: 0.3, type: "tween" }}
             >
                 <CardHeader>
-                    <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">
+                    <h1 className="text-primary text-xl leading-none font-semibold tracking-tight">
                         Expériences
                     </h1>
                 </CardHeader>
@@ -31,13 +32,9 @@ export const ExperiencesCard = ({ data }: Props) => {
                             >
                                 <ChevronsRight size={20} />
                                 <div className="flex flex-col justify-center gap-2">
-                                    <p className="inline-flex gap-0.5 ">
+                                    <p className="inline-flex gap-0.5">
                                         <span className="pr-1">{`${startYear} / ${!isCurrentJob ? endYear : "Now"}`}</span>
-                                        <span
-                                            className="relative before:absolute before:left-0 before:top-1/2
-                                                before:hidden before:h-px before:w-2 before:bg-white
-                                                before:content-[''] xl:pl-3 xl:pr-1 xl:before:block"
-                                        >
+                                        <span className="relative before:absolute before:top-1/2 before:left-0 before:hidden before:h-px before:w-2 before:bg-white before:content-[''] xl:pr-1 xl:pl-3 xl:before:block">
                                             {job}
                                         </span>
                                     </p>
@@ -48,7 +45,7 @@ export const ExperiencesCard = ({ data }: Props) => {
                     </ul>
                 </CardContent>
                 <Layers
-                    className="absolute right-1 top-1 stroke-muted-foreground opacity-50"
+                    className="stroke-muted-foreground absolute top-1 right-1 opacity-50"
                     size={58}
                     strokeWidth={0.5}
                 />

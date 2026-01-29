@@ -1,16 +1,16 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { type ISourceOptions } from "@tsparticles/engine";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
-import { useEffect, useMemo, useState } from "react";
 
 export const ParticlesContainer = () => {
     const [init, setInit] = useState(false);
 
     useEffect(() => {
         const loadParticlesEngine = async () => {
-            await initParticlesEngine(async engine => {
+            await initParticlesEngine(async (engine) => {
                 await loadSlim(engine).then(() => {
                     setInit(true);
                 });
@@ -60,7 +60,7 @@ export const ParticlesContainer = () => {
             },
             detectRetina: true,
         }),
-        []
+        [],
     );
 
     if (init) {
@@ -69,7 +69,7 @@ export const ParticlesContainer = () => {
                 id="tsparticles"
                 key="tsparticlesContainer"
                 options={options}
-                className="fixed left-0 top-0 h-screen w-screen"
+                className="fixed top-0 left-0 h-screen w-screen"
             />
         );
     }

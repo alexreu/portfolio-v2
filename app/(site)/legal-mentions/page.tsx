@@ -1,5 +1,5 @@
 const legalMentions = () => {
-    return <section className="h-screen bg-dark"></section>;
+    return <section className="bg-dark h-screen"></section>;
 };
 
 export default legalMentions;

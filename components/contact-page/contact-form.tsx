@@ -1,16 +1,24 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Check, LoaderCircle, MoveUpRight } from "lucide-react";
 import React, { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, LoaderCircle, MoveUpRight } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+
 import { contactFormSchema } from "@/lib/schemas/contact-form-schema";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 
 export const ContactForm = () => {
@@ -76,7 +84,7 @@ export const ContactForm = () => {
                                         <FormControl>
                                             <Input
                                                 placeholder="Prénom"
-                                                className="rounded-xl p-6 focus:border-primary"
+                                                className="focus:border-primary rounded-xl p-6"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -93,7 +101,7 @@ export const ContactForm = () => {
                                         <FormControl>
                                             <Input
                                                 placeholder="Prénom"
-                                                className="rounded-xl p-6 focus:border-primary"
+                                                className="focus:border-primary rounded-xl p-6"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -111,7 +119,7 @@ export const ContactForm = () => {
                                         <FormControl>
                                             <Input
                                                 placeholder="john@doe.com"
-                                                className="h-12 rounded-xl px-6 py-4 focus:border-primary"
+                                                className="focus:border-primary h-12 rounded-xl px-6 py-4"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -127,7 +135,7 @@ export const ContactForm = () => {
                                         <FormControl>
                                             <Input
                                                 placeholder="Quel est votre demande"
-                                                className="rounded-xl p-6 focus:border-primary"
+                                                className="focus:border-primary rounded-xl p-6"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -144,7 +152,7 @@ export const ContactForm = () => {
                                         <FormControl>
                                             <Textarea
                                                 placeholder="Votre message"
-                                                className="col-span-2 rounded-xl p-6 focus:border-primary"
+                                                className="focus:border-primary col-span-2 rounded-xl p-6"
                                                 rows={6}
                                                 {...field}
                                             />
@@ -155,8 +163,7 @@ export const ContactForm = () => {
                         </div>
                         <Button
                             type="submit"
-                            className="mt-5 inline-flex gap-2 rounded-full focus-visible:outline-2
-                                focus-visible:outline-offset-4 focus-visible:outline-primary disabled:cursor-not-allowed"
+                            className="focus-visible:outline-primary mt-5 inline-flex gap-2 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 disabled:cursor-not-allowed"
                             disabled={isLoading}
                         >
                             Envoyer

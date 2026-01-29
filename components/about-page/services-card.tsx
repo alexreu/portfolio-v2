@@ -1,9 +1,10 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { AboutPageData } from "@/lib/types";
 import { ChevronRight, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
+
+import { AboutPageData } from "@/lib/types";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 type Props = {
     data: AboutPageData["services"];
@@ -11,14 +12,14 @@ type Props = {
 
 export const ServicesCard = ({ data }: Props) => {
     return (
-        <Card className="relative col-span-1 flex flex-col justify-center opacity-100 backdrop-blur-xl xl:col-span-3">
+        <Card className="relative col-span-1 flex flex-col justify-center opacity-100 backdrop-blur-xl xl:col-span-5">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3, type: "tween" }}
             >
                 <CardHeader>
-                    <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">
+                    <h1 className="text-primary text-xl leading-none font-semibold tracking-tight">
                         What i do
                     </h1>
                 </CardHeader>
@@ -33,7 +34,7 @@ export const ServicesCard = ({ data }: Props) => {
                     </ul>
                 </CardContent>
                 <Sparkles
-                    className="absolute right-1 top-1 rotate-90 stroke-muted-foreground opacity-50"
+                    className="stroke-muted-foreground absolute top-1 right-1 rotate-90 opacity-50"
                     size={58}
                     strokeWidth={0.5}
                 />

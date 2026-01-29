@@ -30,8 +30,16 @@ export type AboutPageData = {
         company: string;
     }[];
     services: { _key: string; service: string }[];
-    education: { _key: string; yearOfGraduation: number; graduationTitle: string; trainingLocation: string }[];
-    homePageData: { profilePicture: HomepageData["profilePicture"]; keyFigures: HomepageData["keyFigures"] };
+    education: {
+        _key: string;
+        yearOfGraduation: number;
+        graduationTitle: string;
+        trainingLocation: string;
+    }[];
+    homePageData: {
+        profilePicture: HomepageData["profilePicture"];
+        keyFigures: HomepageData["keyFigures"];
+    };
 };
 
 export type ServicesPageData = {

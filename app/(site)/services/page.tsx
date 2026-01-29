@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+
 import { getServicesPageData } from "@/lib/sanity/sanity.query";
 import { ServicesPageContent } from "@/components/services-page/services-page-content";
 

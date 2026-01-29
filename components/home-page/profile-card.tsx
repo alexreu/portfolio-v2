@@ -1,11 +1,12 @@
 "use client";
 
-import { Card, CardFooter, CardHeader } from "@/components/ui/card";
-import { CardFooterLink } from "@/components/ui/card-footer-link";
-import { Send, Sparkles } from "lucide-react";
-import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
+import { Send, Sparkles } from "lucide-react";
+import { motion } from "motion/react";
+
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
+import { CardFooterLink } from "@/components/ui/card-footer-link";
 
 type Props = {
     firstname?: string;
@@ -25,15 +26,11 @@ export const ProfileCard = ({ profilePicture, firstname }: Props) => {
     };
 
     return (
-        <Card
-            className="relative order-1 col-span-1 flex flex-col items-center opacity-100 backdrop-blur-xl md:row-span-2
-                lg:order-0 lg:col-span-3 lg:col-start-1 lg:row-start-1 xl:row-span-3"
-        >
+        <Card className="relative order-1 col-span-1 flex flex-col items-center opacity-100 backdrop-blur-xl md:row-span-2 lg:order-0 lg:col-span-3 lg:col-start-1 lg:row-start-1 xl:row-span-3">
             <CardHeader className="mt-auto flex flex-col-reverse items-center gap-6">
                 <h1>
                     <MotionLink
-                        className="bg-primary relative flex w-full items-center gap-3 rounded-xl p-3 text-lg font-medium
-                            tracking-wide text-white"
+                        className="bg-primary relative flex w-full items-center gap-3 rounded-xl p-3 text-lg font-medium tracking-wide text-white"
                         href="/contact"
                         initial="hidden"
                         whileHover="visible"

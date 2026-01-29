@@ -10,20 +10,20 @@ const services = defineType({
             title: "Illustration du service",
             type: "image",
             options: { hotspot: true },
-            validation: rule => rule.required(),
+            validation: (rule) => rule.required(),
         }),
         defineField({
             name: "serviceTitle",
             title: "Titre du service",
             type: "string",
-            validation: rule => rule.required(),
+            validation: (rule) => rule.required(),
         }),
         defineField({
             name: "serviceDescription",
             title: "Description du service",
             type: "text",
             rows: 5,
-            validation: rule => rule.required(),
+            validation: (rule) => rule.required(),
         }),
     ],
 });

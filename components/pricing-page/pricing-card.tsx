@@ -1,8 +1,9 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Check, Sparkle } from "lucide-react";
 import { motion } from "motion/react";
+
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 type Props = {
     title: string;
@@ -20,11 +21,10 @@ export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3, type: "tween", ease: "easeInOut" }}
-            className="col-span-1 flex flex-col divide-y-2 text-white opacity-100 backdrop-blur-xl transition-all
-                duration-300 ease-in-out xl:col-span-4 xl:row-span-2"
+            className="col-span-1 flex flex-col divide-y-2 text-white opacity-100 backdrop-blur-xl transition-all duration-300 ease-in-out xl:col-span-4 xl:row-span-2"
         >
             <CardHeader className="min-h-48 gap-2">
-                <h2 className="inline-flex items-center gap-2 text-2xl font-semibold text-primary">
+                <h2 className="text-primary inline-flex items-center gap-2 text-2xl font-semibold">
                     <Sparkle strokeWidth={1} size={28} /> {title}
                 </h2>
                 {isCustom ? (
@@ -33,19 +33,21 @@ export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }
                         <p className="text-sm tracking-wide text-white">
                             Possibilité d&apos;adapter le pack à vos besoins
                         </p>
-                        <p className="text-sm tracking-wide text-muted-foreground">Sur devis</p>
+                        <p className="text-muted-foreground text-sm tracking-wide">Sur devis</p>
                     </>
                 ) : (
                     <div className="mt-0 flex flex-col">
                         <p className="mt-0 inline-flex flex-col">
                             <span>À partir de *</span>
                             <span className="my-1 inline-flex items-center gap-2">
-                                <span className="text-4xl font-semibold tracking-widest">{fixedPrice}€</span>
-                                <span className="text-base text-muted-foreground">HT</span>
+                                <span className="text-4xl font-semibold tracking-widest">
+                                    {fixedPrice}€
+                                </span>
+                                <span className="text-muted-foreground text-base">HT</span>
                             </span>
                             <span className="inline-flex items-center gap-2 text-lg tracking-wider">
                                 + <span className="font-medium">{monthPrice}€</span>
-                                <span className="text-sm text-muted-foreground">HT /mois</span>
+                                <span className="text-muted-foreground text-sm">HT /mois</span>
                             </span>
                         </p>
                     </div>
@@ -54,11 +56,14 @@ export const PricingCard = ({ title, monthPrice, fixedPrice, content, isCustom }
             <CardContent className="pt-6">
                 <ul className="flex flex-col gap-4">
                     {content.map(({ _key, offerContentItem }) => (
-                        <li key={_key} className="flex items-center gap-3 text-base font-medium tracking-wide">
+                        <li
+                            key={_key}
+                            className="flex items-center gap-3 text-base font-medium tracking-wide"
+                        >
                             <span>
                                 <Check size={20} className="stroke-primary" />
                             </span>
-                            <span className="line-clamp-2 inline-flex flex-wrap break-words font-light">
+                            <span className="line-clamp-2 inline-flex flex-wrap font-light break-words">
                                 {offerContentItem}
                             </span>
                         </li>

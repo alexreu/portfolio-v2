@@ -1,8 +1,9 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { motion } from "motion/react";
 import Image from "next/image";
+import { motion } from "motion/react";
+
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 type Props = {
     title: string;
@@ -19,15 +20,14 @@ export const ServiceCard = ({ title, description, illustration }: Props) => {
                 transition={{ duration: 0.3, type: "tween" }}
             >
                 <CardHeader className="flex flex-col gap-3">
-                    <h1 className="inline-flex flex-col gap-1 text-2xl font-semibold text-primary">{title}</h1>
+                    <h1 className="text-primary inline-flex flex-col gap-1 text-2xl font-semibold">
+                        {title}
+                    </h1>
                     <div className="inline-flex h-32 items-center">
                         <Image src={illustration} alt={title} height={128} width={160} />
                     </div>
                 </CardHeader>
-                <CardContent
-                    className="mt-auto whitespace-pre-line text-left text-base text-white opacity-70
-                        lg:text-justify"
-                >
+                <CardContent className="mt-auto text-left text-base whitespace-pre-line text-white opacity-70 lg:text-justify">
                     <p>{description}</p>
                 </CardContent>
             </motion.div>

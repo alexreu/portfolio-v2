@@ -1,7 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import AutoScroll from "embla-carousel-auto-scroll";
 import Autoplay from "embla-carousel-autoplay";
 import {
@@ -17,6 +15,9 @@ import {
     PersonStanding,
     Terminal,
 } from "lucide-react";
+
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 type Props = {
     skills?: { skill: string; _key: string }[];
@@ -38,12 +39,9 @@ export const SkillsCard = ({ skills }: Props) => {
     };
 
     return (
-        <Card
-            className=" order-6 col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:order-0 lg:col-span-6
-                lg:row-span-1"
-        >
+        <Card className="order-6 col-span-1 flex flex-col opacity-100 backdrop-blur-xl lg:order-0 lg:col-span-6 lg:row-span-1">
             <CardHeader className="w-full self-start">
-                <h1 className="text-xl font-semibold leading-none tracking-tight text-primary">
+                <h1 className="text-primary text-xl leading-none font-semibold tracking-tight">
                     Skills & tools <span className="sr-only">compétences et outils</span>
                 </h1>
             </CardHeader>
@@ -58,8 +56,11 @@ export const SkillsCard = ({ skills }: Props) => {
                         >
                             <CarouselContent>
                                 {skills.map(({ skill, _key }) => (
-                                    <CarouselItem key={_key} className="basis-1/3 md:basis-1/2 xl:basis-1/4">
-                                        <p className="rounded-lg border p-2 text-center text-xs text-muted lg:text-sm">
+                                    <CarouselItem
+                                        key={_key}
+                                        className="basis-1/3 md:basis-1/2 xl:basis-1/4"
+                                    >
+                                        <p className="text-muted rounded-lg border p-2 text-center text-xs lg:text-sm">
                                             {skill}
                                         </p>
                                     </CarouselItem>
@@ -75,21 +76,21 @@ export const SkillsCard = ({ skills }: Props) => {
                     >
                         <CarouselContent>
                             {Object.entries(tools).map(([key, tool]) => (
-                                <CarouselItem key={key} className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
-                                    <span
-                                        className="inline-flex items-center justify-center rounded-lg border p-2
-                                            text-center text-sm text-muted"
-                                    >
+                                <CarouselItem
+                                    key={key}
+                                    className="basis-1/5 lg:basis-1/6 xl:basis-1/12"
+                                >
+                                    <span className="text-muted inline-flex items-center justify-center rounded-lg border p-2 text-center text-sm">
                                         {tool}
                                     </span>
                                 </CarouselItem>
                             ))}
                             {Object.entries(tools).map(([key, tool]) => (
-                                <CarouselItem key={key} className="basis-1/5 lg:basis-1/6 xl:basis-1/12">
-                                    <span
-                                        className="inline-flex items-center justify-center rounded-lg border p-2
-                                            text-center text-sm text-muted"
-                                    >
+                                <CarouselItem
+                                    key={key}
+                                    className="basis-1/5 lg:basis-1/6 xl:basis-1/12"
+                                >
+                                    <span className="text-muted inline-flex items-center justify-center rounded-lg border p-2 text-center text-sm">
                                         {tool}
                                     </span>
                                 </CarouselItem>

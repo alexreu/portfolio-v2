@@ -4,8 +4,6 @@
     /* Font families */
     --font-main: var(--font-poppins), sans-serif;
 
-
-
     /* Custom colors from the config */
     --color-border: hsl(0 0% 20%);
     --color-input: hsl(220 13% 91%);
@@ -33,7 +31,9 @@
     --radius-sm: calc(var(--radius) - 4px);
 
     /* Box shadows */
-    --shadow-light: rgba(204, 219, 232, .109) 3px 3px 6px 0px inset, rgba(255, 255, 255, .081) -3px -3px 6px 1px inset;
+    --shadow-light:
+        rgba(204, 219, 232, 0.109) 3px 3px 6px 0px inset,
+        rgba(255, 255, 255, 0.081) -3px -3px 6px 1px inset;
 
     /* Animation keyframes and animations */
     @keyframes accordion-down {
@@ -79,7 +79,11 @@
         --background: 0 0% 20%;
         --foreground: 224 71.4% 4.1%;
 
-        --card: linear-gradient(153deg, rgba(255, 255, 255, 0.12) -65.62%, rgba(255, 255, 255, 0.04) 83.28%);
+        --card: linear-gradient(
+            153deg,
+            rgba(255, 255, 255, 0.12) -65.62%,
+            rgba(255, 255, 255, 0.04) 83.28%
+        );
         --card-foreground: 224 71.4% 4.1%;
 
         --popover: 0 0% 100%;
@@ -135,7 +139,7 @@
         @apply border-border;
         @apply scroll-smooth;
         @apply focus:outline-hidden;
-        @apply focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4;
+        @apply focus-visible:outline-primary focus-visible:outline-2 focus-visible:outline-offset-4;
     }
 
     body {
@@ -143,7 +147,11 @@
     }
 
     .bg-card {
-        background: linear-gradient(153deg, rgba(255, 255, 255, 0.12) -65.62%, rgba(255, 255, 255, 0.04) 83.28%) !important;
+        background: linear-gradient(
+            153deg,
+            rgba(255, 255, 255, 0.12) -65.62%,
+            rgba(255, 255, 255, 0.04) 83.28%
+        ) !important;
     }
 }
 

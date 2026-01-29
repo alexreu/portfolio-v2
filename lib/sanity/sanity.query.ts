@@ -1,4 +1,5 @@
 import { groq } from "next-sanity";
+
 import client from "./client";
 
 export const getHomepageData = async () => {
