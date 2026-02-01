@@ -24,13 +24,13 @@ export const ParticlesContainer = () => {
         () => ({
             background: {
                 color: {
-                    value: "#0A090D",
+                    value: "#0A0A0A",
                 },
             },
             fpsLimit: 120,
             particles: {
                 color: {
-                    value: "#FD4766",
+                    value: "#FF4D4D",
                 },
                 move: {
                     direction: "bottom",
@@ -69,7 +69,7 @@ export const ParticlesContainer = () => {
                 id="tsparticles"
                 key="tsparticlesContainer"
                 options={options}
-                className="fixed top-0 left-0 h-screen w-screen"
+                className="fixed top-0 left-0 z-0 h-screen w-screen"
             />
         );
     }
