@@ -55,8 +55,9 @@ export const ServicesCard = () => {
                             <motion.div
                                 key={service.title}
                                 initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1 + 0.3 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.02, duration: 0.4, ease: "easeOut" }}
                                 whileHover={{ y: -4, scale: 1.02 }}
                                 className="group/service relative rounded-2xl border border-white/5 bg-white/3 p-6 transition-all duration-300 hover:border-[#FF4D4D]/30 hover:bg-white/6"
                             >

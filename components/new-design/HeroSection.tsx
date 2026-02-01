@@ -99,7 +99,7 @@ export const HeroSection = () => {
                 >
                     <div className="relative mx-auto h-64 w-64 md:h-80 md:w-80">
                         {/* Glowing background */}
-                        <div className="absolute inset-0 animate-pulse rounded-full bg-linear-to-br from-[#FF4D4D]/30 to-purple-500/20 blur-3xl" />
+                        <div className="absolute inset-0 rounded-full bg-linear-to-br from-[#FF4D4D]/30 to-purple-500/20 blur-3xl" />
 
                         {/* Avatar container */}
                         <div className="relative h-full w-full rounded-full bg-linear-to-br from-[#FF4D4D] to-[#ff6b6b] p-1">

@@ -158,7 +158,7 @@ export const PricingCard = () => {
                                 {/* Glow effect for Popular card */}
                                 {isPremium && (
                                     <>
-                                        <div className="absolute -inset-6 -z-10 animate-pulse rounded-3xl bg-[#FF4D4D]/20 blur-3xl" />
+                                        <div className="absolute -inset-6 -z-10 rounded-3xl bg-[#FF4D4D]/20 blur-3xl" />
                                         <div className="absolute -inset-1 -z-10 rounded-2xl bg-linear-to-br from-[#FF4D4D]/50 via-[#FF4D4D]/20 to-purple-500/20" />
                                     </>
                                 )}

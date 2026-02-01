@@ -20,7 +20,8 @@ export const BentoGrid = () => {
                 {/* Row 1: Small cards */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.1 }}
                 >
                     {/*<SocialCard />*/}
@@ -28,7 +29,8 @@ export const BentoGrid = () => {
 
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.15 }}
                     className="md:col-span-2"
                 >
@@ -38,7 +40,8 @@ export const BentoGrid = () => {
                 {/* Row 2: Big Services Card */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.2 }}
                     className="md:col-span-2 lg:col-span-3 lg:row-span-2"
                 >
@@ -47,7 +50,8 @@ export const BentoGrid = () => {
 
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.25 }}
                     className="lg:row-span-2"
                 >
@@ -57,7 +61,8 @@ export const BentoGrid = () => {
                 {/* Row 3: Skills */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.3 }}
                     className="md:col-span-2 lg:col-span-3"
                 >
@@ -67,7 +72,8 @@ export const BentoGrid = () => {
                 {/* Row 4: Pricing Section - Full Width */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.35 }}
                     className="md:col-span-2 lg:col-span-3"
                 >
@@ -77,7 +83,8 @@ export const BentoGrid = () => {
                 {/* Row 5: Big Contact CTA - Full Width */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="md:col-span-2 lg:col-span-3"
                 >
