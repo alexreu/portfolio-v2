@@ -5,8 +5,6 @@ import { HeroSection } from "@/components/home/hero-section";
 export default async function Home() {
     const data = await getHomepageDataV2();
 
-    console.log({ data });
-
     return (
         <>
             <HeroSection data={data.settings?.hero} />
