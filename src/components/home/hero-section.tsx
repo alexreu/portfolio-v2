@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 export const HeroSection = () => {
     return (
-        <section className="py-12 md:py-20">
+        <section id="accueil" className="py-12 md:py-20">
             <div className="grid items-center gap-12 lg:grid-cols-[1fr,auto]">
                 {/* Left Content */}
                 <div className="space-y-6">

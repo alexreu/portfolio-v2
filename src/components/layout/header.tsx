@@ -5,9 +5,14 @@ import { motion } from "motion/react";
 
 import { Button } from "@/components/ui/button";
 
-export const Header = () => {
-    const navItems = ["Accueil", "À propos", "Services", "Tarifs"];
+const navItems = [
+    { label: "Accueil", href: "#accueil" },
+    { label: "À propos", href: "#a-propos" },
+    { label: "Services", href: "#services" },
+    { label: "Tarifs", href: "#tarifs" },
+];
 
+export const Header = () => {
     return (
         <motion.header
             initial={{ y: -100, opacity: 0 }}
@@ -17,7 +22,11 @@ export const Header = () => {
         >
             <div className="mx-auto flex max-w-350 items-center justify-between px-6 py-4">
                 {/* Logo */}
-                <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-2">
+                <motion.a
+                    href="#accueil"
+                    whileHover={{ scale: 1.05 }}
+                    className="flex items-center gap-2"
+                >
                     <div className="relative">
                         <Code2 className="h-7 w-7 text-primary" />
                         <div className="absolute -inset-1 -z-10 rounded-full bg-primary/20 blur-md" />
@@ -25,21 +34,21 @@ export const Header = () => {
                     <span className="text-accent text-xl font-semibold tracking-tight">
                         AleX<span className="text-primary">Dev</span>Lab
                     </span>
-                </motion.div>
+                </motion.a>
 
                 {/* Navigation */}
                 <nav className="hidden items-center gap-8 md:flex">
                     {navItems.map((item, index) => (
                         <motion.a
-                            key={item}
-                            href={`#${item.toLowerCase().replace(/\s/g, "-")}`}
+                            key={item.href}
+                            href={item.href}
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 + 0.3 }}
                             whileHover={{ y: -2 }}
                             className="group relative text-sm text-gray-400 transition-colors hover:text-white"
                         >
-                            {item}
+                            {item.label}
                             <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full" />
                         </motion.a>
                     ))}
