@@ -5,6 +5,7 @@ import { AlertTriangle, Home, Mail } from "lucide-react";
 import { motion } from "motion/react";
 
 import { ParticlesContainer } from "@/components/effects/particles-container";
+import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
     return (
@@ -97,38 +98,27 @@ export default function NotFound() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.6 }}
                         >
-                            <Link href="/" className="flex">
-                                <motion.span
-                                    className="group bg-primary focus:ring-primary relative w-full overflow-hidden rounded-xl px-8 py-4 font-medium text-white transition-all duration-300 hover:shadow-glow-md focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:outline-none sm:w-auto"
-                                    whileHover={{ scale: 1.02, y: -2 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    aria-label="Retourner à la page d'accueil"
-                                >
-                                    <span className="relative z-10 flex items-center justify-center gap-2">
-                                        <Home className="h-5 w-5" aria-hidden="true" />
-                                        Retour à l&apos;accueil
-                                    </span>
-                                    <motion.div
-                                        className="absolute inset-0 bg-linear-to-r from-primary to-primary-light"
-                                        initial={{ opacity: 0 }}
-                                        whileHover={{ opacity: 1 }}
-                                        transition={{ duration: 0.3 }}
-                                    />
-                                </motion.span>
-                            </Link>
-                            <Link href="/contact" className="flex">
-                                <motion.span
-                                    className="group border-primary text-primary hover:bg-primary focus:ring-primary relative w-full rounded-xl border-2 bg-transparent px-8 py-4 font-medium transition-all duration-300 hover:text-white hover:shadow-glow-sm focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:outline-none sm:w-auto"
-                                    whileHover={{ scale: 1.02, y: -2 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    aria-label="Aller à la page de contact"
-                                >
-                                    <span className="relative z-10 flex items-center justify-center gap-2">
-                                        <Mail className="h-5 w-5" aria-hidden="true" />
-                                        Me contacter
-                                    </span>
-                                </motion.span>
-                            </Link>
+                            <Button
+                                variant="primary"
+                                withGradient
+                                className="w-full rounded-xl sm:w-auto"
+                                asChild
+                            >
+                                <Link href="/" aria-label="Retourner à la page d'accueil">
+                                    <Home className="h-5 w-5" aria-hidden="true" />
+                                    Retour à l&apos;accueil
+                                </Link>
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className="w-full sm:w-auto"
+                                asChild
+                            >
+                                <Link href="/contact" aria-label="Aller à la page de contact">
+                                    <Mail className="h-5 w-5" aria-hidden="true" />
+                                    Me contacter
+                                </Link>
+                            </Button>
                         </motion.div>
                     </div>
                     <motion.p

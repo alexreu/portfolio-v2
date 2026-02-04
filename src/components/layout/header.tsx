@@ -3,6 +3,8 @@
 import { Code2 } from "lucide-react";
 import { motion } from "motion/react";
 
+import { Button } from "@/components/ui/button";
+
 export const Header = () => {
     const navItems = ["Accueil", "À propos", "Services", "Tarifs"];
 
@@ -44,17 +46,9 @@ export const Header = () => {
                 </nav>
 
                 {/* CTA Button */}
-                <motion.button
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="group relative overflow-hidden rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-white shadow-glow-sm transition-all duration-300 hover:shadow-glow-md"
-                >
-                    <span className="relative z-10">Let&apos;s Talk</span>
-                    <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-light opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                </motion.button>
+                <Button variant="primary" size="sm" withGradient className="shadow-glow-sm hover:shadow-glow-md">
+                    Let&apos;s Talk
+                </Button>
             </div>
         </motion.header>
     );

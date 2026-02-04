@@ -1,6 +1,7 @@
-import { Palette, Target, TrendingUp, Wrench, Zap } from "lucide-react";
+import { ArrowRight, Palette, Target, TrendingUp, Wrench, Zap } from "lucide-react";
 
 import { GlassCard } from "@/components/shared/glass-card";
+import { Button } from "@/components/ui/button";
 
 const categoryThemes = {
     primary: {
@@ -228,25 +229,11 @@ export const SkillsCard = () => {
 
                 {/* Bottom CTA */}
                 <div className="flex items-center justify-center pt-4">
-                    <button className="group flex items-center gap-2 rounded-full border border-white/8 bg-white/3 px-6 py-3 transition-all duration-300 hover:border-primary/30 hover:bg-white/6">
-                        <Target className="text-primary h-4 w-4" />
-                        <span className="text-sm font-semibold">
-                            Voir mon approche technique
-                        </span>
-                        <svg
-                            className="h-4 w-4 transition-transform group-hover:translate-x-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M17 8l4 4m0 0l-4 4m4-4H3"
-                            />
-                        </svg>
-                    </button>
+                    <Button variant="secondary" size="sm">
+                        <Target className="h-4 w-4 text-primary" />
+                        Voir mon approche technique
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Button>
                 </div>
             </div>
         </GlassCard>

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { GlassCard } from "@/components/shared/glass-card";
+import { Button } from "@/components/ui/button";
 
 const pricingPlans = [
     {
@@ -308,15 +309,13 @@ export const PricingCard = () => {
                                         </div>
 
                                         {/* CTA Button */}
-                                        <button
-                                            className={`w-full rounded-xl px-6 py-4 font-bold transition-all duration-300 ${
-                                                isPremium
-                                                    ? "bg-primary text-white shadow-lg shadow-primary/30 hover:-translate-y-1 hover:scale-105 hover:bg-primary-light hover:shadow-primary/50"
-                                                    : "border-2 border-white/10 bg-transparent text-white hover:border-white/20 hover:bg-white/5"
-                                            }`}
+                                        <Button
+                                            variant={isPremium ? "primary" : "ghost"}
+                                            fullWidth
+                                            className={isPremium ? "rounded-xl shadow-lg shadow-primary/30" : "rounded-xl"}
                                         >
                                             {isPremium ? "Démarrer mon projet" : "En savoir plus"}
-                                        </button>
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
@@ -329,9 +328,9 @@ export const PricingCard = () => {
                     <p className="text-sm text-gray-400">
                         💳 Paiement en 3 fois sans frais possible • 🎯 Devis gratuit sous 24h
                     </p>
-                    <button className="text-sm font-semibold text-primary hover:underline">
+                    <Button variant="link" size="sm">
                         Comparer les offres en détail →
-                    </button>
+                    </Button>
                 </div>
             </div>
         </GlassCard>

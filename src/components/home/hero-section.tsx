@@ -3,6 +3,8 @@
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
 
+import { Button } from "@/components/ui/button";
+
 export const HeroSection = () => {
     return (
         <section className="py-12 md:py-20">
@@ -68,25 +70,14 @@ export const HeroSection = () => {
                         transition={{ duration: 0.7, delay: 0.8 }}
                         className="flex flex-wrap gap-4"
                     >
-                        <motion.button
-                            whileHover={{ scale: 1.05, y: -2 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="group relative overflow-hidden rounded-full bg-primary px-8 py-4 font-semibold text-white shadow-glow transition-all duration-300 hover:shadow-glow-lg"
-                        >
-                            <span className="relative z-10 flex items-center gap-2">
-                                Démarrer un projet
-                                <ArrowUpRight className="h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-                            </span>
-                            <div className="absolute inset-0 bg-linear-to-r from-primary to-primary-light opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                        </motion.button>
+                        <Button variant="primary" withGradient>
+                            Démarrer un projet
+                            <ArrowUpRight className="h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                        </Button>
 
-                        <motion.button
-                            whileHover={{ scale: 1.05, y: -2 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="rounded-full border border-white/10 bg-white/5 px-8 py-4 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-white/10"
-                        >
+                        <Button variant="secondary">
                             Voir mes travaux
-                        </motion.button>
+                        </Button>
                     </motion.div>
                 </div>
 
