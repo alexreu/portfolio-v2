@@ -1,10 +1,39 @@
 import { ArrowUpRight, Lightbulb, User } from "lucide-react";
 import { motion } from "motion/react";
 
+import type { SiteSettings } from "@/lib/sanity/types";
+
 import { GlassCard } from "../shared/glass-card";
 import { Button } from "../ui/button";
 
-export const AboutCard = () => {
+type AboutCardProps = {
+    data?: SiteSettings["about"] | null;
+};
+
+// Default values when Sanity data is not available
+const defaultData = {
+    title: "Développeur Front-End passionné par l'excellence web",
+    subtitle: "5 ans d'expérience en React, Next.js et TypeScript",
+    approach: {
+        title: "Mon Approche",
+        description:
+            "Code maintenable, performances optimales, communication transparente. Chaque site bénéficie d'un hébergement optimisé et d'un suivi technique inclus.",
+    },
+    targetAudience: {
+        title: "Pour qui ?",
+        description:
+            "Entrepreneurs et entreprises qui veulent une présence en ligne rapide (offre Starter) ou une application web sur-mesure. Prêt à donner vie à votre projet ? Discutons-en.",
+    },
+};
+
+export const AboutCard = ({ data }: AboutCardProps) => {
+    const about = {
+        title: data?.title || defaultData.title,
+        subtitle: data?.subtitle || defaultData.subtitle,
+        approach: data?.approach || defaultData.approach,
+        targetAudience: data?.targetAudience || defaultData.targetAudience,
+    };
+
     return (
         <GlassCard className="h-full p-8 md:p-10">
             <div className="flex h-full flex-col space-y-8">
@@ -13,12 +42,10 @@ export const AboutCard = () => {
                         Qui suis-je
                     </span>
                     <h2 className="text-accent text-3xl font-bold md:text-4xl">
-                        Développeur Front-End passionné par{" "}
+                        {about.title.split("l'excellence web")[0]}
                         <span className="text-primary">l&apos;excellence web </span> ⚡️
                     </h2>
-                    <p className="text-lg text-gray-400">
-                        5 ans d&apos;expérience en React, Next.js et TypeScript
-                    </p>
+                    <p className="text-lg text-gray-300">{about.subtitle}</p>
                 </div>
                 <div className="grid flex-1 grid-cols-2 gap-4">
                     <motion.div
@@ -42,14 +69,12 @@ export const AboutCard = () => {
 
                             {/* Title */}
                             <h3 className="text-accent group-hover/service:text-primary text-xl font-bold transition-colors duration-300">
-                                Mon Approche
+                                {about.approach?.title}
                             </h3>
 
                             {/* Description */}
-                            <p className="text-base leading-relaxed">
-                                Code maintenable, performances optimales, communication
-                                transparente. Chaque site bénéficie d&apos;un hébergement optimisé
-                                et d&apos;un suivi technique inclus.
+                            <p className="leading-relaxed text-gray-300">
+                                {about.approach?.description}
                             </p>
                         </div>
 
@@ -77,14 +102,12 @@ export const AboutCard = () => {
 
                             {/* Title */}
                             <h3 className="text-accent group-hover/service:text-primary text-xl font-bold transition-colors duration-300">
-                                Pour qui ?
+                                {about.targetAudience?.title}
                             </h3>
 
                             {/* Description */}
-                            <p className="text-base leading-relaxed">
-                                Entrepreneurs et entreprises qui veulent une présence en ligne
-                                rapide (offre Starter) ou une application web sur-mesure. Prêt à
-                                donner vie à votre projet ? Discutons-en.
+                            <p className="leading-relaxed text-gray-300">
+                                {about.targetAudience?.description}
                             </p>
                         </div>
 

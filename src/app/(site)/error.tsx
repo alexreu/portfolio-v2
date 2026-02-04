@@ -30,21 +30,21 @@ export default function Error({ error, reset }: ErrorProps) {
             >
                 <div className="mb-6 flex justify-center">
                     <div className="relative">
-                        <div className="absolute inset-0 rounded-full bg-primary opacity-20 blur-2xl" />
+                        <div className="bg-primary absolute inset-0 rounded-full opacity-20 blur-2xl" />
                         <AlertTriangle
-                            className="relative h-16 w-16 text-primary"
+                            className="text-primary relative h-16 w-16"
                             strokeWidth={1.5}
                         />
                     </div>
                 </div>
 
-                <h1 className="mb-4 text-2xl font-bold text-accent md:text-3xl">
+                <h1 className="text-accent mb-4 text-2xl font-bold md:text-3xl">
                     Une erreur est survenue
                 </h1>
 
-                <p className="mb-8 text-gray-400">
-                    Désolé, quelque chose s&apos;est mal passé. Veuillez réessayer ou
-                    revenir plus tard.
+                <p className="mb-8 text-gray-300">
+                    Désolé, quelque chose s&apos;est mal passé. Veuillez réessayer ou revenir plus
+                    tard.
                 </p>
 
                 <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -59,9 +59,7 @@ export default function Error({ error, reset }: ErrorProps) {
                 </div>
 
                 {process.env.NODE_ENV === "development" && error.digest && (
-                    <p className="mt-6 text-xs text-gray-600">
-                        Error ID: {error.digest}
-                    </p>
+                    <p className="mt-6 text-xs text-gray-600">Error ID: {error.digest}</p>
                 )}
             </motion.div>
         </div>

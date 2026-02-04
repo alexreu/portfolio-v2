@@ -22,13 +22,10 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
                     <div className="w-full max-w-md text-center">
                         <div className="mb-6 text-6xl">⚠️</div>
 
-                        <h1 className="mb-4 text-2xl font-bold">
-                            Erreur critique
-                        </h1>
+                        <h1 className="mb-4 text-2xl font-bold">Erreur critique</h1>
 
-                        <p className="mb-8 text-gray-400">
-                            Une erreur inattendue s&apos;est produite. Veuillez
-                            rafraîchir la page.
+                        <p className="mb-8 text-gray-300">
+                            Une erreur inattendue s&apos;est produite. Veuillez rafraîchir la page.
                         </p>
 
                         <button
@@ -39,9 +36,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
                         </button>
 
                         {process.env.NODE_ENV === "development" && error.digest && (
-                            <p className="mt-6 text-xs text-gray-600">
-                                Error ID: {error.digest}
-                            </p>
+                            <p className="mt-6 text-xs text-gray-600">Error ID: {error.digest}</p>
                         )}
                     </div>
                 </div>

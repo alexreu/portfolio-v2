@@ -1,7 +1,9 @@
 import { ArrowRight, Palette, Target, TrendingUp, Wrench, Zap } from "lucide-react";
 
-import { GlassCard } from "@/components/shared/glass-card";
+import { getIcon } from "@/lib/icons";
+import type { SkillCategory } from "@/lib/sanity/types";
 import { Button } from "@/components/ui/button";
+import { GlassCard } from "@/components/shared/glass-card";
 
 const categoryThemes = {
     primary: {
@@ -32,122 +34,77 @@ const categoryThemes = {
 
 type ThemeKey = keyof typeof categoryThemes;
 
-const skillCategories = [
+type SkillsCardProps = {
+    categories?: SkillCategory[];
+};
+
+// Default skills when Sanity data is not available
+const defaultCategories: SkillCategory[] = [
     {
+        _id: "1",
         title: "Front-end & UI",
         subtitle: "Des interfaces qui convertissent et fidélisent",
-        icon: Palette,
-        theme: "primary" as ThemeKey,
+        icon: "Palette",
+        theme: "primary",
         skills: [
             {
                 name: "React & Next.js",
                 description: "Applications rapides et modernes",
-                icon: "⚛️",
+                emoji: "⚛️",
             },
-            {
-                name: "TypeScript",
-                description: "Code fiable et maintenable",
-                icon: "📘",
-            },
-            {
-                name: "Tailwind CSS",
-                description: "Design system cohérent",
-                icon: "🎨",
-            },
-            {
-                name: "Animations",
-                description: "Expériences interactives fluides",
-                icon: "✨",
-            },
+            { name: "TypeScript", description: "Code fiable et maintenable", emoji: "📘" },
+            { name: "Tailwind CSS", description: "Design system cohérent", emoji: "🎨" },
+            { name: "Animations", description: "Expériences interactives fluides", emoji: "✨" },
         ],
+        order: 0,
     },
     {
+        _id: "2",
         title: "Performance & Qualité",
         subtitle: "Vitesse = meilleur référencement et conversions",
-        icon: Zap,
-        theme: "amber" as ThemeKey,
+        icon: "Zap",
+        theme: "amber",
         skills: [
-            {
-                name: "Optimisation",
-                description: "Temps de chargement < 2 secondes",
-                icon: "⚡",
-            },
-            {
-                name: "Core Web Vitals",
-                description: "Score Google Lighthouse > 90",
-                icon: "📊",
-            },
-            {
-                name: "Bundle Optimization",
-                description: "Code léger et performant",
-                icon: "📦",
-            },
-            {
-                name: "Lazy Loading",
-                description: "Chargement progressif intelligent",
-                icon: "🚀",
-            },
+            { name: "Optimisation", description: "Temps de chargement < 2 secondes", emoji: "⚡" },
+            { name: "Core Web Vitals", description: "Score Google Lighthouse > 90", emoji: "📊" },
+            { name: "Bundle Optimization", description: "Code léger et performant", emoji: "📦" },
+            { name: "Lazy Loading", description: "Chargement progressif intelligent", emoji: "🚀" },
         ],
+        order: 1,
     },
     {
+        _id: "3",
         title: "Accessibilité & SEO",
         subtitle: "Visible par tous, trouvé par Google",
-        icon: TrendingUp,
-        theme: "emerald" as ThemeKey,
+        icon: "TrendingUp",
+        theme: "emerald",
         skills: [
-            {
-                name: "SEO Technique",
-                description: "Première page Google garantie",
-                icon: "🎯",
-            },
-            {
-                name: "WCAG 2.1",
-                description: "Accessible à tous les utilisateurs",
-                icon: "♿",
-            },
-            {
-                name: "Schema Markup",
-                description: "Rich snippets & featured results",
-                icon: "🏷️",
-            },
-            {
-                name: "Meta Tags",
-                description: "Partages sociaux optimisés",
-                icon: "🔗",
-            },
+            { name: "SEO Technique", description: "Première page Google garantie", emoji: "🎯" },
+            { name: "WCAG 2.1", description: "Accessible à tous les utilisateurs", emoji: "♿" },
+            { name: "Schema Markup", description: "Rich snippets & featured results", emoji: "🏷️" },
+            { name: "Meta Tags", description: "Partages sociaux optimisés", emoji: "🔗" },
         ],
+        order: 2,
     },
     {
+        _id: "4",
         title: "Outils & Workflow",
         subtitle: "Collaboration fluide et livraison rapide",
-        icon: Wrench,
-        theme: "purple" as ThemeKey,
+        icon: "Wrench",
+        theme: "purple",
         skills: [
-            {
-                name: "Git & GitHub",
-                description: "Versioning professionnel",
-                icon: "📦",
-            },
-            {
-                name: "Figma to Code",
-                description: "Intégration pixel-perfect",
-                icon: "🎨",
-            },
-            {
-                name: "CI/CD",
-                description: "Déploiements automatisés",
-                icon: "🔄",
-            },
-            {
-                name: "Documentation",
-                description: "Code maintenable et évolutif",
-                icon: "📚",
-            },
+            { name: "Git & GitHub", description: "Versioning professionnel", emoji: "📦" },
+            { name: "Figma to Code", description: "Intégration pixel-perfect", emoji: "🎨" },
+            { name: "CI/CD", description: "Déploiements automatisés", emoji: "🔄" },
+            { name: "Documentation", description: "Code maintenable et évolutif", emoji: "📚" },
         ],
+        order: 3,
     },
 ];
 
-export const SkillsCard = () => {
+export const SkillsCard = ({ categories }: SkillsCardProps) => {
+    const displayCategories = categories && categories.length > 0 ? categories : defaultCategories;
+
     return (
         <GlassCard className="h-full p-8 md:p-10">
             <div className="flex h-full flex-col space-y-8">
@@ -160,19 +117,20 @@ export const SkillsCard = () => {
                         Technologies qui{" "}
                         <span className="text-primary">génèrent des résultats</span>
                     </h2>
-                    <p className="text-lg text-gray-400">
+                    <p className="text-lg text-gray-300">
                         Stack moderne orientée performance, conversion et croissance
                     </p>
                 </div>
 
                 {/* Skills Grid */}
                 <div className="grid flex-1 gap-6 md:grid-cols-2">
-                    {skillCategories.map((category) => {
-                        const Icon = category.icon;
-                        const theme = categoryThemes[category.theme];
+                    {displayCategories.map((category) => {
+                        const Icon = getIcon(category.icon, Palette);
+                        const theme =
+                            categoryThemes[category.theme as ThemeKey] || categoryThemes.primary;
                         return (
                             <div
-                                key={category.title}
+                                key={category._id}
                                 className="group relative rounded-2xl border border-white/5 bg-white/2 p-6 transition-all duration-300 hover:border-white/10 hover:bg-white/4"
                             >
                                 {/* Decorative glow */}
@@ -183,7 +141,7 @@ export const SkillsCard = () => {
                                 {/* Category Header */}
                                 <div className="mb-6 flex items-start gap-4">
                                     <div
-                                        className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl border transition-all duration-300 ${theme.iconBg} ${theme.iconBorder}`}
+                                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 ${theme.iconBg} ${theme.iconBorder}`}
                                     >
                                         <Icon className={`h-6 w-6 ${theme.icon}`} />
                                     </div>
@@ -192,7 +150,7 @@ export const SkillsCard = () => {
                                         <h3 className="text-accent mb-1 text-lg font-bold">
                                             {category.title}
                                         </h3>
-                                        <p className="text-xs leading-relaxed text-gray-400">
+                                        <p className="text-xs leading-relaxed text-gray-300">
                                             {category.subtitle}
                                         </p>
                                     </div>
@@ -206,8 +164,8 @@ export const SkillsCard = () => {
                                             className="group/skill flex items-start gap-3 rounded-lg bg-white/2 p-3 transition-all duration-200 hover:bg-white/4"
                                         >
                                             {/* Emoji Icon */}
-                                            <span className="flex-shrink-0 text-xl">
-                                                {skill.icon}
+                                            <span className="shrink-0 text-xl">
+                                                {skill.emoji || "•"}
                                             </span>
 
                                             {/* Skill Info */}
@@ -215,9 +173,11 @@ export const SkillsCard = () => {
                                                 <div className="group-hover/skill:text-primary text-sm font-semibold text-white transition-colors">
                                                     {skill.name}
                                                 </div>
-                                                <div className="mt-0.5 text-xs leading-relaxed text-gray-500">
-                                                    {skill.description}
-                                                </div>
+                                                {skill.description && (
+                                                    <div className="mt-0.5 text-xs leading-relaxed text-gray-300">
+                                                        {skill.description}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     ))}
@@ -230,7 +190,7 @@ export const SkillsCard = () => {
                 {/* Bottom CTA */}
                 <div className="flex items-center justify-center pt-4">
                     <Button variant="secondary" size="sm">
-                        <Target className="h-4 w-4 text-primary" />
+                        <Target className="text-primary h-4 w-4" />
                         Voir mon approche technique
                         <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Button>

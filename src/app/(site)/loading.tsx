@@ -5,16 +5,16 @@ export default function Loading() {
                 {/* Animated logo/spinner */}
                 <div className="relative h-16 w-16">
                     {/* Outer ring */}
-                    <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-primary" />
+                    <div className="border-t-primary absolute inset-0 animate-spin rounded-full border-4 border-transparent" />
                     {/* Inner glow */}
-                    <div className="absolute inset-2 rounded-full bg-primary/20 blur-sm" />
+                    <div className="bg-primary/20 absolute inset-2 rounded-full blur-sm" />
                     {/* Center dot */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="h-4 w-4 animate-pulse rounded-full bg-primary" />
+                        <div className="bg-primary h-4 w-4 animate-pulse rounded-full" />
                     </div>
                 </div>
 
-                <p className="text-sm text-gray-400">Chargement...</p>
+                <p className="text-sm text-gray-300">Chargement...</p>
             </div>
         </div>
     );

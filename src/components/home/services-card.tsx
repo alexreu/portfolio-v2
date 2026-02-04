@@ -3,36 +3,53 @@
 import { Code, Palette, TrendingUp, Zap } from "lucide-react";
 import { motion } from "motion/react";
 
+import { getIcon } from "@/lib/icons";
+import type { ServiceV2 } from "@/lib/sanity/types";
 import { GlassCard } from "@/components/shared/glass-card";
 
-const services = [
+type ServicesCardProps = {
+    services?: ServiceV2[];
+};
+
+// Default services when Sanity data is not available
+const defaultServices: ServiceV2[] = [
     {
-        icon: Code,
+        _id: "1",
+        icon: "Code",
         title: "Intégration Web",
         description: "Développement d'interfaces React/Next.js performantes et pixel-perfect",
         features: ["React & Next.js", "TypeScript", "Responsive Design"],
+        order: 0,
     },
     {
-        icon: Palette,
+        _id: "2",
+        icon: "Palette",
         title: "Design UI/UX",
         description: "Création d'expériences utilisateur modernes et intuitives",
         features: ["Design System", "Prototypage", "Figma to Code"],
+        order: 1,
     },
     {
-        icon: Zap,
+        _id: "3",
+        icon: "Zap",
         title: "Optimisation Performance",
         description: "Amélioration de la vitesse et des performances web",
         features: ["Core Web Vitals", "Lighthouse", "Bundle Optimization"],
+        order: 2,
     },
     {
-        icon: TrendingUp,
+        _id: "4",
+        icon: "TrendingUp",
         title: "Référencement SEO",
         description: "Optimisation pour les moteurs de recherche et visibilité maximale",
         features: ["SEO Technique", "Meta Tags", "Schema Markup"],
+        order: 3,
     },
 ];
 
-export const ServicesCard = () => {
+export const ServicesCard = ({ services }: ServicesCardProps) => {
+    const displayServices = services && services.length > 0 ? services : defaultServices;
+
     return (
         <GlassCard className="h-full p-8 md:p-10">
             <div className="flex h-full flex-col space-y-8">
@@ -44,18 +61,18 @@ export const ServicesCard = () => {
                     <h2 className="text-accent text-3xl font-bold md:text-4xl">
                         Ce que je fais <span className="text-primary">de mieux</span> 💡
                     </h2>
-                    <p className="text-lg text-gray-400">
+                    <p className="text-lg text-gray-300">
                         Des solutions web complètes pour transformer votre présence digitale
                     </p>
                 </div>
 
                 {/* Services Grid */}
                 <div className="grid flex-1 gap-6 md:grid-cols-2">
-                    {services.map((service, index) => {
-                        const Icon = service.icon;
+                    {displayServices.map((service, index) => {
+                        const Icon = getIcon(service.icon, Code);
                         return (
                             <motion.div
-                                key={service.title}
+                                key={service._id}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 + 0.3 }}
@@ -80,7 +97,7 @@ export const ServicesCard = () => {
                                     </h3>
 
                                     {/* Description */}
-                                    <p className="text-sm leading-relaxed text-gray-400">
+                                    <p className="text-sm leading-relaxed text-gray-300">
                                         {service.description}
                                     </p>
 

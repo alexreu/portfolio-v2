@@ -12,22 +12,30 @@ import {
     Zap,
 } from "lucide-react";
 
-import { GlassCard } from "@/components/shared/glass-card";
+import { getIcon } from "@/lib/icons";
+import type { PricingPlanV2 } from "@/lib/sanity/types";
 import { Button } from "@/components/ui/button";
+import { GlassCard } from "@/components/shared/glass-card";
 
-const pricingPlans = [
+type PricingCardProps = {
+    plans?: PricingPlanV2[];
+};
+
+// Default pricing plans when Sanity data is not available
+const defaultPlans: PricingPlanV2[] = [
     {
+        _id: "1",
         name: "Starter",
         subtitle: "Offre spéciale template",
         description: "Solution rapide et économique",
-        price: "790",
-        period: "+ 30€/mois",
+        price: 790,
+        monthlyFee: "+ 30€/mois",
         commitment: "Engagement maintenance 12 mois",
-        icon: Layers,
-        popular: false,
-        features: [
+        icon: "Layers",
+        isPopular: false,
+        featureCategories: [
             {
-                category: "Inclus",
+                categoryName: "Inclus",
                 items: [
                     "Template personnalisé",
                     "Design responsive",
@@ -36,27 +44,30 @@ const pricingPlans = [
                 ],
             },
             {
-                category: "Technique",
+                categoryName: "Technique",
                 items: ["SEO basique", "Google Analytics", "Livraison 1 semaine"],
             },
         ],
-        icons: [
-            { icon: Layers, label: "Template" },
-            { icon: Code, label: "Dev" },
+        featureIcons: [
+            { icon: "Layers", label: "Template" },
+            { icon: "Code", label: "Dev" },
         ],
+        ctaText: "En savoir plus",
+        order: 0,
     },
     {
+        _id: "2",
         name: "Sur Mesure",
         subtitle: "Le meilleur rapport qualité/prix",
         description: "Design unique et adapté",
-        price: "1400",
-        period: "+ 40€/mois",
+        price: 1400,
+        monthlyFee: "+ 40€/mois",
         commitment: "Sans engagement",
-        icon: Sparkles,
-        popular: true,
-        features: [
+        icon: "Sparkles",
+        isPopular: true,
+        featureCategories: [
             {
-                category: "Design",
+                categoryName: "Design",
                 items: [
                     "Design 100% personnalisé",
                     "Animations sur-mesure",
@@ -65,33 +76,36 @@ const pricingPlans = [
                 ],
             },
             {
-                category: "Technique",
+                categoryName: "Technique",
                 items: ["Jusqu'à 10 pages", "Blog intégré", "SEO optimisé", "Performance maximale"],
             },
             {
-                category: "Support",
+                categoryName: "Support",
                 items: ["Support 60 jours", "Formation complète", "Livraison 3 semaines"],
             },
         ],
-        icons: [
-            { icon: Sparkles, label: "Custom" },
-            { icon: Palette, label: "Design" },
-            { icon: Zap, label: "Perf" },
-            { icon: TrendingUp, label: "SEO" },
+        featureIcons: [
+            { icon: "Sparkles", label: "Custom" },
+            { icon: "Palette", label: "Design" },
+            { icon: "Zap", label: "Perf" },
+            { icon: "TrendingUp", label: "SEO" },
         ],
+        ctaText: "Démarrer mon projet",
+        order: 1,
     },
     {
+        _id: "3",
         name: "Business",
         subtitle: "Solution entreprise complète",
         description: "Pour aller plus loin",
-        price: "2500",
-        period: "+ 60€/mois",
+        price: 2500,
+        monthlyFee: "+ 60€/mois",
         commitment: "Évolutif",
-        icon: Rocket,
-        popular: false,
-        features: [
+        icon: "Rocket",
+        isPopular: false,
+        featureCategories: [
             {
-                category: "Design",
+                categoryName: "Design",
                 items: [
                     "Design System complet",
                     "Interface complexe",
@@ -100,7 +114,7 @@ const pricingPlans = [
                 ],
             },
             {
-                category: "Technique",
+                categoryName: "Technique",
                 items: [
                     "Pages illimitées",
                     "CMS Headless (Sanity/Strapi)",
@@ -110,7 +124,7 @@ const pricingPlans = [
                 ],
             },
             {
-                category: "Support",
+                categoryName: "Support",
                 items: [
                     "Support 90 jours",
                     "Accompagnement dédié",
@@ -119,48 +133,52 @@ const pricingPlans = [
                 ],
             },
         ],
-        icons: [
-            { icon: Rocket, label: "Business" },
-            { icon: Database, label: "CMS" },
-            { icon: Shield, label: "Premium" },
-            { icon: Headphones, label: "Support Pro" },
+        featureIcons: [
+            { icon: "Rocket", label: "Business" },
+            { icon: "Database", label: "CMS" },
+            { icon: "Shield", label: "Premium" },
+            { icon: "Headphones", label: "Support Pro" },
         ],
+        ctaText: "En savoir plus",
+        order: 2,
     },
 ];
 
-export const PricingCard = () => {
+export const PricingCard = ({ plans }: PricingCardProps) => {
+    const displayPlans = plans && plans.length > 0 ? plans : defaultPlans;
+
     return (
         <GlassCard className="h-full p-8 md:p-10" hoverScale={false}>
             <div className="space-y-8">
                 {/* Header */}
                 <div className="space-y-3 text-center">
-                    <span className="text-sm font-semibold tracking-wider text-primary uppercase">
+                    <span className="text-primary text-sm font-semibold tracking-wider uppercase">
                         Tarifs
                     </span>
                     <h2 className="text-accent text-3xl font-bold md:text-4xl">
                         Choisissez votre <span className="text-primary">formule</span>
                     </h2>
-                    <p className="text-lg text-gray-400">
+                    <p className="text-lg text-gray-300">
                         Des solutions adaptées à chaque projet et budget
                     </p>
                 </div>
 
                 {/* Pricing Cards Grid */}
                 <div className="grid items-center gap-6 md:grid-cols-3">
-                    {pricingPlans.map((plan) => {
-                        const Icon = plan.icon;
-                        const isPremium = plan.popular;
+                    {displayPlans.map((plan) => {
+                        const Icon = getIcon(plan.icon || "Layers", Layers);
+                        const isPremium = plan.isPopular;
 
                         return (
                             <div
-                                key={plan.name}
+                                key={plan._id}
                                 className={`relative transition-all duration-300 ${isPremium ? "md:z-10 md:scale-110" : "md:hover:scale-105"}`}
                             >
                                 {/* Glow effect for Popular card */}
                                 {isPremium && (
                                     <>
-                                        <div className="absolute -inset-6 -z-10 rounded-3xl bg-primary/20 blur-3xl" />
-                                        <div className="absolute -inset-1 -z-10 rounded-2xl bg-linear-to-br from-primary/50 via-primary/20 to-purple-500/20" />
+                                        <div className="bg-primary/20 absolute -inset-6 -z-10 rounded-3xl blur-3xl" />
+                                        <div className="from-primary/50 via-primary/20 absolute -inset-1 -z-10 rounded-2xl bg-linear-to-br to-purple-500/20" />
                                     </>
                                 )}
 
@@ -168,13 +186,13 @@ export const PricingCard = () => {
                                 <div
                                     className={`relative h-full rounded-2xl border p-6 transition-all duration-300 ${
                                         isPremium
-                                            ? "border-primary/40 bg-linear-to-b from-secondary to-background shadow-xl"
-                                            : "border-white/15 bg-card hover:border-white/25"
+                                            ? "border-primary/40 from-secondary to-background bg-linear-to-b shadow-xl"
+                                            : "bg-card border-white/15 hover:border-white/25"
                                     }`}
                                 >
                                     {/* Popular Badge */}
                                     {isPremium && (
-                                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary to-primary-light px-5 py-2 text-xs font-bold tracking-wider text-white uppercase shadow-lg shadow-primary/50">
+                                        <div className="from-primary to-primary-light shadow-primary/50 absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r px-5 py-2 text-xs font-bold tracking-wider text-white uppercase shadow-lg">
                                             ⭐ Recommandé
                                         </div>
                                     )}
@@ -191,7 +209,7 @@ export const PricingCard = () => {
                                                 }`}
                                             >
                                                 <Icon
-                                                    className={`h-7 w-7 ${isPremium ? "text-primary" : "text-gray-400"}`}
+                                                    className={`h-7 w-7 ${isPremium ? "text-primary" : "text-gray-300"}`}
                                                 />
                                             </div>
 
@@ -201,18 +219,22 @@ export const PricingCard = () => {
                                                 >
                                                     {plan.name}
                                                 </h3>
-                                                <p
-                                                    className={`mt-1 text-xs font-semibold ${
-                                                        isPremium
-                                                            ? "text-primary"
-                                                            : "text-gray-500"
-                                                    }`}
-                                                >
-                                                    {plan.subtitle}
-                                                </p>
-                                                <p className="mt-1 text-sm text-gray-400">
-                                                    {plan.description}
-                                                </p>
+                                                {plan.subtitle && (
+                                                    <p
+                                                        className={`mt-1 text-xs font-semibold ${
+                                                            isPremium
+                                                                ? "text-primary"
+                                                                : "text-gray-500"
+                                                        }`}
+                                                    >
+                                                        {plan.subtitle}
+                                                    </p>
+                                                )}
+                                                {plan.description && (
+                                                    <p className="mt-1 text-sm text-gray-300">
+                                                        {plan.description}
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
 
@@ -230,45 +252,51 @@ export const PricingCard = () => {
                                                     €
                                                 </span>
                                             </div>
-                                            <p className="mt-2 text-sm text-gray-400">
-                                                {plan.period}
-                                            </p>
-                                            <p
-                                                className={`mt-2 text-xs ${isPremium ? "text-gray-400" : "text-gray-600"}`}
-                                            >
-                                                {plan.commitment}
-                                            </p>
+                                            {plan.monthlyFee && (
+                                                <p className="mt-2 text-sm text-gray-300">
+                                                    {plan.monthlyFee}
+                                                </p>
+                                            )}
+                                            {plan.commitment && (
+                                                <p
+                                                    className={`mt-2 text-xs ${isPremium ? "text-gray-300" : "text-gray-600"}`}
+                                                >
+                                                    {plan.commitment}
+                                                </p>
+                                            )}
                                         </div>
 
                                         {/* Feature Icons */}
-                                        <div className="flex flex-wrap gap-2">
-                                            {plan.icons.map((item, idx) => {
-                                                const FeatureIcon = item.icon;
-                                                return (
-                                                    <div
-                                                        key={idx}
-                                                        className={`group relative rounded-lg border px-3 py-2 transition-all duration-300 ${
-                                                            isPremium
-                                                                ? "border-primary/20 bg-primary/5 hover:border-primary/40 hover:bg-primary/10"
-                                                                : "border-white/5 bg-white/[0.03] hover:border-white/10"
-                                                        }`}
-                                                        title={item.label}
-                                                    >
-                                                        <FeatureIcon
-                                                            className={`h-4 w-4 ${
+                                        {plan.featureIcons && plan.featureIcons.length > 0 && (
+                                            <div className="flex flex-wrap gap-2">
+                                                {plan.featureIcons.map((item, idx) => {
+                                                    const FeatureIcon = getIcon(item.icon, Code);
+                                                    return (
+                                                        <div
+                                                            key={idx}
+                                                            className={`group relative rounded-lg border px-3 py-2 transition-all duration-300 ${
                                                                 isPremium
-                                                                    ? "text-primary"
-                                                                    : "text-gray-400 group-hover:text-white"
-                                                            } transition-colors`}
-                                                        />
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
+                                                                    ? "border-primary/20 bg-primary/5 hover:border-primary/40 hover:bg-primary/10"
+                                                                    : "border-white/5 bg-white/[0.03] hover:border-white/10"
+                                                            }`}
+                                                            title={item.label}
+                                                        >
+                                                            <FeatureIcon
+                                                                className={`h-4 w-4 ${
+                                                                    isPremium
+                                                                        ? "text-primary"
+                                                                        : "text-gray-300 group-hover:text-white"
+                                                                } transition-colors`}
+                                                            />
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
 
                                         {/* Features by Category */}
                                         <div className="space-y-4">
-                                            {plan.features.map((category, idx) => (
+                                            {plan.featureCategories.map((category, idx) => (
                                                 <div key={idx} className="space-y-2">
                                                     <div
                                                         className={`text-xs font-semibold tracking-wider uppercase ${
@@ -277,7 +305,7 @@ export const PricingCard = () => {
                                                                 : "text-gray-500"
                                                         }`}
                                                     >
-                                                        {category.category}
+                                                        {category.categoryName}
                                                     </div>
                                                     <div className="space-y-2">
                                                         {category.items.map((item, itemIdx) => (
@@ -296,7 +324,7 @@ export const PricingCard = () => {
                                                                     className={
                                                                         isPremium
                                                                             ? "text-gray-200"
-                                                                            : "text-gray-400"
+                                                                            : "text-gray-300"
                                                                     }
                                                                 >
                                                                     {item}
@@ -312,9 +340,16 @@ export const PricingCard = () => {
                                         <Button
                                             variant={isPremium ? "primary" : "ghost"}
                                             fullWidth
-                                            className={isPremium ? "rounded-xl shadow-lg shadow-primary/30" : "rounded-xl"}
+                                            className={
+                                                isPremium
+                                                    ? "shadow-primary/30 rounded-xl shadow-lg"
+                                                    : "rounded-xl"
+                                            }
                                         >
-                                            {isPremium ? "Démarrer mon projet" : "En savoir plus"}
+                                            {plan.ctaText ||
+                                                (isPremium
+                                                    ? "Démarrer mon projet"
+                                                    : "En savoir plus")}
                                         </Button>
                                     </div>
                                 </div>
@@ -325,7 +360,7 @@ export const PricingCard = () => {
 
                 {/* Bottom Note */}
                 <div className="space-y-2 pt-6 text-center">
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-gray-300">
                         💳 Paiement en 3 fois sans frais possible • 🎯 Devis gratuit sous 24h
                     </p>
                     <Button variant="link" size="sm">

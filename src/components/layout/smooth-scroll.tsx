@@ -34,6 +34,7 @@ export const SmoothScroll = ({ children }: SmoothScrollProps) => {
                 syncTouchLerp: 0.06,
                 touchMultiplier: 2,
                 autoRaf: false, // We sync with Motion's frame loop instead
+                anchors: true,
             }}
         >
             {children}

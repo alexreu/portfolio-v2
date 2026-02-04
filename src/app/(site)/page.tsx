@@ -1,11 +1,22 @@
-import { HeroSection } from "@/components/home/hero-section";
+import { getHomepageDataV2 } from "@/lib/sanity/sanity.query";
 import { BentoGrid } from "@/components/home/bento-grid";
+import { HeroSection } from "@/components/home/hero-section";
 
-export default function Home() {
+export default async function Home() {
+    const data = await getHomepageDataV2();
+
+    console.log({ data });
+
     return (
         <>
-            <HeroSection />
-            <BentoGrid />
+            <HeroSection data={data.settings?.hero} />
+            <BentoGrid
+                aboutData={data.settings?.about}
+                contactData={data.settings?.contact}
+                services={data.services}
+                pricingPlans={data.pricingPlans}
+                skillCategories={data.skillCategories}
+            />
         </>
     );
 }

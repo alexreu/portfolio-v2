@@ -2,13 +2,34 @@
 
 import { motion } from "motion/react";
 
+import type {
+    PricingPlanV2,
+    ServiceV2,
+    SiteSettings,
+    SkillCategory,
+} from "@/lib/sanity/types";
+
 import { AboutCard } from "./about-card";
 import { ContactCard } from "./contact-card";
 import { PricingCard } from "./pricing-card";
 import { ServicesCard } from "./services-card";
 import { SkillsCard } from "./skill-cards";
 
-export const BentoGrid = () => {
+type BentoGridProps = {
+    aboutData?: SiteSettings["about"] | null;
+    contactData?: SiteSettings["contact"] | null;
+    services?: ServiceV2[];
+    pricingPlans?: PricingPlanV2[];
+    skillCategories?: SkillCategory[];
+};
+
+export const BentoGrid = ({
+    aboutData,
+    contactData,
+    services,
+    pricingPlans,
+    skillCategories,
+}: BentoGridProps) => {
     return (
         <section className="pb-20">
             <div className="grid auto-rows-auto grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -21,7 +42,7 @@ export const BentoGrid = () => {
                     transition={{ duration: 0.5, delay: 0.1 }}
                     className="md:col-span-3 scroll-mt-24"
                 >
-                    <AboutCard />
+                    <AboutCard data={aboutData} />
                 </motion.div>
 
                 {/* Services Section */}
@@ -33,7 +54,7 @@ export const BentoGrid = () => {
                     transition={{ duration: 0.5, delay: 0.15 }}
                     className="md:col-span-2 lg:col-span-3 scroll-mt-24"
                 >
-                    <ServicesCard />
+                    <ServicesCard services={services} />
                 </motion.div>
 
                 {/* Skills Section */}
@@ -44,10 +65,10 @@ export const BentoGrid = () => {
                     transition={{ duration: 0.5, delay: 0.3 }}
                     className="md:col-span-2 lg:col-span-3"
                 >
-                    <SkillsCard />
+                    <SkillsCard categories={skillCategories} />
                 </motion.div>
 
-                {/* Row 4: Pricing Section - Full Width */}
+                {/* Pricing Section */}
                 <motion.div
                     id="tarifs"
                     initial={{ opacity: 0, y: 30 }}
@@ -56,10 +77,10 @@ export const BentoGrid = () => {
                     transition={{ duration: 0.5, delay: 0.35 }}
                     className="md:col-span-2 lg:col-span-3 scroll-mt-24"
                 >
-                    <PricingCard />
+                    <PricingCard plans={pricingPlans} />
                 </motion.div>
 
-                {/* Row 5: Big Contact CTA - Full Width */}
+                {/* Contact Section */}
                 <motion.div
                     id="contact"
                     initial={{ opacity: 0, y: 30 }}
@@ -68,7 +89,7 @@ export const BentoGrid = () => {
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="md:col-span-2 lg:col-span-3 scroll-mt-24"
                 >
-                    <ContactCard />
+                    <ContactCard data={contactData} />
                 </motion.div>
             </div>
         </section>
