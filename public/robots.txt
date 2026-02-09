@@ -1,12 +1,10 @@
 # *
 User-agent: *
 Allow: /
-
-# *
-User-agent: *
 Disallow: /studio
 Disallow: /_next
 Disallow: /images
+Disallow: /maintenance
 
 # Host
 Host: https://alexdevlab.com

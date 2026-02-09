@@ -1,13 +1,14 @@
 /** @type {import("next-sitemap").IConfig} */
 module.exports = {
     siteUrl: "https://alexdevlab.com",
-    changefreq: "daily",
+    changefreq: "weekly",
     priority: 0.7,
     sitemapSize: 5000,
-    generateRobotsTxt: true, // (optional)
+    generateRobotsTxt: true,
     exclude: [
         "/studio",
         "/studio/*",
+        "/maintenance",
         "/_next/*",
         "/_next/static/*",
         "/images/*",
@@ -20,24 +21,26 @@ module.exports = {
     ],
     robotsTxtOptions: {
         policies: [
-            { userAgent: "*", allow: "/" },
-            { userAgent: "*", disallow: ["/studio", "/_next", "/images"] },
+            {
+                userAgent: "*",
+                allow: "/",
+                disallow: ["/studio", "/_next", "/images", "/maintenance"],
+            },
         ],
     },
-    // Default transformation function
     transform: async (config, path) => {
-        // Skip static files and assets
         if (
             path.includes("/_next") ||
             path.includes("/images") ||
+            path.includes("/maintenance") ||
             path.match(/\.(woff2|jpg|png|gif|css|js)$/)
         ) {
             return null;
         }
-        const priority = path === "/" ? 1 : config.priority;
+        const priority = path === "/" ? 1.0 : config.priority;
         return {
-            loc: path, // => this will be exported as http(s)://<config.siteUrl>/<path>
-            changefreq: config.changefreq,
+            loc: path,
+            changefreq: path === "/" ? "weekly" : "monthly",
             priority: priority,
             lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
             alternateRefs: config.alternateRefs ?? [],

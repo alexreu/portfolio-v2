@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
     reactStrictMode: true,
+    turbopack: {
+        root: __dirname,
+    },
     experimental: {
         viewTransition: true,
     },
@@ -10,7 +13,6 @@ module.exports = {
             {
                 protocol: "https",
                 hostname: "cdn.sanity.io",
-                port: "",
             },
         ],
     },
