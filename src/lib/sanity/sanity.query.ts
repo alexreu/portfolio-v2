@@ -1,63 +1,7 @@
 import { groq } from "next-sanity";
 
 import client from "./client";
-import type {
-    HomepageData,
-    PricingPlanV2,
-    ServiceV2,
-    SiteSettings,
-    SkillCategory,
-} from "./types";
-
-// ===========================================
-// LEGACY QUERIES (keep for backward compatibility)
-// ===========================================
-
-export const getHomepageData = async () => {
-    return client.fetch(groq`*[_type == "homepage"]{
-        _id,
-        firstname,
-        profilePicture {alt, "image": asset->url},
-        job,
-        keyFigures,
-        skills
-    }`);
-};
-
-export const getPricingPageData = async () => {
-    return client.fetch(groq`*[_type == "pricing"] | order(_createdAt asc) {
-        _id,
-        fixedPrice,
-        monthlyPrice,
-        isOfferCustom,
-        offerContent,
-        offerTitle
-    }`);
-};
-
-export const getAboutPageData = async () => {
-    return client.fetch(groq`*[_type == "about"][0]{
-        _id,
-        presentation,
-        experiences,
-        services,
-        education,
-        "homePageData": *[_type == "homepage"][0]{keyFigures, profilePicture {alt, "image": asset->url}, }
-    }`);
-};
-
-export const getServicesPageData = async () => {
-    return client.fetch(groq`*[_type == "services"] | order(_createdAt asc) {
-        _id,
-        serviceTitle,
-        serviceDescription,
-        serviceIllustration {"image": asset->url},
-    }`);
-};
-
-// ===========================================
-// V2 QUERIES (new schema)
-// ===========================================
+import type { HomepageData, PricingPlan, Service, SiteSettings, SkillCategory } from "./types";
 
 /**
  * Get site settings (singleton)
@@ -94,10 +38,10 @@ export const getSiteSettings = async (): Promise<SiteSettings | null> => {
 };
 
 /**
- * Get all services (V2)
+ * Get all services
  */
-export const getServicesV2 = async (): Promise<ServiceV2[]> => {
-    return client.fetch(groq`*[_type == "serviceV2"] | order(order asc) {
+export const getServices = async (): Promise<Service[]> => {
+    return client.fetch(groq`*[_type == "service"] | order(order asc) {
         _id,
         title,
         description,
@@ -108,10 +52,10 @@ export const getServicesV2 = async (): Promise<ServiceV2[]> => {
 };
 
 /**
- * Get all pricing plans (V2)
+ * Get all pricing plans
  */
-export const getPricingPlansV2 = async (): Promise<PricingPlanV2[]> => {
-    return client.fetch(groq`*[_type == "pricingPlanV2"] | order(order asc) {
+export const getPricingPlans = async (): Promise<PricingPlan[]> => {
+    return client.fetch(groq`*[_type == "pricingPlan"] | order(order asc) {
         _id,
         name,
         subtitle,
@@ -158,10 +102,10 @@ export const getSkillCategories = async (): Promise<SkillCategory[]> => {
 };
 
 /**
- * Get all homepage data in a single query (V2)
+ * Get all homepage data in a single query
  * Use this for the main page to reduce API calls
  */
-export const getHomepageDataV2 = async (): Promise<HomepageData> => {
+export const getHomepageData = async (): Promise<HomepageData> => {
     return client.fetch(groq`{
         "settings": *[_type == "siteSettings"][0]{
             _id,
@@ -191,7 +135,7 @@ export const getHomepageDataV2 = async (): Promise<HomepageData> => {
             },
             socialLinks
         },
-        "services": *[_type == "serviceV2"] | order(order asc) {
+        "services": *[_type == "service"] | order(order asc) {
             _id,
             title,
             description,
@@ -199,7 +143,7 @@ export const getHomepageDataV2 = async (): Promise<HomepageData> => {
             features,
             order
         },
-        "pricingPlans": *[_type == "pricingPlanV2"] | order(order asc) {
+        "pricingPlans": *[_type == "pricingPlan"] | order(order asc) {
             _id,
             name,
             subtitle,

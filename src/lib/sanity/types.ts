@@ -1,5 +1,5 @@
 /**
- * Sanity Types for V2 schemas
+ * Sanity Types
  */
 
 // Site Settings
@@ -35,8 +35,8 @@ export type SiteSettings = {
     }>;
 };
 
-// Service V2
-export type ServiceV2 = {
+// Service
+export type Service = {
     _id: string;
     title: string;
     description: string;
@@ -45,7 +45,7 @@ export type ServiceV2 = {
     order: number;
 };
 
-// Pricing Plan V2
+// Pricing Plan
 export type FeatureCategory = {
     categoryName: string;
     items: string[];
@@ -56,7 +56,7 @@ export type FeatureIcon = {
     label: string;
 };
 
-export type PricingPlanV2 = {
+export type PricingPlan = {
     _id: string;
     name: string;
     subtitle?: string;
@@ -102,7 +102,7 @@ export type SanityImage = {
 // Homepage data (combined)
 export type HomepageData = {
     settings: SiteSettings | null;
-    services: ServiceV2[];
-    pricingPlans: PricingPlanV2[];
+    services: Service[];
+    pricingPlans: PricingPlan[];
     skillCategories: SkillCategory[];
 };
