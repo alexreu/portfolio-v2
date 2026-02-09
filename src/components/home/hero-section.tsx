@@ -65,19 +65,17 @@ export const HeroSection = ({ data }: HeroSectionProps) => {
                                 transition={{ duration: 0.7, delay: 0.5 }}
                                 className="text-accent text-5xl font-bold tracking-tight md:text-7xl lg:text-8xl"
                             >
-                                {hero.title}
-                            </motion.h1>
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.7, delay: 0.6 }}
-                                className="relative inline-block"
-                            >
-                                <h1 className="text-primary text-5xl font-bold tracking-tight md:text-7xl lg:text-8xl">
+                                {hero.title}{" "}
+                                <motion.span
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.7, delay: 0.6 }}
+                                    className="text-primary relative inline-block"
+                                >
                                     {hero.subtitle}
-                                </h1>
-                                <div className="bg-primary/10 absolute -inset-2 -z-10 blur-3xl" />
-                            </motion.div>
+                                    <div className="bg-primary/10 absolute -inset-2 -z-10 blur-3xl" />
+                                </motion.span>
+                            </motion.h1>
                         </div>
 
                         <motion.p

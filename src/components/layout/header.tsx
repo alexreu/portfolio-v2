@@ -37,7 +37,7 @@ export const Header = () => {
                 </motion.a>
 
                 {/* Navigation */}
-                <nav className="hidden items-center gap-8 md:flex">
+                <nav aria-label="Navigation principale" className="hidden items-center gap-8 md:flex">
                     {navItems.map((item, index) => (
                         <motion.a
                             key={item.href}
