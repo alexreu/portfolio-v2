@@ -43,7 +43,7 @@ export const ContactCard = ({ data }: ContactCardProps) => {
                                 </div>
                             )}
 
-                            <h2 className="text-4xl leading-tight font-bold md:text-5xl xl:text-6xl">
+                            <h2 className="text-4xl leading-tight font-bold md:text-5xl">
                                 Prêt à booster
                                 <br />
                                 <span className="text-primary">votre présence web ?</span>
