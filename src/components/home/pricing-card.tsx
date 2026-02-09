@@ -1,16 +1,4 @@
-import {
-    Check,
-    Code,
-    Database,
-    Headphones,
-    Layers,
-    Palette,
-    Rocket,
-    Shield,
-    Sparkles,
-    TrendingUp,
-    Zap,
-} from "lucide-react";
+import { Check, Code, Layers } from "lucide-react";
 
 import { getIcon } from "@/lib/icons";
 import type { PricingPlanV2 } from "@/lib/sanity/types";
@@ -26,8 +14,8 @@ const defaultPlans: PricingPlanV2[] = [
     {
         _id: "1",
         name: "Starter",
-        subtitle: "Offre spéciale template",
-        description: "Solution rapide et économique",
+        subtitle: "Idéal pour démarrer",
+        description: "Votre site pro en ligne en 7 jours, clé en main.",
         priceType: "fixed",
         price: 790,
         monthlyFee: "+ 30€/mois",
@@ -53,14 +41,14 @@ const defaultPlans: PricingPlanV2[] = [
             { icon: "Layers", label: "Template" },
             { icon: "Code", label: "Dev" },
         ],
-        ctaText: "En savoir plus",
+        ctaText: "Lancer mon projet",
         order: 0,
     },
     {
         _id: "2",
         name: "Sur Mesure",
-        subtitle: "Le meilleur rapport qualité/prix",
-        description: "Design unique et adapté",
+        subtitle: "Le choix n°1 des entrepreneurs ambitieux",
+        description: "Un site unique conçu pour convertir vos visiteurs en clients.",
         priceType: "fixed",
         price: 1400,
         monthlyFee: "+ 40€/mois",
@@ -92,14 +80,15 @@ const defaultPlans: PricingPlanV2[] = [
             { icon: "Zap", label: "Perf" },
             { icon: "TrendingUp", label: "SEO" },
         ],
-        ctaText: "Démarrer mon projet",
+        ctaText: "Obtenir mon devis gratuit",
         order: 1,
     },
     {
         _id: "3",
         name: "Business",
-        subtitle: "Solution entreprise complète",
-        description: "Pour aller plus loin",
+        subtitle: "Pour les projets qui voient grand",
+        description:
+            "Application web sur-mesure avec architecture scalable et accompagnement dédié.",
         priceType: "fixed",
         price: 2500,
         monthlyFee: "+ 60€/mois",
@@ -142,7 +131,7 @@ const defaultPlans: PricingPlanV2[] = [
             { icon: "Shield", label: "Premium" },
             { icon: "Headphones", label: "Support Pro" },
         ],
-        ctaText: "En savoir plus",
+        ctaText: "Réserver un appel stratégique",
         order: 2,
     },
 ];
@@ -162,7 +151,7 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                         Choisissez votre <span className="text-primary">formule</span>
                     </h2>
                     <p className="text-lg text-gray-300">
-                        Des solutions adaptées à chaque projet et budget
+                        Investissez dans un site qui travaille pour vous
                     </p>
                 </div>
 
@@ -175,7 +164,7 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                         return (
                             <div
                                 key={plan._id}
-                                className={`relative min-w-0 h-full transition-all duration-300 ${isPremium ? "lg:z-10 lg:scale-110" : "lg:hover:scale-105"}`}
+                                className={`relative h-full min-w-0 transition-all duration-300 ${isPremium ? "lg:z-10 lg:scale-110" : "lg:hover:scale-105"}`}
                             >
                                 {/* Glow effect for Popular card */}
                                 {isPremium && (
@@ -195,7 +184,7 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                 >
                                     {/* Popular Badge */}
                                     {isPremium && (
-                                        <div className="from-primary to-primary-light shadow-primary/50 absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r px-5 py-2 text-xs font-bold tracking-wider text-white uppercase shadow-lg">
+                                        <div className="from-primary to-primary-light shadow-primary/50 absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-linear-to-r px-5 py-2 text-xs font-bold tracking-wider text-white uppercase shadow-lg">
                                             ⭐ Recommandé
                                         </div>
                                     )}
@@ -246,14 +235,16 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                             className={`border-y py-6 ${isPremium ? "border-primary/20" : "border-white/5"}`}
                                         >
                                             {plan.startingFrom && (
-                                                <p className={`text-sm mb-1 ${isPremium ? "text-gray-300" : "text-gray-500"}`}>
+                                                <p
+                                                    className={`mb-1 text-sm ${isPremium ? "text-gray-300" : "text-gray-500"}`}
+                                                >
                                                     À partir de
                                                 </p>
                                             )}
                                             {plan.priceType === "custom" ? (
                                                 <div>
                                                     <span
-                                                        className={`text-5xl font-bold ${isPremium ? "text-primary" : "text-white"}`}
+                                                        className={`text-4xl font-bold xl:text-5xl ${isPremium ? "text-primary" : "text-white"}`}
                                                     >
                                                         {plan.priceCustom || "Sur devis"}
                                                     </span>
@@ -265,7 +256,7 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                                     >
                                                         {plan.price}
                                                     </span>
-                                                    <span className="text-3xl font-bold text-gray-500">
+                                                    <span className="text-2xl font-bold text-gray-500 xl:text-3xl">
                                                         € HT
                                                     </span>
                                                 </div>
@@ -273,7 +264,13 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                             {plan.minimumBudget && (
                                                 <p className="mt-2 text-sm text-gray-400">
                                                     Budget minimum conseillé :{" "}
-                                                    <span className={isPremium ? "text-primary" : "text-white"}>
+                                                    <span
+                                                        className={
+                                                            isPremium
+                                                                ? "text-primary"
+                                                                : "text-white"
+                                                        }
+                                                    >
                                                         {plan.minimumBudget}
                                                     </span>
                                                 </p>
@@ -303,7 +300,7 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                                             className={`group relative rounded-lg border px-3 py-2 transition-all duration-300 ${
                                                                 isPremium
                                                                     ? "border-primary/20 bg-primary/5 hover:border-primary/40 hover:bg-primary/10"
-                                                                    : "border-white/5 bg-white/[0.03] hover:border-white/10"
+                                                                    : "border-white/5 bg-white/3 hover:border-white/10"
                                                             }`}
                                                             title={item.label}
                                                         >
@@ -340,7 +337,7 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                                                 className="flex items-start gap-2 text-sm"
                                                             >
                                                                 <Check
-                                                                    className={`mt-0.5 h-4 w-4 flex-shrink-0 ${
+                                                                    className={`mt-0.5 h-4 w-4 shrink-0 ${
                                                                         isPremium
                                                                             ? "text-primary"
                                                                             : "text-gray-400"
@@ -388,15 +385,10 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                 </div>
 
                 {/* Bottom Note */}
-                <div className="space-y-2 pt-6 text-center">
+                <div className="mx-auto mt-20 max-w-xl rounded-2xl border border-white/10 bg-white/3 px-6 py-4 text-center">
                     <p className="text-sm text-gray-300">
                         💳 Paiement en 3 fois sans frais possible • 🎯 Devis gratuit sous 24h
                     </p>
-                    <Button variant="link" size="sm" asChild>
-                        <a href="#tarifs">
-                            Comparer les offres en détail →
-                        </a>
-                    </Button>
                 </div>
             </div>
         </GlassCard>

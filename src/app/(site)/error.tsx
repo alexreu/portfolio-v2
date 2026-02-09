@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -54,7 +55,7 @@ export default function Error({ error, reset }: ErrorProps) {
                     </Button>
 
                     <Button variant="outline" asChild>
-                        <a href="/">Retour à l&apos;accueil</a>
+                        <Link href="/">Retour à l&apos;accueil</Link>
                     </Button>
                 </div>
 

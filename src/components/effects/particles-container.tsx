@@ -65,6 +65,7 @@ export const ParticlesContainer = () => {
             },
             detectRetina: true,
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Recalculate options when engine initializes
     }, [init]);
 
     if (init) {

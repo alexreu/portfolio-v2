@@ -2,12 +2,7 @@
 
 import { motion } from "motion/react";
 
-import type {
-    PricingPlanV2,
-    ServiceV2,
-    SiteSettings,
-    SkillCategory,
-} from "@/lib/sanity/types";
+import type { PricingPlanV2, ServiceV2, SiteSettings, SkillCategory } from "@/lib/sanity/types";
 
 import { AboutCard } from "./about-card";
 import { ContactCard } from "./contact-card";
@@ -31,7 +26,7 @@ export const BentoGrid = ({
     skillCategories,
 }: BentoGridProps) => {
     return (
-        <section className="pb-20">
+        <section className="pb-10 xl:pb-20">
             <div className="grid auto-rows-auto grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {/* About Section */}
                 <motion.div
@@ -40,7 +35,7 @@ export const BentoGrid = ({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
-                    className="md:col-span-2 lg:col-span-3 scroll-mt-24"
+                    className="scroll-mt-24 md:col-span-2 lg:col-span-3"
                 >
                     <AboutCard data={aboutData} />
                 </motion.div>
@@ -52,7 +47,7 @@ export const BentoGrid = ({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.5, delay: 0.15 }}
-                    className="md:col-span-2 lg:col-span-3 scroll-mt-24"
+                    className="scroll-mt-24 md:col-span-2 lg:col-span-3"
                 >
                     <ServicesCard services={services} />
                 </motion.div>
@@ -75,7 +70,7 @@ export const BentoGrid = ({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.5, delay: 0.35 }}
-                    className="md:col-span-2 lg:col-span-3 scroll-mt-24"
+                    className="scroll-mt-24 md:col-span-2 lg:col-span-3"
                 >
                     <PricingCard plans={pricingPlans} />
                 </motion.div>
@@ -87,7 +82,7 @@ export const BentoGrid = ({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.5, delay: 0.4 }}
-                    className="md:col-span-2 lg:col-span-3 scroll-mt-24"
+                    className="scroll-mt-24 md:col-span-2 lg:col-span-3"
                 >
                     <ContactCard data={contactData} />
                 </motion.div>

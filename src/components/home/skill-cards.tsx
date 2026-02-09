@@ -1,8 +1,7 @@
-import { ArrowRight, Palette, Target, TrendingUp, Wrench, Zap } from "lucide-react";
+import { Palette } from "lucide-react";
 
 import { getIcon } from "@/lib/icons";
 import type { SkillCategory } from "@/lib/sanity/types";
-import { Button } from "@/components/ui/button";
 import { GlassCard } from "@/components/shared/glass-card";
 
 const categoryThemes = {
@@ -106,14 +105,14 @@ export const SkillsCard = ({ categories }: SkillsCardProps) => {
     const displayCategories = categories && categories.length > 0 ? categories : defaultCategories;
 
     return (
-        <GlassCard className="h-full p-8 md:p-10">
+        <GlassCard className="h-full p-6 md:p-10">
             <div className="flex h-full flex-col space-y-8">
                 {/* Header */}
                 <div className="space-y-3">
                     <span className="text-primary text-sm font-semibold tracking-wider uppercase">
                         Compétences
                     </span>
-                    <h2 className="text-accent text-3xl font-bold md:text-4xl">
+                    <h2 className="text-accent text-2xl font-bold md:text-4xl">
                         Technologies qui{" "}
                         <span className="text-primary">génèrent des résultats</span>
                     </h2>
@@ -139,14 +138,14 @@ export const SkillsCard = ({ categories }: SkillsCardProps) => {
                                 />
 
                                 {/* Category Header */}
-                                <div className="mb-6 flex items-start gap-4">
+                                <div className="mb-6 grid grid-cols-6 gap-4 md:gap-0">
                                     <div
-                                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 ${theme.iconBg} ${theme.iconBorder}`}
+                                        className={`col-span-6 flex h-12 w-12 shrink-0 items-center justify-center place-self-start rounded-xl border transition-all duration-300 md:col-span-1 md:place-self-center ${theme.iconBg} ${theme.iconBorder}`}
                                     >
                                         <Icon className={`h-6 w-6 ${theme.icon}`} />
                                     </div>
 
-                                    <div className="flex-1">
+                                    <div className="col-span-6 md:col-span-5">
                                         <h3 className="text-accent mb-1 text-lg font-bold">
                                             {category.title}
                                         </h3>
@@ -185,15 +184,6 @@ export const SkillsCard = ({ categories }: SkillsCardProps) => {
                             </div>
                         );
                     })}
-                </div>
-
-                {/* Bottom CTA */}
-                <div className="flex items-center justify-center pt-4">
-                    <Button variant="secondary" size="sm">
-                        <Target className="text-primary h-4 w-4" />
-                        Voir mon approche technique
-                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Button>
                 </div>
             </div>
         </GlassCard>

@@ -35,13 +35,13 @@ export const AboutCard = ({ data }: AboutCardProps) => {
     };
 
     return (
-        <GlassCard className="h-full p-8 md:p-10">
+        <GlassCard className="h-full p-5 md:p-10">
             <div className="flex h-full flex-col space-y-8">
                 <div className="space-y-4">
                     <span className="text-primary text-sm font-semibold tracking-wider uppercase">
                         Qui suis-je
                     </span>
-                    <h2 className="text-accent text-3xl font-bold md:text-4xl">
+                    <h2 className="text-accent text-2xl font-bold md:text-4xl">
                         {about.title.split("l'excellence web")[0]}
                         <span className="text-primary">l&apos;excellence web</span>
                     </h2>

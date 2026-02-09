@@ -1,12 +1,12 @@
 "use client";
 
-import { ArrowRight, Code, Palette, TrendingUp, Zap } from "lucide-react";
+import { ArrowRight, Code } from "lucide-react";
 import { motion } from "motion/react";
 
 import { getIcon } from "@/lib/icons";
 import type { ServiceV2 } from "@/lib/sanity/types";
-import { GlassCard } from "@/components/shared/glass-card";
 import { Button } from "@/components/ui/button";
+import { GlassCard } from "@/components/shared/glass-card";
 
 type ServicesCardProps = {
     services?: ServiceV2[];
@@ -52,14 +52,14 @@ export const ServicesCard = ({ services }: ServicesCardProps) => {
     const displayServices = services && services.length > 0 ? services : defaultServices;
 
     return (
-        <GlassCard className="h-full p-8 md:p-10">
+        <GlassCard className="h-full p-4 md:p-10">
             <div className="flex h-full flex-col space-y-8">
                 {/* Header */}
                 <div className="space-y-3">
                     <span className="text-primary text-sm font-semibold tracking-wider uppercase">
                         Mes Services
                     </span>
-                    <h2 className="text-accent text-3xl font-bold md:text-4xl">
+                    <h2 className="text-accent text-2xl font-bold md:text-4xl">
                         Ce que je fais <span className="text-primary">de mieux</span> 💡
                     </h2>
                     <p className="text-lg text-gray-300">

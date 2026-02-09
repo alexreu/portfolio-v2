@@ -43,14 +43,14 @@ export const ContactCard = ({ data }: ContactCardProps) => {
                                 </div>
                             )}
 
-                            <h2 className="text-4xl leading-tight font-bold md:text-5xl lg:text-6xl">
+                            <h2 className="text-4xl leading-tight font-bold md:text-5xl xl:text-6xl">
                                 Prêt à booster
                                 <br />
                                 <span className="text-primary">votre présence web ?</span>
                             </h2>
 
                             <p className="text-lg leading-relaxed text-gray-300">
-                                Devis gratuit • Pas d'engagement • Premier échange offert pour
+                                Devis gratuit • Pas d&apos;engagement • Premier échange offert pour
                                 définir ensemble votre projet.
                             </p>
                         </div>
