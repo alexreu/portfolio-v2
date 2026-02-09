@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { AlertTriangle, RefreshCw } from "lucide-react";
+import { AlertTriangle, Home, RefreshCw } from "lucide-react";
 import { motion } from "motion/react";
 
 import { Button } from "@/components/ui/button";
@@ -55,7 +55,10 @@ export default function Error({ error, reset }: ErrorProps) {
                     </Button>
 
                     <Button variant="outline" asChild>
-                        <Link href="/">Retour à l&apos;accueil</Link>
+                        <Link href="/">
+                            <Home className="h-5 w-5" />
+                            Retour à l&apos;accueil
+                        </Link>
                     </Button>
                 </div>
 

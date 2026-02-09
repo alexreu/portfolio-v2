@@ -114,10 +114,13 @@ export default function NotFound() {
                                 className="w-full sm:w-auto"
                                 asChild
                             >
-                                <Link href="/contact" aria-label="Aller à la page de contact">
+                                <a
+                                    href="mailto:contact@alexdevlab.com"
+                                    aria-label="Envoyer un email"
+                                >
                                     <Mail className="h-5 w-5" aria-hidden="true" />
                                     Me contacter
-                                </Link>
+                                </a>
                             </Button>
                         </motion.div>
                     </div>
