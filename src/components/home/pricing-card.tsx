@@ -1,16 +1,16 @@
 import { Check, Code, Layers } from "lucide-react";
 
 import { getIcon } from "@/lib/icons";
-import type { PricingPlanV2 } from "@/lib/sanity/types";
+import type { PricingPlan } from "@/lib/sanity/types";
 import { Button } from "@/components/ui/button";
 import { GlassCard } from "@/components/shared/glass-card";
 
 type PricingCardProps = {
-    plans?: PricingPlanV2[];
+    plans?: PricingPlan[];
 };
 
 // Default pricing plans when Sanity data is not available
-const defaultPlans: PricingPlanV2[] = [
+const defaultPlans: PricingPlan[] = [
     {
         _id: "1",
         name: "Starter",

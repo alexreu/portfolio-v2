@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 
-import type { PricingPlanV2, ServiceV2, SiteSettings, SkillCategory } from "@/lib/sanity/types";
+import type { PricingPlan, Service, SiteSettings, SkillCategory } from "@/lib/sanity/types";
 
 import { AboutCard } from "./about-card";
 import { ContactCard } from "./contact-card";
@@ -13,8 +13,8 @@ import { SkillsCard } from "./skill-cards";
 type BentoGridProps = {
     aboutData?: SiteSettings["about"] | null;
     contactData?: SiteSettings["contact"] | null;
-    services?: ServiceV2[];
-    pricingPlans?: PricingPlanV2[];
+    services?: Service[];
+    pricingPlans?: PricingPlan[];
     skillCategories?: SkillCategory[];
 };
 

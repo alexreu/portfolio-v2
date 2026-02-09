@@ -2,11 +2,11 @@ import { defineArrayMember, defineField, defineType } from "@sanity/types";
 import { CircleDollarSign } from "lucide-react";
 
 /**
- * Pricing Plan V2 - Pricing plans with categorized features
+ * Pricing Plan - Pricing plans with categorized features
  */
-const pricingPlanV2 = defineType({
-    name: "pricingPlanV2",
-    title: "Plans tarifaires (v2)",
+const pricingPlan = defineType({
+    name: "pricingPlan",
+    title: "Plans tarifaires",
     type: "document",
     icon: CircleDollarSign,
     fields: [
@@ -215,4 +215,4 @@ const pricingPlanV2 = defineType({
     },
 });
 
-export default pricingPlanV2;
+export default pricingPlan;

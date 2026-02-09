@@ -2,11 +2,11 @@ import { defineArrayMember, defineField, defineType } from "@sanity/types";
 import { Briefcase } from "lucide-react";
 
 /**
- * Service V2 - Services offered with icon and features
+ * Service - Services offered with icon and features
  */
-const serviceV2 = defineType({
-    name: "serviceV2",
-    title: "Services (v2)",
+const service = defineType({
+    name: "service",
+    title: "Services",
     type: "document",
     icon: Briefcase,
     fields: [
@@ -75,4 +75,4 @@ const serviceV2 = defineType({
     },
 });
 
-export default serviceV2;
+export default service;

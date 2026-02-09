@@ -4,16 +4,16 @@ import { ArrowRight, Code } from "lucide-react";
 import { motion } from "motion/react";
 
 import { getIcon } from "@/lib/icons";
-import type { ServiceV2 } from "@/lib/sanity/types";
+import type { Service } from "@/lib/sanity/types";
 import { Button } from "@/components/ui/button";
 import { GlassCard } from "@/components/shared/glass-card";
 
 type ServicesCardProps = {
-    services?: ServiceV2[];
+    services?: Service[];
 };
 
 // Default services when Sanity data is not available
-const defaultServices: ServiceV2[] = [
+const defaultServices: Service[] = [
     {
         _id: "1",
         icon: "Code",
