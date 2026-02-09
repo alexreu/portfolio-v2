@@ -22,11 +22,16 @@ const defaultData: HeroData = {
         "Je transforme vos idées en expériences web exceptionnelles. Spécialisé dans la création d'interfaces modernes, performantes et accessibles.",
     availabilityText: "Disponible pour de nouveaux projets",
     ctaPrimary: { text: "Démarrer un projet", href: "#contact" },
-    ctaSecondary: { text: "Voir mes travaux", href: "#services" },
+    ctaSecondary: { text: "Voir mes tarifs", href: "#tarifs" },
 };
 
 export const HeroSection = ({ data }: HeroSectionProps) => {
-    const hero = { ...defaultData, ...data };
+    const hero = {
+        ...defaultData,
+        ...Object.fromEntries(
+            Object.entries(data || {}).filter(([, v]) => v != null)
+        ),
+    };
 
     return (
         <section id="accueil" className="py-12 md:py-20">
@@ -101,12 +106,11 @@ export const HeroSection = ({ data }: HeroSectionProps) => {
                             </Button>
                         )}
 
-                        {/* Disable this for now */}
-                        {/*{hero.ctaSecondary && (
-                            <Button variant="secondary" asChild>
+                        {hero.ctaSecondary && (
+                            <Button variant="ghost" asChild>
                                 <a href={hero.ctaSecondary.href}>{hero.ctaSecondary.text}</a>
                             </Button>
-                        )}*/}
+                        )}
                     </motion.div>
                 </div>
 

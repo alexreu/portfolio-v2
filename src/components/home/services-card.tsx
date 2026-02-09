@@ -1,11 +1,12 @@
 "use client";
 
-import { Code, Palette, TrendingUp, Zap } from "lucide-react";
+import { ArrowRight, Code, Palette, TrendingUp, Zap } from "lucide-react";
 import { motion } from "motion/react";
 
 import { getIcon } from "@/lib/icons";
 import type { ServiceV2 } from "@/lib/sanity/types";
 import { GlassCard } from "@/components/shared/glass-card";
+import { Button } from "@/components/ui/button";
 
 type ServicesCardProps = {
     services?: ServiceV2[];
@@ -119,6 +120,16 @@ export const ServicesCard = ({ services }: ServicesCardProps) => {
                             </motion.div>
                         );
                     })}
+                </div>
+
+                {/* CTA */}
+                <div className="pt-4 text-center">
+                    <Button variant="ghost" asChild>
+                        <a href="#tarifs">
+                            Découvrir les tarifs
+                            <ArrowRight className="h-4 w-4" />
+                        </a>
+                    </Button>
                 </div>
             </div>
         </GlassCard>

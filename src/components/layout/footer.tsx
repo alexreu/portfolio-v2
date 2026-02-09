@@ -13,7 +13,7 @@ export const Footer = () => {
             <div className="mx-auto max-w-350 px-6 py-8">
                 <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
                     {/* Copyright */}
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-gray-400">
                         Copyright © 2026 AlexDevLab | Designed by{" "}
                         <span className="font-semibold text-primary">AlexDevLab</span>
                     </div>
@@ -25,7 +25,7 @@ export const Footer = () => {
                                 key={item}
                                 href={`#${item.toLowerCase().replace(/\s/g, "-")}`}
                                 whileHover={{ y: -2 }}
-                                className="text-sm text-gray-500 transition-colors hover:text-white"
+                                className="text-sm text-gray-400 transition-colors hover:text-white"
                             >
                                 {item}
                             </motion.a>

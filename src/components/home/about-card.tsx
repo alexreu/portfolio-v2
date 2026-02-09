@@ -43,11 +43,11 @@ export const AboutCard = ({ data }: AboutCardProps) => {
                     </span>
                     <h2 className="text-accent text-3xl font-bold md:text-4xl">
                         {about.title.split("l'excellence web")[0]}
-                        <span className="text-primary">l&apos;excellence web </span> ⚡️
+                        <span className="text-primary">l&apos;excellence web</span>
                     </h2>
                     <p className="text-lg text-gray-300">{about.subtitle}</p>
                 </div>
-                <div className="grid flex-1 grid-cols-2 gap-4">
+                <div className="grid flex-1 grid-cols-1 gap-4 md:grid-cols-2">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}

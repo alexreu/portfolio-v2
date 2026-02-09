@@ -61,7 +61,11 @@ export type PricingPlanV2 = {
     name: string;
     subtitle?: string;
     description?: string;
-    price: number;
+    priceType: "fixed" | "custom";
+    price?: number;
+    priceCustom?: string;
+    startingFrom?: boolean;
+    minimumBudget?: string;
     monthlyFee?: string;
     commitment?: string;
     isPopular: boolean;

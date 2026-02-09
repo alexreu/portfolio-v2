@@ -40,7 +40,7 @@ export const BentoGrid = ({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.2 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
-                    className="md:col-span-3 scroll-mt-24"
+                    className="md:col-span-2 lg:col-span-3 scroll-mt-24"
                 >
                     <AboutCard data={aboutData} />
                 </motion.div>

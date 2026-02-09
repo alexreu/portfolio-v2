@@ -23,16 +23,16 @@ export const ContactCard = ({ data }: ContactCardProps) => {
             {/* Animated gradient border */}
             <div className="from-primary to-primary absolute inset-0 animate-pulse bg-linear-to-r via-purple-500 opacity-50" />
 
-            <div className="bg-background relative h-full rounded-3xl p-8 md:p-12">
+            <div className="bg-background relative h-full rounded-3xl p-5 sm:p-8 md:p-12">
                 {/* Decorative background elements */}
                 <div className="absolute inset-0 overflow-hidden rounded-3xl">
                     <div className="bg-primary/10 absolute top-0 right-0 h-96 w-96 rounded-full blur-3xl" />
                     <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl" />
                 </div>
 
-                <div className="relative z-10 grid h-full items-center gap-8 md:grid-cols-2">
+                <div className="relative z-10 grid h-full items-center gap-8 lg:grid-cols-2">
                     {/* Left: Main CTA */}
-                    <div className="space-y-6">
+                    <div className="min-w-0 space-y-6">
                         <div className="space-y-3">
                             {contact.responseTime && (
                                 <div className="border-primary/30 bg-primary/20 inline-flex items-center gap-2 rounded-full border px-4 py-2">
@@ -56,9 +56,11 @@ export const ContactCard = ({ data }: ContactCardProps) => {
                         </div>
 
                         {/* Main CTA Button */}
-                        <Button variant="primary" size="lg" withGradient>
-                            Démarrer mon projet
-                            <ArrowRight className="h-6 w-6 transition-transform duration-300 group-hover:translate-x-2" />
+                        <Button variant="primary" size="lg" asChild>
+                            <a href={`mailto:${contact.email}`}>
+                                Démarrer mon projet
+                                <ArrowRight className="h-6 w-6 transition-transform duration-300 group-hover:translate-x-2" />
+                            </a>
                         </Button>
 
                         {/* Trust indicators */}
@@ -83,7 +85,7 @@ export const ContactCard = ({ data }: ContactCardProps) => {
                     </div>
 
                     {/* Right: Contact Methods */}
-                    <div className="space-y-4">
+                    <div className="min-w-0 space-y-4">
                         <h3 className="mb-6 text-xl font-semibold text-gray-300">
                             Ou contactez-moi directement
                         </h3>
@@ -93,18 +95,18 @@ export const ContactCard = ({ data }: ContactCardProps) => {
                                 href={`mailto:${contact.email}`}
                                 className="group hover:border-primary/30 flex items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 transition-all duration-300 hover:translate-x-1 hover:bg-white/[0.06]"
                             >
-                                <div className="border-primary/20 bg-primary/10 group-hover:bg-primary/20 flex h-12 w-12 items-center justify-center rounded-xl border transition-all duration-300">
+                                <div className="border-primary/20 bg-primary/10 group-hover:bg-primary/20 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-all duration-300">
                                     <Mail className="text-primary h-6 w-6" />
                                 </div>
-                                <div className="flex-1">
+                                <div className="min-w-0 flex-1">
                                     <div className="mb-1 text-sm text-gray-300">
                                         Email professionnel
                                     </div>
-                                    <div className="group-hover:text-primary font-semibold transition-colors duration-300">
+                                    <div className="group-hover:text-primary truncate font-semibold transition-colors duration-300">
                                         {contact.email}
                                     </div>
                                 </div>
-                                <ArrowRight className="group-hover:text-primary h-5 w-5 text-gray-600 transition-all duration-300 group-hover:translate-x-1" />
+                                <ArrowRight className="group-hover:text-primary h-5 w-5 shrink-0 text-gray-400 transition-all duration-300 group-hover:translate-x-1" />
                             </a>
                         )}
 
@@ -121,10 +123,10 @@ export const ContactCard = ({ data }: ContactCardProps) => {
                                 }
                                 className="group hover:border-primary/30 flex items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 transition-all duration-300 hover:translate-x-1 hover:bg-white/[0.06]"
                             >
-                                <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-purple-500/20 bg-purple-500/10 transition-all duration-300 group-hover:bg-purple-500/20">
+                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-purple-500/20 bg-purple-500/10 transition-all duration-300 group-hover:bg-purple-500/20">
                                     <Calendar className="h-6 w-6 text-purple-400" />
                                 </div>
-                                <div className="flex-1">
+                                <div className="min-w-0 flex-1">
                                     <div className="mb-1 text-sm text-gray-300">
                                         Rendez-vous offert
                                     </div>
@@ -132,7 +134,7 @@ export const ContactCard = ({ data }: ContactCardProps) => {
                                         Réserver un appel (30 min gratuit)
                                     </div>
                                 </div>
-                                <ArrowRight className="h-5 w-5 text-gray-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-purple-400" />
+                                <ArrowRight className="h-5 w-5 shrink-0 text-gray-400 transition-all duration-300 group-hover:translate-x-1 group-hover:text-purple-400" />
                             </a>
                         )}
 
@@ -149,10 +151,10 @@ export const ContactCard = ({ data }: ContactCardProps) => {
                                 }
                                 className="group hover:border-primary/30 flex items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 transition-all duration-300 hover:translate-x-1 hover:bg-white/[0.06]"
                             >
-                                <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-green-500/20 bg-green-500/10 transition-all duration-300 group-hover:bg-green-500/20">
+                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-green-500/20 bg-green-500/10 transition-all duration-300 group-hover:bg-green-500/20">
                                     <MessageSquare className="h-6 w-6 text-green-400" />
                                 </div>
-                                <div className="flex-1">
+                                <div className="min-w-0 flex-1">
                                     <div className="mb-1 text-sm text-gray-300">
                                         WhatsApp Business
                                     </div>
@@ -160,7 +162,7 @@ export const ContactCard = ({ data }: ContactCardProps) => {
                                         Message instantané (Réponse rapide)
                                     </div>
                                 </div>
-                                <ArrowRight className="h-5 w-5 text-gray-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-green-400" />
+                                <ArrowRight className="h-5 w-5 shrink-0 text-gray-400 transition-all duration-300 group-hover:translate-x-1 group-hover:text-green-400" />
                             </a>
                         )}
                     </div>

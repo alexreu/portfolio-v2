@@ -28,10 +28,45 @@ const pricingPlanV2 = defineType({
             type: "string",
         }),
         defineField({
+            name: "priceType",
+            title: "Type de prix",
+            type: "string",
+            options: {
+                list: [
+                    { title: "Montant fixe", value: "fixed" },
+                    { title: "Texte libre (ex: Sur devis)", value: "custom" },
+                ],
+                layout: "radio",
+            },
+            initialValue: "fixed",
+            validation: (rule) => rule.required(),
+        }),
+        defineField({
             name: "price",
             title: "Prix (€)",
             type: "number",
-            validation: (rule) => rule.required().min(0),
+            validation: (rule) => rule.min(0),
+            hidden: ({ parent }) => parent?.priceType !== "fixed",
+        }),
+        defineField({
+            name: "priceCustom",
+            title: "Prix (texte)",
+            type: "string",
+            description: "Ex: Sur devis",
+            hidden: ({ parent }) => parent?.priceType !== "custom",
+        }),
+        defineField({
+            name: "startingFrom",
+            title: "Afficher « À partir de »",
+            type: "boolean",
+            initialValue: false,
+            description: "Affiche la mention « À partir de » avant le prix",
+        }),
+        defineField({
+            name: "minimumBudget",
+            title: "Budget minimum conseillé",
+            type: "string",
+            description: "Ex: 6 000 € HT",
         }),
         defineField({
             name: "monthlyFee",
@@ -164,13 +199,17 @@ const pricingPlanV2 = defineType({
     preview: {
         select: {
             title: "name",
+            priceType: "priceType",
             price: "price",
+            priceCustom: "priceCustom",
             isPopular: "isPopular",
         },
-        prepare({ title, price, isPopular }) {
+        prepare({ title, priceType, price, priceCustom, isPopular }) {
+            const displayPrice =
+                priceType === "custom" ? (priceCustom || "Sur devis") : `${price}€`;
             return {
                 title: `${title}${isPopular ? " ⭐" : ""}`,
-                subtitle: `${price}€`,
+                subtitle: displayPrice,
             };
         },
     },

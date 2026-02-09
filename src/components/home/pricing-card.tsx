@@ -28,6 +28,7 @@ const defaultPlans: PricingPlanV2[] = [
         name: "Starter",
         subtitle: "Offre spéciale template",
         description: "Solution rapide et économique",
+        priceType: "fixed",
         price: 790,
         monthlyFee: "+ 30€/mois",
         commitment: "Engagement maintenance 12 mois",
@@ -60,6 +61,7 @@ const defaultPlans: PricingPlanV2[] = [
         name: "Sur Mesure",
         subtitle: "Le meilleur rapport qualité/prix",
         description: "Design unique et adapté",
+        priceType: "fixed",
         price: 1400,
         monthlyFee: "+ 40€/mois",
         commitment: "Sans engagement",
@@ -98,6 +100,7 @@ const defaultPlans: PricingPlanV2[] = [
         name: "Business",
         subtitle: "Solution entreprise complète",
         description: "Pour aller plus loin",
+        priceType: "fixed",
         price: 2500,
         monthlyFee: "+ 60€/mois",
         commitment: "Évolutif",
@@ -148,7 +151,7 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
     const displayPlans = plans && plans.length > 0 ? plans : defaultPlans;
 
     return (
-        <GlassCard className="h-full p-8 md:p-10" hoverScale={false}>
+        <GlassCard className="h-full p-4 sm:p-8 md:p-10" hoverScale={false}>
             <div className="space-y-8">
                 {/* Header */}
                 <div className="space-y-3 text-center">
@@ -164,7 +167,7 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                 </div>
 
                 {/* Pricing Cards Grid */}
-                <div className="grid items-center gap-6 md:grid-cols-3">
+                <div className="mt-8 grid items-stretch gap-6 lg:mt-20 lg:grid-cols-3 lg:gap-10">
                     {displayPlans.map((plan) => {
                         const Icon = getIcon(plan.icon || "Layers", Layers);
                         const isPremium = plan.isPopular;
@@ -172,7 +175,7 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                         return (
                             <div
                                 key={plan._id}
-                                className={`relative transition-all duration-300 ${isPremium ? "md:z-10 md:scale-110" : "md:hover:scale-105"}`}
+                                className={`relative min-w-0 h-full transition-all duration-300 ${isPremium ? "lg:z-10 lg:scale-110" : "lg:hover:scale-105"}`}
                             >
                                 {/* Glow effect for Popular card */}
                                 {isPremium && (
@@ -198,9 +201,9 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                     )}
 
                                     {/* Content */}
-                                    <div className="space-y-6">
+                                    <div className="flex h-full flex-col gap-6">
                                         {/* Header */}
-                                        <div className="space-y-3 pt-2">
+                                        <div className={`space-y-3 ${isPremium ? "pt-4" : "pt-2"}`}>
                                             <div
                                                 className={`flex h-14 w-14 items-center justify-center rounded-xl border ${
                                                     isPremium
@@ -224,7 +227,7 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                                         className={`mt-1 text-xs font-semibold ${
                                                             isPremium
                                                                 ? "text-primary"
-                                                                : "text-gray-500"
+                                                                : "text-gray-400"
                                                         }`}
                                                     >
                                                         {plan.subtitle}
@@ -242,16 +245,39 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                         <div
                                             className={`border-y py-6 ${isPremium ? "border-primary/20" : "border-white/5"}`}
                                         >
-                                            <div className="flex items-baseline gap-1">
-                                                <span
-                                                    className={`text-6xl font-bold ${isPremium ? "text-primary" : "text-white"}`}
-                                                >
-                                                    {plan.price}
-                                                </span>
-                                                <span className="text-3xl font-bold text-gray-500">
-                                                    €
-                                                </span>
-                                            </div>
+                                            {plan.startingFrom && (
+                                                <p className={`text-sm mb-1 ${isPremium ? "text-gray-300" : "text-gray-500"}`}>
+                                                    À partir de
+                                                </p>
+                                            )}
+                                            {plan.priceType === "custom" ? (
+                                                <div>
+                                                    <span
+                                                        className={`text-5xl font-bold ${isPremium ? "text-primary" : "text-white"}`}
+                                                    >
+                                                        {plan.priceCustom || "Sur devis"}
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-baseline gap-1">
+                                                    <span
+                                                        className={`text-6xl font-bold ${isPremium ? "text-primary" : "text-white"}`}
+                                                    >
+                                                        {plan.price}
+                                                    </span>
+                                                    <span className="text-3xl font-bold text-gray-500">
+                                                        € HT
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {plan.minimumBudget && (
+                                                <p className="mt-2 text-sm text-gray-400">
+                                                    Budget minimum conseillé :{" "}
+                                                    <span className={isPremium ? "text-primary" : "text-white"}>
+                                                        {plan.minimumBudget}
+                                                    </span>
+                                                </p>
+                                            )}
                                             {plan.monthlyFee && (
                                                 <p className="mt-2 text-sm text-gray-300">
                                                     {plan.monthlyFee}
@@ -259,7 +285,7 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                             )}
                                             {plan.commitment && (
                                                 <p
-                                                    className={`mt-2 text-xs ${isPremium ? "text-gray-300" : "text-gray-600"}`}
+                                                    className={`mt-2 text-xs ${isPremium ? "text-gray-300" : "text-gray-400"}`}
                                                 >
                                                     {plan.commitment}
                                                 </p>
@@ -295,14 +321,14 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                         )}
 
                                         {/* Features by Category */}
-                                        <div className="space-y-4">
-                                            {plan.featureCategories.map((category, idx) => (
+                                        <div className="flex-1 space-y-4">
+                                            {plan.featureCategories?.map((category, idx) => (
                                                 <div key={idx} className="space-y-2">
                                                     <div
                                                         className={`text-xs font-semibold tracking-wider uppercase ${
                                                             isPremium
                                                                 ? "text-primary"
-                                                                : "text-gray-500"
+                                                                : "text-gray-400"
                                                         }`}
                                                     >
                                                         {category.categoryName}
@@ -317,7 +343,7 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                                                     className={`mt-0.5 h-4 w-4 flex-shrink-0 ${
                                                                         isPremium
                                                                             ? "text-primary"
-                                                                            : "text-gray-600"
+                                                                            : "text-gray-400"
                                                                     }`}
                                                                 />
                                                                 <span
@@ -345,11 +371,14 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                                                     ? "shadow-primary/30 rounded-xl shadow-lg"
                                                     : "rounded-xl"
                                             }
+                                            asChild
                                         >
-                                            {plan.ctaText ||
-                                                (isPremium
-                                                    ? "Démarrer mon projet"
-                                                    : "En savoir plus")}
+                                            <a href="#contact">
+                                                {plan.ctaText ||
+                                                    (isPremium
+                                                        ? "Démarrer mon projet"
+                                                        : "En savoir plus")}
+                                            </a>
                                         </Button>
                                     </div>
                                 </div>
@@ -363,8 +392,10 @@ export const PricingCard = ({ plans }: PricingCardProps) => {
                     <p className="text-sm text-gray-300">
                         💳 Paiement en 3 fois sans frais possible • 🎯 Devis gratuit sous 24h
                     </p>
-                    <Button variant="link" size="sm">
-                        Comparer les offres en détail →
+                    <Button variant="link" size="sm" asChild>
+                        <a href="#tarifs">
+                            Comparer les offres en détail →
+                        </a>
                     </Button>
                 </div>
             </div>

@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
  * - `icon`: Icon-only button
  */
 const buttonVariants = cva(
-    "group relative inline-flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
+    "group relative inline-flex cursor-pointer items-center justify-center gap-2 overflow-hidden whitespace-nowrap font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
     {
         variants: {
             variant: {
@@ -49,8 +49,8 @@ const buttonVariants = cva(
 
                 // Ghost - minimal for tertiary actions (pricing non-premium)
                 ghost: [
-                    "rounded-xl border-2 border-white/10 bg-transparent text-white",
-                    "hover:border-white/20 hover:bg-white/5",
+                    "rounded-full border border-white/10 bg-transparent text-white",
+                    "hover:border-white/20 hover:bg-white/5 hover:-translate-y-0.5 hover:scale-[1.02]",
                     "active:scale-[0.98]",
                 ].join(" "),
 
