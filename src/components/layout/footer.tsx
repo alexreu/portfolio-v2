@@ -46,9 +46,11 @@ export const Footer = () => {
                         ))}
                     </nav>
                 </div>
+            </div>
 
-                {/* Legal links */}
-                <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/5 pt-6">
+            {/* Legal links — full-width border */}
+            <div className="border-t border-white/5">
+                <div className="mx-auto flex max-w-350 flex-wrap items-center justify-center gap-x-5 gap-y-2 px-6 py-6">
                     {legalLinks.map((item, index) => (
                         <span key={item.href} className="flex items-center gap-5">
                             <Link
