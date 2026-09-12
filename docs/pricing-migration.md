@@ -30,9 +30,15 @@ NEXT_PUBLIC_SANITY_PROJECT_ID=qh2sxz0g SANITY_DATASET=production node scripts/mi
 NEXT_PUBLIC_SANITY_PROJECT_ID=qh2sxz0g SANITY_DATASET=production node scripts/migrate-pricing.mjs --apply
 ```
 
+Une session Sanity CLI authentifiée peut être utilisée sans manipuler directement le jeton :
+
+```sh
+NEXT_PUBLIC_SANITY_PROJECT_ID=qh2sxz0g SANITY_DATASET=production pnpm exec sanity exec scripts/migrate-pricing.mjs --with-user-token -- --apply --cli-user-token
+```
+
 Le script refuse les offres sources manquantes et les brouillons existants, sauvegarde les documents originaux dans `.sanity-backups/`, puis applique une transaction atomique avec contrôle des révisions. Il refuse de remplacer une maintenance déjà existante : une seconde exécution ne peut donc pas écraser des retouches éditoriales. Une simulation sans jeton ne peut voir que les documents accessibles publiquement ; l’exécution avec un jeton éditeur vérifie aussi les brouillons.
 
-La page d’accueil est générée statiquement : après application de la migration, relancer le build et le déploiement de l’application pour rendre les nouveaux montants visibles. Aucune écriture dans Sanity n’a été effectuée pendant l’implémentation.
+La migration a été appliquée au dataset `production` le 12 septembre 2026 avec la session Sanity CLI authentifiée. Les documents précédents ont été sauvegardés localement dans `.sanity-backups/pricing-1789236577511.json`. La page d’accueil étant générée statiquement, relancer le build et le déploiement de l’application pour rendre les nouveaux montants visibles en production.
 
 ## Fichiers concernés
 

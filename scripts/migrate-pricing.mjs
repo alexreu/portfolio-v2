@@ -1,21 +1,30 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createClient } from "@sanity/client";
+import { getCliClient } from "sanity/cli";
 
 const apply = process.argv.includes("--apply");
+const useCliUserToken = process.argv.includes("--cli-user-token");
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.SANITY_DATASET;
 if (!projectId || !dataset)
     throw new Error("Set NEXT_PUBLIC_SANITY_PROJECT_ID and SANITY_DATASET explicitly.");
-if (apply && !process.env.SANITY_API_WRITE_TOKEN)
-    throw new Error("--apply requires SANITY_API_WRITE_TOKEN.");
-const client = createClient({
-    projectId,
-    dataset,
-    apiVersion: "2023-05-03",
-    useCdn: false,
-    token: process.env.SANITY_API_WRITE_TOKEN,
-    perspective: "raw",
-});
+if (apply && !process.env.SANITY_API_WRITE_TOKEN && !useCliUserToken)
+    throw new Error("--apply requires SANITY_API_WRITE_TOKEN or --cli-user-token.");
+const client = useCliUserToken
+    ? getCliClient({ apiVersion: "2023-05-03" }).withConfig({
+          projectId,
+          dataset,
+          useCdn: false,
+          perspective: "raw",
+      })
+    : createClient({
+          projectId,
+          dataset,
+          apiVersion: "2023-05-03",
+          useCdn: false,
+          token: process.env.SANITY_API_WRITE_TOKEN,
+          perspective: "raw",
+      });
 const content = JSON.parse(
     await readFile(new URL("../content/pricing.json", import.meta.url), "utf8"),
 );
