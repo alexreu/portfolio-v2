@@ -3,6 +3,12 @@ import { groq } from "next-sanity";
 import client from "./client";
 import type { HomepageData, PricingPlan, Service, SiteSettings, SkillCategory } from "./types";
 
+// Shared projection keeps the standalone and homepage queries in sync.
+const pricingFields = groq`_id, name, subtitle, description, priceType, price, priceCustom,
+    startingFrom, minimumBudget, monthlyFee, commitment, isPopular, icon,
+    highlights, contextLabel, context,
+    featureCategories[] { categoryName, items }, ctaText, order`;
+
 /**
  * Get site settings (singleton)
  */
@@ -55,31 +61,9 @@ export const getServices = async (): Promise<Service[]> => {
  * Get all pricing plans
  */
 export const getPricingPlans = async (): Promise<PricingPlan[]> => {
-    return client.fetch(groq`*[_type == "pricingPlan"] | order(order asc) {
-        _id,
-        name,
-        subtitle,
-        description,
-        priceType,
-        price,
-        priceCustom,
-        startingFrom,
-        minimumBudget,
-        monthlyFee,
-        commitment,
-        isPopular,
-        icon,
-        featureCategories[] {
-            categoryName,
-            items
-        },
-        featureIcons[] {
-            icon,
-            label
-        },
-        ctaText,
-        order
-    }`);
+    return client.fetch(
+        groq`*[_type == "pricingPlan" && archived != true] | order(order asc) {${pricingFields}}`,
+    );
 };
 
 /**
@@ -143,29 +127,10 @@ export const getHomepageData = async (): Promise<HomepageData> => {
             features,
             order
         },
-        "pricingPlans": *[_type == "pricingPlan"] | order(order asc) {
-            _id,
-            name,
-            subtitle,
-            description,
-            priceType,
-            price,
-            priceCustom,
-            minimumBudget,
-            monthlyFee,
-            commitment,
-            isPopular,
-            icon,
-            featureCategories[] {
-                categoryName,
-                items
-            },
-            featureIcons[] {
-                icon,
-                label
-            },
-            ctaText,
-            order
+        "pricingPlans": *[_type == "pricingPlan" && archived != true] | order(order asc) {${pricingFields}},
+        "maintenance": *[_type == "maintenanceSection" && _id == "maintenanceSection"][0] {
+            _id, title, description, footerNote,
+            plans[] { _key, name, price, summary, detailsIntro, features }
         },
         "skillCategories": *[_type == "skillCategory"] | order(order asc) {
             _id,

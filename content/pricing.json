@@ -1,0 +1,210 @@
+{
+    "offers": [
+        {
+            "_id": "0f38ee6c-7021-42ce-aa72-d68d71819845",
+            "_type": "pricingPlan",
+            "name": "Site Vitrine",
+            "subtitle": "Une présence en ligne qui inspire confiance.",
+            "description": "Un site moderne, rapide et sur mesure pour présenter votre activité et convertir vos visiteurs en clients.",
+            "priceType": "fixed",
+            "price": 1490,
+            "startingFrom": true,
+            "isPopular": false,
+            "icon": "Layers",
+            "highlights": [
+                "Jusqu’à 5 pages",
+                "Design personnalisé",
+                "Responsive",
+                "SEO technique",
+                "Formulaire de contact",
+                "Analytics",
+                "Mise en ligne",
+                "30 jours de garantie corrective"
+            ],
+            "contextLabel": "Options",
+            "context": "CMS, blog, multilingue, réservation, SEO local.",
+            "ctaText": "Parler de mon site",
+            "order": 0,
+            "featureCategories": [
+                {
+                    "_key": "detail-0",
+                    "categoryName": "Livraison et accompagnement",
+                    "items": [
+                        "Développement Next.js / React",
+                        "Métadonnées, OpenGraph, sitemap et robots.txt",
+                        "Optimisation des images et des performances",
+                        "Configuration du domaine et HTTPS",
+                        "2 séries de retours et formation rapide"
+                    ],
+                    "_type": "object"
+                },
+                {
+                    "_key": "detail-1",
+                    "categoryName": "Options disponibles",
+                    "items": [
+                        "CMS Sanity : +290 €",
+                        "Page supplémentaire : +120 €",
+                        "Blog / actualités : +390 €",
+                        "Multilingue : à partir de +350 €",
+                        "Réservation / calendrier : à partir de +390 €",
+                        "SEO local avancé : +390 €"
+                    ],
+                    "_type": "object"
+                }
+            ],
+            "archived": false
+        },
+        {
+            "_id": "a8458b61-17e8-4135-9fe9-053a729e0a38",
+            "_type": "pricingPlan",
+            "name": "E-commerce",
+            "subtitle": "Votre boutique en ligne, pensée pour vendre.",
+            "description": "Une boutique performante et simple à gérer pour vendre vos produits et développer votre activité en ligne.",
+            "priceType": "fixed",
+            "price": 2990,
+            "startingFrom": true,
+            "isPopular": false,
+            "icon": "Sparkles",
+            "highlights": [
+                "Jusqu’à 20 produits",
+                "Paiement sécurisé",
+                "Panier et commandes",
+                "Gestion des stocks",
+                "Comptes clients",
+                "SEO e-commerce",
+                "Analytics",
+                "Catalogue produits"
+            ],
+            "contextLabel": "Options",
+            "context": "Click & Collect, abonnements, fidélité, ERP, transporteurs.",
+            "ctaText": "Parler de ma boutique",
+            "order": 1,
+            "featureCategories": [
+                {
+                    "_key": "detail-0",
+                    "categoryName": "Votre boutique",
+                    "items": [
+                        "Catégories, collections, variantes et recherche",
+                        "Codes promotionnels simples et emails transactionnels",
+                        "Optimisation des performances et données structurées produits",
+                        "Configuration du domaine et mise en production",
+                        "Formation et 30 jours de garantie corrective"
+                    ],
+                    "_type": "object"
+                },
+                {
+                    "_key": "detail-1",
+                    "categoryName": "Options disponibles",
+                    "items": [
+                        "Produits supplémentaires : +100 € par tranche de 20",
+                        "Import catalogue : à partir de +250 €",
+                        "Click & Collect : +290 €",
+                        "Abonnements : à partir de +490 €",
+                        "Fidélité et transporteurs : à partir de +390 €",
+                        "Connexion caisse / ERP : sur devis"
+                    ],
+                    "_type": "object"
+                }
+            ],
+            "archived": false
+        },
+        {
+            "_id": "e92f5539-bbe0-4db0-8461-7abfc077ce8d",
+            "_type": "pricingPlan",
+            "name": "Développement sur mesure",
+            "subtitle": "Des outils conçus autour de votre métier.",
+            "description": "Applications web, API, dashboards ou SaaS développés sur mesure pour répondre à vos besoins spécifiques.",
+            "priceType": "fixed",
+            "price": 4500,
+            "startingFrom": true,
+            "isPopular": false,
+            "icon": "Zap",
+            "highlights": [
+                "Front-end React / Next.js",
+                "API et base de données",
+                "Authentification",
+                "Dashboard",
+                "Intégrations externes",
+                "Tests",
+                "Déploiement",
+                "Architecture évolutive"
+            ],
+            "contextLabel": "Pour",
+            "context": "SaaS, outils métier, espaces clients, plateformes et automatisations.",
+            "ctaText": "Parler de mon projet",
+            "order": 2,
+            "featureCategories": [
+                {
+                    "_key": "detail-0",
+                    "categoryName": "Selon les besoins du projet",
+                    "items": [
+                        "Audit fonctionnel, UX/UI et architecture technique",
+                        "API Symfony / API Platform et base de données",
+                        "Gestion des utilisateurs et des rôles",
+                        "Tests automatisés, CI/CD et Docker",
+                        "Documentation technique et mise en production",
+                        "Estimation détaillée après échange sur vos besoins"
+                    ],
+                    "_type": "object"
+                }
+            ],
+            "archived": false
+        }
+    ],
+    "maintenance": {
+        "_id": "maintenanceSection",
+        "_type": "maintenanceSection",
+        "title": "Votre projet reste entre de bonnes mains.",
+        "description": "Hébergement, mises à jour, monitoring et accompagnement technique pour garder votre site fiable et performant.",
+        "plans": [
+            {
+                "_key": "essential",
+                "name": "Essentiel",
+                "price": 59,
+                "summary": "Pour les sites vitrines nécessitant un suivi technique régulier.",
+                "features": [
+                    "Hébergement et certificat HTTPS",
+                    "Surveillance de la disponibilité",
+                    "Mises à jour techniques",
+                    "Sauvegardes lorsque nécessaire",
+                    "Correction des anomalies liées au site",
+                    "Support par email"
+                ],
+                "_type": "object"
+            },
+            {
+                "_key": "serenity",
+                "name": "Sérénité",
+                "price": 89,
+                "summary": "Pour faire évoluer régulièrement votre site.",
+                "detailsIntro": "Tout Essentiel, avec :",
+                "features": [
+                    "Jusqu’à 1 h d’intervention par mois",
+                    "Petites modifications de contenu",
+                    "Ajout de photos ou réalisations",
+                    "Petites évolutions",
+                    "Surveillance des performances",
+                    "Support prioritaire"
+                ],
+                "_type": "object"
+            },
+            {
+                "_key": "business",
+                "name": "Business",
+                "price": 129,
+                "summary": "Pour les boutiques et applications plus critiques.",
+                "detailsIntro": "Tout Sérénité, avec :",
+                "features": [
+                    "Jusqu’à 2 h d’intervention au total par mois",
+                    "Monitoring renforcé",
+                    "Surveillance des API et fonctions critiques",
+                    "Maintenance préventive",
+                    "Suivi des dépendances",
+                    "Intervention prioritaire en cas d’incident"
+                ],
+                "_type": "object"
+            }
+        ],
+        "footerNote": "Les heures non utilisées ne sont pas reportables. Les nouvelles fonctionnalités et évolutions importantes font l’objet d’un devis séparé. Les licences, abonnements et services tiers peuvent être facturés séparément."
+    }
+}

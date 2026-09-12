@@ -11,6 +11,34 @@ const pricingPlan = defineType({
     icon: CircleDollarSign,
     fields: [
         defineField({
+            name: "archived",
+            title: "Archiver cette offre",
+            type: "boolean",
+            initialValue: false,
+        }),
+        defineField({
+            name: "highlights",
+            title: "Points visibles sur la carte",
+            description:
+                "8 points courts maximum. Les détails restent dans les catégories ci-dessous.",
+            type: "array",
+            of: [{ type: "string", validation: (rule) => rule.required().max(65) }],
+            validation: (rule) => rule.required().min(1).max(8),
+        }),
+        defineField({
+            name: "contextLabel",
+            title: "Libellé du contexte",
+            type: "string",
+            initialValue: "Options",
+            validation: (rule) => rule.required().max(20),
+        }),
+        defineField({
+            name: "context",
+            title: "Options ou contexte",
+            type: "string",
+            validation: (rule) => rule.required().max(160),
+        }),
+        defineField({
             name: "name",
             title: "Nom du plan",
             type: "string",
@@ -20,12 +48,13 @@ const pricingPlan = defineType({
             name: "subtitle",
             title: "Sous-titre",
             type: "string",
-            description: "Ex: Le meilleur rapport qualité/prix",
+            validation: (rule) => rule.required().max(90),
         }),
         defineField({
             name: "description",
             title: "Description courte",
             type: "string",
+            validation: (rule) => rule.required().max(180),
         }),
         defineField({
             name: "priceType",
@@ -45,7 +74,14 @@ const pricingPlan = defineType({
             name: "price",
             title: "Prix (€)",
             type: "number",
-            validation: (rule) => rule.min(0),
+            validation: (rule) =>
+                rule
+                    .min(0)
+                    .custom((value, context) =>
+                        context.document?.priceType === "fixed" && typeof value !== "number"
+                            ? "Un montant est requis pour un prix fixe."
+                            : true,
+                    ),
             hidden: ({ parent }) => parent?.priceType !== "fixed",
         }),
         defineField({
@@ -103,7 +139,7 @@ const pricingPlan = defineType({
         }),
         defineField({
             name: "featureCategories",
-            title: "Catégories de fonctionnalités",
+            title: "Détails de l’offre (accordéon)",
             type: "array",
             of: [
                 defineArrayMember({
@@ -180,7 +216,8 @@ const pricingPlan = defineType({
             name: "ctaText",
             title: "Texte du bouton",
             type: "string",
-            initialValue: "En savoir plus",
+            initialValue: "Parler de mon projet",
+            validation: (rule) => rule.required().max(50),
         }),
         defineField({
             name: "order",
@@ -205,8 +242,7 @@ const pricingPlan = defineType({
             isPopular: "isPopular",
         },
         prepare({ title, priceType, price, priceCustom, isPopular }) {
-            const displayPrice =
-                priceType === "custom" ? (priceCustom || "Sur devis") : `${price}€`;
+            const displayPrice = priceType === "custom" ? priceCustom || "Sur devis" : `${price}€`;
             return {
                 title: `${title}${isPopular ? " ⭐" : ""}`,
                 subtitle: displayPrice,

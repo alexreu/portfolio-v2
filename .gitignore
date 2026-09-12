@@ -44,3 +44,6 @@ CLAUDE.md
 /.claude
 next-env.d.ts
 tsconfig.tsbuildinfo
+
+# Local Sanity migration backups
+.sanity-backups/

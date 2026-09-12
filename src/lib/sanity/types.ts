@@ -70,10 +70,28 @@ export type PricingPlan = {
     commitment?: string;
     isPopular: boolean;
     icon?: string;
-    featureCategories: FeatureCategory[];
+    highlights?: string[] | null;
+    contextLabel?: string;
+    context?: string;
+    featureCategories?: FeatureCategory[] | null;
     featureIcons?: FeatureIcon[];
     ctaText: string;
     order: number;
+};
+
+export type MaintenanceSection = {
+    _id: string;
+    title: string;
+    description: string;
+    plans: {
+        _key: string;
+        name: string;
+        price: number;
+        summary: string;
+        detailsIntro?: string;
+        features: string[];
+    }[];
+    footerNote: string;
 };
 
 // Skill Category
@@ -104,5 +122,6 @@ export type HomepageData = {
     settings: SiteSettings | null;
     services: Service[];
     pricingPlans: PricingPlan[];
+    maintenance: MaintenanceSection | null;
     skillCategories: SkillCategory[];
 };

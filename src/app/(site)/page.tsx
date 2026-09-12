@@ -13,6 +13,7 @@ export default async function Home() {
                 contactData={data.settings?.contact}
                 services={data.services}
                 pricingPlans={data.pricingPlans}
+                maintenance={data.maintenance}
                 skillCategories={data.skillCategories}
             />
         </>

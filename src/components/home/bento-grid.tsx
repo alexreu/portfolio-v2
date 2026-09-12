@@ -2,7 +2,13 @@
 
 import { motion } from "motion/react";
 
-import type { PricingPlan, Service, SiteSettings, SkillCategory } from "@/lib/sanity/types";
+import type {
+    MaintenanceSection,
+    PricingPlan,
+    Service,
+    SiteSettings,
+    SkillCategory,
+} from "@/lib/sanity/types";
 
 import { AboutCard } from "./about-card";
 import { ContactCard } from "./contact-card";
@@ -15,6 +21,7 @@ type BentoGridProps = {
     contactData?: SiteSettings["contact"] | null;
     services?: Service[];
     pricingPlans?: PricingPlan[];
+    maintenance?: MaintenanceSection | null;
     skillCategories?: SkillCategory[];
 };
 
@@ -23,6 +30,7 @@ export const BentoGrid = ({
     contactData,
     services,
     pricingPlans,
+    maintenance,
     skillCategories,
 }: BentoGridProps) => {
     return (
@@ -72,7 +80,7 @@ export const BentoGrid = ({
                     transition={{ duration: 0.5, delay: 0.35 }}
                     className="scroll-mt-24 md:col-span-2 lg:col-span-3"
                 >
-                    <PricingCard plans={pricingPlans} />
+                    <PricingCard plans={pricingPlans} maintenance={maintenance} />
                 </motion.div>
 
                 {/* Contact Section */}
