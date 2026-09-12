@@ -21,11 +21,11 @@ export const Maintenance = ({ data }: { data: MaintenanceSection }) => {
                 </h3>
                 <p className="text-sm leading-relaxed text-gray-400">{data.description}</p>
             </div>
-            <ul className="grid items-start overflow-hidden rounded-xl border border-white/10 bg-white/2 md:grid-cols-3">
+            <ul className="grid items-start gap-3 md:grid-cols-3">
                 {data.plans?.map((plan) => (
                     <li
                         key={plan._key}
-                        className="border-white/10 p-4 not-first:border-t md:not-first:border-t-0 md:not-first:border-l"
+                        className="rounded-xl border border-white/10 bg-white/2 p-4"
                     >
                         <div className="flex flex-wrap items-baseline justify-between gap-2">
                             <h4 className="text-sm font-medium text-white">{plan.name}</h4>
