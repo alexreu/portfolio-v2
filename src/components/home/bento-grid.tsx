@@ -64,9 +64,16 @@ export const BentoGrid = ({
                     <ServicesCard services={services} />
                 </motion.div>
 
-                <div className="md:col-span-2 lg:col-span-3">
+                <motion.div
+                    id="projets"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.5, delay: 0.15 }}
+                    className="scroll-mt-24 md:col-span-2 lg:col-span-3"
+                >
                     <ProjectsSection projects={projects} />
-                </div>
+                </motion.div>
 
                 {/* Skills Section */}
                 <motion.div
