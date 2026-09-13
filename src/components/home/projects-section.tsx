@@ -18,22 +18,20 @@ export function ProjectsSection({ projects }: { projects?: Project[] }) {
     return (
         <section id="projets" aria-labelledby="projects-heading" className="scroll-mt-28">
             <GlassCard className="p-4 md:p-10" hoverScale={!reducedMotion}>
-                <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
-                    <div className="space-y-3">
-                        <p className="text-primary text-xs font-semibold tracking-[0.2em] uppercase">
-                            Mes projets{" "}
-                            <span className="ml-3 text-gray-400">
-                                / {String(selection.length).padStart(2, "0")}
-                            </span>
-                        </p>
-                        <h2
-                            id="projects-heading"
-                            className="text-accent text-3xl font-semibold tracking-tight md:text-5xl"
-                        >
-                            Des idées. <span className="text-gray-400">Du concret.</span>
-                        </h2>
-                    </div>
-                    <p className="max-w-64 text-sm leading-relaxed text-gray-400">
+                <div className="mb-8 space-y-3 md:mb-10">
+                    <p className="text-primary text-sm font-semibold tracking-wider uppercase">
+                        Mes projets{" "}
+                        <span className="ml-3 text-gray-400">
+                            / {String(selection.length).padStart(2, "0")}
+                        </span>
+                    </p>
+                    <h2
+                        id="projects-heading"
+                        className="text-accent text-2xl font-bold md:text-4xl"
+                    >
+                        Des idées. <span className="text-primary">Du concret.</span>
+                    </h2>
+                    <p className="text-lg text-gray-300">
                         Une sélection d’interfaces conçues pour faire la différence.
                     </p>
                 </div>
