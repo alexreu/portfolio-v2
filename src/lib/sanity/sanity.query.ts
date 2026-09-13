@@ -90,7 +90,8 @@ export const getSkillCategories = async (): Promise<SkillCategory[]> => {
  * Use this for the main page to reduce API calls
  */
 export const getHomepageData = async (): Promise<HomepageData> => {
-    return client.fetch(groq`{
+    return client.fetch(
+        groq`{
         "projectCount": count(*[_type == "project"]),
         "projects": *[_type == "project" && archived != true] | order(order asc, _id asc) {
             _id, title, category, description, url, tags, order,
@@ -150,5 +151,6 @@ export const getHomepageData = async (): Promise<HomepageData> => {
             },
             order
         }
-    }`);
+    }`,
+    );
 };

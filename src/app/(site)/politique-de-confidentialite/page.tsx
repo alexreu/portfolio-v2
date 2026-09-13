@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 
-import {
-    LegalPageLayout,
-    LegalSection,
-} from "@/components/shared/legal-page-layout";
+import { LegalPageLayout, LegalSection } from "@/components/shared/legal-page-layout";
 
 export const metadata: Metadata = {
     title: "Politique de Confidentialité | AlexDevLab",
@@ -13,10 +10,7 @@ export const metadata: Metadata = {
 
 export default function PolitiqueDeConfidentialite() {
     return (
-        <LegalPageLayout
-            title="Politique de confidentialité"
-            lastUpdated="11 février 2026"
-        >
+        <LegalPageLayout title="Politique de confidentialité" lastUpdated="11 février 2026">
             <LegalSection number="1" title="Responsable du traitement">
                 <p>
                     Le responsable du traitement des données personnelles collectées sur le site
@@ -50,7 +44,9 @@ export default function PolitiqueDeConfidentialite() {
             </LegalSection>
 
             <LegalSection number="2" title="Données collectées">
-                <p>Nous collectons les données suivantes dans le cadre du fonctionnement du site :</p>
+                <p>
+                    Nous collectons les données suivantes dans le cadre du fonctionnement du site :
+                </p>
 
                 <h3 className="text-accent/90 mt-4 text-base font-semibold">
                     Formulaire de contact
@@ -65,16 +61,15 @@ export default function PolitiqueDeConfidentialite() {
                     Ce site utilise Vercel Analytics, une solution d&apos;analyse respectueuse de la
                     vie privée. Les données collectées sont anonymisées et agrégées : pages
                     visitées, durée de visite, type d&apos;appareil et pays d&apos;origine. Vercel
-                    Analytics{" "}
-                    <strong className="text-accent/80">ne dépose aucun cookie</strong> et ne
-                    collecte aucune donnée personnelle identifiable.
+                    Analytics <strong className="text-accent/80">ne dépose aucun cookie</strong> et
+                    ne collecte aucune donnée personnelle identifiable.
                 </p>
 
                 <h3 className="text-accent/90 mt-4 text-base font-semibold">Adresse IP</h3>
                 <p>
                     Votre adresse IP est utilisée temporairement (quelques minutes) dans le cadre du
-                    mécanisme de limitation de débit (rate limiting) pour protéger le site contre les
-                    abus. Cette donnée est stockée en mémoire volatile et n&apos;est jamais
+                    mécanisme de limitation de débit (rate limiting) pour protéger le site contre
+                    les abus. Cette donnée est stockée en mémoire volatile et n&apos;est jamais
                     enregistrée de manière persistante.
                 </p>
             </LegalSection>
@@ -139,12 +134,6 @@ export default function PolitiqueDeConfidentialite() {
                     <li>
                         <strong className="text-accent/80">Vercel Inc.</strong> (hébergement et
                         analytics) — États-Unis
-                    </li>
-                    <li>
-                        <strong className="text-accent/80">
-                            Postmark / ActiveCampaign LLC
-                        </strong>{" "}
-                        (envoi d&apos;emails via le formulaire de contact) — États-Unis
                     </li>
                 </ul>
                 <p>
@@ -225,10 +214,10 @@ export default function PolitiqueDeConfidentialite() {
 
             <LegalSection number="9" title="Modifications">
                 <p>
-                    Nous nous réservons le droit de modifier la présente politique de confidentialité
-                    à tout moment. Les modifications seront publiées sur cette page avec mise à jour
-                    de la date indiquée en haut du document. Nous vous invitons à consulter
-                    régulièrement cette page.
+                    Nous nous réservons le droit de modifier la présente politique de
+                    confidentialité à tout moment. Les modifications seront publiées sur cette page
+                    avec mise à jour de la date indiquée en haut du document. Nous vous invitons à
+                    consulter régulièrement cette page.
                 </p>
             </LegalSection>
 
