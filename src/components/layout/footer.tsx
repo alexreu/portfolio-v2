@@ -28,7 +28,7 @@ export const Footer = () => {
             <div className="mx-auto max-w-350 px-6 py-8">
                 <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
                     {/* Copyright */}
-                    <div className="text-sm text-gray-400">
+                    <div className="text-center text-sm text-gray-400 md:text-left">
                         Copyright © 2026 AlexDevLab | Designed by{" "}
                         <span className="text-primary font-semibold">AlexDevLab</span>
                     </div>
