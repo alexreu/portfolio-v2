@@ -9,6 +9,7 @@ export default async function Home() {
         <>
             <HeroSection data={data.settings?.hero} />
             <BentoGrid
+                projects={data.projectCount > 0 ? data.projects : undefined}
                 aboutData={data.settings?.about}
                 contactData={data.settings?.contact}
                 services={data.services}

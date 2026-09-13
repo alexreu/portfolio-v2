@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import type {
     MaintenanceSection,
     PricingPlan,
+    Project,
     Service,
     SiteSettings,
     SkillCategory,
@@ -13,10 +14,12 @@ import type {
 import { AboutCard } from "./about-card";
 import { ContactCard } from "./contact-card";
 import { PricingCard } from "./pricing-card";
+import { ProjectsSection } from "./projects-section";
 import { ServicesCard } from "./services-card";
 import { SkillsCard } from "./skill-cards";
 
 type BentoGridProps = {
+    projects?: Project[];
     aboutData?: SiteSettings["about"] | null;
     contactData?: SiteSettings["contact"] | null;
     services?: Service[];
@@ -26,6 +29,7 @@ type BentoGridProps = {
 };
 
 export const BentoGrid = ({
+    projects,
     aboutData,
     contactData,
     services,
@@ -59,6 +63,10 @@ export const BentoGrid = ({
                 >
                     <ServicesCard services={services} />
                 </motion.div>
+
+                <div className="md:col-span-2 lg:col-span-3">
+                    <ProjectsSection projects={projects} />
+                </div>
 
                 {/* Skills Section */}
                 <motion.div
