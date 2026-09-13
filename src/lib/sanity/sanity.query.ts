@@ -91,6 +91,11 @@ export const getSkillCategories = async (): Promise<SkillCategory[]> => {
  */
 export const getHomepageData = async (): Promise<HomepageData> => {
     return client.fetch(groq`{
+        "projectCount": count(*[_type == "project"]),
+        "projects": *[_type == "project" && archived != true] | order(order asc, _id asc) {
+            _id, title, category, description, url, tags, order,
+            cover {alt, "image": asset->url}
+        },
         "settings": *[_type == "siteSettings"][0]{
             _id,
             hero {

@@ -119,9 +119,22 @@ export type SanityImage = {
 
 // Homepage data (combined)
 export type HomepageData = {
+    projects: Project[];
+    projectCount: number;
     settings: SiteSettings | null;
     services: Service[];
     pricingPlans: PricingPlan[];
     maintenance: MaintenanceSection | null;
     skillCategories: SkillCategory[];
+};
+
+export type Project = {
+    _id: string;
+    title: string;
+    category: string;
+    description: string;
+    url: string;
+    cover?: SanityImage | null;
+    tags?: string[] | null;
+    order: number;
 };

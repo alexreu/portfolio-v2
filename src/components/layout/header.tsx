@@ -9,6 +9,7 @@ const navItems = [
     { label: "Accueil", href: "#accueil" },
     { label: "À propos", href: "#a-propos" },
     { label: "Services", href: "#services" },
+    { label: "Projets", href: "#projets" },
     { label: "Tarifs", href: "#tarifs" },
 ];
 
@@ -37,7 +38,10 @@ export const Header = () => {
                 </motion.a>
 
                 {/* Navigation */}
-                <nav aria-label="Navigation principale" className="hidden items-center gap-8 md:flex">
+                <nav
+                    aria-label="Navigation principale"
+                    className="hidden items-center gap-4 md:flex lg:gap-8"
+                >
                     {navItems.map((item, index) => (
                         <motion.a
                             key={item.href}
