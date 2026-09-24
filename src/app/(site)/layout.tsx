@@ -19,7 +19,7 @@ export default function SiteLayout({ children }: Props) {
             <div className="relative z-10">
                 <Header />
                 <main className="mx-auto max-w-350 space-y-8 px-6 py-8">{children}</main>
-                <Footer />
+                <Footer renderedYear={new Date().getFullYear()} />
             </div>
             <BackToTop />
             <Toaster />

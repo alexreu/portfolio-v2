@@ -1,11 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
+
+import { CurrentYear } from "./current-year";
 
 const navItems = [
     { label: "Accueil", href: "#accueil" },
-    { label: "A propos", href: "#a-propos" },
+    { label: "À propos", href: "#a-propos" },
     { label: "Services", href: "#services" },
     { label: "Projets", href: "#projets" },
     { label: "Tarifs", href: "#tarifs" },
@@ -17,7 +20,14 @@ const legalLinks = [
     { label: "Cookies", href: "/politique-de-cookies" },
 ];
 
-export const Footer = () => {
+type FooterProps = {
+    renderedYear: number;
+};
+
+export const Footer = ({ renderedYear }: FooterProps) => {
+    const pathname = usePathname();
+    const sectionHref = (hash: string) => (pathname === "/" ? hash : `/${hash}`);
+
     return (
         <motion.footer
             initial={{ opacity: 0 }}
@@ -29,8 +39,8 @@ export const Footer = () => {
                 <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
                     {/* Copyright */}
                     <div className="text-center text-sm text-gray-400 md:text-left">
-                        Copyright © 2026 AlexDevLab | Designed by{" "}
-                        <span className="text-primary font-semibold">AlexDevLab</span>
+                        Copyright © <CurrentYear renderedYear={renderedYear} /> AlexDevLab |
+                        Designed by <span className="text-primary font-semibold">AlexDevLab</span>
                     </div>
 
                     {/* Footer Navigation */}
@@ -41,7 +51,7 @@ export const Footer = () => {
                         {navItems.map((item) => (
                             <motion.a
                                 key={item.href}
-                                href={item.href}
+                                href={sectionHref(item.href)}
                                 whileHover={{ y: -2 }}
                                 className="text-sm text-gray-400 transition-colors hover:text-white"
                             >
