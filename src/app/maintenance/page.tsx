@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import { Wrench } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "Maintenance en cours | AlexDevLab",
+    title: "Maintenance en cours",
     description: "Le site est actuellement en maintenance. Nous serons de retour très bientôt.",
-    robots: "noindex, nofollow",
+    robots: { index: false, follow: false },
 };
 
 export default function MaintenancePage() {

@@ -1,19 +1,25 @@
 import type { Metadata } from "next";
 
+import { buildPageJsonLd, buildPageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 import {
     LegalPageLayout,
     LegalSection,
 } from "@/components/shared/legal-page-layout";
 
-export const metadata: Metadata = {
-    title: "Politique de Cookies | AlexDevLab",
+const page = {
+    title: "Politique de cookies",
     description:
-        "Politique de cookies du site alexdevlab.com — utilisation des cookies, Vercel Analytics et gestion de vos préférences.",
+        "Politique de cookies du site alexdevlab.com : cookies utilisés, Vercel Analytics et gestion de vos préférences.",
+    path: "/politique-de-cookies",
 };
+
+export const metadata: Metadata = buildPageMetadata(page);
 
 export default function PolitiqueDeCookies() {
     return (
         <LegalPageLayout title="Politique de cookies" lastUpdated="11 février 2026">
+            <JsonLd data={buildPageJsonLd(page)} />
             <LegalSection number="1" title="Qu'est-ce qu'un cookie ?">
                 <p>
                     Un cookie est un petit fichier texte déposé sur votre terminal (ordinateur,

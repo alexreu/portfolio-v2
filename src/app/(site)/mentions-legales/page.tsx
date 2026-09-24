@@ -1,19 +1,25 @@
 import type { Metadata } from "next";
 
+import { buildPageJsonLd, buildPageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 import {
     LegalPageLayout,
     LegalSection,
 } from "@/components/shared/legal-page-layout";
 
-export const metadata: Metadata = {
-    title: "Mentions Légales | AlexDevLab",
+const page = {
+    title: "Mentions légales",
     description:
-        "Mentions légales du site alexdevlab.com — éditeur, hébergement, propriété intellectuelle et droit applicable.",
+        "Mentions légales du site alexdevlab.com : éditeur, hébergement, propriété intellectuelle et droit applicable.",
+    path: "/mentions-legales",
 };
+
+export const metadata: Metadata = buildPageMetadata(page);
 
 export default function MentionsLegales() {
     return (
         <LegalPageLayout title="Mentions légales" lastUpdated="11 février 2026">
+            <JsonLd data={buildPageJsonLd(page)} />
             <LegalSection number="1" title="Éditeur du site">
                 <p>Le site alexdevlab.com est édité par :</p>
                 <ul className="list-inside list-disc space-y-1 pl-1">

@@ -1,16 +1,22 @@
 import type { Metadata } from "next";
 
+import { buildPageJsonLd, buildPageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
 import { LegalPageLayout, LegalSection } from "@/components/shared/legal-page-layout";
 
-export const metadata: Metadata = {
-    title: "Politique de Confidentialité | AlexDevLab",
+const page = {
+    title: "Politique de confidentialité",
     description:
-        "Politique de confidentialité du site alexdevlab.com — traitement des données personnelles, droits RGPD et cookies.",
+        "Politique de confidentialité du site alexdevlab.com : traitement des données personnelles, droits RGPD et cookies.",
+    path: "/politique-de-confidentialite",
 };
+
+export const metadata: Metadata = buildPageMetadata(page);
 
 export default function PolitiqueDeConfidentialite() {
     return (
         <LegalPageLayout title="Politique de confidentialité" lastUpdated="11 février 2026">
+            <JsonLd data={buildPageJsonLd(page)} />
             <LegalSection number="1" title="Responsable du traitement">
                 <p>
                     Le responsable du traitement des données personnelles collectées sur le site

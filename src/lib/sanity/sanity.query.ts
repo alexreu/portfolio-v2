@@ -154,3 +154,12 @@ export const getHomepageData = async (): Promise<HomepageData> => {
     }`,
     );
 };
+
+/**
+ * Most recent published edit, used as the homepage `lastmod` in the sitemap
+ */
+export const getLastContentUpdate = async (): Promise<string | null> => {
+    return client.fetch(
+        groq`*[!(_id in path("drafts.**")) && _type in ["siteSettings", "service", "pricingPlan", "maintenanceSection", "skillCategory", "project"]] | order(_updatedAt desc)[0]._updatedAt`,
+    );
+};

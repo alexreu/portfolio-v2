@@ -8,7 +8,10 @@ export async function POST(request: NextRequest) {
         return Response.json({ message: "Invalid Secret" }, { status: 401 });
     }
 
-    revalidatePath("/");
+    // Every route built from Sanity content, so crawlers never read a stale copy.
+    for (const path of ["/", "/sitemap.xml", "/llms.txt"]) {
+        revalidatePath(path);
+    }
 
     return Response.json({ revalidated: true, timestamp: Date.now() });
 }

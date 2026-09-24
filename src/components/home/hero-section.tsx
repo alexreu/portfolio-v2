@@ -73,7 +73,10 @@ export const HeroSection = ({ data }: HeroSectionProps) => {
                                     className="text-primary relative inline-block"
                                 >
                                     {hero.subtitle}
-                                    <div className="bg-primary/10 absolute -inset-2 -z-10 blur-3xl" />
+                                    <span
+                                        aria-hidden="true"
+                                        className="bg-primary/10 absolute -inset-2 -z-10 blur-3xl"
+                                    />
                                 </motion.span>
                             </motion.h1>
                         </div>

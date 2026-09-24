@@ -1,7 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
-export const alt = "AlexDevLab - Developpeur Front-End Freelance a la Reunion";
+export const alt = "AlexDevLab, développeur front-end freelance à La Réunion";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -57,6 +56,7 @@ export default function OgImage() {
                 >
                     <div
                         style={{
+                            display: "flex",
                             fontSize: "48px",
                             fontWeight: 800,
                             color: "#F5F5F5",
@@ -72,6 +72,8 @@ export default function OgImage() {
                 {/* Title */}
                 <div
                     style={{
+                        display: "flex",
+                        gap: "16px",
                         fontSize: "56px",
                         fontWeight: 700,
                         color: "#F5F5F5",
@@ -81,9 +83,9 @@ export default function OgImage() {
                         marginBottom: "24px",
                     }}
                 >
-                    Developpeur{" "}
+                    <span>Développeur</span>
                     <span style={{ color: "#FF4D4D" }}>Front-End</span>
-                    {" "}Freelance
+                    <span>Freelance</span>
                 </div>
 
                 {/* Subtitle */}
@@ -113,7 +115,7 @@ export default function OgImage() {
                 >
                     <span>alexdevlab.com</span>
                     <span style={{ color: "#FF4D4D" }}>|</span>
-                    <span>Ile de la Reunion</span>
+                    <span>La Réunion</span>
                     <span style={{ color: "#FF4D4D" }}>|</span>
                     <span>Devis gratuit</span>
                 </div>
