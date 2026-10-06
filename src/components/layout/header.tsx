@@ -38,7 +38,7 @@ const toneStyles = {
         panelLink: "text-gray-200 hover:bg-white/5 hover:text-primary",
     },
     ivory: {
-        header: "bg-wed-ivory/85 border-wed-line",
+        header: "bg-wed-ivory border-wed-line",
         brand: "text-wed-ink",
         logoMark: "text-wed-gold",
         logoGlow: "bg-wed-gold-soft/30",
