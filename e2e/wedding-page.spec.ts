@@ -1,7 +1,9 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("page /mariage", () => {
-    test("« Choisir Intime » coche la formule sans recharger ni vider le formulaire", async ({ page }) => {
+    test("« Choisir Intime » coche la formule sans recharger ni vider le formulaire", async ({
+        page,
+    }) => {
         await page.goto("/mariage");
         const names = page.getByLabel("Vos prénoms");
         await names.fill("Camille & Hugo");
