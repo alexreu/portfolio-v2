@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Viewport } from "next";
 import { Cormorant_Garamond } from "next/font/google";
 
 import { Toaster } from "@/components/ui/toaster";
@@ -14,6 +15,12 @@ const cormorant = Cormorant_Garamond({
     variable: "--font-cormorant",
 });
 
+/** Browser chrome matches the ivory page instead of the dark portfolio. */
+export const viewport: Viewport = {
+    themeColor: "#F4F0E8",
+    colorScheme: "light",
+};
+
 type Props = {
     children: ReactNode;
 };
@@ -23,9 +30,9 @@ export default function WeddingLayout({ children }: Props) {
     return (
         <SmoothScroll>
             <div className={`${cormorant.variable} relative z-10`}>
-                <Header />
+                <Header tone="ivory" />
                 <main className="bg-wed-ivory text-wed-ink">{children}</main>
-                <Footer renderedYear={new Date().getFullYear()} />
+                <Footer renderedYear={new Date().getFullYear()} tone="ivory" />
             </div>
             <Toaster />
         </SmoothScroll>

@@ -5,7 +5,14 @@ import { usePathname } from "next/navigation";
 import { Code2, Menu, X } from "lucide-react";
 import { motion } from "motion/react";
 
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+
+/** On the wedding page, "contact" means that page's own form. */
+const contactItem = (tone: HeaderTone, sectionHref: (hash: string) => string) =>
+    tone === "ivory"
+        ? { label: "Parler de mon mariage", href: "#contact" }
+        : { label: "Contact", href: sectionHref("#contact") };
 
 const navItems = [
     { label: "Accueil", href: "#accueil" },
@@ -15,7 +22,36 @@ const navItems = [
     { label: "Tarifs", href: "#tarifs" },
 ];
 
-export const Header = () => {
+export type HeaderTone = "dark" | "ivory";
+
+/** Class sets per surface: the wedding page frames its ivory content in ivory too. */
+const toneStyles = {
+    dark: {
+        header: "bg-background/80 border-white/5",
+        brand: "text-accent",
+        link: "text-gray-300 hover:text-white",
+        underline: "bg-primary",
+        menuButton: "border-white/10 bg-white/5 text-white hover:bg-white/10",
+        panel: "bg-background border-white/10",
+        panelLink: "text-gray-200 hover:bg-white/5 hover:text-primary",
+    },
+    ivory: {
+        header: "bg-wed-ivory/85 border-wed-line",
+        brand: "text-wed-ink",
+        link: "text-wed-ink-soft hover:text-wed-ink",
+        underline: "bg-wed-gold",
+        menuButton: "border-wed-line bg-wed-paper text-wed-ink hover:bg-wed-line-soft",
+        panel: "bg-wed-ivory border-wed-line",
+        panelLink: "text-wed-ink-soft hover:bg-wed-paper hover:text-wed-ink",
+    },
+} as const satisfies Record<HeaderTone, Record<string, string>>;
+
+type HeaderProps = {
+    tone?: HeaderTone;
+};
+
+export const Header = ({ tone = "dark" }: HeaderProps) => {
+    const styles = toneStyles[tone];
     const [menuOpen, setMenuOpen] = useState(false);
     const menuTrigger = useRef<HTMLButtonElement>(null);
     const pathname = usePathname();
@@ -41,7 +77,7 @@ export const Header = () => {
                     menuTrigger.current?.focus();
                 }
             }}
-            className="bg-background/80 sticky top-0 z-50 border-b border-white/5 backdrop-blur-xl"
+            className={cn("sticky top-0 z-50 border-b backdrop-blur-xl", styles.header)}
         >
             <div className="mx-auto flex max-w-350 items-center justify-between px-6 py-4">
                 {/* Logo */}
@@ -56,7 +92,7 @@ export const Header = () => {
                         <Code2 className="text-primary h-7 w-7" />
                         <div className="bg-primary/20 absolute -inset-1 -z-10 rounded-full blur-md" />
                     </div>
-                    <span className="text-accent text-xl font-semibold tracking-tight">
+                    <span className={cn("text-xl font-semibold tracking-tight", styles.brand)}>
                         AleX<span className="text-primary">Dev</span>Lab
                     </span>
                 </motion.a>
@@ -74,23 +110,37 @@ export const Header = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 + 0.3 }}
                             whileHover={{ y: -2 }}
-                            className="group relative text-sm text-gray-300 transition-colors hover:text-white"
+                            className={cn("group relative text-sm transition-colors", styles.link)}
                         >
                             {item.label}
-                            <span className="bg-primary absolute -bottom-1 left-0 h-0.5 w-0 transition-all duration-300 group-hover:w-full" />
+                            <span
+                                className={cn(
+                                    "absolute -bottom-1 left-0 h-0.5 w-0 transition-all duration-300 group-hover:w-full",
+                                    styles.underline,
+                                )}
+                            />
                         </motion.a>
                     ))}
                 </nav>
 
                 {/* CTA Button */}
-                <Button
-                    variant="primary"
-                    size="sm"
-                    className="shadow-glow-sm hover:shadow-glow-md hidden md:inline-flex"
-                    asChild
-                >
-                    <a href={sectionHref("#contact")}>Let&apos;s Talk</a>
-                </Button>
+                {tone === "ivory" ? (
+                    <a
+                        href="#contact"
+                        className="bg-wed-ink text-wed-paper hidden min-h-10 items-center rounded-sm px-4 text-sm font-medium transition-colors hover:bg-black md:inline-flex"
+                    >
+                        Parler de mon mariage
+                    </a>
+                ) : (
+                    <Button
+                        variant="primary"
+                        size="sm"
+                        className="shadow-glow-sm hover:shadow-glow-md hidden md:inline-flex"
+                        asChild
+                    >
+                        <a href={sectionHref("#contact")}>Let&apos;s Talk</a>
+                    </Button>
+                )}
                 <button
                     ref={menuTrigger}
                     type="button"
@@ -98,7 +148,10 @@ export const Header = () => {
                     aria-expanded={menuOpen}
                     aria-controls="mobile-navigation"
                     onClick={() => setMenuOpen((open) => !open)}
-                    className="focus-visible:ring-primary flex size-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white hover:bg-white/10 focus-visible:ring-2 md:hidden"
+                    className={cn(
+                        "focus-visible:ring-primary flex size-11 items-center justify-center rounded-xl border focus-visible:ring-2 md:hidden",
+                        styles.menuButton,
+                    )}
                 >
                     {menuOpen ? (
                         <X aria-hidden="true" className="size-5" />
@@ -118,15 +171,24 @@ export const Header = () => {
                     )
                         setMenuOpen(false);
                 }}
-                className="bg-background absolute inset-x-0 top-full max-h-[calc(100dvh-5rem)] overflow-y-auto border-b border-white/10 px-6 py-4 shadow-2xl backdrop-blur-xl md:hidden"
+                className={cn(
+                    "absolute inset-x-0 top-full max-h-[calc(100dvh-5rem)] overflow-y-auto border-b px-6 py-4 shadow-2xl backdrop-blur-xl md:hidden",
+                    styles.panel,
+                )}
             >
                 <ul className="space-y-1">
-                    {[...navItems, { label: "Contact", href: "#contact" }].map((item) => (
+                    {[
+                        ...navItems.map((item) => ({ ...item, href: sectionHref(item.href) })),
+                        contactItem(tone, sectionHref),
+                    ].map((item) => (
                         <li key={item.href}>
                             <a
-                                href={sectionHref(item.href)}
+                                href={item.href}
                                 onClick={() => setMenuOpen(false)}
-                                className="hover:text-primary focus-visible:ring-primary flex min-h-12 items-center rounded-lg px-4 text-base text-gray-200 transition-colors hover:bg-white/5 focus-visible:ring-2 motion-reduce:transition-none"
+                                className={cn(
+                                    "focus-visible:ring-primary flex min-h-12 items-center rounded-lg px-4 text-base transition-colors focus-visible:ring-2 motion-reduce:transition-none",
+                                    styles.panelLink,
+                                )}
                             >
                                 {item.label}
                             </a>
