@@ -412,7 +412,7 @@ la galerie.
 
 ```
                 ┌───────────────────────────────┐
-                │  Portfolio (repo actuel)      │  alexdevlab.fr
+                │  Portfolio (repo actuel)      │  alexdevlab.com
                 │  Next.js 16 · Vercel · Sanity │  /mariage, carte bento, démo
                 └──────────────┬────────────────┘
                                │ lien « voir la démo »
@@ -422,8 +422,8 @@ la galerie.
                 │                                                       │
                 │  proxy (ex-middleware) : Host → tenant                │
                 │   camille-et-hugo.fr          → wedding « camille-hugo »
-                │   demo.mariage.alexdevlab.fr  → wedding « demo »      │
-                │   app.mariage.alexdevlab.fr   → tableau de bord       │
+                │   demo.mariage.alexdevlab.com  → wedding « demo »      │
+                │   app.mariage.alexdevlab.com   → tableau de bord       │
                 └──┬──────────┬──────────┬───────────┬──────────┬───────┘
                    │          │          │           │          │
               Sanity      Neon       Cloudflare    Email     Upstash
@@ -477,9 +477,9 @@ N mises à jour de dépendances. Le multi-tenant par domaine est le modèle
   enregistrements DNS A/CNAME posés automatiquement, SSL automatique.
 - **Titulaire du domaine** : AlexDevLab par défaut (renouvellement maîtrisé),
   transfert au couple sur demande à la fin du contrat. À écrire dans les CGV.
-- **Sous-domaine de secours** : `camille-hugo.mariage.alexdevlab.fr`, toujours
+- **Sous-domaine de secours** : `camille-hugo.mariage.alexdevlab.com`, toujours
   actif (prévisualisation, recette, panne DNS). Le joker
-  `*.mariage.alexdevlab.fr` impose que la zone `mariage.alexdevlab.fr` soit
+  `*.mariage.alexdevlab.com` impose que la zone `mariage.alexdevlab.com` soit
   gérée par les serveurs DNS de Vercel.
 - `www` → redirection 308 vers l'apex.
 - Renouvellement : rappel J-30 avant échéance → prolongation ou expiration.
@@ -738,6 +738,27 @@ des sections, légendes.
 
 Pour la phase 0, la démo peut être un site statique tant que la plateforme
 n'existe pas. Elle sera migrée en tenant `demo` en phase 1.
+
+### État de la phase 0 (branche `feat/wedding-service`, 2026-10-06)
+
+Faite, en TDD (Vitest + Playwright), dans le portfolio :
+
+- **`/mariage`** : en-tête propre à la page (sections, retour au portfolio,
+  contact), contenu du singleton Sanity « Sites de mariage » avec repli
+  statique, JSON-LD `Service` + 3 `Offer` + `FAQPage`, sitemap, `llms.txt`,
+  formulaire de contact envoyé par Resend (limite 3 demandes/heure/IP).
+- **`/mariage/demo`** : site de Camille & Hugo vu par Marie & Thomas
+  (faire-part au sceau, programme par moments, réponses validées, barre du bas
+  mobile) et aperçu du jour J (table, « en ce moment / ensuite », envoi de
+  photos simulé et signé du nom du foyer).
+- **Home** : carte « Sites de mariage » dans la grille bento.
+- **Logique réutilisable par la plateforme** (`src/lib/wedding/`) :
+  `programmeAt`, `siteModeAt`, `tabBar`, `signPhoto`, `validateAnswer`,
+  `countdownTo`, `formatHour` — fonctions pures, sans base de données.
+
+Avant la mise en ligne : renseigner `RESEND_API_KEY`, `WEDDING_INQUIRY_FROM`
+(domaine vérifié chez Resend) et `WEDDING_INQUIRY_TO`, puis publier le document
+« Sites de mariage » dans le Studio (sinon le contenu par défaut s'affiche).
 
 ---
 
