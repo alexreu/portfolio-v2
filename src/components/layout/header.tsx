@@ -29,6 +29,8 @@ const toneStyles = {
     dark: {
         header: "bg-background/80 border-white/5",
         brand: "text-accent",
+        logoMark: "text-primary",
+        logoGlow: "bg-primary/20",
         link: "text-gray-300 hover:text-white",
         underline: "bg-primary",
         menuButton: "border-white/10 bg-white/5 text-white hover:bg-white/10",
@@ -38,6 +40,8 @@ const toneStyles = {
     ivory: {
         header: "bg-wed-ivory/85 border-wed-line",
         brand: "text-wed-ink",
+        logoMark: "text-wed-gold",
+        logoGlow: "bg-wed-gold-soft/30",
         link: "text-wed-ink-soft hover:text-wed-ink",
         underline: "bg-wed-gold",
         menuButton: "border-wed-line bg-wed-paper text-wed-ink hover:bg-wed-line-soft",
@@ -89,11 +93,16 @@ export const Header = ({ tone = "dark" }: HeaderProps) => {
                     className="flex items-center gap-2"
                 >
                     <div className="relative">
-                        <Code2 className="text-primary h-7 w-7" />
-                        <div className="bg-primary/20 absolute -inset-1 -z-10 rounded-full blur-md" />
+                        <Code2 className={cn("h-7 w-7", styles.logoMark)} />
+                        <div
+                            className={cn(
+                                "absolute -inset-1 -z-10 rounded-full blur-md",
+                                styles.logoGlow,
+                            )}
+                        />
                     </div>
                     <span className={cn("text-xl font-semibold tracking-tight", styles.brand)}>
-                        AleX<span className="text-primary">Dev</span>Lab
+                        AleX<span className={styles.logoMark}>Dev</span>Lab
                     </span>
                 </motion.a>
 
