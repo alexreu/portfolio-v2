@@ -5,6 +5,7 @@ import { buildPageMetadata, buildWeddingJsonLd, weddingPage } from "@/lib/seo";
 import { resolveWeddingService } from "@/lib/wedding-service/content";
 import { JsonLd } from "@/components/shared/json-ld";
 import { WeddingComparison } from "@/components/wedding/wedding-comparison";
+import { WeddingContactSection } from "@/components/wedding/wedding-contact-section";
 import { WeddingDashboard } from "@/components/wedding/wedding-dashboard";
 import { WeddingDemoBand } from "@/components/wedding/wedding-demo-band";
 import { WeddingFaq } from "@/components/wedding/wedding-faq";
@@ -31,6 +32,7 @@ export default async function WeddingPage() {
             <WeddingPricing pricing={content.pricing} />
             <WeddingComparison comparison={content.comparison} />
             <WeddingFaq faq={content.faq} />
+            <WeddingContactSection />
         </>
     );
 }

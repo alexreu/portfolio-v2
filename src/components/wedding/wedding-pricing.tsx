@@ -11,6 +11,13 @@ type WeddingPricingProps = {
 
 const formatPrice = (price: number) => price.toLocaleString("fr-FR");
 
+/** "Essentiel" → "essentiel": the value the contact form expects. */
+const planKey = (name: string) =>
+    name
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .toLowerCase();
+
 const PlanCard = ({ plan }: { plan: WeddingPlan }) => (
     <article
         aria-labelledby={`formule-${plan.name}`}
@@ -74,7 +81,7 @@ const PlanCard = ({ plan }: { plan: WeddingPlan }) => (
             ))}
         </ul>
         <a
-            href="#contact"
+            href={`?formule=${planKey(plan.name)}#contact`}
             className={cn(
                 "mt-8 inline-flex min-h-12 items-center justify-center rounded-sm px-5 font-medium transition-colors",
                 plan.featured
