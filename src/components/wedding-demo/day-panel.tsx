@@ -7,6 +7,8 @@ import { formatHour } from "@/lib/wedding/format-hour";
 import type { Programme } from "@/lib/wedding/programme";
 
 type DayPanelProps = {
+    /** "Samedi 12 juin" */
+    dateLabel: string;
     guestName: string;
     table: { readonly number: number; readonly name: string };
     programme: Programme;
@@ -16,6 +18,7 @@ type DayPanelProps = {
 
 /** The personal link on the wedding day: table, what is on now, and photo upload. */
 export const DayPanel = ({
+    dateLabel,
     guestName,
     table,
     programme,
@@ -29,7 +32,7 @@ export const DayPanel = ({
         <section id="jourj" aria-labelledby="jourj-titre" className="scroll-mt-16 pt-7 pb-14">
             <div className="mx-auto max-w-150 px-4 md:px-7">
                 <p className="text-demo-earth-dark text-[0.95rem]">
-                    Samedi 12 juin · c&apos;est aujourd&apos;hui
+                    {dateLabel} · c&apos;est aujourd&apos;hui
                 </p>
                 <h2
                     id="jourj-titre"
@@ -52,7 +55,7 @@ export const DayPanel = ({
                         aria-expanded={mapOpen}
                         aria-controls="plan-salle"
                         onClick={() => setMapOpen((open) => !open)}
-                        className="border-demo-ink-2 min-h-12 cursor-pointer rounded-md border px-4 whitespace-nowrap"
+                        className="border-demo-ink-2 hover:border-demo-paper min-h-12 cursor-pointer rounded-full border px-5 whitespace-nowrap transition-colors"
                     >
                         {mapOpen ? "Masquer le plan" : "Voir le plan"}
                     </button>
@@ -162,7 +165,7 @@ export const DayPanel = ({
                 <button
                     type="button"
                     onClick={onAddPhotos}
-                    className="bg-demo-olive mt-3.5 flex min-h-15 w-full cursor-pointer items-center justify-center gap-2.5 rounded-lg text-[1.05rem] font-medium text-white"
+                    className="bg-demo-olive hover:bg-demo-olive-dark mt-3.5 flex min-h-15 w-full cursor-pointer items-center justify-center gap-2.5 rounded-full text-[1.05rem] font-medium text-white transition-[background-color,scale] active:scale-[0.99]"
                 >
                     <Camera aria-hidden="true" className="size-5.5" strokeWidth={1.6} />
                     Ajouter mes photos

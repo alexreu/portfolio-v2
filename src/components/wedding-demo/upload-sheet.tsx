@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Camera, Images } from "lucide-react";
 
+import { useScrollLock } from "@/hooks/use-scroll-lock";
+
 type Upload = {
     readonly id: string;
     readonly name: string;
@@ -43,16 +45,13 @@ export const UploadSheet = ({ signature, onClose }: UploadSheetProps) => {
     const sending = uploads.some((upload) => upload.progress < 100);
     const done = uploads.length > 0 && !sending;
 
+    useScrollLock();
+
     useEffect(() => {
         title.current?.focus();
-        const previous = document.body.style.overflow;
-        document.body.style.overflow = "hidden";
         const closeOnEscape = (event: KeyboardEvent) => event.key === "Escape" && onClose();
         document.addEventListener("keydown", closeOnEscape);
-        return () => {
-            document.body.style.overflow = previous;
-            document.removeEventListener("keydown", closeOnEscape);
-        };
+        return () => document.removeEventListener("keydown", closeOnEscape);
     }, [onClose]);
 
     useEffect(() => {
@@ -89,7 +88,8 @@ export const UploadSheet = ({ signature, onClose }: UploadSheetProps) => {
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="envoi-titre"
-                className="bg-demo-card animate-in slide-in-from-bottom-10 w-full max-w-140 rounded-t-2xl px-5 pt-2.5 pb-[calc(1rem+env(safe-area-inset-bottom))] motion-reduce:animate-none"
+                data-lenis-prevent
+                className="bg-demo-card animate-in slide-in-from-bottom-10 max-h-[90dvh] w-full max-w-140 overflow-y-auto overscroll-contain rounded-t-2xl px-5 pt-2.5 pb-[calc(1rem+env(safe-area-inset-bottom))] motion-reduce:animate-none"
             >
                 <div
                     aria-hidden="true"
@@ -112,7 +112,7 @@ export const UploadSheet = ({ signature, onClose }: UploadSheetProps) => {
                     <button
                         type="button"
                         onClick={() => cameraInput.current?.click()}
-                        className="bg-demo-ink text-demo-card flex min-h-14.5 cursor-pointer items-center justify-center gap-2.5 rounded-lg text-[1.05rem] font-medium"
+                        className="bg-demo-ink text-demo-card hover:bg-demo-ink-2 flex min-h-14.5 cursor-pointer items-center justify-center gap-2.5 rounded-full text-[1.05rem] font-medium transition-[background-color,scale] active:scale-[0.99]"
                     >
                         <Camera aria-hidden="true" className="size-5" strokeWidth={1.6} />
                         Prendre une photo
@@ -120,7 +120,7 @@ export const UploadSheet = ({ signature, onClose }: UploadSheetProps) => {
                     <button
                         type="button"
                         onClick={() => galleryInput.current?.click()}
-                        className="border-demo-line text-demo-ink flex min-h-14.5 cursor-pointer items-center justify-center gap-2.5 rounded-lg border text-[1.05rem] font-medium"
+                        className="border-demo-line text-demo-ink hover:border-demo-ink flex min-h-14.5 cursor-pointer items-center justify-center gap-2.5 rounded-full border text-[1.05rem] font-medium transition-[border-color,scale] active:scale-[0.99]"
                     >
                         <Images aria-hidden="true" className="size-5" strokeWidth={1.6} />
                         Choisir dans ma galerie
@@ -193,7 +193,7 @@ export const UploadSheet = ({ signature, onClose }: UploadSheetProps) => {
                 <button
                     type="button"
                     onClick={onClose}
-                    className="text-demo-ink-2 mt-2 min-h-13 w-full cursor-pointer"
+                    className="text-demo-ink-2 hover:text-demo-ink mt-2 min-h-13 w-full cursor-pointer rounded-full transition-colors"
                 >
                     Fermer
                 </button>

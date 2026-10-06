@@ -285,6 +285,14 @@ export const weddingPage = {
         "Faire-part numérique animé, réponses des invités par lien personnel, programme du jour J et galerie photo partagée. Un site de mariage unique, dès 290 €.",
 } as const;
 
+/** The couple's dashboard, playable with fictional data kept in the visitor's browser. */
+export const weddingDashboardDemoPage = {
+    path: "/mariage/demo/tableau-de-bord",
+    title: "Démo · tableau de bord des mariés",
+    description:
+        "Essayez le tableau de bord d'un site de mariage : réponses des invités en temps réel, récap traiteur, création de faire-part et relances. Données fictives, rien n'est envoyé.",
+} as const;
+
 const weddingOffer = (plan: WeddingPlan) => ({
     "@type": "Offer",
     name: plan.name,

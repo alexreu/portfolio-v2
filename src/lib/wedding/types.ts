@@ -8,6 +8,13 @@ export type Slot = {
     readonly endsAt?: string;
 };
 
+/** A question of the couple's own, answered once per household. */
+export type GuestQuestion = {
+    readonly id: string;
+    readonly label: string;
+    readonly placeholder?: string;
+};
+
 /** One invitation, hence one answer: may hold several slots. */
 export type Moment = {
     readonly key: string;

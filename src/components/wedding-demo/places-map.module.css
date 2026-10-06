@@ -1,0 +1,69 @@
+/*
+ * OpenStreetMap tiles in the site's paper tones: the map is desaturated and warmed by a
+ * filter on its tiles only, so markers, popups and controls keep the couple's colours.
+ */
+.map {
+    background: var(--demo-paper-2);
+    font-family: var(--font-demo-sans);
+}
+
+.map :global(.leaflet-tile-pane) {
+    filter: grayscale(1) sepia(0.32) contrast(0.88) brightness(1.06);
+}
+
+.map :global(.leaflet-bar) {
+    border: 1px solid var(--demo-line);
+    border-radius: 9999px;
+    overflow: hidden;
+    box-shadow: none;
+}
+
+.map :global(.leaflet-bar a) {
+    width: 2.75rem;
+    height: 2.75rem;
+    line-height: 2.75rem;
+    background: var(--demo-card);
+    color: var(--demo-ink);
+    border-bottom-color: var(--demo-line);
+    font-weight: 300;
+}
+
+.map :global(.leaflet-bar a:hover) {
+    background: var(--demo-paper);
+}
+
+.map :global(.leaflet-popup-content-wrapper),
+.map :global(.leaflet-popup-tip) {
+    background: var(--demo-card);
+    color: var(--demo-ink);
+    box-shadow: 0 10px 30px -12px color-mix(in oklab, var(--demo-ink) 45%, transparent);
+}
+
+.map :global(.leaflet-popup-content-wrapper) {
+    border-radius: 1rem;
+}
+
+.map :global(.leaflet-popup-content) {
+    margin: 0.9rem 1.1rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
+.map :global(.leaflet-popup-close-button) {
+    color: var(--demo-muted);
+}
+
+.map :global(.leaflet-control-attribution) {
+    background: color-mix(in oklab, var(--demo-card) 85%, transparent);
+    color: var(--demo-muted);
+    font-size: 0.7rem;
+}
+
+.map :global(.leaflet-control-attribution a) {
+    color: var(--demo-ink-2);
+}
+
+.pin {
+    display: block;
+    filter: drop-shadow(0 4px 6px color-mix(in oklab, var(--demo-ink) 35%, transparent));
+}

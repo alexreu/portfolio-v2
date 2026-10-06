@@ -1,6 +1,6 @@
 import type { Invitation } from "@/lib/wedding/answer";
 import type { WeddingDay } from "@/lib/wedding/site-mode";
-import type { Moment } from "@/lib/wedding/types";
+import type { GuestQuestion, Moment } from "@/lib/wedding/types";
 
 import { weddingPhotos } from "./wedding-photos";
 
@@ -94,12 +94,22 @@ export const weddingDemo = {
             ],
         },
     ] satisfies readonly Moment[],
+    /** The couple's own questions, answered once per household. */
+    questions: [
+        {
+            id: "chanson",
+            label: "Une chanson qui vous fera danser",
+            placeholder: "Artiste — titre",
+        },
+    ] satisfies readonly GuestQuestion[],
     places: [
         {
             name: "Domaine des Oliviers",
             address: "Route de Vaugines, 84160 Lourmarin",
             note: "Parking sur place · navettes non prévues",
             photo: weddingPhotos.table,
+            /** Fictional estate, placed on the road from Lourmarin to Vaugines. */
+            coordinates: { lat: 43.7652, lng: 5.3735 },
         },
     ],
     dressCode: {

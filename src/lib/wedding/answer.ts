@@ -16,12 +16,19 @@ export type AnswerDraft = {
         Record<string, { readonly choice: DietChoice; readonly other: string }>
     >;
     readonly consent: boolean;
+    /** Answers to the couple's own questions, by question id ("chanson"). */
+    readonly questions: Readonly<Record<string, string>>;
+    /** "Un mot pour nous". */
+    readonly message: string;
 };
 
 export type AnswerIssue = {
     readonly path: string;
-    readonly code: "attendance-required" | "diet-detail-required" | "consent-required";
+    readonly code: "attendance-required" | "diet-detail-required" | "consent-required" | "too-long";
 };
+
+const QUESTION_MAX = 200;
+const MESSAGE_MAX = 600;
 
 const missingAttendance = (invitation: Invitation, draft: AnswerDraft): readonly AnswerIssue[] =>
     invitation.guests.flatMap((guest) =>
@@ -50,6 +57,15 @@ const missingConsent = (draft: AnswerDraft): readonly AnswerIssue[] =>
         ? [{ path: "consent", code: "consent-required" }]
         : [];
 
+const tooLong = (draft: AnswerDraft): readonly AnswerIssue[] => [
+    ...Object.entries(draft.questions)
+        .filter(([, answer]) => answer.trim().length > QUESTION_MAX)
+        .map(([id]) => ({ path: `questions.${id}`, code: "too-long" as const })),
+    ...(draft.message.trim().length > MESSAGE_MAX
+        ? [{ path: "message", code: "too-long" as const }]
+        : []),
+];
+
 export const validateAnswer = (
     invitation: Invitation,
     draft: AnswerDraft,
@@ -58,6 +74,7 @@ export const validateAnswer = (
         ...missingAttendance(invitation, draft),
         ...missingDietDetails(draft),
         ...missingConsent(draft),
+        ...tooLong(draft),
     ];
     return issues.length === 0 ? success(draft) : failure(issues);
 };

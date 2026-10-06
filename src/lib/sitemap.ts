@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { absoluteUrl, site, weddingPage } from "@/lib/seo";
+import { absoluteUrl, site, weddingDashboardDemoPage, weddingPage } from "@/lib/seo";
 
 const legalPages = ["/mentions-legales", "/politique-de-confidentialite", "/politique-de-cookies"];
 
@@ -34,6 +34,11 @@ export const sitemapEntries = ({
         url: absoluteUrl(`${weddingPage.path}/demo`),
         changeFrequency: "yearly",
         priority: 0.5,
+    },
+    {
+        url: absoluteUrl(weddingDashboardDemoPage.path),
+        changeFrequency: "yearly",
+        priority: 0.4,
     },
     ...legalPages.map((path) => ({
         url: absoluteUrl(path),

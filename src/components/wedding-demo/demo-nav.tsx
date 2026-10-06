@@ -43,7 +43,7 @@ export const DemoNav = ({ monogram, mode, onTogglePreview }: DemoNavProps) => (
                     onClick={onTogglePreview}
                     title="Démonstration : voir le site tel qu'il apparaît le jour du mariage"
                     className={cn(
-                        "min-h-10 cursor-pointer rounded-full border border-dashed px-3.5 text-[0.8rem] whitespace-nowrap md:text-sm",
+                        "min-h-10 cursor-pointer rounded-full border border-dashed px-3.5 text-[0.8rem] whitespace-nowrap transition-colors md:text-sm",
                         mode === "day"
                             ? "bg-demo-olive border-demo-olive border-solid text-white"
                             : "border-demo-olive text-demo-olive",
@@ -54,7 +54,7 @@ export const DemoNav = ({ monogram, mode, onTogglePreview }: DemoNavProps) => (
                 {mode === "before" && (
                     <a
                         href="#rsvp"
-                        className="bg-demo-ink text-demo-card hidden min-h-11 items-center rounded-xs px-4.5 text-sm md:inline-flex"
+                        className="bg-demo-ink text-demo-card hover:bg-demo-ink-2 hidden min-h-11 items-center rounded-full px-5 text-sm transition-colors md:inline-flex"
                     >
                         Répondre
                     </a>

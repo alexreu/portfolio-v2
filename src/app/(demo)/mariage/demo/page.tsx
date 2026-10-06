@@ -16,5 +16,11 @@ type Props = {
 
 export default async function WeddingDemoPage({ searchParams }: Props) {
     const params = await searchParams;
-    return <DemoSite skipInvitation={"skip" in params} startOnWeddingDay={"jourj" in params} />;
+    return (
+        <DemoSite
+            skipInvitation={"skip" in params}
+            startOnWeddingDay={"jourj" in params}
+            householdId={typeof params.foyer === "string" ? params.foyer : undefined}
+        />
+    );
 }

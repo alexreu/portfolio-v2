@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import type { WeddingService } from "@/lib/wedding-service/types";
 
@@ -68,7 +71,7 @@ const DashboardPreview = () => (
                             {kpi.label}
                         </dt>
                         <dd>
-                            <span className="font-wed-serif block text-3xl leading-tight">
+                            <span className="font-wed-serif block text-3xl leading-tight lining-nums">
                                 {kpi.value}
                             </span>
                             <span className="text-wed-muted text-xs">{kpi.detail}</span>
@@ -116,6 +119,18 @@ export const WeddingDashboard = ({ dashboard }: WeddingDashboardProps) => (
         <div className="mx-auto max-w-300 px-6">
             <SectionIntro content={dashboard} headingId="tableau-de-bord-titre" tone="dark" />
             <DashboardPreview />
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+                <Link
+                    href="/mariage/demo/tableau-de-bord"
+                    className="bg-wed-ivory text-wed-ink hover:bg-wed-paper inline-flex min-h-12 items-center gap-2 rounded-sm px-6 font-medium transition-colors"
+                >
+                    Essayer le tableau de bord
+                    <ArrowRight aria-hidden="true" className="size-4" />
+                </Link>
+                <p className="text-wed-night-muted text-sm">
+                    Invités fictifs, gardés dans votre navigateur : rien n&apos;est envoyé.
+                </p>
+            </div>
             <ul className="mt-12 grid gap-8 md:grid-cols-3">
                 {dashboard.points.map((point) => (
                     <li

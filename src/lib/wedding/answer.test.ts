@@ -17,6 +17,8 @@ const complete: AnswerDraft = {
     },
     diets: {},
     consent: false,
+    questions: {},
+    message: "",
 };
 
 const issues = (draft: AnswerDraft) => {
@@ -65,5 +67,18 @@ describe("validateAnswer", () => {
                 diets: { marie: { choice: "aucune", other: "" } },
             }).ok,
         ).toBe(true);
+    });
+
+    it("keeps the answers to the couple's questions and the note short enough to read", () => {
+        const draft: AnswerDraft = {
+            ...complete,
+            questions: { chanson: "a".repeat(201) },
+            message: "b".repeat(601),
+        };
+
+        expect(issues(draft)).toEqual([
+            { path: "questions.chanson", code: "too-long" },
+            { path: "message", code: "too-long" },
+        ]);
     });
 });

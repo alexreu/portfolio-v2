@@ -751,6 +751,12 @@ Faite, en TDD (Vitest + Playwright), dans le portfolio :
   (faire-part au sceau, programme par moments, réponses validées, barre du bas
   mobile) et aperçu du jour J (table, « en ce moment / ensuite », envoi de
   photos simulé et signé du nom du foyer).
+- **`/mariage/demo/tableau-de-bord`** : tableau de bord des mariés jouable
+  (indicateurs, réponses par moment, récap traiteur, foyers filtrables,
+  création de faire-part avec lien personnel, éditeur du faire-part, détail
+  d'une réponse (qui vient à quoi, régimes, chanson, petit mot, historique),
+  relances, galerie avec visionneuse, export CSV). Invités fictifs gardés dans le navigateur, partagés
+  avec le site invité : une réponse donnée sur `/mariage/demo` apparaît aussitôt.
 - **Home** : carte « Sites de mariage » dans la grille bento.
 - **Logique réutilisable par la plateforme** (`src/lib/wedding/`) :
   `programmeAt`, `siteModeAt`, `tabBar`, `signPhoto`, `validateAnswer`,

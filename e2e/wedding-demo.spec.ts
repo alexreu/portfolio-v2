@@ -72,4 +72,68 @@ test.describe("site démo Camille & Hugo", () => {
         await expect(invitation).toBeHidden();
         await expect(page.getByRole("heading", { level: 1, name: /Camille/ })).toBeVisible();
     });
+
+    test("même rechargé après avoir défilé, le faire-part ouvre le site en haut de page", async ({
+        page,
+    }) => {
+        await page.goto("/mariage/demo");
+        await page.getByRole("button", { name: "Ouvrir le faire-part" }).click();
+        await expect(page.getByRole("dialog")).toBeHidden();
+        await page.evaluate(() => window.scrollTo(0, 600));
+        await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(500);
+
+        await page.reload();
+        await page.getByRole("button", { name: "Ouvrir le faire-part" }).click();
+        await expect(page.getByRole("dialog")).toBeHidden();
+
+        expect(await page.evaluate(() => window.scrollY)).toBe(0);
+        await expect(page.getByRole("heading", { level: 1, name: /Camille/ })).toBeInViewport({
+            ratio: 1,
+        });
+    });
+
+    test("l'ouverture du faire-part se passe d'un geste", async ({ page }) => {
+        await page.goto("/mariage/demo");
+        const invitation = page.getByRole("dialog", { name: /Camille/ });
+
+        await invitation.getByRole("button", { name: "Ouvrir le faire-part" }).click();
+        await invitation.getByRole("button", { name: "Passer" }).click();
+
+        await expect(invitation).toBeHidden({ timeout: 1_000 });
+    });
+
+    test("une photo de la galerie s'affiche en grand et se parcourt au clavier", async ({
+        page,
+    }) => {
+        await page.goto("/mariage/demo?skip&jourj");
+
+        await page.getByRole("button", { name: "Agrandir la photo de Léa" }).click();
+        await expect(page.getByRole("dialog", { name: "Photo de Léa, 1 sur 8" })).toBeVisible();
+
+        await page.keyboard.press("ArrowRight");
+        await expect(page.getByRole("dialog", { name: "Photo de Thomas, 2 sur 8" })).toBeVisible();
+
+        await page.keyboard.press("Escape");
+        await expect(page.getByRole("dialog")).toBeHidden();
+    });
+
+    test("la carte des lieux situe le domaine et donne son adresse", async ({ page }) => {
+        await page.goto("/mariage/demo?skip");
+        const map = page.getByRole("region", { name: "Carte des lieux" });
+        await map.scrollIntoViewIfNeeded();
+
+        await map.getByTitle("Domaine des Oliviers").click();
+        await expect(map).toContainText("Route de Vaugines, 84160 Lourmarin");
+        await expect(map).toContainText("OpenStreetMap");
+    });
+
+    test("le compte à rebours égrène les secondes", async ({ page }) => {
+        await page.goto("/mariage/demo?skip");
+        const countdown = page.getByLabel("Compte à rebours");
+        await expect(countdown).toContainText("secondes");
+        await expect(countdown).not.toContainText("–");
+
+        const before = await countdown.textContent();
+        await expect.poll(() => countdown.textContent(), { timeout: 2_500 }).not.toBe(before);
+    });
 });

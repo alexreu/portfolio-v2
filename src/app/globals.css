@@ -46,6 +46,8 @@
     --wedding-yes-bg: #E3EADD;
     --wedding-wait: #7A5F37;
     --wedding-wait-bg: #F1E9D9;
+    --wedding-no: #7E3D2A;
+    --wedding-no-bg: #F3E3DC;
 
     /* Démo Camille & Hugo : papier, encre, olivier */
     --demo-paper: #EFEAE0;
@@ -89,6 +91,8 @@
     --color-wed-yes-bg: var(--wedding-yes-bg);
     --color-wed-wait: var(--wedding-wait);
     --color-wed-wait-bg: var(--wedding-wait-bg);
+    --color-wed-no: var(--wedding-no);
+    --color-wed-no-bg: var(--wedding-no-bg);
 
     --color-demo-paper: var(--demo-paper);
     --color-demo-paper-2: var(--demo-paper-2);

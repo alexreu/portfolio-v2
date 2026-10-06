@@ -12,15 +12,20 @@ import {
     type Presence,
 } from "@/lib/wedding/answer";
 import { formatHour } from "@/lib/wedding/format-hour";
-import type { Moment } from "@/lib/wedding/types";
+import type { GuestQuestion, Moment } from "@/lib/wedding/types";
 
 type AnswerFormProps = {
     householdName: string;
     invitation: Invitation;
     moments: readonly Moment[];
+    /** The couple's own questions, answered once for the household. */
+    questions: readonly GuestQuestion[];
     presenceLabels: Readonly<Record<string, { readonly yes: string; readonly no: string }>>;
+    /** The saved answer when the household edits it, empty otherwise. */
+    initialDraft: AnswerDraft;
     answered: boolean;
-    onAnswered: (answered: boolean) => void;
+    onSubmit: (draft: AnswerDraft) => void;
+    onEdit: () => void;
 };
 
 const dietOptions: readonly { value: DietChoice; label: string }[] = [
@@ -35,9 +40,8 @@ const issueMessages: Record<AnswerIssue["code"], string> = {
     "attendance-required": "Indiquez si vous serez là.",
     "diet-detail-required": "Précisez la contrainte.",
     "consent-required": "Merci d'accepter que vos contraintes soient transmises au traiteur.",
+    "too-long": "C'est un peu long : raccourcissez un peu.",
 };
-
-const emptyDraft: AnswerDraft = { attendance: {}, diets: {}, consent: false };
 
 const noDiet = { choice: "aucune", other: "" } as const satisfies {
     choice: DietChoice;
@@ -67,11 +71,14 @@ export const AnswerForm = ({
     householdName,
     invitation,
     moments,
+    questions,
     presenceLabels,
+    initialDraft,
     answered,
-    onAnswered,
+    onSubmit,
+    onEdit,
 }: AnswerFormProps) => {
-    const [draft, setDraft] = useState<AnswerDraft>(emptyDraft);
+    const [draft, setDraft] = useState<AnswerDraft>(initialDraft);
     const [issues, setIssues] = useState<readonly AnswerIssue[]>([]);
     const invited = moments.filter((moment) => invitation.momentKeys.includes(moment.key));
 
@@ -97,7 +104,7 @@ export const AnswerForm = ({
         event.preventDefault();
         const result = validateAnswer(invitation, draft);
         setIssues(result.ok ? [] : result.error);
-        if (result.ok) onAnswered(true);
+        if (result.ok) onSubmit(result.value);
     };
 
     if (answered)
@@ -109,7 +116,7 @@ export const AnswerForm = ({
                 </p>
                 <button
                     type="button"
-                    onClick={() => onAnswered(false)}
+                    onClick={onEdit}
                     className="min-h-11 cursor-pointer underline underline-offset-4"
                 >
                     Modifier ma réponse
@@ -126,7 +133,7 @@ export const AnswerForm = ({
             {issues.length > 0 && (
                 <p
                     role="alert"
-                    className="border-demo-no/40 text-demo-no mb-5 rounded-xs border p-3.5 text-sm"
+                    className="border-demo-no/40 text-demo-no mb-5 rounded-xl border p-3.5 text-sm"
                 >
                     Il reste {issues.length} {issues.length > 1 ? "points" : "point"} à compléter
                     avant d&apos;envoyer.
@@ -161,7 +168,7 @@ export const AnswerForm = ({
                                         aria-label={`${guest.firstName}, ${moment.title}`}
                                         aria-describedby={issue ? errorId : undefined}
                                         className={cn(
-                                            "border-demo-line flex overflow-hidden rounded-xs border",
+                                            "border-demo-line bg-demo-paper flex gap-1 rounded-full border p-1",
                                             issue && "border-demo-no",
                                         )}
                                     >
@@ -174,13 +181,12 @@ export const AnswerForm = ({
                                                     setPresence(guest.id, moment.key, presence)
                                                 }
                                                 className={cn(
-                                                    "text-demo-ink-2 min-h-12 flex-1 cursor-pointer px-4.5 transition-colors md:min-w-20",
-                                                    presence === "no" &&
-                                                        "border-demo-line border-l",
-                                                    value === presence &&
-                                                        (presence === "yes"
+                                                    "text-demo-ink-2 min-h-11 flex-1 cursor-pointer rounded-full px-4.5 transition-colors md:min-w-22",
+                                                    value === presence
+                                                        ? presence === "yes"
                                                             ? "bg-demo-olive-dark text-white"
-                                                            : "bg-demo-no text-white"),
+                                                            : "bg-demo-no text-white"
+                                                        : "hover:bg-demo-card hover:text-demo-ink",
                                                 )}
                                             >
                                                 {labels[presence]}
@@ -204,7 +210,7 @@ export const AnswerForm = ({
                                 onChange={(event) =>
                                     setDiet(guest.id, { choice: event.target.value as DietChoice })
                                 }
-                                className="bg-demo-paper border-demo-line min-h-12 rounded-xs border px-3.5"
+                                className="bg-demo-paper border-demo-line min-h-12 rounded-xl border px-3.5"
                             >
                                 {dietOptions.map((option) => (
                                     <option key={option.value} value={option.value}>
@@ -232,7 +238,7 @@ export const AnswerForm = ({
                                         aria-describedby={
                                             otherIssue ? `erreur-precision-${guest.id}` : undefined
                                         }
-                                        className="bg-demo-paper border-demo-line min-h-12 rounded-xs border px-3.5"
+                                        className="bg-demo-paper border-demo-line min-h-12 rounded-xl border px-3.5"
                                     />
                                     <ErrorText
                                         id={`erreur-precision-${guest.id}`}
@@ -245,16 +251,39 @@ export const AnswerForm = ({
                 );
             })}
             <div className="border-demo-line grid gap-3.5 border-t py-5.5">
-                <div className="flex flex-col gap-1.5">
-                    <label htmlFor="chanson" className="text-demo-ink-2 text-sm">
-                        Une chanson qui vous fera danser
-                    </label>
-                    <input
-                        id="chanson"
-                        placeholder="Artiste — titre"
-                        className="bg-demo-paper border-demo-line min-h-12 rounded-xs border px-3.5"
-                    />
-                </div>
+                {questions.map((question) => {
+                    const issue = messageAt(issues, `questions.${question.id}`);
+                    return (
+                        <div key={question.id} className="flex flex-col gap-1.5">
+                            <label
+                                htmlFor={`question-${question.id}`}
+                                className="text-demo-ink-2 text-sm"
+                            >
+                                {question.label}
+                            </label>
+                            <input
+                                id={`question-${question.id}`}
+                                value={draft.questions[question.id] ?? ""}
+                                onChange={(event) =>
+                                    setDraft((current) => ({
+                                        ...current,
+                                        questions: {
+                                            ...current.questions,
+                                            [question.id]: event.target.value,
+                                        },
+                                    }))
+                                }
+                                placeholder={question.placeholder}
+                                aria-invalid={Boolean(issue)}
+                                aria-describedby={
+                                    issue ? `erreur-question-${question.id}` : undefined
+                                }
+                                className="bg-demo-paper border-demo-line min-h-12 rounded-xl border px-3.5"
+                            />
+                            <ErrorText id={`erreur-question-${question.id}`} code={issue} />
+                        </div>
+                    );
+                })}
                 <div className="flex flex-col gap-1.5">
                     <label htmlFor="mot" className="text-demo-ink-2 text-sm">
                         Un mot pour nous
@@ -262,8 +291,15 @@ export const AnswerForm = ({
                     <textarea
                         id="mot"
                         rows={3}
-                        className="bg-demo-paper border-demo-line rounded-xs border px-3.5 py-3"
+                        value={draft.message}
+                        onChange={(event) =>
+                            setDraft((current) => ({ ...current, message: event.target.value }))
+                        }
+                        aria-invalid={Boolean(messageAt(issues, "message"))}
+                        aria-describedby={messageAt(issues, "message") ? "erreur-mot" : undefined}
+                        className="bg-demo-paper border-demo-line rounded-xl border px-3.5 py-3"
                     />
+                    <ErrorText id="erreur-mot" code={messageAt(issues, "message")} />
                 </div>
                 <label className="text-demo-muted flex cursor-pointer gap-2.5 py-1.5 text-sm">
                     <input
@@ -284,7 +320,7 @@ export const AnswerForm = ({
             </div>
             <button
                 type="submit"
-                className="bg-demo-ink text-demo-card min-h-13.5 w-full cursor-pointer rounded-xs font-medium"
+                className="bg-demo-ink text-demo-card hover:bg-demo-ink-2 min-h-13.5 w-full cursor-pointer rounded-full font-medium transition-[background-color,scale] active:scale-[0.99]"
             >
                 Envoyer notre réponse
             </button>

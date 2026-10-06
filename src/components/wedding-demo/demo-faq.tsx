@@ -24,7 +24,7 @@ export const DemoFaq = ({ items }: DemoFaqProps) => (
                             {item.question}
                             <span
                                 aria-hidden="true"
-                                className="font-demo-sans text-2xl font-light transition-transform group-open:rotate-45"
+                                className="border-demo-line font-demo-sans grid size-9 shrink-0 place-items-center rounded-full border text-xl font-light transition-transform group-open:rotate-45"
                             >
                                 +
                             </span>

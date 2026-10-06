@@ -26,7 +26,7 @@ const iconOf = (tab: Tab) => (tab.emphasis === "done" ? CircleCheck : (icons[tab
 
 const tabClass = (tab: Tab) =>
     cn(
-        "flex min-h-13.5 flex-col items-center justify-center gap-0.5 rounded-lg text-[0.8rem] whitespace-nowrap",
+        "flex min-h-13.5 flex-col items-center justify-center gap-0.5 rounded-full text-[0.8rem] whitespace-nowrap",
         tab.emphasis === "primary" && "bg-demo-ink text-demo-card font-medium",
         tab.emphasis === "done" && "text-demo-olive font-medium",
         tab.emphasis === "normal" && "text-demo-muted",

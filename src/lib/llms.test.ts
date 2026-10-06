@@ -14,10 +14,11 @@ describe("weddingLlmsSection", () => {
         expect(section).toContain("TVA non applicable, art. 293 B du CGI");
     });
 
-    it("points AI crawlers to the offer page and the demo", () => {
+    it("points AI crawlers to the offer page and the demos", () => {
         const section = weddingLlmsSection(defaultWeddingService);
 
         expect(section).toContain("https://alexdevlab.com/mariage");
         expect(section).toContain("https://alexdevlab.com/mariage/demo");
+        expect(section).toContain("https://alexdevlab.com/mariage/demo/tableau-de-bord");
     });
 });
