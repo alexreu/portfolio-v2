@@ -1,22 +1,7 @@
 import { ReactNode } from "react";
 import { Viewport } from "next";
-import { Jost, Newsreader, Pinyon_Script } from "next/font/google";
 
-const newsreader = Newsreader({
-    subsets: ["latin"],
-    style: ["normal", "italic"],
-    display: "swap",
-    variable: "--font-newsreader",
-});
-
-const jost = Jost({ subsets: ["latin"], display: "swap", variable: "--font-jost" });
-
-const pinyon = Pinyon_Script({
-    weight: "400",
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-pinyon",
-});
+import { jost, newsreader, pinyon } from "@/app/fonts/wedding";
 
 /** The couple's own site: no portfolio header, paper tones up to the browser chrome. */
 export const viewport: Viewport = {
