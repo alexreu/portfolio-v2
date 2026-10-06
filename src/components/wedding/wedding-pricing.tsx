@@ -106,7 +106,7 @@ export const WeddingPricing = ({ pricing }: WeddingPricingProps) => (
     <section
         id="tarifs"
         aria-labelledby="tarifs-titre"
-        className="border-wed-line-soft bg-wed-paper scroll-mt-20 border-y py-20 md:py-28"
+        className="border-wed-line-soft bg-wed-paper scroll-mt-18 border-y py-20 md:py-28"
     >
         <div className="mx-auto max-w-300 px-6">
             <SectionIntro content={pricing} headingId="tarifs-titre" />

@@ -9,7 +9,7 @@ type WeddingFaqProps = {
 };
 
 export const WeddingFaq = ({ faq }: WeddingFaqProps) => (
-    <section id="faq" aria-labelledby="faq-titre" className="pb-20 md:pb-28">
+    <section id="faq" aria-labelledby="faq-titre" className="scroll-mt-24 pb-20 md:pb-28">
         <div className="mx-auto grid max-w-300 gap-8 px-6 md:grid-cols-[0.8fr_1.2fr] md:gap-16">
             <div>
                 <p className="text-wed-gold text-xs font-medium tracking-[0.18em] uppercase">

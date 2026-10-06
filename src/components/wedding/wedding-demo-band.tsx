@@ -9,7 +9,11 @@ type WeddingDemoBandProps = {
 };
 
 export const WeddingDemoBand = ({ demo }: WeddingDemoBandProps) => (
-    <section id="demo" aria-labelledby="demo-titre" className="bg-wed-night text-wed-night-text">
+    <section
+        id="demo"
+        aria-labelledby="demo-titre"
+        className="bg-wed-night text-wed-night-text scroll-mt-18"
+    >
         <div className="grid lg:min-h-[40rem] lg:grid-cols-[1.25fr_1fr]">
             <div className="relative h-80 sm:h-[26rem] lg:h-auto">
                 <Image

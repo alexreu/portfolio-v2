@@ -12,7 +12,7 @@ export const WeddingMoments = ({ moments }: WeddingMomentsProps) => (
     <section
         id="experience"
         aria-labelledby="experience-titre"
-        className="border-wed-line-soft bg-wed-paper border-y py-20 md:py-28"
+        className="border-wed-line-soft bg-wed-paper scroll-mt-18 border-y py-20 md:py-28"
     >
         <div className="mx-auto max-w-300 px-6">
             <SectionIntro content={moments} headingId="experience-titre" />

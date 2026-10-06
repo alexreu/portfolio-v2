@@ -15,7 +15,7 @@ export const WeddingFeatures = ({ features }: WeddingFeaturesProps) => (
     <section
         id="fonctionnalites"
         aria-labelledby="fonctionnalites-titre"
-        className="py-20 md:py-28"
+        className="scroll-mt-18 py-20 md:py-28"
     >
         <div className="mx-auto max-w-300 px-6">
             <SectionIntro content={features} headingId="fonctionnalites-titre" />

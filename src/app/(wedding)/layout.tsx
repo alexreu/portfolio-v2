@@ -4,8 +4,8 @@ import { Cormorant_Garamond } from "next/font/google";
 
 import { Toaster } from "@/components/ui/toaster";
 import { Footer } from "@/components/layout/footer";
-import { Header } from "@/components/layout/header";
 import { SmoothScroll } from "@/components/layout/smooth-scroll";
+import { WeddingHeader } from "@/components/wedding/wedding-header";
 
 const cormorant = Cormorant_Garamond({
     weight: ["400", "500"],
@@ -25,12 +25,12 @@ type Props = {
     children: ReactNode;
 };
 
-/** The dark portfolio frames an ivory page: same header and footer, no particles. */
+/** An ivory page with its own navigation and a way back to the portfolio; no particles. */
 export default function WeddingLayout({ children }: Props) {
     return (
         <SmoothScroll>
             <div className={`${cormorant.variable} relative z-10`}>
-                <Header tone="ivory" />
+                <WeddingHeader />
                 <main className="bg-wed-ivory text-wed-ink">{children}</main>
                 <Footer renderedYear={new Date().getFullYear()} tone="ivory" />
             </div>

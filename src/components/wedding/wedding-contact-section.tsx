@@ -13,7 +13,7 @@ export const WeddingContactSection = () => (
     <section
         id="contact"
         aria-labelledby="contact-titre"
-        className="bg-wed-night text-wed-night-text scroll-mt-20 py-20 md:py-28"
+        className="bg-wed-night text-wed-night-text scroll-mt-18 py-20 md:py-28"
     >
         <div className="mx-auto grid max-w-300 items-start gap-12 px-6 lg:grid-cols-[1fr_1.1fr] lg:gap-18">
             <div>
