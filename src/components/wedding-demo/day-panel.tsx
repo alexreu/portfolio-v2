@@ -135,7 +135,7 @@ export const DayPanel = ({
                             <span className="text-demo-olive flex items-center gap-2 text-sm font-medium">
                                 <span
                                     aria-hidden="true"
-                                    className="bg-demo-olive size-2 animate-pulse rounded-full motion-reduce:animate-none"
+                                    className="bg-demo-olive size-2 rounded-full"
                                 />
                                 En ce moment
                             </span>
