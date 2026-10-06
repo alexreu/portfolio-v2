@@ -3,14 +3,21 @@
 import { useState } from "react";
 import { Camera } from "lucide-react";
 
+import type { RoomLayout, SeatTable } from "@/lib/wedding-dashboard/types";
 import { formatHour } from "@/lib/wedding/format-hour";
 import type { Programme } from "@/lib/wedding/programme";
+
+import { RoomPlan } from "./room-plan";
 
 type DayPanelProps = {
     /** "Samedi 12 juin" */
     dateLabel: string;
     guestName: string;
-    table: { readonly number: number; readonly name: string };
+    /** Every table of the room, for the plan. */
+    tables: readonly SeatTable[];
+    room: RoomLayout;
+    /** The household's own tables, set by the couple in their dashboard. */
+    ownTables: readonly SeatTable[];
     programme: Programme;
     photoCount: number;
     onAddPhotos: () => void;
@@ -20,7 +27,9 @@ type DayPanelProps = {
 export const DayPanel = ({
     dateLabel,
     guestName,
-    table,
+    tables,
+    room,
+    ownTables,
     programme,
     photoCount,
     onAddPhotos,
@@ -41,15 +50,29 @@ export const DayPanel = ({
                     Bienvenue {guestName}
                 </h2>
                 <div className="bg-demo-ink text-demo-paper flex items-center justify-between gap-4 rounded-lg px-5 py-4.5">
-                    <p>
-                        <span className="text-demo-night-muted block text-sm">Votre table</span>
-                        <span className="font-demo-serif block text-6xl leading-none">
-                            {table.number}
-                        </span>
-                        <span className="font-demo-serif text-demo-sand text-xl italic">
-                            {table.name}
-                        </span>
-                    </p>
+                    {ownTables.length > 0 ? (
+                        <p>
+                            <span className="text-demo-night-muted block text-sm">
+                                {ownTables.length > 1 ? "Vos tables" : "Votre table"}
+                            </span>
+                            <span className="font-demo-serif block text-6xl leading-none">
+                                {ownTables.map((table) => table.number).join(" · ")}
+                            </span>
+                            <span className="font-demo-serif text-demo-sand text-xl italic">
+                                {ownTables.map((table) => table.name).join(" · ")}
+                            </span>
+                        </p>
+                    ) : (
+                        <p>
+                            <span className="text-demo-night-muted block text-sm">Votre table</span>
+                            <span className="font-demo-serif block text-2xl leading-snug">
+                                Pas encore attribuée
+                            </span>
+                            <span className="text-demo-night-muted text-sm">
+                                Les témoins vous guideront à l&apos;arrivée.
+                            </span>
+                        </p>
+                    )}
                     <button
                         type="button"
                         aria-expanded={mapOpen}
@@ -65,71 +88,16 @@ export const DayPanel = ({
                         id="plan-salle"
                         className="bg-demo-card border-demo-line mt-2 rounded-lg border p-2.5"
                     >
-                        <svg
-                            viewBox="0 0 280 150"
-                            role="img"
-                            aria-label={`Plan de la salle, table ${table.number} en surbrillance`}
-                            className="h-auto w-full"
-                        >
-                            <rect
-                                x="1"
-                                y="1"
-                                width="278"
-                                height="148"
-                                rx="4"
-                                className="fill-demo-card stroke-demo-line"
-                            />
-                            <rect
-                                x="95"
-                                y="8"
-                                width="90"
-                                height="18"
-                                rx="2"
-                                className="fill-demo-paper-2"
-                            />
-                            <text
-                                x="140"
-                                y="21"
-                                textAnchor="middle"
-                                className="fill-demo-muted text-[10px]"
-                            >
-                                Mariés
-                            </text>
-                            {[
-                                [45, 58],
-                                [100, 58],
-                                [180, 58],
-                                [235, 58],
-                                [45, 112],
-                                [100, 112],
-                                [235, 112],
-                            ].map(([cx, cy]) => (
-                                <circle
-                                    key={`${cx}-${cy}`}
-                                    cx={cx}
-                                    cy={cy}
-                                    r="16"
-                                    className="fill-demo-paper-2"
-                                />
-                            ))}
-                            <circle cx="180" cy="112" r="18" className="fill-demo-olive" />
-                            <text
-                                x="180"
-                                y="117"
-                                textAnchor="middle"
-                                className="fill-demo-card text-[14px]"
-                            >
-                                {table.number}
-                            </text>
-                            <text
-                                x="140"
-                                y="144"
-                                textAnchor="middle"
-                                className="fill-demo-muted text-[10px]"
-                            >
-                                Entrée de l&apos;orangerie
-                            </text>
-                        </svg>
+                        <RoomPlan
+                            tables={tables}
+                            room={room}
+                            highlight={ownTables.map((table) => table.id)}
+                            label={
+                                ownTables.length > 0
+                                    ? `Plan de la salle, table ${ownTables.map((table) => table.number).join(" et ")} en surbrillance`
+                                    : "Plan de la salle"
+                            }
+                        />
                     </div>
                 )}
                 <div className="bg-demo-card border-demo-line mt-3.5 rounded-lg border px-5 py-1">

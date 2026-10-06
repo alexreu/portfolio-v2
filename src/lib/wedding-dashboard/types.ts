@@ -1,4 +1,5 @@
 import type { DietChoice, Presence } from "@/lib/wedding/answer";
+import type { GuestQuestion } from "@/lib/wedding/types";
 
 /** Who the household belongs with; the family groups take the couple's first names. */
 export type GroupKey = "famille-1" | "famille-2" | "amis" | "collegues";
@@ -34,6 +35,56 @@ export type HouseholdRecord = {
     readonly questions: Readonly<Record<string, string>>;
     /** The household's note to the couple, empty if none. */
     readonly message: string;
+};
+
+/** One timed line of a moment, as the couple types it: a day around the wedding and hours. */
+export type SlotPlan = {
+    readonly id: string;
+    readonly title: string;
+    readonly place: string;
+    /** 0 the wedding day, -1 the day before, 1 the day after. */
+    readonly dayOffset: number;
+    /** "16:00" */
+    readonly start: string;
+    /** "", or "04:00": an end before the start falls the next day. */
+    readonly end: string;
+};
+
+/** One invitation, hence one answer, as the couple edits it. */
+export type MomentPlan = {
+    readonly key: string;
+    readonly title: string;
+    readonly slots: readonly SlotPlan[];
+};
+
+/** A table of the dinner, placed on the room plan in percent of its width and height. */
+export type SeatTable = {
+    readonly id: string;
+    readonly number: number;
+    readonly name: string;
+    readonly capacity: number;
+    readonly x: number;
+    readonly y: number;
+};
+
+/** Dates the couple set themselves; null follows the wedding day automatically. */
+export type DateOverrides = {
+    readonly answerDeadline: string | null;
+    readonly reminder: string | null;
+    readonly galleryOpens: string | null;
+};
+
+export type RoomSize = "s" | "m" | "l" | "xl";
+
+export type RoomPoint = { readonly x: number; readonly y: number };
+
+/** The dinner room: its name, its size, and where the couple's table and the entrance stand. */
+export type RoomLayout = {
+    /** "L'orangerie": shown at the entrance. */
+    readonly name: string;
+    readonly size: RoomSize;
+    readonly head: RoomPoint;
+    readonly entrance: RoomPoint;
 };
 
 export type SealTone = "olive" | "terre" | "encre";
@@ -87,4 +138,11 @@ export type DemoState = {
     readonly activity: readonly Activity[];
     readonly photos: readonly GalleryPhoto[];
     readonly lastReminder: { readonly at: string; readonly count: number } | null;
+    readonly moments: readonly MomentPlan[];
+    readonly questions: readonly GuestQuestion[];
+    readonly tables: readonly SeatTable[];
+    /** Table id by guest id. */
+    readonly seats: Readonly<Record<string, string>>;
+    readonly room: RoomLayout;
+    readonly dates: DateOverrides;
 };

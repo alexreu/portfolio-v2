@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
+import type { DraftIssue } from "@/lib/wedding-dashboard/drafts";
 import type { CellTone } from "@/lib/wedding-dashboard/households";
 
 const pill =
@@ -10,6 +11,7 @@ export const buttonStyles = {
     primary: cn(pill, "bg-wed-ink text-wed-paper hover:bg-black"),
     secondary: cn(pill, "border-wed-line bg-wed-paper text-wed-ink hover:border-wed-ink border"),
     quiet: cn(pill, "text-wed-ink-soft hover:bg-wed-line-soft hover:text-wed-ink px-3.5"),
+    danger: cn(pill, "bg-wed-no hover:bg-wed-no/90 text-white"),
 } as const;
 
 export const iconButton =
@@ -75,3 +77,19 @@ export const FieldError = ({ id, message }: { id: string; message: string | unde
 /** Where a sentence needs a word for a count: 1 foyer, 2 foyers. */
 export const plural = (count: number, one: string, many: string) =>
     `${count} ${count > 1 ? many : one}`;
+
+/** What every form of the dashboard says about a field it cannot accept. */
+export const issueMessages: Record<DraftIssue["code"], string> = {
+    required: "À renseigner.",
+    "too-long": "Un peu long : raccourcissez.",
+    "guest-required": "Ajoutez au moins une personne.",
+    "moment-required": "Cochez au moins un moment.",
+    "email-invalid": "Cette adresse ne semble pas complète.",
+    "date-invalid": "Date invalide.",
+    "date-past": "Choisissez une date à venir.",
+    "slot-required": "Ajoutez au moins un horaire.",
+    "time-invalid": "Heure attendue, par exemple 16:00.",
+    "number-taken": "Ce numéro est déjà pris.",
+    "out-of-range": "Valeur hors limites.",
+    limit: "Six questions au plus.",
+};

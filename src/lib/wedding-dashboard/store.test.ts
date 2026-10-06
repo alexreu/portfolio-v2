@@ -17,6 +17,12 @@ const seedState: DemoState = {
     activity: [],
     photos: [{ id: "p1", src: "/p1.jpg", alt: "", author: "Léa", removed: false }],
     lastReminder: null,
+    moments: [],
+    questions: [],
+    tables: [],
+    seats: {},
+    room: { name: "L'orangerie", size: "s", head: { x: 50, y: 11 }, entrance: { x: 50, y: 96 } },
+    dates: { answerDeadline: null, reminder: null, galleryOpens: null },
 };
 
 const memoryStorage = (): KeyValueStorage & { data: Map<string, string> } => {

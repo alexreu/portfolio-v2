@@ -1,21 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CONTENT_WEDDING_DAY, DEMO_GUEST_HOUSEHOLD } from "@/content/wedding-dashboard-demo";
+import { DEMO_GUEST_HOUSEHOLD } from "@/content/wedding-dashboard-demo";
 import { weddingDemo } from "@/content/wedding-demo";
 import { useLenis } from "lenis/react";
 import { ExternalLink, RotateCcw } from "lucide-react";
 
-import { shiftMoments, weddingCalendar } from "@/lib/wedding-dashboard/calendar";
+import { weddingCalendar } from "@/lib/wedding-dashboard/calendar";
 import { guestListCsv } from "@/lib/wedding-dashboard/csv";
 import { householdIdFor, monogram } from "@/lib/wedding-dashboard/drafts";
 import { groupLabel, householdStatus } from "@/lib/wedding-dashboard/households";
+import { momentsFromPlans } from "@/lib/wedding-dashboard/programme-plan";
 import type { HouseholdRecord } from "@/lib/wedding-dashboard/types";
 import { useNow } from "@/hooks/use-now";
 import { useWeddingDemo } from "@/hooks/use-wedding-demo";
 
+import { ConfirmPopover } from "./confirm-popover";
 import { DashboardNav } from "./dashboard-nav";
 import { buttonStyles } from "./dashboard-ui";
+import { DatesSection } from "./dates-section";
 import { FollowUpSection } from "./follow-up-section";
 import { GallerySection } from "./gallery-section";
 import { HouseholdDialog } from "./household-dialog";
@@ -23,6 +26,9 @@ import { HouseholdPanel } from "./household-panel";
 import { HouseholdsSection } from "./households-section";
 import { InvitationEditor } from "./invitation-editor";
 import { OverviewSection } from "./overview-section";
+import { ProgrammeSection } from "./programme-section";
+import { QuestionsSection } from "./questions-section";
+import { SeatingSection } from "./seating-section";
 
 const HIGHLIGHT_MS = 2_500;
 
@@ -78,8 +84,8 @@ export const DashboardApp = () => {
     if (!state) return <DashboardSkeleton />;
 
     const { design } = state;
-    const calendar = weddingCalendar(design.date);
-    const moments = shiftMoments(weddingDemo.moments, CONTENT_WEDDING_DAY, design.date);
+    const calendar = weddingCalendar(design.date, state.dates);
+    const moments = momentsFromPlans(state.moments, design.date);
     const sampleGuest =
         state.households.find((household) => household.id === DEMO_GUEST_HOUSEHOLD)?.name ??
         weddingDemo.household.name;
@@ -96,9 +102,7 @@ export const DashboardApp = () => {
 
     const remind = () => dispatch({ type: "reminder-sent", at: at() });
 
-    const resetDemo = () => {
-        if (window.confirm("Effacer vos essais et revenir aux données de départ ?")) reset();
-    };
+    const resetDemo = reset;
 
     return (
         <div className="grid min-h-dvh grid-cols-[minmax(0,1fr)] lg:grid-cols-[16rem_minmax(0,1fr)]">
@@ -129,10 +133,18 @@ export const DashboardApp = () => {
                             <ExternalLink aria-hidden="true" />
                             Site des invités
                         </a>
-                        <button type="button" onClick={resetDemo} className={buttonStyles.quiet}>
-                            <RotateCcw aria-hidden="true" />
-                            Réinitialiser
-                        </button>
+                        <ConfirmPopover
+                            question="Revenir aux données de départ ?"
+                            detail="Vos essais dans ce navigateur seront effacés."
+                            confirmLabel="Réinitialiser"
+                            align="end"
+                            onConfirm={resetDemo}
+                        >
+                            <button type="button" className={buttonStyles.quiet}>
+                                <RotateCcw aria-hidden="true" />
+                                Réinitialiser
+                            </button>
+                        </ConfirmPopover>
                     </div>
                 </aside>
 
@@ -155,11 +167,55 @@ export const DashboardApp = () => {
                     onAddHousehold={() => setCreating(true)}
                     onOpen={(household) => setDetailId(household.id)}
                 />
+                <DatesSection
+                    day={design.date}
+                    dates={state.dates}
+                    now={now}
+                    onSave={(day, dates) => dispatch({ type: "dates-saved", day, dates, at: at() })}
+                />
+                <ProgrammeSection
+                    moments={state.moments}
+                    households={state.households}
+                    weddingDay={design.date}
+                    onSave={(moment, inviteAll) =>
+                        dispatch({ type: "moment-saved", moment, inviteAll, at: at() })
+                    }
+                    onRemove={(moment) =>
+                        dispatch({ type: "moment-removed", key: moment.key, at: at() })
+                    }
+                />
+                <SeatingSection
+                    households={state.households}
+                    tables={state.tables}
+                    seats={state.seats}
+                    room={state.room}
+                    onSaveRoom={(name, size) => dispatch({ type: "room-saved", name, size })}
+                    onMoveFixture={(fixture, x, y) =>
+                        dispatch({ type: "fixture-moved", fixture, x, y })
+                    }
+                    onSaveTable={(table) => dispatch({ type: "table-saved", table })}
+                    onMoveTable={(tableId, x, y) =>
+                        dispatch({ type: "table-moved", tableId, x, y })
+                    }
+                    onRemoveTable={(tableId) => dispatch({ type: "table-removed", tableId })}
+                    onSeatGuest={(guestId, tableId) =>
+                        dispatch({ type: "guest-seated", guestId, tableId })
+                    }
+                    onSeatHousehold={(householdId, tableId) =>
+                        dispatch({ type: "household-seated", householdId, tableId })
+                    }
+                />
                 <InvitationEditor
                     design={design}
                     sampleGuest={sampleGuest}
                     now={now}
                     onSave={(next) => dispatch({ type: "design-saved", design: next, at: at() })}
+                />
+                <QuestionsSection
+                    questions={state.questions}
+                    onSave={(questions) =>
+                        dispatch({ type: "questions-saved", questions, at: at() })
+                    }
                 />
                 <FollowUpSection
                     state={state}
@@ -180,7 +236,7 @@ export const DashboardApp = () => {
             <HouseholdPanel
                 household={state.households.find((household) => household.id === detailId) ?? null}
                 moments={moments}
-                questions={weddingDemo.questions}
+                questions={state.questions}
                 design={design}
                 activity={state.activity}
                 now={now}

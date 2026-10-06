@@ -11,14 +11,15 @@ import { OliveSprig } from "./olive-sprig";
 
 /**
  * The Signature opening, in seconds from the touch on the seal. On the guest site the page
- * takes over at `handOver`, then the overlay fades: 2.4 s in all, under the 2.5 s of the plan.
+ * takes over at `handOver`, then the overlay fades: 3.5 s in all. The card holds still
+ * for half a second once both olive branches are drawn, so they can be seen.
  */
 export const envelopeTimeline = {
     flap: 0.15,
     rise: 0.6,
     forward: 1.2,
-    sprig: 1.15,
-    handOver: 1.9,
+    sprig: 1.3,
+    handOver: 3,
 } as const;
 
 const at = envelopeTimeline;

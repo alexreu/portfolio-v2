@@ -38,7 +38,9 @@ const issueAt = (issues: readonly DraftIssue[], path: keyof InvitationDesign) =>
     issues.find((issue) => issue.path === path);
 
 const sameDesign = (a: InvitationDesign, b: InvitationDesign) =>
-    (Object.keys(a) as (keyof InvitationDesign)[]).every((key) => a[key] === b[key]);
+    (Object.keys(a) as (keyof InvitationDesign)[])
+        .filter((key) => key !== "date")
+        .every((key) => a[key] === b[key]);
 
 /** What every guest discovers first: names, date, place, greeting and the colour of the seal. */
 export const InvitationEditor = ({ design, sampleGuest, now, onSave }: InvitationEditorProps) => {
@@ -48,9 +50,10 @@ export const InvitationEditor = ({ design, sampleGuest, now, onSave }: Invitatio
     const [opening, setOpening] = useState(false);
     const [take, setTake] = useState(0);
     const today = parisDay(now);
-    const check = validateDesign(draft, today);
+    /** The date is set in « Dates clés »: the editor always works on the saved one. */
+    const check = validateDesign({ ...draft, date: design.date }, today);
     /** The preview keeps the last valid date while one is being typed. */
-    const previewDate = issueAt(check.ok ? [] : check.error, "date") ? design.date : draft.date;
+    const previewDate = design.date;
     const dirty = !sameDesign(draft, design);
 
     const change = (patch: Partial<InvitationDesign>) => {
@@ -87,7 +90,6 @@ export const InvitationEditor = ({ design, sampleGuest, now, onSave }: Invitatio
     };
     const first = field("first");
     const second = field("second");
-    const date = field("date");
     const place = field("place");
     const welcome = field("welcome");
 
@@ -134,19 +136,6 @@ export const InvitationEditor = ({ design, sampleGuest, now, onSave }: Invitatio
                         {second.error}
                     </label>
                     <label className="grid content-start gap-1.5 text-sm">
-                        <span className="text-wed-ink-soft">Date du mariage</span>
-                        <input
-                            type="date"
-                            min={today}
-                            value={draft.date}
-                            onChange={(event) => change({ date: event.target.value })}
-                            aria-invalid={date["aria-invalid"]}
-                            aria-describedby={date["aria-describedby"]}
-                            className={inputStyles}
-                        />
-                        {date.error}
-                    </label>
-                    <label className="grid content-start gap-1.5 text-sm">
                         <span className="text-wed-ink-soft">Lieu, sous la date</span>
                         <input
                             value={draft.place}
@@ -158,6 +147,13 @@ export const InvitationEditor = ({ design, sampleGuest, now, onSave }: Invitatio
                         />
                         {place.error}
                     </label>
+                    <p className="text-wed-muted self-end pb-3 text-xs">
+                        La date se règle dans{" "}
+                        <a href="#dates" className="text-wed-ink-soft underline underline-offset-4">
+                            Dates clés
+                        </a>
+                        .
+                    </p>
                 </div>
                 <label className="grid gap-1.5 text-sm">
                     <span className="text-wed-ink-soft">Mot d&apos;accueil sur le site</span>

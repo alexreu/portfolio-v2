@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { householdStatus } from "@/lib/wedding-dashboard/households";
+import { householdTables, seatingPlan } from "@/lib/wedding-dashboard/seating";
 import { overview } from "@/lib/wedding-dashboard/stats";
 
 import { DEMO_GUEST_HOUSEHOLD, demoSeed } from "./wedding-dashboard-demo";
@@ -51,6 +52,27 @@ describe("demoSeed", () => {
         expect(answered.filter((household) => household.questions.chanson).length).toBeGreaterThan(
             3,
         );
+    });
+
+    it("starts the room plan half done: most dinner guests seated, one family waiting", () => {
+        const plan = seatingPlan(seed.households, seed.tables, seed.seats);
+
+        expect(plan.tables).toHaveLength(8);
+        expect(plan.unseated.map((guest) => guest.householdName)).toEqual(
+            Array(4).fill("Famille Mercier"),
+        );
+        expect(householdTables(seed.households[0], seed.tables, seed.seats)[0].name).toBe(
+            "Les Oliviers",
+        );
+    });
+
+    it("keeps the programme of the content, editable", () => {
+        expect(seed.moments.map((moment) => moment.key)).toEqual([
+            "ceremonie-vin-honneur",
+            "diner",
+            "brunch",
+        ]);
+        expect(seed.moments[2].slots[0]).toMatchObject({ dayOffset: 1, start: "11:00" });
     });
 
     it("gives every household and guest a unique id", () => {

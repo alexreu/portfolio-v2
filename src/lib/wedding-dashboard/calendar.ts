@@ -11,7 +11,7 @@ const atNoon = (day: string) => new Date(`${day}T12:00:00Z`);
 export const addDays = (day: string, days: number) =>
     new Date(atNoon(day).getTime() + days * DAY).toISOString().slice(0, 10);
 
-const daysBetween = (from: string, to: string) =>
+export const daysBetween = (from: string, to: string) =>
     Math.round((atNoon(to).getTime() - atNoon(from).getTime()) / DAY);
 
 /** Today's date in Paris, as "YYYY-MM-DD". */
@@ -39,19 +39,35 @@ export type WeddingCalendar = {
     readonly dateLabel: string;
     /** "Samedi 12 juin" */
     readonly shortDateLabel: string;
-    /** Answers close six weeks before the day. */
     readonly answerDeadline: string;
     readonly answerDeadlineLabel: string;
-    /** The automatic reminder goes out fifteen days before the deadline. */
     readonly reminderDay: string;
     readonly reminderLabel: string;
-    /** The guest gallery opens the day before. */
+    readonly galleryOpens: string;
     readonly galleryOpensLabel: string;
 };
 
-export const weddingCalendar = (day: string): WeddingCalendar => {
+/**
+ * Answers close six weeks before the day, the reminder goes out fifteen days before the
+ * deadline, and the guest gallery opens the day before.
+ */
+export const automaticDates = (day: string) => {
     const answerDeadline = addDays(day, -42);
-    const reminderDay = addDays(answerDeadline, -15);
+    return {
+        answerDeadline,
+        reminder: addDays(answerDeadline, -15),
+        galleryOpens: addDays(day, -1),
+    };
+};
+
+export const weddingCalendar = (
+    day: string,
+    overrides: Partial<Record<keyof ReturnType<typeof automaticDates>, string | null>> = {},
+): WeddingCalendar => {
+    const automatic = automaticDates(day);
+    const answerDeadline = overrides.answerDeadline ?? automatic.answerDeadline;
+    const reminderDay = overrides.reminder ?? automatic.reminder;
+    const galleryOpens = overrides.galleryOpens ?? automatic.galleryOpens;
     return {
         day,
         dateLabel: capitalized(`${weekdayLabel(day)} ${part(day, { year: "numeric" })}`),
@@ -60,7 +76,8 @@ export const weddingCalendar = (day: string): WeddingCalendar => {
         answerDeadlineLabel: `${dayOfMonth(answerDeadline)} ${part(answerDeadline, { month: "long", year: "numeric" })}`,
         reminderDay,
         reminderLabel: weekdayLabel(reminderDay),
-        galleryOpensLabel: weekdayLabel(addDays(day, -1)),
+        galleryOpens,
+        galleryOpensLabel: weekdayLabel(galleryOpens),
     };
 };
 
@@ -80,7 +97,7 @@ export const sinceLabel = (iso: string, now: Date) => {
 };
 
 /** "+02:00" on a summer day in Paris, "+01:00" in winter. */
-const parisOffset = (day: string) => {
+export const parisOffset = (day: string) => {
     const zone = new Intl.DateTimeFormat("en-US", {
         timeZone: "Europe/Paris",
         timeZoneName: "longOffset",

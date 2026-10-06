@@ -30,7 +30,7 @@ test.describe("tableau de bord des mariés (démo)", () => {
 
         await expect(page).toHaveURL(DASHBOARD);
         await expect(
-            page.getByRole("heading", { level: 1, name: "Bonjour Camille" }),
+            page.getByRole("heading", { level: 1, name: "Bonjour Camille & Hugo" }),
         ).toBeVisible();
     });
 
@@ -154,6 +154,117 @@ test.describe("tableau de bord des mariés (démo)", () => {
         await expect(gallery).toContainText("7 photos visibles");
     });
 
+    test("les dates changées dans le tableau de bord s'appliquent au site des invités", async ({
+        page,
+    }) => {
+        await page.goto(DASHBOARD);
+        const dates = page.getByRole("region", { name: "Dates clés" });
+        await dates.getByLabel("Date du mariage").fill("2027-09-04");
+        await dates.getByLabel("Date limite des réponses").fill("2027-08-01");
+        await dates.getByRole("button", { name: "Enregistrer les dates" }).click();
+        await expect(dates.getByRole("status")).toContainText("réponses avant le 1er août 2027");
+
+        await page.goto("/mariage/demo?skip");
+        await expect(page.locator("main")).toContainText("Samedi 4 septembre 2027");
+        await expect(page.locator("#rsvp")).toContainText("1er août 2027");
+        await expect(page.locator("#programme")).toContainText("4 septembre");
+    });
+
+    test("un moment ajouté au programme apparaît chez les invités", async ({ page }) => {
+        await page.goto(DASHBOARD);
+        const programme = page.getByRole("region", { name: "Programme" });
+        await programme.getByRole("button", { name: "Ajouter un moment" }).click();
+
+        const dialog = page.getByRole("dialog", { name: "Nouveau moment" });
+        await dialog.getByLabel("Nom du moment").fill("Mairie");
+        await dialog.getByLabel("Intitulé").fill("Mariage civil");
+        await dialog.getByLabel("Lieu").fill("Mairie de Lourmarin");
+        await dialog.getByLabel("Date", { exact: true }).fill("2027-06-11");
+        await dialog.getByLabel("Début").fill("11:00");
+        await dialog.getByRole("button", { name: "Ajouter le moment" }).click();
+        await expect(programme).toContainText("Mariage civil");
+
+        await page.goto("/mariage/demo?skip");
+        await expect(page.getByRole("region", { name: "Le déroulé" })).toContainText(
+            "Mariage civil",
+        );
+        await expect(
+            page
+                .getByRole("form", { name: "Votre réponse" })
+                .getByRole("group", { name: "Marie, Mairie" }),
+        ).toBeVisible();
+    });
+
+    test("une question ajoutée au faire-part est posée aux invités", async ({ page }) => {
+        await page.goto(DASHBOARD);
+        const questions = page.getByRole("region", { name: "Questions du faire-part" });
+        await questions.getByRole("button", { name: "Ajouter une question" }).click();
+        await questions
+            .getByRole("textbox", { name: "Question 2", exact: true })
+            .fill("Besoin d'une place en covoiturage ?");
+        await questions.getByRole("button", { name: "Enregistrer les questions" }).click();
+        await expect(questions.getByRole("status")).toContainText("Enregistrées");
+
+        await page.goto("/mariage/demo?skip");
+        await expect(
+            page
+                .getByRole("form", { name: "Votre réponse" })
+                .getByLabel("Besoin d'une place en covoiturage ?"),
+        ).toBeVisible();
+    });
+
+    test("le plan de table placé par les mariés s'affiche le jour J", async ({ page }) => {
+        await page.goto(DASHBOARD);
+        const seating = page.getByRole("region", { name: "Plan de table · dîner" });
+        await expect(seating).toContainText("4 invités au dîner n'ont pas encore de table.");
+
+        await seating
+            .getByLabel("Placer Famille Mercier à une table")
+            .selectOption({ label: "Table 8 · Les Mûriers (0/8)" });
+        await expect(seating).not.toContainText("n'ont pas encore de table");
+
+        await seating.getByRole("button", { name: /^Table 7, Les Oliviers/ }).click();
+        const table = seating.getByRole("region", { name: "Table 7" });
+        await table.getByLabel("Nom").fill("La Grande Oliveraie");
+        await table.getByRole("button", { name: "Enregistrer la table" }).click();
+
+        await page.goto("/mariage/demo?jourj");
+        await expect(page.getByRole("region", { name: "Bienvenue Marie & Thomas" })).toContainText(
+            "La Grande Oliveraie",
+        );
+    });
+
+    test("la salle se renomme et une table se retire depuis le plan, sans alerte", async ({
+        page,
+    }) => {
+        await page.goto(DASHBOARD);
+        const seating = page.getByRole("region", { name: "Plan de table · dîner" });
+        await seating.getByLabel("Nom, écrit à l'entrée").fill("La grange");
+        await seating.getByLabel("Taille").selectOption("m");
+
+        await seating.getByRole("button", { name: /^Table 8, Les Mûriers/ }).click();
+        await seating.getByRole("button", { name: "Retirer la table 8" }).click();
+        await page
+            .getByRole("dialog", { name: "Retirer la table 8 ?" })
+            .getByRole("button", { name: "Retirer" })
+            .click();
+        await expect(seating.getByRole("button", { name: /^Table 8,/ })).toHaveCount(0);
+
+        await page.goto("/mariage/demo?jourj");
+        await page.getByRole("button", { name: "Voir le plan" }).click();
+        await expect(page.locator("#plan-salle")).toContainText("Entrée · La grange");
+    });
+
+    test("sur téléphone, le menu suit la section lue", async ({ page, isMobile }) => {
+        test.skip(!isMobile, "la barre défilante n'existe que sur mobile");
+        await page.goto(DASHBOARD);
+        const strip = page.locator('header nav[aria-label="Sections du tableau de bord"] ul');
+        await expect(strip).toBeVisible();
+
+        await page.locator("#galerie").scrollIntoViewIfNeeded();
+        await expect.poll(() => strip.evaluate((list) => list.scrollLeft)).toBeGreaterThan(0);
+    });
+
     test("l'export CSV donne la liste des invités pour le traiteur", async ({ page }) => {
         await page.goto(DASHBOARD);
         const [download] = await Promise.all([
@@ -174,8 +285,11 @@ test.describe("tableau de bord des mariés (démo)", () => {
             "Relance envoyée à 8 foyers",
         );
 
-        page.once("dialog", (dialog) => dialog.accept());
-        await page.getByRole("button", { name: "Réinitialiser" }).first().click();
+        await page.getByRole("button", { name: "Réinitialiser", exact: true }).first().click();
+        await page
+            .getByRole("dialog", { name: "Revenir aux données de départ ?" })
+            .getByRole("button", { name: "Réinitialiser" })
+            .click();
         await expect(page.getByRole("region", { name: "Activité récente" })).not.toContainText(
             "Relance envoyée à 8 foyers",
         );

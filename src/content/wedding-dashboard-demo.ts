@@ -1,3 +1,4 @@
+import { plansFromMoments } from "@/lib/wedding-dashboard/programme-plan";
 import { demoReducer, type DemoAction } from "@/lib/wedding-dashboard/state";
 import type {
     DemoState,
@@ -5,10 +6,14 @@ import type {
     GuestRecord,
     HouseholdRecord,
     InvitationDesign,
+    SeatTable,
 } from "@/lib/wedding-dashboard/types";
 import type { DietChoice, Presence } from "@/lib/wedding/answer";
 
 import { weddingDemo } from "./wedding-demo";
+
+/** The seed replays only events that happened at a given time. */
+type TimedAction = Extract<DemoAction, { readonly at: string }>;
 
 /** Marie & Thomas: the household visitors play on the guest site. */
 export const DEMO_GUEST_HOUSEHOLD = "lefevre";
@@ -320,6 +325,32 @@ const plans: readonly HouseholdPlan[] = [
     },
 ];
 
+/** The orangery's round tables, named after Provence; table 7 is Marie & Thomas's. */
+const tables: readonly SeatTable[] = [
+    { id: "t1", number: 1, name: "Les Lavandes", capacity: 8, x: 16, y: 39 },
+    { id: "t2", number: 2, name: "Les Cyprès", capacity: 8, x: 36, y: 39 },
+    { id: "t3", number: 3, name: "Les Amandiers", capacity: 8, x: 64, y: 39 },
+    { id: "t4", number: 4, name: "Les Figuiers", capacity: 8, x: 84, y: 39 },
+    { id: "t5", number: 5, name: "Les Platanes", capacity: 8, x: 16, y: 75 },
+    { id: "t6", number: 6, name: "Les Vignes", capacity: 8, x: 36, y: 75 },
+    { id: "t7", number: 7, name: "Les Oliviers", capacity: 8, x: 64, y: 75 },
+    { id: "t8", number: 8, name: "Les Mûriers", capacity: 8, x: 84, y: 75 },
+];
+
+/** Who sits where so far: the Mercier family still waits for a table. */
+const seating: Readonly<Record<string, string>> = {
+    [DEMO_GUEST_HOUSEHOLD]: "t7",
+    moreau: "t1",
+    martin: "t1",
+    garcia: "t2",
+    caron: "t2",
+    faure: "t2",
+    durand: "t3",
+    girard: "t3",
+    fontaine: "t4",
+    dupont: "t4",
+};
+
 const ago = (now: Date, { days = 0, hours = 0, minutes = 0 }: Ago) =>
     new Date(now.getTime() - ((days * 24 + hours) * 60 + minutes) * 60_000).toISOString();
 
@@ -356,7 +387,7 @@ const answerAction = (
     plan: HouseholdPlan,
     household: HouseholdRecord,
     now: Date,
-): readonly DemoAction[] => {
+): readonly TimedAction[] => {
     if (!plan.answer) return [];
     const { at, by, moments, except = {}, diets = {}, song, message = "" } = plan.answer;
     return [
@@ -400,8 +431,8 @@ const answerAction = (
  */
 export const demoSeed = (now: Date): DemoState => {
     const households = plans.map((plan) => invited(plan, now));
-    const actions: readonly DemoAction[] = [
-        ...plans.flatMap((plan, index): readonly DemoAction[] =>
+    const actions: readonly TimedAction[] = [
+        ...plans.flatMap((plan, index): readonly TimedAction[] =>
             plan.seen
                 ? [{ type: "household-opened", householdId: plan.id, at: ago(now, plan.seen) }]
                 : answerAction(plan, households[index], now),
@@ -421,6 +452,23 @@ export const demoSeed = (now: Date): DemoState => {
             removed: false,
         })),
         lastReminder: null,
+        moments: plansFromMoments(weddingDemo.moments, CONTENT_WEDDING_DAY),
+        questions: weddingDemo.questions,
+        tables,
+        dates: { answerDeadline: null, reminder: null, galleryOpens: null },
+        room: {
+            name: "L'orangerie",
+            size: "s",
+            head: { x: 50, y: 11 },
+            entrance: { x: 50, y: 96 },
+        },
+        seats: Object.fromEntries(
+            households.flatMap((household) =>
+                seating[household.id]
+                    ? household.guests.map((guest) => [guest.id, seating[household.id]])
+                    : [],
+            ),
+        ),
     };
     return [...actions].sort((a, b) => a.at.localeCompare(b.at)).reduce(demoReducer, start);
 };

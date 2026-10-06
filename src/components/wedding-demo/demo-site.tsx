@@ -12,8 +12,10 @@ import { weddingDemo } from "@/content/wedding-demo";
 import { useLenis } from "lenis/react";
 import { AnimatePresence } from "motion/react";
 
-import { moveToDay, shiftMoments, weddingCalendar } from "@/lib/wedding-dashboard/calendar";
+import { moveToDay, weddingCalendar } from "@/lib/wedding-dashboard/calendar";
 import { monogram, personalize } from "@/lib/wedding-dashboard/drafts";
+import { momentsFromPlans } from "@/lib/wedding-dashboard/programme-plan";
+import { householdTables } from "@/lib/wedding-dashboard/seating";
 import type { HouseholdRecord } from "@/lib/wedding-dashboard/types";
 import type { AnswerDraft } from "@/lib/wedding/answer";
 import { signPhoto } from "@/lib/wedding/photo-signature";
@@ -37,7 +39,8 @@ import { InvitationOverlay } from "./invitation-overlay";
 import { UploadSheet } from "./upload-sheet";
 
 /** Marie & Thomas as the server renders them, before the visitor's browser copy is read. */
-const [fallbackHousehold] = demoSeed(new Date(0)).households;
+const fallback = demoSeed(new Date(0));
+const [fallbackHousehold] = fallback.households;
 
 const savedDraft = (household: HouseholdRecord): AnswerDraft => ({
     attendance: household.attendance,
@@ -95,13 +98,13 @@ export const DemoSite = ({ skipInvitation, startOnWeddingDay, householdId }: Dem
     /** A created household is only known once the browser copy is read. */
     const guestName = state === null && householdId ? null : household.name;
 
-    const calendar = weddingCalendar(design.date);
+    const calendar = weddingCalendar(design.date, (state ?? fallback).dates);
     const moved = (iso: string) => moveToDay(iso, CONTENT_WEDDING_DAY, design.date);
-    const invitedMoments = shiftMoments(
-        weddingDemo.moments,
-        CONTENT_WEDDING_DAY,
-        design.date,
-    ).filter((moment) => household.momentKeys.includes(moment.key));
+    /** The programme, questions and room plan as the couple last saved them. */
+    const plan = state ?? fallback;
+    const invitedMoments = momentsFromPlans(plan.moments, design.date).filter((moment) =>
+        household.momentKeys.includes(moment.key),
+    );
     const mode = previewDay
         ? "day"
         : siteModeAt({ startsAt: moved(weddingDemo.day.startsAt) }, new Date());
@@ -173,7 +176,9 @@ export const DemoSite = ({ skipInvitation, startOnWeddingDay, householdId }: Dem
                     <DayPanel
                         dateLabel={calendar.shortDateLabel}
                         guestName={household.name}
-                        table={weddingDemo.household.table}
+                        tables={plan.tables}
+                        room={plan.room}
+                        ownTables={householdTables(household, plan.tables, plan.seats)}
                         programme={programme}
                         photoCount={weddingDemo.gallery.count}
                         onAddPhotos={openUpload}
@@ -231,7 +236,7 @@ export const DemoSite = ({ skipInvitation, startOnWeddingDay, householdId }: Dem
                                         momentKeys: household.momentKeys,
                                     }}
                                     moments={invitedMoments}
-                                    questions={weddingDemo.questions}
+                                    questions={plan.questions}
                                     presenceLabels={presenceLabels(household)}
                                     initialDraft={savedDraft(household)}
                                     answered={answered && !editing}

@@ -120,7 +120,7 @@ export const OverviewSection = ({
             <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
                     <h1 className="font-wed-serif text-[2.6rem] leading-tight font-medium">
-                        Bonjour {state.design.first}
+                        Bonjour {state.design.first} &amp; {state.design.second}
                     </h1>
                     <p className="text-wed-muted">
                         {todayLabel(now)} · {countdownLabel(daysUntil(calendar.day, now))}

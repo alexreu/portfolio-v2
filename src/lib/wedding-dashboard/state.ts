@@ -1,10 +1,21 @@
 import { z } from "zod";
 
 import type { AnswerDraft } from "@/lib/wedding/answer";
+import type { GuestQuestion } from "@/lib/wedding/types";
 
 import { weddingCalendar } from "./calendar";
 import { dietSummary, householdStatus, householdSummary } from "./households";
-import type { Activity, DemoState, HouseholdRecord, InvitationDesign } from "./types";
+import { DINNER } from "./seating";
+import type {
+    Activity,
+    DateOverrides,
+    DemoState,
+    HouseholdRecord,
+    InvitationDesign,
+    MomentPlan,
+    RoomSize,
+    SeatTable,
+} from "./types";
 
 export type DemoAction =
     | { readonly type: "household-added"; readonly household: HouseholdRecord; readonly at: string }
@@ -19,7 +30,43 @@ export type DemoAction =
       }
     | { readonly type: "reminder-sent"; readonly at: string }
     | { readonly type: "photo-toggled"; readonly photoId: string; readonly at: string }
-    | { readonly type: "design-saved"; readonly design: InvitationDesign; readonly at: string };
+    | { readonly type: "design-saved"; readonly design: InvitationDesign; readonly at: string }
+    | {
+          readonly type: "moment-saved";
+          readonly moment: MomentPlan;
+          /** For a new moment: invite every household already on the list. */
+          readonly inviteAll: boolean;
+          readonly at: string;
+      }
+    | { readonly type: "moment-removed"; readonly key: string; readonly at: string }
+    | {
+          readonly type: "questions-saved";
+          readonly questions: readonly GuestQuestion[];
+          readonly at: string;
+      }
+    | { readonly type: "table-saved"; readonly table: SeatTable }
+    | {
+          readonly type: "table-moved";
+          readonly tableId: string;
+          readonly x: number;
+          readonly y: number;
+      }
+    | { readonly type: "table-removed"; readonly tableId: string }
+    | { readonly type: "guest-seated"; readonly guestId: string; readonly tableId: string | null }
+    | { readonly type: "household-seated"; readonly householdId: string; readonly tableId: string }
+    | {
+          readonly type: "dates-saved";
+          readonly day: string;
+          readonly dates: DateOverrides;
+          readonly at: string;
+      }
+    | { readonly type: "room-saved"; readonly name: string; readonly size: RoomSize }
+    | {
+          readonly type: "fixture-moved";
+          readonly fixture: "head" | "entrance";
+          readonly x: number;
+          readonly y: number;
+      };
 
 const ACTIVITY_KEPT = 30;
 const HOUR = 3_600_000;
@@ -232,10 +279,172 @@ export const demoReducer = (state: DemoState, action: DemoAction): DemoState => 
                     at: action.at,
                     kind: "design",
                     text: "Faire-part mis à jour",
-                    detail: `${action.design.first} & ${action.design.second} · ${weddingCalendar(action.design.date).dateLabel}`,
+                    detail: `${action.design.first} & ${action.design.second} · ${weddingCalendar(action.design.date, state.dates).dateLabel}`,
                     badge: "",
                 },
             );
+        case "dates-saved": {
+            const calendar = weddingCalendar(action.day, action.dates);
+            return withActivity(
+                { ...state, design: { ...state.design, date: action.day }, dates: action.dates },
+                {
+                    at: action.at,
+                    kind: "design",
+                    text: "Dates du mariage mises à jour",
+                    detail: `${calendar.dateLabel} · réponses avant le ${calendar.answerDeadlineLabel}`,
+                    badge: "",
+                },
+            );
+        }
+        case "moment-saved":
+            return momentSaved(state, action.moment, action.inviteAll, action.at);
+        case "moment-removed":
+            return momentRemoved(state, action.key, action.at);
+        case "questions-saved":
+            return withActivity(
+                { ...state, questions: action.questions },
+                {
+                    at: action.at,
+                    kind: "design",
+                    text: "Questions du faire-part mises à jour",
+                    detail: `${action.questions.length} ${action.questions.length > 1 ? "questions" : "question"}`,
+                    badge: "",
+                },
+            );
+        default:
+            return roomPlan(state, action);
+    }
+};
+
+const momentSaved = (
+    state: DemoState,
+    moment: MomentPlan,
+    inviteAll: boolean,
+    at: string,
+): DemoState => {
+    const known = state.moments.some((candidate) => candidate.key === moment.key);
+    const next: DemoState = {
+        ...state,
+        moments: known
+            ? state.moments.map((candidate) => (candidate.key === moment.key ? moment : candidate))
+            : [...state.moments, moment],
+        households:
+            known || !inviteAll
+                ? state.households
+                : state.households.map((household) => ({
+                      ...household,
+                      momentKeys: [...household.momentKeys, moment.key],
+                  })),
+    };
+    return withActivity(next, {
+        at,
+        kind: "design",
+        text: `${known ? "Moment modifié" : "Moment ajouté"} : ${moment.title}`,
+        detail: `${moment.slots.length} ${moment.slots.length > 1 ? "horaires" : "horaire"}`,
+        badge: "",
+    });
+};
+
+const withoutKey = <Value>(record: Readonly<Record<string, Value>>, key: string) =>
+    Object.fromEntries(Object.entries(record).filter(([candidate]) => candidate !== key));
+
+const momentRemoved = (state: DemoState, key: string, at: string): DemoState => {
+    const moment = state.moments.find((candidate) => candidate.key === key);
+    if (!moment) return state;
+    return withActivity(
+        {
+            ...state,
+            moments: state.moments.filter((candidate) => candidate.key !== key),
+            households: state.households.map((household) => ({
+                ...household,
+                momentKeys: household.momentKeys.filter((candidate) => candidate !== key),
+                attendance: Object.fromEntries(
+                    Object.entries(household.attendance).map(([guestId, answers]) => [
+                        guestId,
+                        withoutKey(answers, key),
+                    ]),
+                ),
+            })),
+        },
+        {
+            at,
+            kind: "design",
+            text: `Moment retiré : ${moment.title}`,
+            detail: "retiré des invitations et des réponses",
+            badge: "",
+        },
+    );
+};
+
+const clamp = (value: number) => Math.min(96, Math.max(4, Math.round(value)));
+
+const seated = (state: DemoState, guestIds: readonly string[], tableId: string | null) => ({
+    ...state,
+    seats: {
+        ...withoutKeys(state.seats, guestIds),
+        ...(tableId ? Object.fromEntries(guestIds.map((guestId) => [guestId, tableId])) : {}),
+    },
+});
+
+const withoutKeys = (record: Readonly<Record<string, string>>, keys: readonly string[]) =>
+    Object.fromEntries(Object.entries(record).filter(([key]) => !keys.includes(key)));
+
+/** Room plan changes are frequent and minor: they stay out of the activity feed. */
+const roomPlan = (state: DemoState, action: DemoAction): DemoState => {
+    switch (action.type) {
+        case "table-saved":
+            return {
+                ...state,
+                tables: state.tables.some((table) => table.id === action.table.id)
+                    ? state.tables.map((table) =>
+                          table.id === action.table.id ? action.table : table,
+                      )
+                    : [...state.tables, action.table],
+            };
+        case "table-moved":
+            return {
+                ...state,
+                tables: state.tables.map((table) =>
+                    table.id === action.tableId
+                        ? { ...table, x: clamp(action.x), y: clamp(action.y) }
+                        : table,
+                ),
+            };
+        case "table-removed":
+            return {
+                ...state,
+                tables: state.tables.filter((table) => table.id !== action.tableId),
+                seats: Object.fromEntries(
+                    Object.entries(state.seats).filter(([, tableId]) => tableId !== action.tableId),
+                ),
+            };
+        case "guest-seated":
+            return seated(state, [action.guestId], action.tableId);
+        case "household-seated": {
+            const household = state.households.find(
+                (candidate) => candidate.id === action.householdId,
+            );
+            const coming = (household?.guests ?? []).filter(
+                (guest) => household?.attendance[guest.id]?.[DINNER] === "yes",
+            );
+            return seated(
+                state,
+                coming.map((guest) => guest.id),
+                action.tableId,
+            );
+        }
+        case "room-saved":
+            return { ...state, room: { ...state.room, name: action.name, size: action.size } };
+        case "fixture-moved":
+            return {
+                ...state,
+                room: {
+                    ...state.room,
+                    [action.fixture]: { x: clamp(action.x), y: clamp(action.y) },
+                },
+            };
+        default:
+            return state;
     }
 };
 
@@ -307,14 +516,86 @@ const demoStateSchema = z.object({
         }),
     ),
     lastReminder: z.object({ at: z.string(), count: z.number() }).nullable(),
+    /** Absent from copies saved before the programme and room plan could be edited. */
+    moments: z
+        .array(
+            z.object({
+                key: z.string(),
+                title: z.string(),
+                slots: z.array(
+                    z.object({
+                        id: z.string(),
+                        title: z.string(),
+                        place: z.string(),
+                        dayOffset: z.number(),
+                        start: z.string(),
+                        end: z.string(),
+                    }),
+                ),
+            }),
+        )
+        .optional(),
+    questions: z
+        .array(z.object({ id: z.string(), label: z.string(), placeholder: z.string().optional() }))
+        .optional(),
+    tables: z
+        .array(
+            z.object({
+                id: z.string(),
+                number: z.number(),
+                name: z.string(),
+                capacity: z.number(),
+                x: z.number(),
+                y: z.number(),
+            }),
+        )
+        .optional(),
+    seats: z.record(z.string(), z.string()).optional(),
+    room: z
+        .object({
+            name: z.string(),
+            size: z.enum(["s", "m", "l", "xl"]),
+            head: z.object({ x: z.number(), y: z.number() }),
+            entrance: z.object({ x: z.number(), y: z.number() }),
+        })
+        .optional(),
+    dates: z
+        .object({
+            answerDeadline: z.string().nullable(),
+            reminder: z.string().nullable(),
+            galleryOpens: z.string().nullable(),
+        })
+        .optional(),
 });
 
+const defaultRoom = {
+    name: "La salle",
+    size: "s",
+    head: { x: 50, y: 11 },
+    entrance: { x: 50, y: 96 },
+} as const;
+
+type Editable = Pick<DemoState, "moments" | "questions" | "tables" | "seats" | "room" | "dates">;
+
 /** The browser copy may be stale, edited by hand or from an older demo: trusted only if valid. */
-export const parseDemoState = (raw: string | null): DemoState | null => {
+export const parseDemoState = (raw: string | null, defaults: () => Editable): DemoState | null => {
     if (raw === null) return null;
     try {
         const parsed = demoStateSchema.safeParse(JSON.parse(raw));
-        return parsed.success ? parsed.data : null;
+        if (!parsed.success) return null;
+        const { moments, questions, tables, seats, room, dates, ...rest } = parsed.data;
+        const missing =
+            !moments || !questions || !tables || !seats || !room || !dates ? defaults() : null;
+        return {
+            ...rest,
+            moments: moments ?? missing?.moments ?? [],
+            questions: questions ?? missing?.questions ?? [],
+            tables: tables ?? missing?.tables ?? [],
+            seats: seats ?? missing?.seats ?? {},
+            room: room ?? missing?.room ?? defaultRoom,
+            dates: dates ??
+                missing?.dates ?? { answerDeadline: null, reminder: null, galleryOpens: null },
+        };
     } catch {
         return null;
     }

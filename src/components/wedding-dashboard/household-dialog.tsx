@@ -18,7 +18,7 @@ import type { Moment } from "@/lib/wedding/types";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { cormorant } from "@/app/fonts/wedding";
 
-import { buttonStyles, FieldError, iconButton, inputStyles } from "./dashboard-ui";
+import { buttonStyles, FieldError, iconButton, inputStyles, issueMessages } from "./dashboard-ui";
 
 type HouseholdDialogProps = {
     open: boolean;
@@ -33,15 +33,7 @@ const MAX_GUESTS = 8;
 
 const groups: readonly GroupKey[] = ["famille-1", "famille-2", "amis", "collegues"];
 
-const messages: Record<DraftIssue["code"], string> = {
-    required: "À renseigner.",
-    "too-long": "Un peu long : raccourcissez.",
-    "guest-required": "Ajoutez au moins une personne.",
-    "moment-required": "Cochez au moins un moment.",
-    "email-invalid": "Cette adresse ne semble pas complète.",
-    "date-invalid": "Date invalide.",
-    "date-past": "Choisissez une date à venir.",
-};
+const messages = issueMessages;
 
 const emptyDraft = (moments: readonly Moment[]): HouseholdDraft => ({
     name: "",

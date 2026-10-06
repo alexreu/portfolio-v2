@@ -29,7 +29,7 @@ const stem = (startsAt: number): Variants => ({
         pathLength: 1,
         opacity: 1,
         transition: {
-            pathLength: { delay: startsAt, duration: 0.7, ease: [0.65, 0, 0.35, 1] },
+            pathLength: { delay: startsAt, duration: 0.9, ease: [0.65, 0, 0.35, 1] },
             opacity: { delay: startsAt, duration: 0.01 },
         },
     },
@@ -37,7 +37,7 @@ const stem = (startsAt: number): Variants => ({
 
 const grown = (startsAt: number, order: number): Variants => {
     const transition: Transition = {
-        delay: startsAt + 0.15 + order * 0.07,
+        delay: startsAt + 0.2 + order * 0.09,
         duration: 0.45,
         ease: settle,
     };

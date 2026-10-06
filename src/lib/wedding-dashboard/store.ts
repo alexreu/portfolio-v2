@@ -41,7 +41,7 @@ export const createDemoStore = ({ storage, key, seed }: Options): DemoStore => {
     const getSnapshot = () => {
         const raw = read();
         if (cached && cached.raw === raw) return cached.state;
-        cached = { raw, state: parseDemoState(raw) ?? seed() };
+        cached = { raw, state: parseDemoState(raw, seed) ?? seed() };
         return cached.state;
     };
 

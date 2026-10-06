@@ -19,7 +19,12 @@ export type DraftIssue = {
         | "moment-required"
         | "email-invalid"
         | "date-invalid"
-        | "date-past";
+        | "date-past"
+        | "slot-required"
+        | "time-invalid"
+        | "number-taken"
+        | "out-of-range"
+        | "limit";
 };
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

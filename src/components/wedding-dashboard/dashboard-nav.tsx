@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
+    Armchair,
     BellRing,
+    CalendarClock,
+    CalendarDays,
     ExternalLink,
     Images,
     LayoutGrid,
@@ -15,9 +18,14 @@ import {
 
 import { cn } from "@/lib/utils";
 
+import { ConfirmPopover } from "./confirm-popover";
+
 const sections: readonly { id: string; label: string; icon: LucideIcon }[] = [
     { id: "apercu", label: "Vue d'ensemble", icon: LayoutGrid },
     { id: "invites", label: "Invités", icon: Users },
+    { id: "dates", label: "Dates", icon: CalendarClock },
+    { id: "programme", label: "Programme", icon: CalendarDays },
+    { id: "plan-de-table", label: "Plan de table", icon: Armchair },
     { id: "faire-part", label: "Faire-part", icon: Stamp },
     { id: "relances", label: "Relances", icon: BellRing },
     { id: "galerie", label: "Galerie", icon: Images },
@@ -60,6 +68,19 @@ export const DashboardNav = ({
     onReset,
 }: DashboardNavProps) => {
     const active = useActiveSection();
+    const strip = useRef<HTMLUListElement>(null);
+
+    /** On a phone the tabs scroll sideways: the one being read slides to the middle. */
+    useEffect(() => {
+        const list = strip.current;
+        const link = list?.querySelector<HTMLElement>(`a[href="#${active}"]`);
+        if (!list || !link) return;
+        const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        list.scrollTo({
+            left: link.offsetLeft - (list.clientWidth - link.offsetWidth) / 2,
+            behavior: still ? "auto" : "smooth",
+        });
+    }, [active]);
 
     const links = (compact: boolean) =>
         sections.map(({ id, label, icon: Icon }) => (
@@ -93,7 +114,10 @@ export const DashboardNav = ({
             <header className="bg-wed-night text-wed-night-text sticky top-0 z-30 flex h-14 items-center gap-2 pl-4 lg:hidden">
                 <p className="font-wed-serif shrink-0 text-xl italic">{monogram}</p>
                 <nav aria-label="Sections du tableau de bord" className="min-w-0 flex-1">
-                    <ul className="flex gap-1 overflow-x-auto px-2 py-2 [scrollbar-width:none]">
+                    <ul
+                        ref={strip}
+                        className="relative flex gap-1 overflow-x-auto [mask-image:linear-gradient(to_right,transparent,black_12px,black_calc(100%-28px),transparent)] px-2 py-2 [scrollbar-width:none]"
+                    >
                         {links(true)}
                     </ul>
                 </nav>
@@ -117,14 +141,20 @@ export const DashboardNav = ({
                         <ExternalLink aria-hidden="true" className="size-4" />
                         Site des invités
                     </a>
-                    <button
-                        type="button"
-                        onClick={onReset}
-                        className="hover:text-wed-night-text flex min-h-10 cursor-pointer items-center gap-2 rounded-full px-3.5 text-left"
+                    <ConfirmPopover
+                        question="Revenir aux données de départ ?"
+                        detail="Vos essais dans ce navigateur seront effacés."
+                        confirmLabel="Réinitialiser"
+                        onConfirm={onReset}
                     >
-                        <RotateCcw aria-hidden="true" className="size-4" />
-                        Réinitialiser la démo
-                    </button>
+                        <button
+                            type="button"
+                            className="hover:text-wed-night-text flex min-h-10 cursor-pointer items-center gap-2 rounded-full px-3.5 text-left"
+                        >
+                            <RotateCcw aria-hidden="true" className="size-4" />
+                            Réinitialiser la démo
+                        </button>
+                    </ConfirmPopover>
                     <Link
                         href="/mariage"
                         className="hover:text-wed-night-text flex min-h-10 items-center rounded-full px-3.5"

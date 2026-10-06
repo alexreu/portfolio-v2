@@ -37,7 +37,35 @@ const state: DemoState = {
     activity: [],
     photos: [{ id: "p1", src: "/p1.jpg", alt: "Une photo", author: "Léa", removed: false }],
     lastReminder: null,
+    moments: [
+        {
+            key: "ceremonie",
+            title: "Cérémonie",
+            slots: [
+                { id: "c1", title: "Cérémonie", place: "", dayOffset: 0, start: "16:00", end: "" },
+            ],
+        },
+        {
+            key: "diner",
+            title: "Dîner",
+            slots: [{ id: "d1", title: "Dîner", place: "", dayOffset: 0, start: "20:00", end: "" }],
+        },
+    ],
+    questions: [{ id: "chanson", label: "Une chanson", placeholder: "" }],
+    tables: [{ id: "t7", number: 7, name: "Les Oliviers", capacity: 8, x: 64, y: 75 }],
+    seats: { marie: "t7" },
+    room: { name: "L'orangerie", size: "s", head: { x: 50, y: 11 }, entrance: { x: 50, y: 96 } },
+    dates: { answerDeadline: null, reminder: null, galleryOpens: null },
 };
+
+const extras = () => ({
+    moments: [],
+    questions: [],
+    tables: [],
+    seats: {},
+    room: state.room,
+    dates: state.dates,
+});
 
 const at = "2026-10-06T10:00:00+02:00";
 
@@ -204,9 +232,150 @@ describe("demoReducer", () => {
     });
 });
 
+describe("demoReducer · programme, questions and room plan", () => {
+    const answeredLefevre: DemoState = {
+        ...state,
+        households: [
+            {
+                ...lefevre,
+                answeredAt: at,
+                answeredBy: "invite",
+                attendance: {
+                    marie: { ceremonie: "yes", diner: "yes" },
+                    thomas: { ceremonie: "yes", diner: "no" },
+                },
+            },
+        ],
+    };
+
+    const brunch = {
+        key: "brunch",
+        title: "Brunch",
+        slots: [{ id: "b1", title: "Brunch", place: "", dayOffset: 1, start: "11:00", end: "" }],
+    };
+
+    it("adds a moment, and invites every household when asked", () => {
+        const next = demoReducer(state, {
+            type: "moment-saved",
+            moment: brunch,
+            inviteAll: true,
+            at,
+        });
+
+        expect(next.moments.map((moment) => moment.key)).toEqual(["ceremonie", "diner", "brunch"]);
+        expect(next.households[0].momentKeys).toEqual(["ceremonie", "diner", "brunch"]);
+        expect(next.activity[0].text).toBe("Moment ajouté : Brunch");
+    });
+
+    it("renames a moment in place", () => {
+        const next = demoReducer(state, {
+            type: "moment-saved",
+            moment: { ...state.moments[1], title: "Dîner & soirée" },
+            inviteAll: false,
+            at,
+        });
+
+        expect(next.moments[1].title).toBe("Dîner & soirée");
+        expect(next.activity[0].text).toBe("Moment modifié : Dîner & soirée");
+    });
+
+    it("removes a moment from the programme and from every invitation and answer", () => {
+        const next = demoReducer(answeredLefevre, { type: "moment-removed", key: "diner", at });
+
+        expect(next.moments.map((moment) => moment.key)).toEqual(["ceremonie"]);
+        expect(next.households[0].momentKeys).toEqual(["ceremonie"]);
+        expect(next.households[0].attendance).toEqual({
+            marie: { ceremonie: "yes" },
+            thomas: { ceremonie: "yes" },
+        });
+    });
+
+    it("moves the wedding day and keeps the dates the couple set", () => {
+        const next = demoReducer(state, {
+            type: "dates-saved",
+            day: "2027-09-04",
+            dates: { answerDeadline: "2027-08-01", reminder: null, galleryOpens: null },
+            at,
+        });
+
+        expect(next.design.date).toBe("2027-09-04");
+        expect(next.dates.answerDeadline).toBe("2027-08-01");
+        expect(next.activity[0]).toMatchObject({
+            text: "Dates du mariage mises à jour",
+            detail: "Samedi 4 septembre 2027 · réponses avant le 1er août 2027",
+        });
+    });
+
+    it("saves the faire-part's questions", () => {
+        const questions = [{ id: "covoiturage", label: "Covoiturage ?", placeholder: "" }];
+        const next = demoReducer(state, { type: "questions-saved", questions, at });
+
+        expect(next.questions).toEqual(questions);
+        expect(next.activity[0].text).toBe("Questions du faire-part mises à jour");
+    });
+
+    it("adds, moves and removes a table, freeing its seats", () => {
+        const table = { id: "t1", number: 1, name: "Les Lavandes", capacity: 6, x: 20, y: 40 };
+        const added = demoReducer(state, { type: "table-saved", table });
+        const moved = demoReducer(added, { type: "table-moved", tableId: "t1", x: 120, y: -5 });
+        const removed = demoReducer(moved, { type: "table-removed", tableId: "t7" });
+
+        expect(moved.tables.find((t) => t.id === "t1")).toMatchObject({ x: 96, y: 4 });
+        expect(removed.tables.map((t) => t.id)).toEqual(["t1"]);
+        expect(removed.seats).toEqual({});
+    });
+
+    it("renames and enlarges the room, and moves the couple's table and the entrance", () => {
+        const renamed = demoReducer(state, {
+            type: "room-saved",
+            name: "La grange",
+            size: "l",
+        });
+        const moved = demoReducer(renamed, { type: "fixture-moved", fixture: "head", x: 20, y: 0 });
+        const door = demoReducer(moved, {
+            type: "fixture-moved",
+            fixture: "entrance",
+            x: 101,
+            y: 50,
+        });
+
+        expect(door.room).toEqual({
+            name: "La grange",
+            size: "l",
+            head: { x: 20, y: 4 },
+            entrance: { x: 96, y: 50 },
+        });
+    });
+
+    it("seats a guest, moves them, and takes the seat back", () => {
+        const seated = demoReducer(state, {
+            type: "guest-seated",
+            guestId: "thomas",
+            tableId: "t7",
+        });
+        const freed = demoReducer(seated, {
+            type: "guest-seated",
+            guestId: "marie",
+            tableId: null,
+        });
+
+        expect(seated.seats).toEqual({ marie: "t7", thomas: "t7" });
+        expect(freed.seats).toEqual({ thomas: "t7" });
+    });
+
+    it("seats a whole household at once, only those coming to dinner", () => {
+        const next = demoReducer(
+            { ...answeredLefevre, seats: {} },
+            { type: "household-seated", householdId: "lefevre", tableId: "t7" },
+        );
+
+        expect(next.seats).toEqual({ marie: "t7" });
+    });
+});
+
 describe("parseDemoState", () => {
     it("reads back what was saved", () => {
-        expect(parseDemoState(JSON.stringify(state))).toEqual(state);
+        expect(parseDemoState(JSON.stringify(state), extras)).toEqual(state);
     });
 
     it("still reads a copy saved before notes and questions were kept", () => {
@@ -216,16 +385,32 @@ describe("parseDemoState", () => {
             activity: [{ id: "a", at, kind: "opened", text: "t", detail: "d", badge: "" }],
         };
 
-        const parsed = parseDemoState(JSON.stringify(older));
+        const parsed = parseDemoState(JSON.stringify(older), extras);
 
         expect(parsed?.households[0]).toMatchObject({ questions: {}, message: "" });
         expect(parsed?.activity[0].subject).toBe("");
     });
 
+    it("fills in the programme, questions and room plan missing from an older copy", () => {
+        const { moments, questions, tables, seats, room, dates, ...older } = state;
+        const parsed = parseDemoState(JSON.stringify(older), () => ({
+            moments,
+            questions,
+            tables,
+            seats,
+            room,
+            dates,
+        }));
+
+        expect(parsed).toEqual(state);
+    });
+
     it("ignores anything it cannot trust, so the demo starts afresh", () => {
-        expect(parseDemoState(null)).toBeNull();
-        expect(parseDemoState("{oops")).toBeNull();
-        expect(parseDemoState(JSON.stringify({ ...state, version: 2 }))).toBeNull();
-        expect(parseDemoState(JSON.stringify({ ...state, households: [{ id: 1 }] }))).toBeNull();
+        expect(parseDemoState(null, extras)).toBeNull();
+        expect(parseDemoState("{oops", extras)).toBeNull();
+        expect(parseDemoState(JSON.stringify({ ...state, version: 2 }), extras)).toBeNull();
+        expect(
+            parseDemoState(JSON.stringify({ ...state, households: [{ id: 1 }] }), extras),
+        ).toBeNull();
     });
 });

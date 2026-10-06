@@ -234,7 +234,7 @@ Calendrier conseillé au couple :
 ### 4.1 Faire-part numérique
 
 - **Animé dans toutes les formules.** Écran d'ouverture plein écran : sceau /
-  enveloppe / reveal typographique. Animation **≤ 2,5 s**, passable, désactivée
+  enveloppe / reveal typographique. Animation **≤ 3,5 s** (Signature : le rameau d'olivier reste visible une demi-seconde), passable, désactivée
   sous `prefers-reduced-motion`.
 - Intime et Essentiel : une animation standard du socle, aux couleurs du
   couple. Signature : une animation conçue pour le couple.
@@ -755,7 +755,10 @@ Faite, en TDD (Vitest + Playwright), dans le portfolio :
   (indicateurs, réponses par moment, récap traiteur, foyers filtrables,
   création de faire-part avec lien personnel, éditeur du faire-part, détail
   d'une réponse (qui vient à quoi, régimes, chanson, petit mot, historique),
-  relances, galerie avec visionneuse, export CSV). Invités fictifs gardés dans le navigateur, partagés
+  dates clés (jour J, date limite, relance, ouverture de la galerie),
+  programme éditable (moments et horaires datés), questions du faire-part, plan de
+  table par personne (tables déplaçables, alertes), relances, galerie avec
+  visionneuse, export CSV). Invités fictifs gardés dans le navigateur, partagés
   avec le site invité : une réponse donnée sur `/mariage/demo` apparaît aussitôt.
 - **Home** : carte « Sites de mariage » dans la grille bento.
 - **Logique réutilisable par la plateforme** (`src/lib/wedding/`) :

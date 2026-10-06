@@ -19,7 +19,25 @@ describe("weddingCalendar", () => {
             answerDeadlineLabel: "1er mai 2027",
             reminderDay: "2027-04-16",
             reminderLabel: "vendredi 16 avril",
+            galleryOpens: "2027-06-11",
             galleryOpensLabel: "vendredi 11 juin",
+        });
+    });
+
+    it("uses the dates the couple set instead of the automatic ones", () => {
+        expect(
+            weddingCalendar("2027-06-12", {
+                answerDeadline: "2027-05-15",
+                reminder: "2027-05-01",
+                galleryOpens: "2027-06-12",
+            }),
+        ).toMatchObject({
+            answerDeadline: "2027-05-15",
+            answerDeadlineLabel: "15 mai 2027",
+            reminderDay: "2027-05-01",
+            reminderLabel: "samedi 1er mai",
+            galleryOpens: "2027-06-12",
+            galleryOpensLabel: "samedi 12 juin",
         });
     });
 
