@@ -4,6 +4,9 @@ import { structureTool, type StructureBuilder } from "sanity/structure";
 
 import { schemaTypes } from "./schemaTypes";
 
+/** One document each: no create, no duplicate, opened directly from the menu. */
+const singletons = ["maintenanceSection", "weddingService"];
+
 export default defineConfig({
     name: "portfolio-studio",
     title: "portfolio-studio",
@@ -20,7 +23,7 @@ export default defineConfig({
                     .title("Contenu")
                     .items([
                         ...S.documentTypeListItems().filter(
-                            (item) => item.getId() !== "maintenanceSection",
+                            (item) => !singletons.includes(item.getId() ?? ""),
                         ),
                         S.listItem()
                             .title("Maintenance")
@@ -30,15 +33,23 @@ export default defineConfig({
                                     .schemaType("maintenanceSection")
                                     .documentId("maintenanceSection"),
                             ),
+                        S.listItem()
+                            .title("Sites de mariage")
+                            .id("weddingService")
+                            .child(
+                                S.document()
+                                    .schemaType("weddingService")
+                                    .documentId("weddingService"),
+                            ),
                     ]),
         }),
         visionTool(),
     ],
     document: {
         newDocumentOptions: (options) =>
-            options.filter((option) => option.templateId !== "maintenanceSection"),
+            options.filter((option) => !singletons.includes(option.templateId)),
         actions: (actions, context) =>
-            context.schemaType === "maintenanceSection"
+            singletons.includes(context.schemaType)
                 ? actions.filter((action) => action.action !== "duplicate")
                 : actions,
     },

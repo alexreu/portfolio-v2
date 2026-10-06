@@ -1,7 +1,9 @@
+import { weddingLlmsSection } from "@/lib/llms";
 import { getProjectUrl } from "@/lib/projects";
-import { getHomepageData } from "@/lib/sanity/sanity.query";
+import { getHomepageData, getWeddingService } from "@/lib/sanity/sanity.query";
 import type { PricingPlan } from "@/lib/sanity/types";
-import { absoluteUrl, site } from "@/lib/seo";
+import { absoluteUrl, site, weddingPage } from "@/lib/seo";
+import { resolveWeddingService } from "@/lib/wedding-service/content";
 
 // Plain-text brief for LLM crawlers (https://llmstxt.org), rebuilt from Sanity so
 // AI answers quote the same services and prices as the page itself.
@@ -14,7 +16,7 @@ const formatPrice = (plan: PricingPlan) => {
 };
 
 export async function GET() {
-    const data = await getHomepageData();
+    const [data, wedding] = await Promise.all([getHomepageData(), getWeddingService()]);
     const contact = data.settings?.contact;
     const services =
         data.services.length > 0
@@ -49,6 +51,7 @@ export async function GET() {
                         `- Maintenance ${plan.name} : ${plan.price.toLocaleString("fr-FR")} € HT. ${plan.summary}`,
                 ),
             ].join("\n"),
+        weddingLlmsSection(resolveWeddingService(wedding)),
         ["## Expertise", site.expertise.join(", ")].join("\n"),
         projects.length > 0 && ["## Projets", ...projects].join("\n"),
         [
@@ -62,6 +65,7 @@ export async function GET() {
         [
             "## Pages",
             `- [Accueil](${absoluteUrl("/")}) : présentation, services, projets, tarifs et contact`,
+            `- [Sites de mariage](${absoluteUrl(weddingPage.path)}) : offre, démo, tarifs et FAQ`,
             `- [Mentions légales](${absoluteUrl("/mentions-legales")}) : éditeur (SIRET 918 609 421 00014), hébergement`,
             `- [Politique de confidentialité](${absoluteUrl("/politique-de-confidentialite")})`,
         ].join("\n"),

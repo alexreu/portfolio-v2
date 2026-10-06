@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { getProjectUrl } from "@/lib/projects";
 import type { PricingPlan, Project, Service, SiteSettings } from "@/lib/sanity/types";
+import type { WeddingPlan, WeddingService } from "@/lib/wedding-service/types";
 
 /**
  * Single source of truth for SEO: metadata, JSON-LD, sitemap, robots and llms.txt
@@ -273,6 +274,51 @@ export const buildPageJsonLd = ({ title, description, path }: PageMetadataOption
                 { "@type": "ListItem", position: 1, name: "Accueil", item: site.url },
                 { "@type": "ListItem", position: 2, name: title, item: absoluteUrl(path) },
             ],
+        },
+    ],
+});
+
+export const weddingPage = {
+    path: "/mariage",
+    title: "Sites de mariage sur-mesure",
+    description:
+        "Faire-part numérique animé, réponses des invités par lien personnel, programme du jour J et galerie photo partagée. Un site de mariage unique, dès 290 €.",
+} as const;
+
+const weddingOffer = (plan: WeddingPlan) => ({
+    "@type": "Offer",
+    name: plan.name,
+    description: plan.tagline,
+    price: String(plan.price),
+    priceCurrency: "EUR",
+    url: absoluteUrl(`${weddingPage.path}#tarifs`),
+});
+
+const faqNode = (content: WeddingService) => ({
+    "@type": "FAQPage",
+    "@id": `${absoluteUrl(weddingPage.path)}#faq`,
+    mainEntity: content.faq.items.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+});
+
+/** The wedding offer page: the page itself, the service with its three plans, and its FAQ. */
+export const buildWeddingJsonLd = (content: WeddingService) => ({
+    "@context": "https://schema.org",
+    "@graph": [
+        ...buildPageJsonLd(weddingPage)["@graph"],
+        faqNode(content),
+        {
+            "@type": "Service",
+            "@id": `${absoluteUrl(weddingPage.path)}#service`,
+            name: "Sites de mariage",
+            serviceType: "Création de site internet de mariage",
+            description: weddingPage.description,
+            provider: { "@id": ids.business },
+            areaServed: { "@type": "Country", name: "France" },
+            offers: content.pricing.plans.map(weddingOffer),
         },
     ],
 });

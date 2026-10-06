@@ -27,10 +27,84 @@
     --radius: 0.625rem;
 
     --primary-light: #ff6b6b;
+
+    /* Sites de mariage — page /mariage : ivoire, encre, doré */
+    --wedding-ivory: #F4F0E8;
+    --wedding-paper: #FBF8F2;
+    --wedding-ink: #1E1B17;
+    --wedding-ink-soft: #3A342D;
+    --wedding-muted: #6B6359;
+    --wedding-line: #DDD5C8;
+    --wedding-line-soft: #E9E3D8;
+    --wedding-gold: #7A5F37;
+    --wedding-gold-soft: #C9AE82;
+    --wedding-night: #14120F;
+    --wedding-night-line: #2E2A24;
+    --wedding-night-text: #EDE7DC;
+    --wedding-night-muted: #A39A8D;
+    --wedding-yes: #3D5537;
+    --wedding-yes-bg: #E3EADD;
+    --wedding-wait: #7A5F37;
+    --wedding-wait-bg: #F1E9D9;
+
+    /* Démo Camille & Hugo : papier, encre, olivier */
+    --demo-paper: #EFEAE0;
+    --demo-paper-2: #E6E0D3;
+    --demo-card: #F7F4EE;
+    --demo-ink: #1F1D1A;
+    --demo-ink-2: #47423A;
+    --demo-muted: #6A6257;
+    --demo-line: #CFC7B8;
+    --demo-olive: #5E6B4E;
+    --demo-olive-dark: #4A5640;
+    --demo-earth: #B08A6A;
+    --demo-earth-dark: #7A5A3F;
+    --demo-sand: #D9C9AE;
+    --demo-no: #8A4B36;
+    --demo-night-muted: #B9B1A3;
+    --demo-night-line: #3A352E;
 }
 
 @theme inline {
     --font-main: var(--font-poppins), sans-serif;
+    --font-wed-serif: var(--font-cormorant), Georgia, serif;
+    --font-demo-serif: var(--font-newsreader), Georgia, serif;
+    --font-demo-sans: var(--font-jost), system-ui, sans-serif;
+    --font-demo-script: var(--font-pinyon), cursive;
+
+    --color-wed-ivory: var(--wedding-ivory);
+    --color-wed-paper: var(--wedding-paper);
+    --color-wed-ink: var(--wedding-ink);
+    --color-wed-ink-soft: var(--wedding-ink-soft);
+    --color-wed-muted: var(--wedding-muted);
+    --color-wed-line: var(--wedding-line);
+    --color-wed-line-soft: var(--wedding-line-soft);
+    --color-wed-gold: var(--wedding-gold);
+    --color-wed-gold-soft: var(--wedding-gold-soft);
+    --color-wed-night: var(--wedding-night);
+    --color-wed-night-line: var(--wedding-night-line);
+    --color-wed-night-text: var(--wedding-night-text);
+    --color-wed-night-muted: var(--wedding-night-muted);
+    --color-wed-yes: var(--wedding-yes);
+    --color-wed-yes-bg: var(--wedding-yes-bg);
+    --color-wed-wait: var(--wedding-wait);
+    --color-wed-wait-bg: var(--wedding-wait-bg);
+
+    --color-demo-paper: var(--demo-paper);
+    --color-demo-paper-2: var(--demo-paper-2);
+    --color-demo-card: var(--demo-card);
+    --color-demo-ink: var(--demo-ink);
+    --color-demo-ink-2: var(--demo-ink-2);
+    --color-demo-muted: var(--demo-muted);
+    --color-demo-line: var(--demo-line);
+    --color-demo-olive: var(--demo-olive);
+    --color-demo-olive-dark: var(--demo-olive-dark);
+    --color-demo-earth: var(--demo-earth);
+    --color-demo-earth-dark: var(--demo-earth-dark);
+    --color-demo-sand: var(--demo-sand);
+    --color-demo-no: var(--demo-no);
+    --color-demo-night-muted: var(--demo-night-muted);
+    --color-demo-night-line: var(--demo-night-line);
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);

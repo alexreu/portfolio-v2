@@ -1,5 +1,7 @@
 import { groq } from "next-sanity";
 
+import type { WeddingService } from "@/lib/wedding-service/types";
+
 import client from "./client";
 import type { HomepageData, PricingPlan, Service, SiteSettings, SkillCategory } from "./types";
 
@@ -161,5 +163,19 @@ export const getHomepageData = async (): Promise<HomepageData> => {
 export const getLastContentUpdate = async (): Promise<string | null> => {
     return client.fetch(
         groq`*[!(_id in path("drafts.**")) && _type in ["siteSettings", "service", "pricingPlan", "maintenanceSection", "skillCategory", "project"]] | order(_updatedAt desc)[0]._updatedAt`,
+    );
+};
+
+export type WeddingServiceDocument = Partial<WeddingService> & { readonly updatedAt: string };
+
+/**
+ * « Sites de mariage » singleton, null until it is published
+ */
+export const getWeddingService = async (): Promise<WeddingServiceDocument | null> => {
+    return client.fetch(
+        groq`*[_type == "weddingService" && _id == "weddingService"][0]{
+            hero, moments, demo, features, dashboard, steps, pricing, comparison, faq,
+            "updatedAt": _updatedAt
+        }`,
     );
 };
