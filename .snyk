@@ -1,0 +1,14 @@
+# Snyk (https://snyk.io) policy file
+version: v1.25.0
+ignore:
+  SNYK-JS-LEAFLET-16427276:
+    - '*':
+        reason: >-
+          CVE-2025-69993: XSS through HTML strings passed to bindPopup. The wedding demo's
+          venue map (src/components/wedding-demo/places-map.tsx) builds its popups from DOM
+          nodes filled with textContent, never from HTML, and its only HTML is the static
+          OpenStreetMap attribution. No fixed version of leaflet exists yet: review again
+          on expiry.
+        expires: 2027-04-06T00:00:00.000Z
+        created: 2026-10-06T00:00:00.000Z
+patch: {}
