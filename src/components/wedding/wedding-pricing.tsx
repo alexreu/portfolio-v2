@@ -3,6 +3,7 @@ import { Check, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { WeddingPlan, WeddingService } from "@/lib/wedding-service/types";
 
+import { PlanLink } from "./plan-link";
 import { SectionIntro } from "./section-intro";
 
 type WeddingPricingProps = {
@@ -80,8 +81,8 @@ const PlanCard = ({ plan }: { plan: WeddingPlan }) => (
                 </li>
             ))}
         </ul>
-        <a
-            href={`?formule=${planKey(plan.name)}#contact`}
+        <PlanLink
+            plan={planKey(plan.name)}
             className={cn(
                 "mt-8 inline-flex min-h-12 items-center justify-center rounded-sm px-5 font-medium transition-colors",
                 plan.featured
@@ -90,7 +91,7 @@ const PlanCard = ({ plan }: { plan: WeddingPlan }) => (
             )}
         >
             Choisir {plan.name}
-        </a>
+        </PlanLink>
         <p
             className={cn(
                 "mt-3 text-center text-xs",

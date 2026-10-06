@@ -1,12 +1,13 @@
 "use client";
 
 import { useActionState } from "react";
-import { useSearchParams } from "next/navigation";
 import { Check, LoaderCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { InquiryFeedback } from "@/lib/wedding-service/inquiry";
 import { sendWeddingInquiry } from "@/app/(wedding)/mariage/actions";
+
+import { usePlanChoice } from "./plan-choice";
 
 const plans = [
     { value: "intime", label: "Intime" },
@@ -84,7 +85,7 @@ const SentMessage = () => (
 
 export const WeddingContactForm = () => {
     const [feedback, formAction, pending] = useActionState(sendWeddingInquiry, initialFeedback);
-    const preselectedPlan = useSearchParams().get("formule") ?? "signature";
+    const [plan, setPlan] = usePlanChoice("signature");
 
     if (feedback.status === "sent") return <SentMessage />;
 
@@ -149,21 +150,20 @@ export const WeddingContactForm = () => {
             <fieldset className="md:col-span-2">
                 <legend className="mb-2 text-sm">Formule envisagée</legend>
                 <div className="flex flex-wrap gap-2">
-                    {plans.map((plan) => (
+                    {plans.map((option) => (
                         <label
-                            key={plan.value}
+                            key={option.value}
                             className="border-wed-night-line has-checked:border-wed-gold-soft has-checked:text-wed-gold-soft flex min-h-11 cursor-pointer items-center rounded-sm border px-3.5 text-sm"
                         >
                             <input
                                 type="radio"
                                 name="plan"
-                                value={plan.value}
-                                defaultChecked={
-                                    plan.value === (valueOf(feedback, "plan") ?? preselectedPlan)
-                                }
+                                value={option.value}
+                                checked={plan === option.value}
+                                onChange={() => setPlan(option.value)}
                                 className="sr-only"
                             />
-                            {plan.label}
+                            {option.label}
                         </label>
                     ))}
                 </div>

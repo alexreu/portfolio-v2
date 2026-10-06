@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { Check } from "lucide-react";
 
 import { WeddingContactForm } from "./wedding-contact";
@@ -42,9 +41,7 @@ export const WeddingContactSection = () => (
                     ))}
                 </ul>
             </div>
-            <Suspense>
-                <WeddingContactForm />
-            </Suspense>
+            <WeddingContactForm />
         </div>
     </section>
 );
