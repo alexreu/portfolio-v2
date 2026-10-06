@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Tableau de bord — Camille & Hugo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F1EB; --panel:#FFFFFF; --side:#1E1B17; --side-2:#2A2620; --side-text:#E9E3D8; --side-muted:#A39A8D;
+  --ink:#1E1B17; --ink-2:#3A342D; --muted:#6B6359; --line:#E3DDD2; --line-2:#EFEAE1;
+  --gold-text:#7A5F37; --gold-soft:#C9AE82;
+  --yes:#3D5537; --yes-bg:#E3EADD; --no:#7E3D2A; --no-bg:#F3E3DC; --wait:#7A5F37; --wait-bg:#F1E9D9; --closed:#6B6359; --closed-bg:#ECE8E1;
+  --serif:"Cormorant Garamond", Georgia, serif; --sans:"Poppins", system-ui, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold-text);outline-offset:2px}
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+
+/* sidebar */
+aside{background:var(--side);color:var(--side-text);padding:24px 16px;display:flex;flex-direction:column;gap:28px;position:sticky;top:0;height:100vh}
+.brand{padding:0 10px}
+.brand .c{font-family:var(--serif);font-size:26px;line-height:1.1}
+.brand .d{font-size:12px;color:var(--side-muted);margin-top:4px}
+.navlist{display:flex;flex-direction:column;gap:2px}
+.navlist a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:6px;text-decoration:none;color:var(--side-muted);min-height:42px}
+.navlist a:hover{background:var(--side-2);color:var(--side-text)}
+.navlist a.on{background:var(--side-2);color:var(--side-text)}
+.navlist a.on:before{content:"";width:3px;height:18px;background:var(--gold-soft);border-radius:2px;margin-left:-12px;margin-right:-3px}
+.navlist svg{width:18px;height:18px;flex:none}
+.navlist .cnt{margin-left:auto;font-size:12px;background:#3A342C;color:var(--side-text);padding:1px 8px;border-radius:10px}
+.side-foot{margin-top:auto;border-top:1px solid #34302A;padding:16px 10px 0;font-size:12px;color:var(--side-muted)}
+.side-foot a{display:block;color:var(--side-text);text-decoration:none;margin-top:6px;font-size:13px}
+
+/* main */
+main{padding:28px 36px 48px;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.topbar h1{font-family:var(--serif);font-weight:500;font-size:36px;line-height:1.1}
+.topbar p{color:var(--muted);margin-top:2px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:13.5px;font-weight:500;text-decoration:none;transition:border-color .2s,background .2s}
+.btn:hover{border-color:#CFC6B8}
+.btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.dark:hover{background:#000}
+.btn svg{width:16px;height:16px}
+
+.alert{margin-top:22px;display:flex;align-items:center;gap:14px;background:var(--wait-bg);border:1px solid #E6D8BC;border-radius:8px;padding:12px 16px;color:var(--ink-2)}
+.alert svg{width:20px;height:20px;color:var(--wait);flex:none}
+.alert .btn{margin-left:auto;white-space:nowrap}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.kpi{padding:18px 20px}
+.kpi .k{font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between}
+.kpi .v{font-family:var(--serif);font-weight:500;font-size:44px;line-height:1.05;margin-top:6px}
+.kpi .v small{font-family:var(--sans);font-size:14px;color:var(--muted);font-weight:400}
+.kpi .s{font-size:12.5px;color:var(--muted);margin-top:2px}
+.prog{height:6px;border-radius:3px;background:var(--line-2);margin-top:12px;overflow:hidden;display:flex}
+.prog i{display:block;height:100%}
+.trend{color:var(--yes);font-weight:500}
+
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-top:14px}
+.card h2{font-size:15px;font-weight:600}
+.card-h{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line-2)}
+.card-h span{font-size:12.5px;color:var(--muted)}
+.card-b{padding:18px 20px}
+
+/* per event bars */
+.evbar{display:grid;grid-template-columns:190px 1fr 110px;gap:14px;align-items:center;padding:9px 0}
+.evbar .n{font-weight:500}
+.evbar .n small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.stack{display:flex;height:22px;border-radius:4px;overflow:hidden;background:var(--line-2)}
+.stack i{display:block;height:100%}
+.y{background:var(--yes)}.no{background:#B98A79}.w{background:#E2D4B8}
+.evbar .num{text-align:right;font-size:13px;color:var(--muted)}
+.evbar .num b{color:var(--ink);font-weight:600}
+.legend{display:flex;gap:16px;margin-top:12px;font-size:12.5px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:2px;display:block}
+
+/* traiteur */
+.diet{display:grid;gap:10px}
+.diet div{display:flex;justify-content:space-between;align-items:center;padding:4px 0 14px;border-bottom:1px dashed var(--line)}
+.diet div:last-child{border-bottom:none;padding-bottom:4px}
+.diet b{font-family:var(--serif);font-size:24px;font-weight:500}
+.diet .t{display:flex;flex-direction:column}
+.diet .t small{color:var(--muted);font-size:12px}
+
+/* table */
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:14px 20px;border-bottom:1px solid var(--line-2)}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:6px;padding:0 12px;min-height:40px;flex:1;min-width:200px;max-width:320px}
+.search svg{width:16px;height:16px;color:var(--muted)}
+.search input{border:0;outline:0;font:inherit;flex:1;background:transparent}
+.tabs{display:flex;gap:4px;background:var(--bg);padding:4px;border-radius:8px}
+.tabs button{border:0;background:transparent;padding:6px 12px;border-radius:5px;font-size:13px;color:var(--muted);min-height:32px}
+.tabs button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.filter{border:1px solid var(--line);border-radius:6px;min-height:40px;padding:0 12px;background:var(--panel);font:inherit;font-size:13px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:12px;font-weight:500;color:var(--muted);padding:10px 20px;border-bottom:1px solid var(--line-2);vertical-align:bottom}
+td{padding:13px 20px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+tr:hover td{background:#FBFAF7}
+.hh b{font-weight:500;display:block}
+.hh small{color:var(--muted);font-size:12px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.chip:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.c-y{background:var(--yes-bg);color:var(--yes)}.c-n{background:var(--no-bg);color:var(--no)}.c-w{background:var(--wait-bg);color:var(--wait)}.c-x{background:var(--closed-bg);color:var(--closed)}
+.c-x:before{background:transparent;border:1px solid currentColor}
+.grp{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.seen{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.row-act{display:flex;gap:4px;justify-content:flex-end}
+.icon-btn{width:36px;height:36px;display:grid;place-items:center;border:1px solid transparent;border-radius:6px;background:transparent;color:var(--muted)}
+.icon-btn:hover{border-color:var(--line);color:var(--ink);background:var(--panel)}
+.icon-btn svg{width:16px;height:16px}
+.tfoot{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;font-size:12.5px;color:var(--muted)}
+.table-wrap{overflow-x:auto}
+
+/* activity + gallery */
+.grid3{display:grid;grid-template-columns:1fr 1.3fr;gap:14px;margin-top:14px}
+.feed{list-style:none;display:grid;gap:0}
+.feed li{display:grid;grid-template-columns:32px 1fr auto;gap:12px;align-items:start;padding:11px 0;border-bottom:1px solid var(--line-2)}
+.feed li:last-child{border:0}
+.av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:var(--line-2);color:var(--ink-2)}
+.feed .t{font-size:13.5px}
+.feed .t small{display:block;color:var(--muted);font-size:12px}
+.feed time{font-size:12px;color:var(--muted);white-space:nowrap}
+.mod{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mod figure{position:relative;aspect-ratio:1;border-radius:6px;overflow:hidden;background:var(--line-2)}
+.mod img{width:100%;height:100%;object-fit:cover;display:block}
+.mod figure .ok{position:absolute;right:6px;bottom:6px;display:flex;gap:4px}
+.mod figure .ok button{width:30px;height:30px;border-radius:50%;border:0;display:grid;place-items:center;background:rgba(255,255,255,.92);color:var(--ink)}
+.mod figure .ok button svg{width:14px;height:14px}
+.mod figure .by{position:absolute;left:6px;top:6px;font-size:11px;background:rgba(30,27,23,.72);color:#fff;padding:2px 6px;border-radius:4px}
+
+@media(max-width:1180px){.kpis{grid-template-columns:1fr 1fr}.grid2,.grid3{grid-template-columns:1fr}}
+@media(max-width:860px){.app{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:12px;gap:12px;align-items:center}.brand .d,.side-foot,.navlist .cnt{display:none}.navlist{flex-direction:row}.navlist a.on:before{display:none}main{padding:20px 16px}.evbar{grid-template-columns:100px 1fr 80px}.hide-sm{display:none}}
+@media(max-width:860px){.icon-btn{width:44px;height:44px}.mod figure .ok button{width:40px;height:40px}.card-h .btn,.btn{min-height:44px}.search{min-height:44px}.tabs button{min-height:40px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside aria-label="Navigation">
+  <div class="brand"><div class="c">Camille &amp; Hugo</div><div class="d">12 juin 2027 · Signature</div></div>
+  <nav class="navlist">
+    <a href="#" class="on" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Vue d'ensemble</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/></svg>Invités<span class="cnt">58</span></a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 11h16M6 11V7a6 6 0 0 1 12 0v4M3 15h18l-1 5H4z"/></svg>Récap traiteur</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="3.5" r="1.5"/><circle cx="12" cy="20.5" r="1.5"/><circle cx="3.5" cy="12" r="1.5"/><circle cx="20.5" cy="12" r="1.5"/></svg>Plan de table</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg>Galerie</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>Relances</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2"/><rect x="6" y="14" width="12" height="7"/></svg>Faire-part PDF</a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Paramètres</a>
+  </nav>
+  <div class="side-foot">camille-et-hugo.fr<a href="03-demo-camille-hugo.html?skip">Voir le site ↗</a></div>
+</aside>
+
+<main>
+  <div class="topbar">
+    <div><h1>Bonjour Camille</h1><p>Mercredi 7 avril 2027 · J-66 avant le mariage</p></div>
+    <div class="actions">
+      <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 4v12m-5-5 5 5 5-5M4 20h16"/></svg>Exporter CSV</button>
+      <button class="btn dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Ajouter un foyer</button>
+    </div>
+  </div>
+
+  <div class="alert" role="status">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    <span><b>Date limite dans 24 jours.</b> 14 foyers n'ont pas encore répondu, dont 6 qui n'ont jamais ouvert leur lien. Relance automatique prévue le 16 avril.</span>
+    <button class="btn">Relancer maintenant</button>
+  </div>
+
+  <section class="kpis" aria-label="Indicateurs">
+    <div class="card kpi"><div class="k">Réponses reçues <span class="trend">+9 cette semaine</span></div>
+      <div class="v">86 <small>/ 121 invités</small></div>
+      <div class="prog" aria-hidden="true"><i class="y" style="width:71%"></i></div><div class="s">71 % · 44 foyers sur 58</div></div>
+    <div class="card kpi"><div class="k">Présents au dîner</div>
+      <div class="v">74</div><div class="s">dont 9 enfants · 12 absents</div></div>
+    <div class="card kpi"><div class="k">Liens ouverts</div>
+      <div class="v">52 <small>/ 58</small></div><div class="s">6 foyers jamais connectés</div></div>
+    <div class="card kpi"><div class="k">Photos de la galerie</div>
+      <div class="v">—</div><div class="s">Ouverture le 11 juin</div></div>
+  </section>
+
+  <div class="grid2">
+    <section class="card" aria-labelledby="ev-h">
+      <div class="card-h"><h2 id="ev-h">Réponses par moment</h2><span>Invités concernés par chaque moment</span></div>
+      <div class="card-b">
+        <div class="evbar"><div class="n">Mairie<small>Sam. 11 h · famille proche</small></div>
+          <div class="stack" role="img" aria-label="Mairie&nbsp;: 22 présents, 1 absent, 3 en attente"><i class="y" style="width:84.6%"></i><i class="no" style="width:3.8%"></i><i class="w" style="width:11.6%"></i></div>
+          <div class="num"><b>22</b> / 26</div></div>
+        <div class="evbar"><div class="n">Cérémonie &amp; vin d'honneur<small>Sam. 16 h – 17 h 30</small></div>
+          <div class="stack" role="img" aria-label="Cérémonie et vin d'honneur&nbsp;: 78 présents, 8 absents, 35 en attente"><i class="y" style="width:64.5%"></i><i class="no" style="width:6.6%"></i><i class="w" style="width:28.9%"></i></div>
+          <div class="num"><b>78</b> / 121</div></div>
+        <div class="evbar"><div class="n">Dîner &amp; soirée<small>Sam. 20 h</small></div>
+          <div class="stack" role="img" aria-label="Dîner et soirée&nbsp;: 74 présents, 12 absents, 22 en attente"><i class="y" style="width:68.5%"></i><i class="no" style="width:11.1%"></i><i class="w" style="width:20.4%"></i></div>
+          <div class="num"><b>74</b> / 108</div></div>
+        <div class="evbar"><div class="n">Brunch<small>Dim. 11 h</small></div>
+          <div class="stack" role="img" aria-label="Brunch&nbsp;: 41 présents, 19 absents, 48 en attente"><i class="y" style="width:38%"></i><i class="no" style="width:17.6%"></i><i class="w" style="width:44.4%"></i></div>
+          <div class="num"><b>41</b> / 108</div></div>
+        <div class="legend"><span><i class="y"></i>Présents</span><span><i class="no"></i>Absents</span><span><i class="w"></i>En attente</span></div>
+      </div>
+    </section>
+    <section class="card" aria-labelledby="tr-h">
+      <div class="card-h"><h2 id="tr-h">Récap traiteur · dîner</h2><a href="#" class="btn" style="min-height:32px">Exporter PDF</a></div>
+      <div class="card-b diet">
+        <div><span class="t">Adultes<small>menu standard</small></span><b>54</b></div>
+        <div><span class="t">Végétariens</span><b>8</b></div>
+        <div><span class="t">Sans gluten</span><b>3</b></div>
+        <div><span class="t">Enfants<small>menu enfant, 3 à 11 ans</small></span><b>9</b></div>
+        <div><span class="t">Allergies signalées<small>arachides (2), crustacés (1)</small></span><b>3</b></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:14px" aria-labelledby="g-h">
+    <div class="card-h"><h2 id="g-h">Foyers invités</h2><span>58 foyers · 121 invités</span></div>
+    <div class="toolbar">
+      <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input placeholder="Rechercher un nom" aria-label="Rechercher un foyer"></label>
+      <div class="tabs" role="group" aria-label="Filtrer par statut">
+        <button aria-pressed="true">Tous 58</button><button aria-pressed="false">Répondu 44</button><button aria-pressed="false">En attente 8</button><button aria-pressed="false">Jamais ouvert 6</button>
+      </div>
+      <select class="filter" aria-label="Filtrer par groupe"><option>Tous les groupes</option><option>Famille Camille</option><option>Famille Hugo</option><option>Amis</option><option>Collègues</option></select>
+    </div>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th scope="col">Foyer</th><th scope="col">Groupe</th><th scope="col">Cérémonie &amp; vin d'honneur</th><th scope="col">Dîner &amp; soirée</th><th scope="col" class="hide-sm">Brunch</th><th scope="col" class="hide-sm">Dernier accès</th><th scope="col"><span class="sr" style="position:absolute;left:-9999px">Actions</span></th></tr></thead>
+      <tbody>
+        <tr><td class="hh"><b>Marie &amp; Thomas Lefèvre</b><small>2 adultes · végétarien (1)</small></td><td><span class="grp">Amis</span></td><td><span class="chip c-y">2 présents</span></td><td><span class="chip c-y">2 présents</span></td><td class="hide-sm"><span class="chip c-n">Absents</span></td><td class="seen hide-sm">il y a 2 h</td>
+          <td><div class="row-act"><button class="icon-btn" aria-label="Copier le lien de Marie & Thomas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="1"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg></button><button class="icon-btn" aria-label="Plus d'actions"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+        <tr><td class="hh"><b>Famille Moreau</b><small>2 adultes · 2 enfants</small></td><td><span class="grp">Famille Hugo</span></td><td><span class="chip c-y">4 présents</span></td><td><span class="chip c-y">4 présents</span></td><td class="hide-sm"><span class="chip c-w">En attente</span></td><td class="seen hide-sm">hier</td>
+          <td><div class="row-act"><button class="icon-btn" aria-label="Copier le lien de la famille Moreau"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="1"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg></button><button class="icon-btn" aria-label="Plus d'actions"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+        <tr><td class="hh"><b>Julien Bertrand</b><small>1 adulte</small></td><td><span class="grp">Collègues</span></td><td><span class="chip c-n">Absent</span></td><td><span class="chip c-n">Absent</span></td><td class="hide-sm"><span class="chip c-n">Absent</span></td><td class="seen hide-sm">il y a 3 j</td>
+          <td><div class="row-act"><button class="icon-btn" aria-label="Copier le lien de Julien"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="1"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg></button><button class="icon-btn" aria-label="Plus d'actions"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+        <tr><td class="hh"><b>Inès Haddad &amp; Karim Benali</b><small>2 adultes · témoin</small></td><td><span class="grp">Amis</span></td><td><span class="chip c-w">Lien ouvert</span></td><td><span class="chip c-w">Lien ouvert</span></td><td class="hide-sm"><span class="chip c-w">Lien ouvert</span></td><td class="seen hide-sm">il y a 6 j</td>
+          <td><div class="row-act"><button class="icon-btn" aria-label="Copier le lien d'Inès & Karim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="1"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg></button><button class="icon-btn" aria-label="Plus d'actions"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+        <tr><td class="hh"><b>Mamie Jeanne Durand</b><small>1 adulte · réponse saisie par Camille</small></td><td><span class="grp">Famille Camille</span></td><td><span class="chip c-y">Présente</span></td><td><span class="chip c-y">Présente</span></td><td class="hide-sm"><span class="chip c-x">Non invitée</span></td><td class="seen hide-sm">papier</td>
+          <td><div class="row-act"><button class="icon-btn" aria-label="Copier le lien de Jeanne"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="1"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg></button><button class="icon-btn" aria-label="Plus d'actions"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+        <tr><td class="hh"><b>Lucas &amp; Emma Petit</b><small>2 adultes</small></td><td><span class="grp">Famille Hugo</span></td><td><span class="chip c-x">Jamais ouvert</span></td><td><span class="chip c-x">Jamais ouvert</span></td><td class="hide-sm"><span class="chip c-x">Jamais ouvert</span></td><td class="seen hide-sm">—</td>
+          <td><div class="row-act"><button class="icon-btn" aria-label="Copier le lien de Lucas & Emma"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="1"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg></button><button class="icon-btn" aria-label="Plus d'actions"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button></div></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="tfoot"><span>6 sur 58 foyers</span><span>Page 1 sur 10</span></div>
+  </section>
+
+  <div class="grid3">
+    <section class="card" aria-labelledby="a-h">
+      <div class="card-h"><h2 id="a-h">Activité récente</h2></div>
+      <div class="card-b" style="padding-top:6px;padding-bottom:6px">
+        <ul class="feed">
+          <li><span class="av">ML</span><span class="t">Marie Lefèvre a répondu<small>2 présents au dîner · 1 végétarien</small></span><time>11:42</time></li>
+          <li><span class="av">FM</span><span class="t">Famille Moreau a modifié sa réponse<small>+1 enfant au dîner</small></span><time>hier</time></li>
+          <li><span class="av">IH</span><span class="t">Inès Haddad a ouvert son lien<small>3e visite, pas encore de réponse</small></span><time>01/04</time></li>
+          <li><span class="av">✉</span><span class="t">Relance envoyée à 9 foyers<small>5 ouvertures, 3 réponses depuis</small></span><time>31/03</time></li>
+        </ul>
+      </div>
+    </section>
+    <section class="card" aria-labelledby="m-h">
+      <div class="card-h"><h2 id="m-h">Galerie · dernières photos</h2><span>Exemple après le jour J</span></div>
+      <div class="card-b">
+        <div class="mod">
+          <figure><img src="https://images.pexels.com/photos/11813966/pexels-photo-11813966.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=300&w=300" alt="Photo envoyée par Léa"><span class="by">Léa</span><div class="ok"><button aria-label="Retirer la photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div></figure>
+          <figure><img src="https://images.pexels.com/photos/18430845/pexels-photo-18430845.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=300&w=300" alt="Photo envoyée par Thomas"><span class="by">Thomas</span><div class="ok"><button aria-label="Retirer la photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div></figure>
+          <figure><img src="https://images.pexels.com/photos/32113387/pexels-photo-32113387.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=300&w=300" alt="Photo envoyée par Inès"><span class="by">Inès</span><div class="ok"><button aria-label="Retirer la photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div></figure>
+          <figure><img src="https://images.pexels.com/photos/6310593/pexels-photo-6310593.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=300&w=300" alt="Photo envoyée par Julien"><span class="by">Julien</span><div class="ok"><button aria-label="Retirer la photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div></figure>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap;gap:8px">
+          <span style="font-size:12.5px;color:var(--muted)">1 248 photos publiées · une photo gênante se retire en un clic</span>
+          <div style="display:flex;gap:8px"><button class="btn">Voir toute la galerie</button><button class="btn">Télécharger (ZIP)</button></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+</div>
+<script>
+document.querySelectorAll('.tabs').forEach(g=>g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b))}));
+</script>
+</body>
+</html>
