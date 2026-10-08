@@ -282,6 +282,7 @@ export const DemoSite = ({
                     second={design.second}
                     dateLabel={`${calendar.dateLabel} · ${design.place}`}
                     tone={sealToneOf(design.tone)}
+                    preview={preview}
                     onOpened={markOpened}
                 />
             )}
@@ -336,7 +337,7 @@ export const DemoSite = ({
                     <ThanksPanel
                         couple={`${design.first} & ${design.second}`}
                         dateLabel={calendar.dateLabel}
-                        thanks={thanksOf(design)}
+                        thanks={thanksOf(design, { gallery: withGallery })}
                         photoCount={Math.max(weddingDemo.gallery.count, photos.length)}
                         gallery={withGallery}
                         onAddPhotos={openUpload}

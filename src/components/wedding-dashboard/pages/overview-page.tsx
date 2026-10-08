@@ -41,6 +41,8 @@ export const OverviewPage = () => {
                     can("guests.export") && can("guests.diets.read") ? exportCatererPdf : undefined
                 }
                 onRemind={can("reminders.send") ? remind : undefined}
+                reminders={can("reminders.read")}
+                gallery={can("gallery.read")}
             />
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
                 <Card title="Tout le tableau de bord" titleId="pages-title">

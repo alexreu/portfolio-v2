@@ -15,6 +15,8 @@ import {
 } from "@alexreu/wedding-core";
 import { Clock, Download, Plus, Send } from "lucide-react";
 
+import { cn } from "@/lib/utils";
+
 import { buttonStyles, Card, PlanBadge, plural } from "./dashboard-ui";
 import { PdfButton } from "./pdf-button";
 
@@ -29,6 +31,9 @@ type OverviewSectionProps = {
     /** Builds the caterer's PDF and downloads it; out with the diets it holds. */
     onExportCaterer?: () => Promise<void>;
     onRemind?: () => void;
+    /** The automatic reminder and the gallery, out when the formula or the person lacks them. */
+    reminders: boolean;
+    gallery: boolean;
 };
 
 const todayLabel = (now: Date, timezone: string) => {
@@ -126,6 +131,8 @@ export const OverviewSection = ({
     onExport,
     onExportCaterer,
     onRemind,
+    reminders,
+    gallery,
 }: OverviewSectionProps) => {
     const counts = overview(state.households);
     const tallies = momentTallies(state.households, moments);
@@ -177,16 +184,21 @@ export const OverviewSection = ({
                                 Date limite dans {plural(deadlineIn, "jour", "jours")}
                             </strong>{" "}
                             ({calendar.answerDeadlineLabel}).{" "}
-                            {pendingSentence(counts.households, counts.pending, counts.neverOpened)}{" "}
-                            Relance automatique prévue le {calendar.reminderLabel}{" "}
-                            <PlanBadge flag="reminders" />
+                            {pendingSentence(counts.households, counts.pending, counts.neverOpened)}
+                            {reminders && (
+                                <>
+                                    {" "}
+                                    Relance automatique prévue le {calendar.reminderLabel}{" "}
+                                    <PlanBadge flag="reminders" />
+                                </>
+                            )}
                         </>
                     ) : (
                         <strong className="font-semibold">
                             Les réponses sont closes depuis le {calendar.answerDeadlineLabel}.
                         </strong>
                     )}
-                    {state.lastReminder && (
+                    {reminders && state.lastReminder && (
                         <span className="text-wed-muted mt-0.5 block text-sm">
                             Dernière relance :{" "}
                             {sinceLabel(state.lastReminder.at, now, state.timezone)}, à{" "}
@@ -207,7 +219,13 @@ export const OverviewSection = ({
                 )}
             </div>
 
-            <dl aria-label="Indicateurs" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <dl
+                aria-label="Indicateurs"
+                className={cn(
+                    "grid gap-4 sm:grid-cols-2",
+                    gallery ? "xl:grid-cols-4" : "xl:grid-cols-3",
+                )}
+            >
                 <Kpi
                     label="Réponses reçues"
                     value={String(counts.guestsAnswered)}
@@ -226,12 +244,14 @@ export const OverviewSection = ({
                     of={`/ ${counts.households}`}
                     detail={`${plural(counts.neverOpened, "foyer jamais connecté", "foyers jamais connectés")}`}
                 />
-                <Kpi
-                    label="Galerie photos"
-                    plan="gallery"
-                    value="—"
-                    detail={`Ouverture le ${calendar.galleryOpensLabel}`}
-                />
+                {gallery && (
+                    <Kpi
+                        label="Galerie photos"
+                        plan="gallery"
+                        value="—"
+                        detail={`Ouverture le ${calendar.galleryOpensLabel}`}
+                    />
+                )}
             </dl>
 
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">

@@ -29,6 +29,8 @@ type InvitationEditorProps = {
     now: Date;
     /** Where the wedding takes place: "today" is read there. */
     timezone: string;
+    /** Whether the formula has a guest gallery: the day after shows photos under the thanks. */
+    gallery: boolean;
     onSave: (design: InvitationDesign) => void;
 };
 
@@ -62,6 +64,7 @@ export const InvitationEditor = ({
     sampleGuest,
     now,
     timezone,
+    gallery,
     onSave,
 }: InvitationEditorProps) => {
     const [draft, setDraft] = useState(design);
@@ -212,14 +215,16 @@ export const InvitationEditor = ({
                     <span className="text-wed-ink-soft">
                         Message du lendemain{" "}
                         <small className="text-wed-muted">
-                            (au-dessus des photos, après le mariage)
+                            {gallery
+                                ? "(au-dessus des photos, après le mariage)"
+                                : "(sur le site, après le mariage)"}
                         </small>
                     </span>
                     <textarea
                         rows={2}
                         value={draft.thanks ?? ""}
                         onChange={(event) => change({ thanks: event.target.value })}
-                        placeholder={thanksOf({ ...draft, thanks: "" })}
+                        placeholder={thanksOf({ ...draft, thanks: "" }, { gallery })}
                         aria-invalid={thanks["aria-invalid"]}
                         aria-describedby={["faire-part-thanks-aide", thanks["aria-describedby"]]
                             .filter(Boolean)

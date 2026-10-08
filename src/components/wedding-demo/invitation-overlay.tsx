@@ -17,6 +17,8 @@ type InvitationOverlayProps = {
     second: string;
     dateLabel: string;
     tone: SealTone;
+    /** Opened by the couple from their dashboard: said before the seal, not counted. */
+    preview?: boolean;
     onOpened: () => void;
 };
 
@@ -34,6 +36,7 @@ export const InvitationOverlay = ({
     second,
     dateLabel,
     tone,
+    preview = false,
     onOpened,
 }: InvitationOverlayProps) => {
     const [opening, setOpening] = useState(false);
@@ -80,6 +83,12 @@ export const InvitationOverlay = ({
             exit={{ opacity: 0, transition: { duration: instant ? 0 : FADE, ease: "easeOut" } }}
             className="bg-demo-paper fixed inset-0 z-50 grid place-items-center overflow-hidden bg-[radial-gradient(ellipse_at_50%_45%,var(--demo-card),var(--demo-paper)_70%)] p-6 outline-none focus-visible:outline-none"
         >
+            {preview && (
+                <p className="bg-demo-ink text-demo-paper absolute inset-x-0 top-0 px-4 py-2.5 text-center text-sm">
+                    <strong className="font-medium">Aperçu des mariés.</strong> Ouvrir ce faire-part
+                    n&apos;est pas compté comme une visite du foyer.
+                </p>
+            )}
             <div className="flex flex-col items-center">
                 <motion.div initial={false} animate={state} variants={leaving} className="mb-8">
                     <p

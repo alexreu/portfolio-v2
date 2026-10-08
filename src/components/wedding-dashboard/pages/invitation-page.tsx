@@ -19,6 +19,7 @@ export const InvitationPage = () => {
         downloadSharedInvitation,
         downloadHouseholdInvitations,
         can,
+        flags,
     } = useDashboard();
     const sampleHousehold =
         state.households.find((household) => household.id === DEMO_GUEST_HOUSEHOLD) ??
@@ -34,6 +35,7 @@ export const InvitationPage = () => {
                         sampleGuest={sampleGuest}
                         now={now}
                         timezone={state.timezone}
+                        gallery={flags.has("gallery")}
                         onSave={(design) => dispatch({ type: "invitation.save", design })}
                     />
                 </ReadOnly>

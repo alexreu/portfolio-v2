@@ -17,6 +17,7 @@ export const ProgrammePage = () => {
                         dates={state.dates}
                         now={now}
                         timezone={state.timezone}
+                        can={can}
                         onSave={(day, dates) => dispatch({ type: "dates.save", day, dates })}
                     />
                 </ReadOnly>

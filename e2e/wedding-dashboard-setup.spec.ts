@@ -28,11 +28,36 @@ test.describe("tableau de bord des mariés (démo) · formules, import, réglage
         await expect(page.getByText(/· Signature$/).first()).toBeVisible();
     });
 
+    test("Intime ne montre ni galerie, ni tables, ni relance, même dans les dates et la vue d'ensemble", async ({
+        page,
+    }) => {
+        await page.goto(dashboard());
+        await notice(page).getByLabel("Formule").selectOption({ label: "Intime" });
+        await expect(page.getByLabel("Indicateurs")).toContainText("Liens ouverts");
+        await expect(page.getByRole("main")).not.toContainText(
+            /Galerie photos|Relance automatique/,
+        );
+
+        await page.goto(dashboard("programme"));
+        const dates = page.getByRole("form", { name: "Dates clés" });
+        await expect(dates.getByLabel("Date limite des réponses")).toBeVisible();
+        await expect(dates).not.toContainText(
+            /Ouverture de la galerie|Affichage des tables|Relance automatique/,
+        );
+
+        await notice(page).getByLabel("Formule").selectOption({ label: "Signature" });
+        await expect(dates.getByLabel("Ouverture de la galerie", { exact: true })).toBeVisible();
+        await expect(dates.getByLabel("Affichage des tables", { exact: true })).toBeVisible();
+    });
+
     test("une adresse avec ?formule= ouvre le site invité dans cette formule", async ({ page }) => {
         await page.goto("/mariage/demo?skip&formule=intime");
         await expect(page.getByRole("region", { name: "Dress code" })).toBeVisible();
         await expect(page.getByLabel("Compte à rebours")).toHaveCount(0);
         await expect(page.locator("#photos")).toHaveCount(0);
+        await page.goto("/mariage/demo?skip&apres&formule=intime");
+        await expect(page.getByText(/^Merci d'avoir été là/).first()).toBeVisible();
+        await expect(page.getByRole("main")).not.toContainText("photos de la journée");
 
         await page.goto("/mariage/demo?skip&formule=signature");
         await expect(page.getByLabel("Compte à rebours")).toBeVisible();

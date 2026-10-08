@@ -182,6 +182,21 @@ test.describe("tableau de bord des mariés (démo)", () => {
         );
     });
 
+    test("l'aperçu se dit dès l'enveloppe, et l'ouvrir ne compte pas comme une visite du foyer", async ({
+        page,
+    }) => {
+        await page.goto("/mariage/demo?foyer=petit&apercu");
+        const envelope = page.getByRole("dialog").filter({ hasText: "Lucas & Emma Petit" });
+        await expect(envelope).toContainText("Aperçu des mariés");
+        await envelope.getByRole("button", { name: "Ouvrir le faire-part" }).click();
+        await expect(envelope).toBeHidden();
+
+        await page.goto(dashboard());
+        await expect(page.getByRole("region", { name: "Activité récente" })).not.toContainText(
+            "Lucas & Emma Petit a ouvert son lien",
+        );
+    });
+
     test("l'aperçu d'un foyer ramène à son détail pour le corriger", async ({ page }) => {
         await page.goto("/mariage/demo?foyer=lefevre&apercu&skip");
         await page.getByRole("link", { name: "Corriger ce foyer" }).click();
