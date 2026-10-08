@@ -82,7 +82,7 @@ export const AccessSection = ({
         <Card
             id="acces"
             title="Accès au tableau de bord"
-            titleId="acces-titre"
+            titleId="access-title"
             plan="acces"
             aside={
                 <button type="button" onClick={invite} className={buttonStyles.secondary}>

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Check, Copy, ExternalLink, Music, X } from "lucide-react";
+import { Check, Copy, ExternalLink, Music, PenLine, Trash2, UserPen, X } from "lucide-react";
 import {
     AnimatePresence,
     motion,
@@ -11,7 +11,9 @@ import {
     type Variants,
 } from "motion/react";
 
+import { cn } from "@/lib/utils";
 import { dateTimeLabel, sinceLabel } from "@/lib/wedding-dashboard/calendar";
+import { draftOf, type HouseholdDraft } from "@/lib/wedding-dashboard/drafts";
 import {
     groupLabel,
     guestAnswers,
@@ -21,12 +23,19 @@ import {
     type CellTone,
     type GuestAnswer,
 } from "@/lib/wedding-dashboard/households";
+import { previewOf } from "@/lib/wedding-dashboard/preview-link";
 import type { Activity, HouseholdRecord, InvitationDesign } from "@/lib/wedding-dashboard/types";
+import type { AnswerDraft } from "@/lib/wedding/answer";
 import type { GuestQuestion, Moment } from "@/lib/wedding/types";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { cormorant } from "@/app/fonts/wedding";
 
-import { buttonStyles, Chip, iconButton } from "./dashboard-ui";
+import { ConfirmPopover } from "./confirm-popover";
+import { buttonStyles, Chip, iconButton, PlanBadge } from "./dashboard-ui";
+import { HouseholdForm } from "./household-dialog";
+import { PaperAnswerForm } from "./paper-answer-form";
+import { PdfButton } from "./pdf-button";
+import { QrImage } from "./qr-image";
 
 type HouseholdPanelProps = {
     /** The household shown, null when the panel is closed. */
@@ -37,6 +46,13 @@ type HouseholdPanelProps = {
     activity: readonly Activity[];
     now: Date;
     linkFor: (household: HouseholdRecord) => string;
+    /** The household's own printed faire-part, with its personal QR code. */
+    onDownloadInvitation: (household: HouseholdRecord) => Promise<void>;
+    /** The household corrected: name, people, moments, e-mail. */
+    onEdit: (household: HouseholdRecord, draft: HouseholdDraft) => void;
+    /** An answer received by post or by phone, typed in by the couple. */
+    onAnswer: (household: HouseholdRecord, draft: AnswerDraft) => void;
+    onRemove: (household: HouseholdRecord) => void;
     onClose: () => void;
 };
 
@@ -142,8 +158,15 @@ const PanelBody = ({
     activity,
     now,
     linkFor,
+    onDownloadInvitation,
+    onEdit,
+    onAnswer,
+    onRemove,
 }: Omit<HouseholdPanelProps, "household" | "onClose"> & { household: HouseholdRecord }) => {
     const [copied, setCopied] = useState(false);
+    /** The detail, or one of the forms that correct it, in the same panel. */
+    const [view, setView] = useState<"detail" | "edit" | "answer">("detail");
+    const top = useRef<HTMLDivElement>(null);
     const answered = household.answeredAt !== null;
     const timeline = householdTimeline(household, activity, design.first);
 
@@ -158,8 +181,72 @@ const PanelBody = ({
         }
     };
 
+    /** Each view starts at the top of the panel, its first field in reach. */
+    const show = (next: typeof view) => {
+        setView(next);
+        top.current?.closest("[data-lenis-prevent]")?.scrollTo({ top: 0 });
+    };
+
+    if (view !== "detail")
+        return (
+            <section ref={top} aria-labelledby="detail-formulaire" className="grid gap-5">
+                <h3 id="detail-formulaire" className="font-wed-serif text-2xl font-medium">
+                    {view === "edit"
+                        ? "Modifier le foyer"
+                        : answered
+                          ? "Modifier sa réponse"
+                          : "Saisir sa réponse"}
+                </h3>
+                {view === "edit" ? (
+                    <>
+                        <p className="text-wed-muted text-sm">
+                            Son lien reste le même. Une personne ou un moment retiré emporte sa
+                            réponse et sa place à table.
+                        </p>
+                        <HouseholdForm
+                            moments={moments}
+                            design={design}
+                            initial={draftOf(household)}
+                            label={`Modifier ${household.name}`}
+                            submitLabel="Enregistrer le foyer"
+                            onSubmit={(draft) => {
+                                onEdit(household, draft);
+                                show("detail");
+                            }}
+                            onCancel={() => show("detail")}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <p className="text-wed-muted text-sm">
+                            Une réponse reçue par courrier ou par téléphone. Elle apparaîtra comme
+                            saisie par {design.first}.
+                        </p>
+                        <PaperAnswerForm
+                            household={household}
+                            moments={moments.filter((moment) =>
+                                household.momentKeys.includes(moment.key),
+                            )}
+                            questions={questions}
+                            onSubmit={(draft) => {
+                                onAnswer(household, draft);
+                                show("detail");
+                            }}
+                            onCancel={() => show("detail")}
+                        />
+                    </>
+                )}
+            </section>
+        );
+
     return (
-        <motion.div variants={cascade} initial="hidden" animate="shown" className="grid gap-7">
+        <motion.div
+            ref={top}
+            variants={cascade}
+            initial="hidden"
+            animate="shown"
+            className="grid gap-7"
+        >
             <motion.div variants={rise} className="grid justify-items-start gap-3">
                 <StatusLine household={household} now={now} />
                 <div className="flex flex-wrap gap-2">
@@ -168,7 +255,7 @@ const PanelBody = ({
                         {copied ? "Lien copié" : "Copier son lien"}
                     </button>
                     <a
-                        href={linkFor(household)}
+                        href={previewOf(linkFor(household))}
                         target="_blank"
                         rel="noopener"
                         className={buttonStyles.quiet}
@@ -177,7 +264,68 @@ const PanelBody = ({
                         Son faire-part
                     </a>
                 </div>
+                <div className="border-wed-line-soft flex w-full flex-wrap gap-2 border-t pt-3">
+                    <button
+                        type="button"
+                        onClick={() => show("answer")}
+                        className={buttonStyles.secondary}
+                    >
+                        <PenLine aria-hidden="true" />
+                        {answered ? "Modifier sa réponse" : "Saisir sa réponse"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => show("edit")}
+                        className={buttonStyles.quiet}
+                    >
+                        <UserPen aria-hidden="true" />
+                        Modifier le foyer
+                    </button>
+                    <ConfirmPopover
+                        question={`Retirer ${household.name} ?`}
+                        detail="Son lien personnel ne fonctionnera plus. Sa réponse et ses places à table sont effacées."
+                        confirmLabel="Retirer le foyer"
+                        align="end"
+                        onConfirm={() => onRemove(household)}
+                    >
+                        <button
+                            type="button"
+                            className={cn(buttonStyles.quiet, "text-wed-no hover:text-wed-no")}
+                        >
+                            <Trash2 aria-hidden="true" />
+                            Retirer
+                        </button>
+                    </ConfirmPopover>
+                </div>
             </motion.div>
+
+            <motion.section variants={rise} aria-labelledby="detail-papier">
+                <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                    <h3 id="detail-papier" className={cn(heading, "mb-0")}>
+                        Son faire-part papier
+                    </h3>
+                    <PlanBadge section="qr-foyer" />
+                </div>
+                <div className="border-wed-line-soft flex items-center gap-4 rounded-2xl border p-3">
+                    <QrImage
+                        url={linkFor(household)}
+                        label={`QR code personnel de ${household.name}`}
+                        className="size-24 shrink-0"
+                    />
+                    <div className="grid justify-items-start gap-2">
+                        <p className="text-wed-ink-soft text-sm">
+                            Imprimé sur son faire-part, ce code ouvre sa réponse sans rien taper, et
+                            le jour J, sa table.
+                        </p>
+                        <PdfButton
+                            onExport={() => onDownloadInvitation(household)}
+                            className="min-h-9 px-3.5 text-[0.8rem]"
+                        >
+                            Son faire-part PDF
+                        </PdfButton>
+                    </div>
+                </div>
+            </motion.section>
 
             <motion.section variants={rise} aria-labelledby="detail-qui">
                 <h3 id="detail-qui" className={heading}>

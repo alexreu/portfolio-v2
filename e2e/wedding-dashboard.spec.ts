@@ -75,11 +75,129 @@ test.describe("tableau de bord des mariés (démo)", () => {
         );
     });
 
+    test("ouvrir le lien d'un foyer depuis le tableau ne compte pas comme sa visite", async ({
+        page,
+    }) => {
+        await page.goto(dashboard("invites"));
+        const open = households(page)
+            .getByRole("link", {
+                name: "Ouvrir le faire-part de Lucas & Emma Petit (nouvel onglet)",
+            })
+            .first();
+        const href = (await open.getAttribute("href")) ?? "";
+        expect(href).toMatch(/\?foyer=[^&]+&apercu$/);
+
+        await page.goto(href);
+        await expect(page.getByRole("note")).toContainText("Aperçu des mariés");
+        await page.getByRole("button", { name: "Ouvrir le faire-part" }).click();
+        await answerEveryMoment(page, ["Lucas", "Emma"], /^Oui$/);
+
+        await page.goto(dashboard("invites"));
+        await page
+            .getByRole("button", { name: "Voir la réponse de Lucas & Emma Petit" })
+            .first()
+            .click();
+        const detail = page.getByRole("dialog", { name: "Lucas & Emma Petit" });
+        await expect(detail.getByRole("region", { name: "Historique" })).toContainText(
+            "saisie par Camille",
+        );
+        await expect(detail).not.toContainText("Lien ouvert");
+    });
+
+    test("un foyer se corrige depuis son détail, sans changer de lien", async ({ page }) => {
+        await page.goto(dashboard("invites"));
+        await page
+            .getByRole("button", { name: "Voir la réponse de Lucas & Emma Petit" })
+            .first()
+            .click();
+        let detail = page.getByRole("dialog", { name: "Lucas & Emma Petit" });
+        await detail.getByRole("button", { name: "Modifier le foyer" }).click();
+
+        const form = detail.getByRole("form", { name: "Modifier Lucas & Emma Petit" });
+        await expect(form.getByLabel("Prénom de la personne 1")).toHaveValue("Lucas");
+        await form.getByLabel("Nom du foyer").fill("Lucas, Emma & Nina Petit");
+        await form.getByRole("button", { name: "Ajouter une personne" }).click();
+        await form.getByLabel("Prénom de la personne 3").fill("Nina");
+        await form.getByRole("button", { name: "Enregistrer le foyer" }).click();
+
+        detail = page.getByRole("dialog", { name: "Lucas, Emma & Nina Petit" });
+        await expect(detail.getByRole("region", { name: "Qui vient" })).toContainText("Nina");
+        await expect(detail.getByRole("region", { name: "Historique" })).toContainText(
+            "Foyer modifié",
+        );
+        await page.keyboard.press("Escape");
+        await expect(households(page)).toContainText("Lucas, Emma & Nina Petit");
+    });
+
+    test("une réponse reçue par courrier se saisit dans le détail du foyer", async ({ page }) => {
+        await page.goto(dashboard("invites"));
+        await page
+            .getByRole("button", { name: "Voir la réponse de Lucas & Emma Petit" })
+            .first()
+            .click();
+        const detail = page.getByRole("dialog", { name: "Lucas & Emma Petit" });
+        await detail.getByRole("button", { name: "Saisir sa réponse" }).click();
+
+        const form = detail.getByRole("form", { name: "Réponse de Lucas & Emma Petit" });
+        await form.getByRole("button", { name: "Enregistrer leur réponse" }).click();
+        await expect(form.getByRole("alert")).toContainText("à compléter");
+
+        for (const yes of await form.locator("label").filter({ hasText: /^Oui$/ }).all())
+            await yes.click();
+        await form.getByRole("button", { name: "Enregistrer leur réponse" }).click();
+
+        await expect(detail.getByRole("region", { name: "Qui vient" })).toContainText("Présent");
+        await expect(detail.getByRole("region", { name: "Historique" })).toContainText(
+            "saisie par Camille",
+        );
+        await expect(detail).not.toContainText("Lien ouvert");
+    });
+
+    test("un foyer retiré disparaît de la liste, et son lien ne montre plus rien", async ({
+        page,
+    }) => {
+        await page.goto(dashboard("invites"));
+        const preview =
+            (await households(page)
+                .getByRole("link", {
+                    name: "Ouvrir le faire-part de Chloé Lambert (nouvel onglet)",
+                })
+                .first()
+                .getAttribute("href")) ?? "";
+        await page
+            .getByRole("button", { name: "Voir la réponse de Chloé Lambert" })
+            .first()
+            .click();
+        const detail = page.getByRole("dialog", { name: "Chloé Lambert", exact: true });
+        await detail.getByRole("button", { name: "Retirer", exact: true }).click();
+        await page.getByRole("button", { name: "Retirer le foyer" }).click();
+
+        await expect(detail).toBeHidden();
+        await expect(households(page)).toContainText("21 foyers");
+        await expect(households(page)).not.toContainText("Chloé Lambert");
+
+        await page.goto(preview.replace("&apercu", ""));
+        await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+            "Ce lien n'est plus valide",
+        );
+    });
+
+    test("l'aperçu d'un foyer ramène à son détail pour le corriger", async ({ page }) => {
+        await page.goto("/mariage/demo?foyer=lefevre&apercu&skip");
+        await page.getByRole("link", { name: "Corriger ce foyer" }).click();
+
+        await expect(page).toHaveURL(dashboard("invites"));
+        await expect(page.getByRole("dialog", { name: "Marie & Thomas" })).toBeVisible();
+    });
+
     test("les sections réservées à une formule disent laquelle", async ({ page }) => {
         const cases = [
             ["plan-de-table", "Plan de table · dîner", "Signature · option Essentiel"],
             ["galerie", "Galerie des invités", "Dès Essentiel · option Intime"],
             ["faire-part", "Questions du faire-part", "Dès Essentiel · option Intime"],
+            ["faire-part", "Faire-part à imprimer", "Dès Essentiel · option Intime"],
+            ["galerie", "QR code de la galerie", "Dès Essentiel · option Intime"],
+            ["plan-de-table", "QR code du plan de table", "Signature · option Essentiel"],
             ["relances", "Relances", "Dès Essentiel"],
             ["acces", "Accès au tableau de bord", "Signature · option Intime et Essentiel"],
         ] as const;
@@ -493,6 +611,82 @@ test.describe("tableau de bord des mariés (démo)", () => {
         expect(download.suggestedFilename()).toBe("recap-traiteur-camille-hugo-diner.pdf");
         const pdf = await readFile((await download.path()) ?? "");
         expect(pdf.subarray(0, 5).toString()).toBe("%PDF-");
+    });
+
+    test("le faire-part s'imprime en PDF, le même pour tous ou un par foyer", async ({ page }) => {
+        await page.goto(dashboard("faire-part"));
+        const print = page.getByRole("region", { name: "Faire-part à imprimer" });
+        await expect(
+            print.getByRole("img", { name: "QR code du faire-part : ouvre le site du mariage" }),
+        ).toBeVisible();
+        await expect(print).toContainText("Signature · option Intime et Essentiel");
+
+        const [shared] = await Promise.all([
+            page.waitForEvent("download"),
+            print.getByRole("button", { name: "Le faire-part en PDF" }).click(),
+        ]);
+        expect(shared.suggestedFilename()).toBe("faire-part-camille-hugo.pdf");
+        const pdf = await readFile((await shared.path()) ?? "");
+        expect(pdf.subarray(0, 5).toString()).toBe("%PDF-");
+
+        const [perHousehold] = await Promise.all([
+            page.waitForEvent("download"),
+            print.getByRole("button", { name: /^Les \d+ faire-part en PDF$/ }).click(),
+        ]);
+        expect(perHousehold.suggestedFilename()).toBe("faire-part-par-foyer-camille-hugo.pdf");
+    });
+
+    test("le détail d'un foyer montre son QR personnel et son faire-part à imprimer", async ({
+        page,
+    }) => {
+        await page.goto(dashboard("invites"));
+        await page
+            .getByRole("button", { name: "Voir la réponse de Marie & Thomas" })
+            .first()
+            .click();
+
+        const paper = page
+            .getByRole("dialog", { name: "Marie & Thomas" })
+            .getByRole("region", { name: "Son faire-part papier" });
+        await expect(
+            paper.getByRole("img", { name: "QR code personnel de Marie & Thomas" }),
+        ).toBeVisible();
+        const [download] = await Promise.all([
+            page.waitForEvent("download"),
+            paper.getByRole("button", { name: "Son faire-part PDF" }).click(),
+        ]);
+        expect(download.suggestedFilename()).toBe("faire-part-marie-thomas.pdf");
+    });
+
+    test("chaque QR code du jour J n'ouvre que sa page, et s'imprime en affiche", async ({
+        page,
+    }) => {
+        const cases = [
+            [
+                "plan-de-table",
+                "QR code du plan de table",
+                /\/mariage\/demo\/plan-de-table$/,
+                "Affiche du plan de table",
+                "affiche-plan-de-table-camille-hugo.pdf",
+            ],
+            [
+                "galerie",
+                "QR code de la galerie",
+                /\/mariage\/demo\/galerie$/,
+                "Affiche et cartes de table",
+                "affiche-galerie-camille-hugo.pdf",
+            ],
+        ] as const;
+        for (const [path, name, href, button, filename] of cases) {
+            await page.goto(dashboard(path));
+            const card = page.getByRole("region", { name, exact: true });
+            await expect(card.getByRole("link", { name: /^Ouvrir/ })).toHaveAttribute("href", href);
+            const [download] = await Promise.all([
+                page.waitForEvent("download"),
+                card.getByRole("button", { name: button }).click(),
+            ]);
+            expect(download.suggestedFilename()).toBe(filename);
+        }
     });
 
     test("une relance s'inscrit dans l'activité, et la démo se réinitialise", async ({ page }) => {

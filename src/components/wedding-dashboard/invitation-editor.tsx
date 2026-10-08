@@ -7,6 +7,7 @@ import { Check, ExternalLink, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { parisDay, weddingCalendar } from "@/lib/wedding-dashboard/calendar";
 import { personalize, validateDesign, type DraftIssue } from "@/lib/wedding-dashboard/drafts";
+import { previewOf } from "@/lib/wedding-dashboard/preview-link";
 import type { InvitationDesign, SealTone } from "@/lib/wedding-dashboard/types";
 import { InvitationEnvelope } from "@/components/wedding-demo/invitation-envelope";
 
@@ -273,7 +274,7 @@ export const InvitationEditor = ({ design, sampleGuest, now, onSave }: Invitatio
                         </button>
                     )}
                     <a
-                        href="/mariage/demo"
+                        href={previewOf("/mariage/demo")}
                         target="_blank"
                         rel="noopener"
                         className={buttonStyles.quiet}

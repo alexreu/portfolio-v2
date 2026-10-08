@@ -6,7 +6,12 @@ export type HouseholdDraft = {
     readonly name: string;
     readonly group: GroupKey;
     readonly email: string;
-    readonly guests: readonly { readonly firstName: string; readonly child: boolean }[];
+    readonly guests: readonly {
+        /** Set for a guest already in the household, whose answers are kept. */
+        readonly id?: string;
+        readonly firstName: string;
+        readonly child: boolean;
+    }[];
     readonly momentKeys: readonly string[];
 };
 
@@ -90,15 +95,99 @@ export const createHousehold = (
     message: "",
 });
 
-/** "famille-helene-zoe-x7": readable in a link; the suffix keeps two Martin families apart. */
-export const householdIdFor = (name: string, suffix: string) =>
-    `${name
+/** The household as its edit form shows it. */
+export const draftOf = (household: HouseholdRecord): HouseholdDraft => ({
+    name: household.name,
+    group: household.group,
+    email: household.email,
+    guests: household.guests.map(({ id, firstName, child }) => ({ id, firstName, child })),
+    momentKeys: household.momentKeys,
+});
+
+/** "moreau-4": the first number after the household's id that no guest holds yet. */
+const freshGuestIds = (householdId: string, taken: ReadonlySet<string>, count: number) =>
+    [...Array(count + taken.size + 1).keys()]
+        .map((index) => `${householdId}-${index + 1}`)
+        .filter((id) => !taken.has(id))
+        .slice(0, count);
+
+const only = <Value>(
+    record: Readonly<Record<string, Value>>,
+    keys: readonly string[],
+): Readonly<Record<string, Value>> =>
+    Object.fromEntries(Object.entries(record).filter(([key]) => keys.includes(key)));
+
+/**
+ * The household after the couple corrected it: same link, same answers for the guests and
+ * moments still there; a guest or a moment taken out takes their answers with them.
+ */
+export const editHousehold = (
+    household: HouseholdRecord,
+    draft: HouseholdDraft,
+): HouseholdRecord => {
+    const known = new Map(household.guests.map((guest) => [guest.id, guest]));
+    const kept = new Set(
+        draft.guests.flatMap((guest) => (guest.id && known.has(guest.id) ? [guest.id] : [])),
+    );
+    const fresh = freshGuestIds(
+        household.id,
+        new Set(known.keys()),
+        draft.guests.filter((guest) => !(guest.id && kept.has(guest.id))).length,
+    );
+    const guests = draft.guests.reduce<{
+        readonly list: HouseholdRecord["guests"];
+        readonly next: number;
+    }>(
+        ({ list, next }, guest) => {
+            const before = guest.id ? known.get(guest.id) : undefined;
+            return before
+                ? {
+                      list: [
+                          ...list,
+                          { ...before, firstName: guest.firstName, child: guest.child },
+                      ],
+                      next,
+                  }
+                : {
+                      list: [
+                          ...list,
+                          { id: fresh[next], firstName: guest.firstName, child: guest.child },
+                      ],
+                      next: next + 1,
+                  };
+        },
+        { list: [], next: 0 },
+    ).list;
+    const ids = guests.map((guest) => guest.id);
+    return {
+        ...household,
+        name: draft.name,
+        group: draft.group,
+        email: draft.email,
+        guests,
+        momentKeys: draft.momentKeys,
+        attendance: Object.fromEntries(
+            Object.entries(only(household.attendance, ids)).map(([id, moments]) => [
+                id,
+                only(moments, draft.momentKeys),
+            ]),
+        ),
+        diets: only(household.diets, ids),
+    };
+};
+
+/** "Zoé & Élodie" → "zoe-elodie": readable in a link or a file name. */
+export const slugOf = (text: string) =>
+    text
         .normalize("NFD")
         .replace(/\p{Diacritic}/gu, "")
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "")
-        .slice(0, 32)}-${suffix}`;
+        .replace(/^-|-$/g, "");
+
+/** "famille-helene-zoe-x7": readable in a link; the suffix keeps two Martin families apart. */
+export const householdIdFor = (name: string, suffix: string) =>
+    `${slugOf(name).slice(0, 32)}-${suffix}`;
 
 const isRealDay = (day: string) =>
     /^\d{4}-\d{2}-\d{2}$/.test(day) &&

@@ -38,4 +38,18 @@ describe("planOf", () => {
             note: "Signature · option Intime et Essentiel",
         });
     });
+
+    it("marks the printed faire-part as an option with Intime", () => {
+        expect(planOf("faire-part-pdf")).toEqual({
+            from: "Essentiel",
+            note: "Dès Essentiel · option Intime",
+        });
+    });
+
+    it("marks the QR code per household as Signature, an option with Intime and Essentiel", () => {
+        expect(planOf("qr-foyer")).toEqual({
+            from: "Signature",
+            note: "Signature · option Intime et Essentiel",
+        });
+    });
 });

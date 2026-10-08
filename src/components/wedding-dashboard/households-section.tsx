@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, ChevronRight, Copy, ExternalLink, Plus, Search } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 import { sinceLabel } from "@/lib/wedding-dashboard/calendar";
@@ -14,6 +15,7 @@ import {
     type HouseholdFilter,
     type StatusFilter,
 } from "@/lib/wedding-dashboard/households";
+import { previewOf } from "@/lib/wedding-dashboard/preview-link";
 import type { GroupKey, HouseholdRecord, InvitationDesign } from "@/lib/wedding-dashboard/types";
 import type { Moment } from "@/lib/wedding/types";
 
@@ -90,6 +92,7 @@ export const HouseholdsSection = ({
     onAddHousehold,
     onOpen,
 }: HouseholdsSectionProps) => {
+    const still = useReducedMotion() ?? false;
     const [filter, setFilter] = useState<HouseholdFilter>({
         query: "",
         status: "all",
@@ -124,7 +127,7 @@ export const HouseholdsSection = ({
                 )}
             </button>
             <a
-                href={linkFor(household)}
+                href={previewOf(linkFor(household))}
                 target="_blank"
                 rel="noopener"
                 aria-label={`Ouvrir le faire-part de ${household.name} (nouvel onglet)`}
@@ -177,22 +180,52 @@ export const HouseholdsSection = ({
                     aria-label="Filtrer par statut"
                     className="bg-wed-ivory flex max-w-full min-w-0 gap-1 overflow-x-auto rounded-full p-1"
                 >
-                    {statusTabs.map((tab) => (
-                        <button
-                            key={tab.value}
-                            type="button"
-                            aria-pressed={filter.status === tab.value}
-                            onClick={() => setFilter({ ...filter, status: tab.value })}
-                            className={cn(
-                                "min-h-9 cursor-pointer rounded-full px-3.5 text-[0.8rem] whitespace-nowrap transition-colors",
-                                filter.status === tab.value
-                                    ? "bg-wed-paper text-wed-ink font-medium shadow-sm"
-                                    : "text-wed-muted hover:text-wed-ink",
-                            )}
-                        >
-                            {tab.label} {counts[tab.value]}
-                        </button>
-                    ))}
+                    {statusTabs.map((tab) => {
+                        const current = filter.status === tab.value;
+                        return (
+                            <button
+                                key={tab.value}
+                                type="button"
+                                aria-pressed={current}
+                                onClick={() => setFilter({ ...filter, status: tab.value })}
+                                className={cn(
+                                    "relative min-h-9 cursor-pointer rounded-full px-3.5 text-[0.8rem] whitespace-nowrap transition-colors duration-200",
+                                    current ? "text-wed-ink" : "text-wed-muted hover:text-wed-ink",
+                                )}
+                            >
+                                {/* One pill, shared by the tabs: it slides to the one picked. */}
+                                {current && (
+                                    <motion.span
+                                        aria-hidden="true"
+                                        layoutId="household-status-pill"
+                                        transition={
+                                            still
+                                                ? { duration: 0 }
+                                                : { type: "spring", stiffness: 500, damping: 38 }
+                                        }
+                                        className="bg-wed-paper absolute inset-0 rounded-full shadow-sm"
+                                    />
+                                )}
+                                {/* A hidden bold copy holds the width: tabs never shift as the weight changes. */}
+                                <span className="relative grid">
+                                    <span
+                                        className={cn(
+                                            "col-start-1 row-start-1",
+                                            current && "font-medium",
+                                        )}
+                                    >
+                                        {tab.label} {counts[tab.value]}
+                                    </span>
+                                    <span
+                                        aria-hidden="true"
+                                        className="invisible col-start-1 row-start-1 font-medium"
+                                    >
+                                        {tab.label} {counts[tab.value]}
+                                    </span>
+                                </span>
+                            </button>
+                        );
+                    })}
                 </div>
                 <Select
                     aria-label="Filtrer par groupe"

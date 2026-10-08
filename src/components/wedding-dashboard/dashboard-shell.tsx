@@ -10,6 +10,13 @@ import { catererSheet } from "@/lib/wedding-dashboard/caterer-sheet";
 import { guestListCsv } from "@/lib/wedding-dashboard/csv";
 import { householdIdFor, monogram } from "@/lib/wedding-dashboard/drafts";
 import { groupLabel } from "@/lib/wedding-dashboard/households";
+import { previewOf } from "@/lib/wedding-dashboard/preview-link";
+import {
+    galleryPoster,
+    householdInvitations,
+    seatingPoster,
+    sharedInvitation,
+} from "@/lib/wedding-dashboard/prints";
 import { momentsFromPlans } from "@/lib/wedding-dashboard/programme-plan";
 import type { HouseholdRecord } from "@/lib/wedding-dashboard/types";
 import { useNow } from "@/hooks/use-now";
@@ -18,18 +25,23 @@ import { useWeddingDemo } from "@/hooks/use-wedding-demo";
 
 import { ConfirmPopover } from "./confirm-popover";
 import { DashboardProvider, type Dashboard } from "./dashboard-context";
-import { DashboardNav } from "./dashboard-nav";
+import { DashboardNav, MENU_FOLDED_KEY } from "./dashboard-nav";
 import { dashboardHref } from "./dashboard-pages";
 import { buttonStyles } from "./dashboard-ui";
 import { HouseholdDialog } from "./household-dialog";
 import { HouseholdPanel } from "./household-panel";
 
 const HIGHLIGHT_MS = 2_500;
-const MENU_FOLDED_KEY = "mariage-demo-menu-replie";
 const GUESTS = dashboardHref("invites");
 
+const siteUrl = () => `${window.location.origin}/mariage/demo`;
+
 const linkFor = (household: HouseholdRecord) =>
-    `${window.location.origin}/mariage/demo?foyer=${encodeURIComponent(household.id)}`;
+    `${siteUrl()}?foyer=${encodeURIComponent(household.id)}`;
+
+const seatingUrl = () => `${siteUrl()}/plan-de-table`;
+
+const galleryUrl = () => `${siteUrl()}/galerie`;
 
 const download = (filename: string, content: Blob) => {
     const url = URL.createObjectURL(content);
@@ -38,27 +50,36 @@ const download = (filename: string, content: Blob) => {
     URL.revokeObjectURL(url);
 };
 
+const downloadPdf = (filename: string, bytes: Uint8Array) =>
+    download(filename, new Blob([new Uint8Array(bytes)], { type: "application/pdf" }));
+
+/** Only loaded when asked for: the PDF library stays out of the page. */
+const printPdf = () => import("@/lib/wedding-dashboard/print-pdf");
+
 const at = () => new Date().toISOString();
 
 /** Same frame as the dashboard, so nothing jumps once the browser copy is read. */
-const DashboardSkeleton = ({ folded }: { folded: boolean }) => (
-    <div
-        aria-busy="true"
-        className="grid min-h-dvh grid-cols-[minmax(0,1fr)] lg:grid-cols-[auto_minmax(0,1fr)]"
-    >
-        <div className={`bg-wed-night hidden lg:block ${folded ? "w-[4.875rem]" : "w-64"}`} />
-        <div className="bg-wed-night h-14 lg:hidden" />
-        <div className="mx-auto grid w-full max-w-[76rem] content-start gap-4 px-4 py-8 md:px-8">
-            <p className="sr-only">Chargement du tableau de bord…</p>
-            {["h-14 w-72", "h-20", "h-32", "h-72"].map((size) => (
-                <div
-                    key={size}
-                    className={`bg-wed-line-soft rounded-2xl motion-safe:animate-pulse ${size}`}
-                />
-            ))}
+const DashboardSkeleton = () => {
+    const [folded] = useStoredFlag(MENU_FOLDED_KEY);
+    return (
+        <div
+            aria-busy="true"
+            className="grid min-h-dvh grid-cols-[minmax(0,1fr)] lg:grid-cols-[auto_minmax(0,1fr)]"
+        >
+            <div className={`bg-wed-night hidden lg:block ${folded ? "w-[4.875rem]" : "w-64"}`} />
+            <div className="bg-wed-night h-14 lg:hidden" />
+            <div className="mx-auto grid w-full max-w-[76rem] content-start gap-4 px-4 py-8 md:px-8">
+                <p className="sr-only">Chargement du tableau de bord…</p>
+                {["h-14 w-72", "h-20", "h-32", "h-72"].map((size) => (
+                    <div
+                        key={size}
+                        className={`bg-wed-line-soft rounded-2xl motion-safe:animate-pulse ${size}`}
+                    />
+                ))}
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 /**
  * Camille & Hugo's dashboard with fictional guests: the menu, the demo notice, and what any
@@ -74,7 +95,6 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
     const [creating, setCreating] = useState(false);
     const [highlightId, setHighlightId] = useState<string | null>(null);
     const [detailId, setDetailId] = useState<string | null>(null);
-    const [menuFolded, setMenuFolded] = useStoredFlag(MENU_FOLDED_KEY);
 
     /** A faire-part just created: once its dialog closes, the guest list shows it lit up. */
     useEffect(() => {
@@ -85,7 +105,7 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
         return () => window.clearTimeout(timer);
     }, [highlightId, creating, pathname, router, lenis]);
 
-    if (!state) return <DashboardSkeleton folded={menuFolded} />;
+    if (!state) return <DashboardSkeleton />;
 
     const { design } = state;
     const calendar = weddingCalendar(design.date, state.dates);
@@ -99,6 +119,9 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
         moments,
         at,
         linkFor,
+        siteUrl: siteUrl(),
+        seatingUrl: seatingUrl(),
+        galleryUrl: galleryUrl(),
         highlightId,
         openHousehold: setDetailId,
         createHousehold: () => setCreating(true),
@@ -114,11 +137,27 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
             /** Only loaded when asked for: the PDF library stays out of the page. */
             const { catererPdf } = await import("@/lib/wedding-dashboard/caterer-pdf");
             const sheet = catererSheet(state, calendar, new Date());
-            const bytes = await catererPdf(sheet);
-            download(
-                sheet.filename,
-                new Blob([new Uint8Array(bytes)], { type: "application/pdf" }),
-            );
+            downloadPdf(sheet.filename, await catererPdf(sheet));
+        },
+        downloadSharedInvitation: async () => {
+            const { invitationPdf } = await printPdf();
+            const print = sharedInvitation(design, calendar, siteUrl());
+            downloadPdf(print.filename, await invitationPdf(print));
+        },
+        downloadHouseholdInvitations: async (households = state.households) => {
+            const { invitationPdf } = await printPdf();
+            const print = householdInvitations(design, calendar, siteUrl(), households, linkFor);
+            downloadPdf(print.filename, await invitationPdf(print));
+        },
+        downloadSeatingPoster: async () => {
+            const { posterPdf } = await printPdf();
+            const poster = seatingPoster(design, calendar, state.room.name, seatingUrl());
+            downloadPdf(poster.filename, await posterPdf(poster));
+        },
+        downloadGalleryPoster: async () => {
+            const { posterPdf } = await printPdf();
+            const poster = galleryPoster(design, calendar, galleryUrl());
+            downloadPdf(poster.filename, await posterPdf(poster));
         },
         remind: () => dispatch({ type: "reminder-sent", at: at() }),
     };
@@ -131,8 +170,6 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                     monogram={monogram(design.first, design.second)}
                     subtitle={`${calendar.dateLabel} · Signature`}
                     householdCount={state.households.length}
-                    folded={menuFolded}
-                    onFold={setMenuFolded}
                     onReset={reset}
                 />
                 <main className="mx-auto grid w-full max-w-[76rem] grid-cols-[minmax(0,1fr)] content-start gap-4 px-4 pt-6 pb-16 md:px-8 md:pt-8">
@@ -147,7 +184,7 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                         </p>
                         <div className="flex flex-wrap gap-1">
                             <a
-                                href="/mariage/demo"
+                                href={previewOf("/mariage/demo")}
                                 target="_blank"
                                 rel="noopener"
                                 className={buttonStyles.quiet}
@@ -181,6 +218,29 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                     activity={state.activity}
                     now={now}
                     linkFor={linkFor}
+                    onDownloadInvitation={(household) =>
+                        dashboard.downloadHouseholdInvitations([household])
+                    }
+                    onEdit={(household, draft) =>
+                        dispatch({
+                            type: "household-edited",
+                            householdId: household.id,
+                            draft,
+                            at: at(),
+                        })
+                    }
+                    onAnswer={(household, draft) =>
+                        dispatch({
+                            type: "answer-recorded",
+                            householdId: household.id,
+                            draft,
+                            at: at(),
+                            by: "maries",
+                        })
+                    }
+                    onRemove={(household) =>
+                        dispatch({ type: "household-removed", householdId: household.id, at: at() })
+                    }
                     onClose={() => setDetailId(null)}
                 />
                 <HouseholdDialog

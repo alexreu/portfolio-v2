@@ -1,11 +1,11 @@
 import type { ComponentProps, ReactNode } from "react";
-import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { DraftIssue } from "@/lib/wedding-dashboard/drafts";
 import type { CellTone } from "@/lib/wedding-dashboard/households";
 import type { DashboardPage } from "@/lib/wedding-dashboard/pages";
 import { planOf } from "@/lib/wedding-dashboard/plans";
+import { SelectField } from "@/components/shared/select-field";
 
 import { dashboardEntry } from "./dashboard-pages";
 
@@ -99,25 +99,13 @@ export const Chip = ({ tone, children }: { tone: CellTone; children: ReactNode }
 export const inputStyles =
     "border-wed-line bg-wed-paper text-wed-ink placeholder:text-wed-muted/70 aria-invalid:border-wed-no min-h-11 w-full rounded-xl border px-3.5 text-[0.95rem]";
 
-/**
- * A select with its own chevron, set away from the edge: the browser's arrow cannot be moved.
- * Full width by default; `wrapperClassName="w-auto"` sizes it to its options.
- */
-export const Select = ({
-    className,
-    wrapperClassName,
-    ...props
-}: ComponentProps<"select"> & { wrapperClassName?: string }) => (
-    <span className={cn("relative grid", wrapperClassName)}>
-        <select
-            {...props}
-            className={cn(inputStyles, "cursor-pointer appearance-none pr-11", className)}
-        />
-        <ChevronDown
-            aria-hidden="true"
-            className="text-wed-muted pointer-events-none absolute top-1/2 right-4 size-4 -translate-y-1/2"
-        />
-    </span>
+/** The dashboard's select: its field style, the shared chevron in the muted ink. */
+export const Select = ({ className, ...props }: ComponentProps<typeof SelectField>) => (
+    <SelectField
+        {...props}
+        className={cn(inputStyles, className)}
+        chevronClassName="text-wed-muted"
+    />
 );
 
 export const FieldError = ({ id, message }: { id: string; message: string | undefined }) =>

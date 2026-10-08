@@ -1,4 +1,4 @@
-import type { DietChoice, Presence } from "@/lib/wedding/answer";
+import type { AnswerDraft, DietChoice, Presence } from "@/lib/wedding/answer";
 import type { Moment } from "@/lib/wedding/types";
 
 import type { Activity, GroupKey, HouseholdRecord } from "./types";
@@ -182,6 +182,8 @@ const storyLabel = (entry: Activity, household: HouseholdRecord) => {
             return "Faire-part créé";
         case "opened":
             return "Lien ouvert";
+        case "edited":
+            return "Foyer modifié";
         case "updated":
             return "Réponse modifiée";
         case "answered":
@@ -224,3 +226,13 @@ export const householdTimeline = (
         : [{ at: household.createdAt, label: "Faire-part envoyé" }];
     return [...fromFeed, ...answer, ...sent].sort(latestFirst);
 };
+
+/** What the household answered, as the answer form starts from it. */
+export const answerDraftOf = (household: HouseholdRecord): AnswerDraft => ({
+    attendance: household.attendance,
+    diets: household.diets,
+    /** Diets shared once were consented to; nothing to share, nothing to agree to yet. */
+    consent: Object.values(household.diets).some((diet) => diet.choice !== "aucune"),
+    questions: household.questions,
+    message: household.message,
+});

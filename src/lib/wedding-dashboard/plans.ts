@@ -10,6 +10,8 @@ const plans: Readonly<Record<string, SectionPlan>> = {
     relances: { from: "Essentiel", note: "Dès Essentiel" },
     galerie: { from: "Essentiel", note: "Dès Essentiel · option Intime" },
     questions: { from: "Essentiel", note: "Dès Essentiel · option Intime" },
+    "faire-part-pdf": { from: "Essentiel", note: "Dès Essentiel · option Intime" },
+    "qr-foyer": { from: "Signature", note: "Signature · option Intime et Essentiel" },
     "plan-de-table": { from: "Signature", note: "Signature · option Essentiel" },
     acces: { from: "Signature", note: "Signature · option Intime et Essentiel" },
 };

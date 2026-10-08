@@ -13,6 +13,7 @@ import {
     type HouseholdDraft,
 } from "@/lib/wedding-dashboard/drafts";
 import { groupLabel } from "@/lib/wedding-dashboard/households";
+import { previewOf } from "@/lib/wedding-dashboard/preview-link";
 import type { GroupKey, HouseholdRecord, InvitationDesign } from "@/lib/wedding-dashboard/types";
 import type { Moment } from "@/lib/wedding/types";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
@@ -95,7 +96,12 @@ const CreatedPanel = ({
                 />
             </label>
             <div className="flex flex-wrap gap-2">
-                <a href={link} target="_blank" rel="noopener" className={buttonStyles.primary}>
+                <a
+                    href={previewOf(link)}
+                    target="_blank"
+                    rel="noopener"
+                    className={buttonStyles.primary}
+                >
                     <ExternalLink aria-hidden="true" />
                     Ouvrir son faire-part
                 </a>
@@ -112,12 +118,27 @@ const CreatedPanel = ({
     );
 };
 
-const HouseholdForm = ({
+type HouseholdFormProps = Pick<HouseholdDialogProps, "moments" | "design"> & {
+    /** The household being corrected; a new one starts empty. */
+    initial?: HouseholdDraft;
+    /** The form's name, for assistive technologies. */
+    label: string;
+    submitLabel: string;
+    onSubmit: (draft: HouseholdDraft) => void;
+    onCancel?: () => void;
+};
+
+/** Who the household is, and what it is invited to: to create it, or to correct it. */
+export const HouseholdForm = ({
     moments,
     design,
-    onCreate,
-}: Pick<HouseholdDialogProps, "moments" | "design" | "onCreate">) => {
-    const [draft, setDraft] = useState<HouseholdDraft>(() => emptyDraft(moments));
+    initial,
+    label,
+    submitLabel,
+    onSubmit,
+    onCancel,
+}: HouseholdFormProps) => {
+    const [draft, setDraft] = useState<HouseholdDraft>(() => initial ?? emptyDraft(moments));
     const [issues, setIssues] = useState<readonly DraftIssue[]>([]);
 
     const setGuest = (index: number, change: Partial<HouseholdDraft["guests"][number]>) =>
@@ -145,8 +166,7 @@ const HouseholdForm = ({
         event.preventDefault();
         const result = validateHouseholdDraft(draft);
         if (!result.ok) return setIssues(result.error);
-        const id = householdIdFor(result.value.name, randomSuffix());
-        onCreate(createHousehold(result.value, { id, at: new Date().toISOString() }));
+        onSubmit(result.value);
     };
 
     const nameIssue = issueAt(issues, "name");
@@ -154,7 +174,7 @@ const HouseholdForm = ({
     const emailIssue = issueAt(issues, "email");
 
     return (
-        <form noValidate onSubmit={submit} aria-label="Nouveau faire-part" className="grid gap-5">
+        <form noValidate onSubmit={submit} aria-label={label} className="grid gap-5">
             {issues.length > 0 && (
                 <p
                     role="alert"
@@ -312,9 +332,16 @@ const HouseholdForm = ({
                 />
             </label>
 
-            <button type="submit" className={cn(buttonStyles.primary, "min-h-12 w-full")}>
-                Créer le faire-part
-            </button>
+            <div className="flex flex-wrap gap-2">
+                <button type="submit" className={cn(buttonStyles.primary, "min-h-12 flex-1")}>
+                    {submitLabel}
+                </button>
+                {onCancel && (
+                    <button type="button" onClick={onCancel} className={buttonStyles.quiet}>
+                        Annuler
+                    </button>
+                )}
+            </div>
         </form>
     );
 };
@@ -344,7 +371,13 @@ const DialogBody = ({
             key={round}
             moments={moments}
             design={design}
-            onCreate={(household) => {
+            label="Nouveau faire-part"
+            submitLabel="Créer le faire-part"
+            onSubmit={(draft) => {
+                const household = createHousehold(draft, {
+                    id: householdIdFor(draft.name, randomSuffix()),
+                    at: new Date().toISOString(),
+                });
                 onCreate(household);
                 setCreated(household);
             }}

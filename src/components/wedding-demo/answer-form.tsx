@@ -13,6 +13,7 @@ import {
 } from "@/lib/wedding/answer";
 import { formatHour } from "@/lib/wedding/format-hour";
 import type { GuestQuestion, Moment } from "@/lib/wedding/types";
+import { SelectField } from "@/components/shared/select-field";
 
 type AnswerFormProps = {
     householdName: string;
@@ -151,7 +152,7 @@ export const AnswerForm = ({
                         {invited.map((moment) => {
                             const value = draft.attendance[guest.id]?.[moment.key];
                             const issue = messageAt(issues, `attendance.${guest.id}.${moment.key}`);
-                            const errorId = `erreur-${guest.id}-${moment.key}`;
+                            const errorId = `error-${guest.id}-${moment.key}`;
                             return (
                                 <div
                                     key={moment.key}
@@ -168,10 +169,21 @@ export const AnswerForm = ({
                                         aria-label={`${guest.firstName}, ${moment.title}`}
                                         aria-describedby={issue ? errorId : undefined}
                                         className={cn(
-                                            "border-demo-line bg-demo-paper flex gap-1 rounded-full border p-1",
+                                            "border-demo-line bg-demo-paper relative grid grid-cols-2 gap-1 rounded-full border p-1",
                                             issue && "border-demo-no",
                                         )}
                                     >
+                                        {/* One pill under both answers: it slides to the one picked and takes its colour. */}
+                                        <span
+                                            aria-hidden="true"
+                                            className={cn(
+                                                "absolute inset-y-1 left-1 w-[calc(50%-6px)] rounded-full transition-[translate,background-color,opacity] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none",
+                                                value === "no" && "translate-x-[calc(100%+4px)]",
+                                                value === "yes" && "bg-demo-olive-dark",
+                                                value === "no" && "bg-demo-no",
+                                                value === undefined && "opacity-0",
+                                            )}
+                                        />
                                         {(["yes", "no"] as const).map((presence) => (
                                             <button
                                                 key={presence}
@@ -181,11 +193,9 @@ export const AnswerForm = ({
                                                     setPresence(guest.id, moment.key, presence)
                                                 }
                                                 className={cn(
-                                                    "text-demo-ink-2 min-h-11 flex-1 cursor-pointer rounded-full px-4.5 transition-colors md:min-w-22",
+                                                    "text-demo-ink-2 relative min-h-11 cursor-pointer rounded-full px-4.5 transition-colors duration-300 md:min-w-22",
                                                     value === presence
-                                                        ? presence === "yes"
-                                                            ? "bg-demo-olive-dark text-white"
-                                                            : "bg-demo-no text-white"
+                                                        ? "text-white"
                                                         : "hover:bg-demo-card hover:text-demo-ink",
                                                 )}
                                             >
@@ -198,36 +208,34 @@ export const AnswerForm = ({
                             );
                         })}
                         <div className="mt-3.5 flex flex-col gap-1.5">
-                            <label
-                                htmlFor={`regime-${guest.id}`}
-                                className="text-demo-ink-2 text-sm"
-                            >
+                            <label htmlFor={`diet-${guest.id}`} className="text-demo-ink-2 text-sm">
                                 Contraintes alimentaires <small>(facultatif)</small>
                             </label>
-                            <select
-                                id={`regime-${guest.id}`}
+                            <SelectField
+                                id={`diet-${guest.id}`}
                                 value={diet.choice}
                                 onChange={(event) =>
                                     setDiet(guest.id, { choice: event.target.value as DietChoice })
                                 }
                                 className="bg-demo-paper border-demo-line min-h-12 rounded-xl border px-3.5"
+                                chevronClassName="text-demo-muted"
                             >
                                 {dietOptions.map((option) => (
                                     <option key={option.value} value={option.value}>
                                         {option.label}
                                     </option>
                                 ))}
-                            </select>
+                            </SelectField>
                             {diet.choice === "autre" && (
                                 <div className="border-demo-olive mt-2.5 flex flex-col gap-1.5 border-l-2 pl-3.5">
                                     <label
-                                        htmlFor={`precision-${guest.id}`}
+                                        htmlFor={`detail-${guest.id}`}
                                         className="text-demo-ink-2 text-sm"
                                     >
                                         Précisez pour {guest.firstName}
                                     </label>
                                     <input
-                                        id={`precision-${guest.id}`}
+                                        id={`detail-${guest.id}`}
                                         autoFocus
                                         value={diet.other}
                                         onChange={(event) =>
@@ -236,14 +244,11 @@ export const AnswerForm = ({
                                         placeholder="Ex. allergie aux arachides, sans lactose…"
                                         aria-invalid={Boolean(otherIssue)}
                                         aria-describedby={
-                                            otherIssue ? `erreur-precision-${guest.id}` : undefined
+                                            otherIssue ? `error-detail-${guest.id}` : undefined
                                         }
                                         className="bg-demo-paper border-demo-line min-h-12 rounded-xl border px-3.5"
                                     />
-                                    <ErrorText
-                                        id={`erreur-precision-${guest.id}`}
-                                        code={otherIssue}
-                                    />
+                                    <ErrorText id={`error-detail-${guest.id}`} code={otherIssue} />
                                 </div>
                             )}
                         </div>
@@ -276,30 +281,32 @@ export const AnswerForm = ({
                                 placeholder={question.placeholder}
                                 aria-invalid={Boolean(issue)}
                                 aria-describedby={
-                                    issue ? `erreur-question-${question.id}` : undefined
+                                    issue ? `error-question-${question.id}` : undefined
                                 }
                                 className="bg-demo-paper border-demo-line min-h-12 rounded-xl border px-3.5"
                             />
-                            <ErrorText id={`erreur-question-${question.id}`} code={issue} />
+                            <ErrorText id={`error-question-${question.id}`} code={issue} />
                         </div>
                     );
                 })}
                 <div className="flex flex-col gap-1.5">
-                    <label htmlFor="mot" className="text-demo-ink-2 text-sm">
+                    <label htmlFor="note" className="text-demo-ink-2 text-sm">
                         Un mot pour nous
                     </label>
                     <textarea
-                        id="mot"
+                        id="note"
                         rows={3}
                         value={draft.message}
                         onChange={(event) =>
                             setDraft((current) => ({ ...current, message: event.target.value }))
                         }
                         aria-invalid={Boolean(messageAt(issues, "message"))}
-                        aria-describedby={messageAt(issues, "message") ? "erreur-mot" : undefined}
+                        aria-describedby={
+                            messageAt(issues, "message") ? "error-message" : undefined
+                        }
                         className="bg-demo-paper border-demo-line rounded-xl border px-3.5 py-3"
                     />
-                    <ErrorText id="erreur-mot" code={messageAt(issues, "message")} />
+                    <ErrorText id="error-message" code={messageAt(issues, "message")} />
                 </div>
                 <label className="text-demo-muted flex cursor-pointer gap-2.5 py-1.5 text-sm">
                     <input
@@ -309,14 +316,14 @@ export const AnswerForm = ({
                             setDraft((current) => ({ ...current, consent: event.target.checked }))
                         }
                         aria-describedby={
-                            messageAt(issues, "consent") ? "erreur-consentement" : undefined
+                            messageAt(issues, "consent") ? "error-consent" : undefined
                         }
                         className="accent-demo-olive mt-0.5 size-5 shrink-0"
                     />
                     J&apos;accepte que mes contraintes alimentaires soient transmises au traiteur.
                     Elles sont supprimées un mois après le mariage.
                 </label>
-                <ErrorText id="erreur-consentement" code={messageAt(issues, "consent")} />
+                <ErrorText id="error-consent" code={messageAt(issues, "consent")} />
             </div>
             <button
                 type="submit"

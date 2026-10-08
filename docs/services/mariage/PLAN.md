@@ -12,7 +12,7 @@
 | Hors périmètre | Hébergements, transports, liste de mariage / cagnotte |
 | Intégration portfolio | Carte bento sur la home + page dédiée `/mariage` |
 | Univers de la page | **Rupture élégante** : ivoire, serif, doré — le portfolio sombre sert d'écrin |
-| Tarifs | 3 formules : **Intime 290 € / Essentiel 490 € / Signature 990 €** ; l'ancien Prestige (1 690 €) est supprimé, ses briques passent en options |
+| Tarifs | 3 formules : **Intime 290 € / Essentiel 490 € / Signature 890 €** ; l'ancien Prestige (1 690 €) est supprimé, ses briques passent en options |
 | Suivi des réponses | **Tableau de bord mariés** (espace privé) |
 | Accès invités | **Lien personnel par foyer**, sans mot de passe |
 | Projet démo | Couple fictif, style **éditorial moderne** |
@@ -38,7 +38,8 @@
   de bord comptent tous les moments de la même façon.
 - **Questions** : tout ce que le formulaire demande en plus de la présence.
   Les questions de base sont incluses partout ; écrire ses propres questions
-  est une option à 40 €. On ne compte jamais les questions dans l'offre.
+  est inclus dès Essentiel, en option à 40 € avec Intime. On ne compte jamais
+  les questions dans l'offre.
 - **Moodboard** : planche d'inspiration (images, couleurs, typographies,
   matières) validée par le couple avant le design. Sur les pages publiques, on
   écrit « planche d'inspiration ».
@@ -85,7 +86,7 @@ place entre les deux : **design unique, outil de gestion réel, prix d'artisan**
 
 | Acteur | Prix | Ce qu'il propose | Ce qu'il n'a pas (vs notre offre) |
 |---|---|---|---|
-| [Moment de Vie](https://momentdevie.fr/) | 99 → 299 € (5 paliers) | Lien personnel par invité, RSVP + tableau de bord, régimes, plan de table, galerie, animation d'ouverture, 2 ans d'hébergement, livré en 7 jours | Domaine perso (URL `momentdevie.fr/mariage/…`), galerie alimentée par les invités via QR (à confirmer), kit print, bilingue |
+| [Moment de Vie](https://momentdevie.fr/) | 99 → 299 € (5 paliers) | Lien personnel par invité, RSVP + tableau de bord, régimes, plan de table, galerie, animation d'ouverture, 2 ans d'hébergement, livré en 7 jours | Domaine perso (URL `momentdevie.fr/mariage/…`), galerie alimentée par les invités via QR (à confirmer), faire-part PDF avec QR personnel, bilingue |
 | [Plume & Cire](https://plumeetcire.fr/) | 149 € (Essentielle) / 299 € (Signature) | 10 univers graphiques, sites animés, livrés en 5 à 10 jours | Sur-mesure réel (univers prédéfinis) ; RSVP et tableau de bord à vérifier |
 | Maison Celestine, Cotton Bird (Bird Postal), Joy | gratuit → ~150 € | Mini-sites et faire-part numériques à partir de modèles | Design unique, accompagnement |
 
@@ -94,7 +95,7 @@ existe déjà entre 99 € et 299 €. Réponse retenue : une formule **Intime �
 au niveau du haut de ce marché, mais avec ce qu'il n'offre pas (domaine au nom
 du couple, design ajusté par un humain, interlocuteur unique). Essentiel et
 Signature se justifient ensuite par le design dédié, la galerie alimentée par
-les invités le jour J et le kit print assorti.
+les invités le jour J, le QR personnel par foyer et le plan de table sur téléphone.
 
 ---
 
@@ -109,30 +110,44 @@ les invités le jour J et le kit print assorti.
 
 ### 2.1 Formules
 
-| | **Intime** — 290 € | **Essentiel** — 490 € | **Signature** — 990 € ★ |
+| | **Intime** — 290 € | **Essentiel** — 490 € | **Signature** — 890 € ★ |
 |---|---|---|---|
-| Promesse | Annoncer et recevoir les réponses | Tout le parcours, jusqu'aux photos | Tout votre mariage dans un même univers, de l'écran au papier |
-| Pour qui | Petit mariage, l'essentiel en ligne | Mariage simple, budget maîtrisé | Les couples qui veulent un ensemble assorti |
-| Design | Un design standard, à vos couleurs et photos | Design ajusté : palette, typos, mise en page | Direction artistique dédiée (moodboard + 1 proposition), déclinée sur le site et le papier |
+| Promesse | Annoncer et recevoir les réponses | Tout le parcours, jusqu'aux photos | Un univers créé pour vous, du faire-part au jour J |
+| Pour qui | Petit mariage, l'essentiel en ligne | Mariage simple, budget maîtrisé | Les couples qui veulent un site unique et le plan de table sur téléphone |
+| Design | Un design standard, à vos couleurs et photos | Design ajusté : palette, typos, mise en page | Direction artistique dédiée (moodboard + 1 proposition), déclinée sur le site et le faire-part |
 | Faire-part numérique | **Animé** (ouverture standard : sceau / enveloppe) | **Animé** (ouverture standard) | **Animé sur-mesure** (animation conçue pour le couple) |
 | Pages | Accueil, notre histoire, programme, lieux, FAQ ; dress code en une ligne sous le programme | + compte à rebours ; dress code en section illustrée (texte + nuancier) | idem Essentiel |
 | Réponses des invités par lien personnel | ✓ | ✓ | ✓ |
-| Questions aux invités | De base : contraintes alimentaires, mot pour les mariés | De base | De base |
-| Tableau de bord | Liste, statuts, statistiques, export CSV | idem | + plan de table, co-gestion (témoins, wedding planner) |
+| Questions aux invités | De base : contraintes alimentaires, mot pour les mariés | + vos propres questions, sans limite | idem Essentiel |
+| Tableau de bord | Liste, statuts, statistiques, export CSV ; textes, programme et dates modifiés par les mariés | idem | + plan de table, co-gestion (témoins, wedding planner) |
 | Relances automatiques | — | ✓ (J-30, J-15, J-7 avant date limite) | ✓ |
 | Galerie photos invités (QR jour J) | option | ✓ | ✓ |
 | Faire-part PDF + QR | option | ✓ 1 visuel, QR vers le site | ✓ **QR personnel par foyer** (ouvre directement sa réponse) |
-| Plan de table numérique (QR jour J) | — | — | ✓ chaque invité trouve sa table sur son téléphone (§4.7) |
-| Papeterie imprimable assortie | — | — | ✓ menu, plan de table, marque-places, carte de remerciement |
-| Allers-retours | 1 | 2 | 3 |
-| Délai de livraison | 10 jours | 2 semaines | 3 semaines pour le site ; papeterie au plus tard 1 mois avant le mariage |
+| Plan de table numérique (QR jour J) | — | option | ✓ chaque invité trouve sa table sur son téléphone (§4.7) |
+| Allers-retours sur le design | 1 | 2 | 3 |
+| Délai de livraison | 10 jours | 2 semaines | 3 semaines |
 | Mise en ligne | 12 mois + domaine perso | 12 mois + domaine perso | 12 mois + domaine perso |
 
 Chaque formule répond à un besoin : Intime pour annoncer et collecter les
 réponses, Essentiel pour suivre tout le parcours jusqu'aux photos du jour J
-(galerie + relances), Signature pour tout le mariage dans un même univers, du
-site à la papeterie du jour J, avec le plan de table numérique. Le faire-part
+(galerie + relances), Signature pour un univers créé pour le couple, du
+faire-part au jour J, avec le plan de table numérique. Le faire-part
 animé est inclus partout : c'est la base d'une invitation de mariage.
+
+Un aller-retour porte sur le design (mise en page, couleurs, animation). Le
+contenu (textes, programme, horaires, dates, questions) se modifie depuis le
+tableau de bord sans limite : il ne consomme aucun aller-retour.
+
+**Pas de papeterie** (menu, plan de table papier, marque-places, remerciements) :
+ce n'est pas notre métier, comme la galerie du photographe. Côté impression,
+on ne livre que des fichiers générés depuis le site, que le couple fait
+imprimer où il veut : le faire-part PDF + QR (ou un PDF par foyer avec son QR
+personnel), l'affiche du QR du plan de table et celle du QR de la galerie. Signature passe de 990 € à 890 € (décidé
+le 2026-10-06).
+
+La démo du tableau de bord joue la formule Signature : chaque section qui n'est
+pas dans toutes les formules porte un badge (« Dès Essentiel », « Signature ·
+option Essentiel »…) pour qu'un couple venu pour Intime sache ce qu'il aura.
 
 L'ancienne formule Prestige (1 690 €) est supprimée : le site bilingue et le
 design 100 % sur-mesure deviennent des options (§2.2). La galerie du
@@ -142,13 +157,13 @@ photographe n'est pas reprise : ce n'est pas notre métier.
 
 | Option | Prix |
 |---|---|
-| Vos propres questions aux invités (chanson, covoiturage, âge des enfants…) | 40 € |
+| Vos propres questions aux invités (Intime ; chanson, covoiturage, âge des enfants…) | 40 € |
 | Galerie invités (Intime) | 190 € |
 | Faire-part PDF + QR (Intime) | 60 € |
+| Plan de table numérique, sans QR personnel (Essentiel) | 150 € |
 | Faire-part PDF avec QR personnel par foyer (Intime, Essentiel) | 90 € |
 | Co-gestion du tableau de bord (Intime, Essentiel) | 60 € |
 | Langue supplémentaire | 150 € |
-| Supports print supplémentaires (livret de cérémonie, signalétique…) | 60 € / pièce |
 | Design 100 % sur-mesure (illustrations, animations, pages libres) | sur devis |
 | Prolongation du site (archive galerie) | 49 € / an |
 | Livraison express (−1 semaine) | 150 € |
@@ -171,7 +186,7 @@ photographe n'est pas reprise : ce n'est pas notre métier.
 |---|---|---|---|
 | Intime | ~4,5 h (socle industrialisé) / ~7 h au lancement | ~15 € | ~61 €/h / ~39 €/h |
 | Essentiel | ~8 h | ~15 € | ~59 €/h |
-| Signature | ~14 h | ~20 € | ~69 €/h |
+| Signature | ~10 h (sans papeterie) | ~20 € | ~87 €/h |
 
 La rentabilité dépend du **socle hybride** : plus il est complet, plus le temps
 par mariage baisse. Intime n'est rentable qu'avec au moins deux ou trois
@@ -266,7 +281,7 @@ Calendrier conseillé au couple :
 - Accompagnant « +1 » : emplacement nommable par l'invité.
 - Questions **de base** (toutes formules) : contraintes alimentaires (liste +
   champ libre si « Autre »), mot pour les mariés.
-- Questions **personnalisées** (option 40 €, toutes formules) : écrites par le
+- Questions **personnalisées** (dès Essentiel, option 40 € avec Intime) : écrites par le
   couple, sans limite de nombre — chanson pour la soirée, âge des enfants, covoiturage, etc.
 - Date limite : après elle, formulaire verrouillé, message « contactez-nous ».
 - Modification possible jusqu'à la date limite, historique conservé.
@@ -303,7 +318,9 @@ Calendrier conseillé au couple :
 
 ### 4.5 Tableau de bord mariés
 
-- Connexion par **lien magique** email (pas de mot de passe).
+- Connexion par **lien magique** email (pas de mot de passe), réservée aux
+  deux mariés et aux personnes qu'ils invitent selon leur formule : pas
+  d'inscription, comptes créés par AlexDevLab (détail : `STARTER-KIT.md` §5).
 - Vue d'ensemble : taux de réponse, présents/absents par moment, compte à
   rebours avant la date limite.
 - Invités : liste filtrable (statut, moment, groupe « famille Camille »,
@@ -312,7 +329,13 @@ Calendrier conseillé au couple :
   CSV / PDF.
 - Galerie : consultation, retrait d'une photo, téléchargement ZIP.
 - Relances : planification automatique, modèles de message.
-- Rôles : propriétaire (mariés), co-gestion (témoins / planner) en option.
+- Accès : les deux mariés dans toutes les formules ; co-gestion (témoins,
+  planner, sans limite de nombre) incluse en Signature, en option avec Intime
+  et Essentiel. Pas de rôles figés : les mariés choisissent, fonction par
+  fonction (feature flags), ce que chaque personne invitée voit ou modifie.
+- Renvoyer son lien à un foyer, à la main : toutes formules. Relances
+  automatiques et groupées : à partir d'Essentiel.
+- Une fonction hors formule est masquée, jamais grisée.
 
 ### 4.6 Faire-part imprimable
 
@@ -361,11 +384,17 @@ WhatsApp. Le site est conçu pour le pouce, en deux états.
 
 ### 4.7 Plan de table numérique (Signature)
 
-**Principe : un seul QR code sur place, le « QR jour J ».** Imprimé sur
-l'affiche d'accueil, à côté du plan de table papier et sur chaque table, il
-ouvre la page `/jour-j` du site : « Trouver ma table » et « Envoyer mes
-photos ». Un seul code à imprimer, à expliquer et à scanner, pour la table et
-la galerie.
+**Principe : deux QR codes sur place, chacun pour une seule chose** (décidé le
+2026-10-08, remplace le « QR jour J » unique). Aucun ne mène au faire-part ni
+aux réponses :
+
+- **QR du plan de table**, sur l'affiche à l'entrée du dîner (PDF A4 fourni) :
+  il ouvre la page `/plan-de-table`, le plan de la salle, la recherche par
+  prénom ou nom, et qui est à quelle table.
+- **QR de la galerie**, sur l'affiche d'accueil et sur chaque table (PDF A4 +
+  4 cartes à découper) : il ouvre la page `/galerie`. Pour entrer, l'invité
+  donne son prénom et son nom, qui signent ses photos (gardés sur son
+  téléphone, demandés une seule fois).
 
 **Comment l'invité est reconnu**, du plus fluide au plus manuel :
 
@@ -376,10 +405,10 @@ la galerie.
 2. **QR personnel.** En Signature, le faire-part imprimé porte un QR propre au
    foyer : le jour J, il ouvre la même page personnelle, qui passe d'elle-même
    en « mode jour J » (table en tête, programme du jour, bouton photos).
-3. **Recherche par prénom.** Sinon (autre téléphone, navigateur intégré de
-   WhatsApp, invité sans faire-part) : l'invité tape les premières lettres de
-   son prénom ; la liste affiche « Marie L. », « Marine D. » ; il touche son
-   nom et voit sa table. Seuls les invités attendus au dîner sont proposés, avec
+3. **Recherche par prénom ou nom** (page du QR du plan de table) : l'invité
+   tape les premières lettres de son prénom, de son nom, ou des deux ; la liste
+   affiche « Marie L. », « Marine D. » ; il touche son nom et voit sa table.
+   Sous le plan, la liste des tables avec les prénoms de leurs convives. Seuls les invités attendus au dîner sont proposés, avec
    prénom + initiale du nom, jamais le nom complet.
 
 **Règles :**
@@ -389,9 +418,8 @@ la galerie.
 - Les données de la table sont **gardées en cache** sur le téléphone dès la
   veille pour les invités reconnus : la page fonctionne même sans réseau dans
   la salle.
-- Le plan de table papier (papeterie Signature) est **généré à partir des
-  mêmes données** : site et papier ne se contredisent jamais. Un changement de
-  dernière minute s'applique tout de suite sur le site.
+- Pas de plan de table papier fourni : un changement de dernière minute
+  s'applique tout de suite sur le site, sans rien réimprimer.
 - Un « +1 » sans nom apparaît comme « Invité de Marie L. ».
 - Confidentialité : la recherche n'est active que pendant la fenêtre du jour J,
   limitée en nombre de requêtes, et la page n'est pas indexée.
@@ -402,7 +430,7 @@ la galerie.
   simple de la salle).
 - Glisser-déposer les invités **qui ont confirmé le dîner** ; alertes : table
   pleine, invité sans table, enfant seul à une table d'adultes.
-- Exports : plan de table à imprimer (assorti à la papeterie), **liste du
+- Exports : **liste du
   traiteur par table avec les contraintes alimentaires** (« table 7 : 1
   végétarien, 1 sans gluten »).
 
@@ -542,14 +570,16 @@ question       (id, wedding_id, label, kind[text|choice|boolean], required, is_s
 answer         (guest_id, question_id, value, updated_at)
 photo          (id, wedding_id, r2_key, width, height, uploader_name, household_id NULL,
                 status[uploading|published|removed], created_at)
-member         (user_id, wedding_id, role[owner|co_manager|admin])
+member         (user_id, wedding_id, role[owner|member])  -- géré par Better Auth (organization = wedding)
+member_flag    (member_id, flag, level[read|write])       -- droits par personne, cf. STARTER-KIT.md §5.3
 email_log      (id, wedding_id, household_id, kind, provider_id, status, sent_at)
 ```
 
-- `moment_key` référence les moments définis dans Sanity (`mairie`,
-  `ceremonie-vin-honneur`, `diner`, `brunch`) : le contenu (horaires, lieux)
-  reste dans le CMS, les invitations et les réponses en base. Les horaires ne
-  sont jamais stockés en base : on ne répond pas à un horaire.
+- **Révisé le 2026-10-06** : les mariés modifient eux-mêmes faire-part,
+  programme, horaires, dates et questions depuis le tableau de bord. Ce contenu
+  vit donc en base (tables `moment`, `slot`, `question`, `room`… détaillées
+  dans `STARTER-KIT.md` §4.2), plus dans Sanity. On répond toujours à un
+  moment, jamais à un horaire.
 - **Isolation entre mariages** : toute requête passe par une couche d'accès
   aux données qui impose le filtre `wedding_id` du membre connecté (testée
   unitairement). La Row Level Security de Postgres reste possible en défense
@@ -562,9 +592,13 @@ email_log      (id, wedding_id, household_id, kind, provider_id, status, sent_at
 
 ### 5.7 Contenu (Sanity)
 
+Sanity ne garde que ce qu'AlexDevLab rédige ; les mariés demandent les
+changements par message.
+
 Document `weddingSite` : `slug`, `theme` (référence `weddingTheme`), `hero`,
-`story`, `moments[]` (`key`, titre, jour, `slots[]` : heure, intitulé, lieu,
-adresse, coordonnées), `dressCode`, `faq[]`, `photos[]`, `ogImage`, `locales`.
+`story`, `venues[]` (lieu, adresse, coordonnées, itinéraire), `dressCode`,
+`faq[]`, `photos[]`, `ogImage`, `locales`. Le programme et ses horaires sont en
+base (§5.6) : un créneau y désigne un lieu de `venues[]`.
 
 Document `weddingTheme` : jetons CSS (couleurs, typos, rayons), variante du
 faire-part, composants de section autorisés. Le **modèle hybride** tient ici :
@@ -581,7 +615,11 @@ thème peut déclarer des sections spécifiques codées dans `themes/<slug>/`.
 - Uploads : vérification du type MIME réel (octets magiques), taille, clés R2
   non devinables, bucket privé, lecture via URL signée ou domaine de
   transformation protégé.
-- Tableau de bord : lien magique à usage unique (15 min), session 30 jours.
+- Tableau de bord : lien magique à usage unique (15 min) réservé aux adresses
+  déjà rattachées à un mariage, aucune inscription, invitations de
+  co-gestion liées à une adresse (72 h), session 30 jours, compte admin
+  AlexDevLab protégé par passkey ; Better Auth (`magicLink`, `organization`,
+  `admin`, `passkey`) + feature flags en quatre couches (`STARTER-KIT.md` §5).
 - Journal d'audit des exports CSV (données personnelles).
 
 ### 5.9 RGPD
@@ -730,9 +768,9 @@ des sections, légendes.
 | Phase | Contenu | Durée | Sortie |
 |---|---|---|---|
 | **0. Validation** | Page `/mariage` + carte bento + démo statique | 2 sem. | Offre en ligne, premiers contacts |
-| **1. MVP plateforme** | Multi-tenant, faire-part animé, infos, RSVP lien perso, tableau de bord (liste + export), 2 designs standards | 4-6 sem. | Formule Intime vendable |
-| **2. Essentiel** | Galerie invités, relances, PDF/QR, page `/jour-j` | 3-4 sem. | Formule Essentiel vendable |
-| **2 bis. Signature** | Plan de table (tableau de bord + recherche invité + cache hors ligne), QR personnel par foyer, modèles de papeterie (menu, plan de table, marque-places, remerciements), co-gestion | 3-4 sem. | Formule Signature vendable |
+| **1. MVP plateforme** | Multi-tenant, faire-part animé, infos, RSVP lien perso, tableau de bord (liste, détail d'un foyer, export, édition des textes, du programme et des dates), 2 designs standards | 6-8 sem. | Formule Intime vendable |
+| **2. Essentiel** | Galerie invités, relances, PDF/QR, page `/jour-j`, questions personnalisées | 3-4 sem. | Formule Essentiel vendable |
+| **2 bis. Signature** | Plan de table (éditeur de salle comme la démo : tables déplaçables et pivotables, sélection multiple, alertes ; recherche invité + cache hors ligne), QR personnel par foyer, affiche du QR jour J, co-gestion | 4-6 sem. | Formule Signature vendable, option plan de table pour Essentiel |
 | **3. Options** | Multilingue, co-gestion, thèmes sur-mesure | 3 sem. | Options vendables |
 | **4. Industrialisation** | Admin de création de mariage, import CSV assisté, achat de domaine automatisé, purge | continu | Intime en 4 h, Essentiel en 5 h |
 
@@ -758,7 +796,8 @@ Faite, en TDD (Vitest + Playwright), dans le portfolio :
   dates clés (jour J, date limite, relance, ouverture de la galerie),
   programme éditable (moments et horaires datés), questions du faire-part, plan de
   table par personne (tables déplaçables, alertes), relances, galerie avec
-  visionneuse, export CSV). Invités fictifs gardés dans le navigateur, partagés
+  visionneuse, export CSV). Les sections absentes de certaines formules portent
+  un badge de formule (carte et menu). Invités fictifs gardés dans le navigateur, partagés
   avec le site invité : une réponse donnée sur `/mariage/demo` apparaît aussitôt.
 - **Home** : carte « Sites de mariage » dans la grille bento.
 - **Logique réutilisable par la plateforme** (`src/lib/wedding/`) :
@@ -803,18 +842,34 @@ Tranché le 2026-10-06 :
   magique via Resend, fonctions Vercel en `fra1` (Supabase écarté) ;
 - pas de commission partenaires ; univers « BUILD MODE » abandonné ;
 - polices de la démo : Newsreader + Pinyon Script ; emails via Resend ;
-- grille Intime 290 € / Essentiel 490 € / Signature 990 € (Prestige supprimé,
+- grille Intime 290 € / Essentiel 490 € / Signature 890 € (Prestige supprimé,
   ses briques passent en options) ; moments illimités dans toutes les formules ;
-- questions : de base partout ; questions personnalisées en option (40 €) ;
-- Signature repositionnée « tout le mariage dans un même univers » : direction
-  artistique, papeterie imprimable assortie, plan de table numérique par QR,
-  QR personnel par foyer, co-gestion ; statistiques pour tous ; questions
-  personnalisées en option à 40 € ;
+- questions : de base partout ; questions personnalisées incluses dès
+  Essentiel, en option à 40 € avec Intime (révisé le 2026-10-06 : les mariés
+  les écrivent eux-mêmes dans le tableau de bord) ;
+- tableau de bord : les mariés modifient eux-mêmes textes, programme et dates
+  dans toutes les formules ; un aller-retour ne porte que sur le design ;
+- plan de table numérique en option à 150 € avec Essentiel (sans QR
+  personnel), face à Moment de Vie qui l'inclut dès 299 € ;
+- pas de papeterie (ce n'est pas notre métier) : Signature passe de 990 € à
+  890 €, l'option « supports print » disparaît ; on garde les fichiers à
+  imprimer générés depuis le site (faire-part PDF + QR, affiche du QR jour J) ;
+- Signature repositionnée « un univers créé pour vous, du faire-part au jour
+  J » : direction artistique, animation sur-mesure, plan de table numérique par QR,
+  QR personnel par foyer, co-gestion ; statistiques pour tous ;
 - faire-part animé et page « notre histoire » dans toutes les formules ;
   compte à rebours à partir d'Essentiel ; dress code en une ligne visible (hors
   FAQ) en Intime, section illustrée avec nuancier à partir d'Essentiel ; Essentiel = galerie + relances +
   PDF ; Signature conservée (direction artistique, animation sur-mesure) ;
 - galerie invités sans modération : publication directe, retrait après coup ;
+- starter kit du tableau de bord (`STARTER-KIT.md`) : code partagé en paquets
+  privés (`wedding-core`, `dashboard-ui`) une fois la démo finalisée ; contenu
+  modifiable par les mariés en Postgres ; FAQ, lieux et dress code rédigés par
+  AlexDevLab dans Sanity ; fonction hors formule masquée ; renvoi manuel du
+  lien inclus partout ; connexion réservée aux mariés et aux personnes qu'ils
+  invitent selon la formule (Better Auth) ; droits par feature flags
+  (plateforme, formule, mariage, membre) plutôt que par rôles ; pas de limite
+  au nombre de personnes invitées ;
 - pas de marque dédiée : le service s'appelle « Sites de mariage » par
   AlexDevLab. Une marque propre ne se justifiera que si l'activité mariage pèse
   réellement ; piste gardée pour ce moment-là : **Les Conviés**

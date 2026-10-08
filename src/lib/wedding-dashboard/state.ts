@@ -13,6 +13,7 @@ import {
     type Collaborator,
 } from "./access";
 import { weddingCalendar } from "./calendar";
+import { editHousehold, type HouseholdDraft } from "./drafts";
 import { dietSummary, householdStatus, householdSummary } from "./households";
 import type { Fixture } from "./plan-selection";
 import { ENTRANCE_HALF, fixtureInside, HEAD_HALF } from "./room";
@@ -31,6 +32,13 @@ import type {
 
 export type DemoAction =
     | { readonly type: "household-added"; readonly household: HouseholdRecord; readonly at: string }
+    | {
+          readonly type: "household-edited";
+          readonly householdId: string;
+          readonly draft: HouseholdDraft;
+          readonly at: string;
+      }
+    | { readonly type: "household-removed"; readonly householdId: string; readonly at: string }
     | { readonly type: "household-opened"; readonly householdId: string; readonly at: string }
     | {
           readonly type: "answer-recorded";
@@ -237,6 +245,66 @@ const answered = (
     );
 };
 
+/** Seats kept only for guests who still exist and are still invited to dinner. */
+const seatsAfter = (
+    seats: DemoState["seats"],
+    before: HouseholdRecord,
+    after: HouseholdRecord | null,
+): DemoState["seats"] => {
+    const staying = new Set(
+        after?.momentKeys.includes(DINNER) ? after.guests.map((guest) => guest.id) : [],
+    );
+    const leaving = new Set(
+        before.guests.map((guest) => guest.id).filter((id) => !staying.has(id)),
+    );
+    return Object.fromEntries(Object.entries(seats).filter(([guestId]) => !leaving.has(guestId)));
+};
+
+const edited = (
+    state: DemoState,
+    householdId: string,
+    draft: HouseholdDraft,
+    at: string,
+): DemoState => {
+    const household = state.households.find((candidate) => candidate.id === householdId);
+    if (!household) return state;
+    const updated = editHousehold(household, draft);
+    return withActivity(
+        {
+            ...updateHousehold(state, householdId, () => updated),
+            seats: seatsAfter(state.seats, household, updated),
+        },
+        {
+            at,
+            kind: "edited",
+            text: `Foyer ${updated.name} modifié`,
+            detail: householdSummary(updated),
+            badge: badgeFor(updated.name),
+        },
+        householdId,
+    );
+};
+
+const removed = (state: DemoState, householdId: string, at: string): DemoState => {
+    const household = state.households.find((candidate) => candidate.id === householdId);
+    if (!household) return state;
+    return withActivity(
+        {
+            ...state,
+            households: state.households.filter((candidate) => candidate.id !== householdId),
+            seats: seatsAfter(state.seats, household, null),
+        },
+        {
+            at,
+            kind: "removed",
+            text: `${household.name} retiré de la liste`,
+            detail: "son lien personnel ne fonctionne plus",
+            badge: badgeFor(household.name),
+        },
+        householdId,
+    );
+};
+
 const reminded = (state: DemoState, at: string): DemoState => {
     const count = state.households.filter(
         (household) => householdStatus(household) !== "answered",
@@ -294,6 +362,10 @@ export const demoReducer = (state: DemoState, action: DemoAction): DemoState => 
                 },
                 action.household.id,
             );
+        case "household-edited":
+            return edited(state, action.householdId, action.draft, action.at);
+        case "household-removed":
+            return removed(state, action.householdId, action.at);
         case "household-opened":
             return opened(state, action.householdId, action.at);
         case "answer-recorded":
@@ -633,6 +705,8 @@ const demoStateSchema = z.object({
                 "updated",
                 "opened",
                 "created",
+                "edited",
+                "removed",
                 "reminded",
                 "design",
                 "photo",

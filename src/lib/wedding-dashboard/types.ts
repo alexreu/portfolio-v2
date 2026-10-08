@@ -115,6 +115,8 @@ export type ActivityKind =
     | "updated"
     | "opened"
     | "created"
+    | "edited"
+    | "removed"
     | "reminded"
     | "design"
     | "photo"

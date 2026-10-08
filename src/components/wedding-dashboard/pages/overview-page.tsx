@@ -39,7 +39,7 @@ export const OverviewPage = () => {
                 onRemind={remind}
             />
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
-                <Card title="Tout le tableau de bord" titleId="pages-titre">
+                <Card title="Tout le tableau de bord" titleId="pages-title">
                     <ul className="divide-wed-line-soft divide-y px-2 py-1.5">
                         {dashboardEntries.flatMap(({ page, label, icon: Icon }) =>
                             page

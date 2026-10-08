@@ -70,7 +70,7 @@ const GrantFields = ({
 }) => (
     <ul className="divide-wed-line-soft border-wed-line-soft divide-y rounded-2xl border">
         {ACCESS_FEATURES.map((feature) => {
-            const id = `acces-${feature.key.replace(".", "-")}`;
+            const id = `access-${feature.key.replace(".", "-")}`;
             const locked = Boolean(feature.requires && draft.grant[feature.requires] === "aucun");
             return (
                 <li
@@ -84,14 +84,14 @@ const GrantFields = ({
                         <p id={id} className="text-sm font-medium">
                             {feature.label}
                         </p>
-                        <p id={`${id}-aide`} className="text-wed-muted text-xs">
+                        <p id={`${id}-hint`} className="text-wed-muted text-xs">
                             {locked ? "Ouvrez d'abord la liste des invités." : feature.hint}
                         </p>
                     </div>
                     <div
                         role="radiogroup"
                         aria-labelledby={id}
-                        aria-describedby={`${id}-aide`}
+                        aria-describedby={`${id}-hint`}
                         className={cn(
                             "bg-wed-line-soft inline-flex justify-self-start rounded-full p-1",
                             locked && "opacity-50",
@@ -185,11 +185,11 @@ const AccessForm = ({
                         disabled={Boolean(editing)}
                         autoComplete="off"
                         aria-invalid={Boolean(firstNameIssue)}
-                        aria-describedby={firstNameIssue ? "acces-prenom-erreur" : undefined}
+                        aria-describedby={firstNameIssue ? "access-first-name-error" : undefined}
                         className={cn(inputStyles, "disabled:bg-wed-ivory disabled:text-wed-muted")}
                     />
                     <FieldError
-                        id="acces-prenom-erreur"
+                        id="access-first-name-error"
                         message={firstNameIssue && issueMessages[firstNameIssue.code]}
                     />
                 </label>
@@ -203,11 +203,11 @@ const AccessForm = ({
                         placeholder={`Témoin de ${couple.first}…`}
                         autoComplete="off"
                         aria-invalid={Boolean(roleIssue)}
-                        aria-describedby={roleIssue ? "acces-role-erreur" : undefined}
+                        aria-describedby={roleIssue ? "access-role-error" : undefined}
                         className={inputStyles}
                     />
                     <FieldError
-                        id="acces-role-erreur"
+                        id="access-role-error"
                         message={roleIssue && issueMessages[roleIssue.code]}
                     />
                 </label>
@@ -221,23 +221,23 @@ const AccessForm = ({
                     disabled={Boolean(editing)}
                     autoComplete="off"
                     aria-invalid={Boolean(emailIssue)}
-                    aria-describedby={cn("acces-email-aide", emailIssue && "acces-email-erreur")}
+                    aria-describedby={cn("access-email-hint", emailIssue && "access-email-error")}
                     className={cn(inputStyles, "disabled:bg-wed-ivory disabled:text-wed-muted")}
                 />
-                <span id="acces-email-aide" className="text-wed-muted text-xs">
+                <span id="access-email-hint" className="text-wed-muted text-xs">
                     {editing
                         ? "L'accès est lié à cette adresse. Pour en changer, retirez cet accès et invitez la nouvelle."
                         : `Le lien de connexion n'ouvre que pour elle, et l'invitation dure ${INVITATION_HOURS} h.`}
                 </span>
                 <FieldError
-                    id="acces-email-erreur"
+                    id="access-email-error"
                     message={emailIssue && issueMessages[emailIssue.code]}
                 />
             </label>
 
-            <section aria-labelledby="acces-fonctions" className="grid gap-3">
+            <section aria-labelledby="access-functions" className="grid gap-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 id="acces-fonctions" className="text-sm font-semibold">
+                    <h3 id="access-functions" className="text-sm font-semibold">
                         Ce qu&apos;elle ou il peut faire
                     </h3>
                     <div className="flex flex-wrap items-center gap-1.5">
@@ -275,7 +275,7 @@ const AccessForm = ({
                     }}
                 />
                 <FieldError
-                    id="acces-fonctions-erreur"
+                    id="access-functions-error"
                     message={grantIssue && issueMessages[grantIssue.code]}
                 />
                 <p className="text-wed-muted text-xs">
@@ -371,7 +371,7 @@ export const AccessDialog = ({ open, onOpenChange, ...body }: AccessDialogProps)
                         <X aria-hidden="true" />
                     </Dialog.Close>
                 </div>
-                {open && <DialogBody key={body.editing?.id ?? "nouveau"} {...body} />}
+                {open && <DialogBody key={body.editing?.id ?? "new"} {...body} />}
             </Dialog.Content>
         </Dialog.Portal>
     </Dialog.Root>

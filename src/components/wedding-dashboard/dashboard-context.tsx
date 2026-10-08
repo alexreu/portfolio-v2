@@ -17,6 +17,12 @@ export type Dashboard = {
     /** The time an action is recorded at. */
     readonly at: () => string;
     readonly linkFor: (household: HouseholdRecord) => string;
+    /** The guest site, where the shared faire-part's QR code leads. */
+    readonly siteUrl: string;
+    /** The room plan, opened by the QR code at the dinner's entrance. */
+    readonly seatingUrl: string;
+    /** The guests' gallery, opened by the QR code on the tables. */
+    readonly galleryUrl: string;
     /** The household just created, lit up in the guest list. */
     readonly highlightId: string | null;
     readonly openHousehold: (householdId: string) => void;
@@ -24,6 +30,16 @@ export type Dashboard = {
     readonly exportCsv: () => void;
     /** The dinner's sheet for the caterer, downloaded as a PDF. */
     readonly exportCatererPdf: () => Promise<void>;
+    /** The faire-part every guest receives alike, its QR code opening the site. */
+    readonly downloadSharedInvitation: () => Promise<void>;
+    /** One faire-part per household, each with its personal QR code; all of them by default. */
+    readonly downloadHouseholdInvitations: (
+        households?: readonly HouseholdRecord[],
+    ) => Promise<void>;
+    /** The room plan's poster, for the dinner's entrance. */
+    readonly downloadSeatingPoster: () => Promise<void>;
+    /** The gallery's poster, and four cards for the tables. */
+    readonly downloadGalleryPoster: () => Promise<void>;
     readonly remind: () => void;
 };
 

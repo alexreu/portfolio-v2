@@ -5,6 +5,7 @@ import { Check, LoaderCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { InquiryFeedback } from "@/lib/wedding-service/inquiry";
+import { SelectField } from "@/components/shared/select-field";
 import { sendWeddingInquiry } from "@/app/(wedding)/mariage/actions";
 
 import { usePlanChoice } from "./plan-choice";
@@ -133,18 +134,19 @@ export const WeddingContactForm = () => {
             </Field>
             <Field name="guests" label="Nombre d'invités" feedback={feedback}>
                 {(props) => (
-                    <select
+                    <SelectField
                         {...props}
                         name="guests"
                         defaultValue={valueOf(feedback, "guests") ?? "60-120"}
                         className={cn(fieldClass, "[&>option]:text-wed-ink")}
+                        chevronClassName="text-wed-night-muted"
                     >
                         {guestOptions.map((option) => (
                             <option key={option.value} value={option.value}>
                                 {option.label}
                             </option>
                         ))}
-                    </select>
+                    </SelectField>
                 )}
             </Field>
             <fieldset className="md:col-span-2">

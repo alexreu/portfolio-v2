@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+    answerDraftOf,
     filterHouseholds,
     groupLabel,
     guestAnswers,
@@ -280,5 +281,28 @@ describe("householdTimeline", () => {
             lastSeenAt: null,
         });
         expect(householdTimeline(paper, [], "Camille")[0].label).toBe("Réponse saisie par Camille");
+    });
+});
+
+describe("answerDraftOf", () => {
+    it("fills the answer form with what the household said, consent given with its diets", () => {
+        const answered = household({
+            attendance: { marie: { diner: "yes" } },
+            diets: { marie: { choice: "vegan", other: "" } },
+            questions: { chanson: "Respire" },
+            message: "Hâte !",
+        });
+
+        expect(answerDraftOf(answered)).toEqual({
+            attendance: { marie: { diner: "yes" } },
+            diets: { marie: { choice: "vegan", other: "" } },
+            consent: true,
+            questions: { chanson: "Respire" },
+            message: "Hâte !",
+        });
+    });
+
+    it("asks for consent again when no diet was shared", () => {
+        expect(answerDraftOf(household({})).consent).toBe(false);
     });
 });

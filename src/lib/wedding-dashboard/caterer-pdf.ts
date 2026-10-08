@@ -1,6 +1,7 @@
-import { PDFDocument, rgb, StandardFonts, type PDFFont, type PDFPage } from "pdf-lib";
+import { PDFDocument, rgb, StandardFonts, type PDFPage } from "pdf-lib";
 
 import type { CatererSheet } from "./caterer-sheet";
+import { drawable, wrap } from "./pdf-text";
 
 /** A4 in points, with the dashboard's ink, muted brown and gold. */
 const PAGE = { width: 595.28, height: 841.89 } as const;
@@ -15,47 +16,11 @@ const muted = rgb(0x6b / 255, 0x63 / 255, 0x59 / 255);
 const line = rgb(0xdd / 255, 0xd5 / 255, 0xc8 / 255);
 const gold = rgb(0x7a / 255, 0x5f / 255, 0x37 / 255);
 
-/**
- * The standard fonts only draw Western European letters: "Łucja" becomes "Lucja", and what
- * cannot be brought back to a Latin letter, an emoji, is left out.
- */
-const drawable = (font: PDFFont) => {
-    const known = new Set(font.getCharacterSet());
-    const keep = (char: string) => known.has(char.codePointAt(0) ?? 0);
-    return (text: string) =>
-        [...text]
-            .map((char) => {
-                if (keep(char)) return char;
-                const plain = char.normalize("NFD").replace(/\p{Diacritic}/gu, "");
-                return [...plain].every(keep)
-                    ? plain
-                    : char === "Ł"
-                      ? "L"
-                      : char === "ł"
-                        ? "l"
-                        : "";
-            })
-            .join("")
-            .replace(/\s+/g, " ")
-            .trim();
-};
-
 /** Under a table without special menus: all standard, or nobody confirmed yet. */
 const tableDetail = (table: CatererSheet["tables"][number]) => {
     if (table.count === 0) return "personne de confirmé pour l'instant";
     return table.notes.length > 0 ? "" : "menu standard";
 };
-
-/** Words laid out on lines no wider than `width`. */
-const wrap = (text: string, font: PDFFont, size: number, width: number) =>
-    text.split(" ").reduce<readonly string[]>((lines, word) => {
-        const last = lines.at(-1);
-        if (last === undefined) return [word];
-        const joined = `${last} ${word}`;
-        return font.widthOfTextAtSize(joined, size) <= width
-            ? [...lines.slice(0, -1), joined]
-            : [...lines, word];
-    }, []);
 
 /**
  * The caterer's sheet as an A4 PDF: who, when, the covers and menus, then table by table.

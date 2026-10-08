@@ -215,6 +215,71 @@ describe("demoReducer", () => {
         });
     });
 
+    it("edits a household and says so, freeing the seats of a guest who left", () => {
+        const seated = { ...state, seats: { marie: "t1", thomas: "t1" } };
+        const next = demoReducer(seated, {
+            type: "household-edited",
+            householdId: "lefevre",
+            draft: {
+                name: "Marie Lefèvre",
+                group: "amis",
+                email: "",
+                guests: [{ id: "marie", firstName: "Marie", child: false }],
+                momentKeys: ["ceremonie", "diner"],
+            },
+            at,
+        });
+
+        expect(next.households[0].name).toBe("Marie Lefèvre");
+        expect(next.households[0].guests).toHaveLength(1);
+        expect(next.seats).toEqual({ marie: "t1" });
+        expect(next.activity[0]).toMatchObject({
+            kind: "edited",
+            text: "Foyer Marie Lefèvre modifié",
+            subject: "lefevre",
+        });
+    });
+
+    it("frees the household's seats when it is no longer invited to dinner", () => {
+        const seated = { ...state, seats: { marie: "t1", thomas: "t1" } };
+        const next = demoReducer(seated, {
+            type: "household-edited",
+            householdId: "lefevre",
+            draft: {
+                name: "Marie & Thomas",
+                group: "amis",
+                email: "",
+                guests: [
+                    { id: "marie", firstName: "Marie", child: false },
+                    { id: "thomas", firstName: "Thomas", child: false },
+                ],
+                momentKeys: ["ceremonie"],
+            },
+            at,
+        });
+
+        expect(next.seats).toEqual({});
+    });
+
+    it("removes a household, its seats with it, and says so", () => {
+        const seated = { ...state, seats: { marie: "t1", thomas: "t1", autre: "t1" } };
+        const next = demoReducer(seated, { type: "household-removed", householdId: "lefevre", at });
+
+        expect(next.households).toEqual([]);
+        expect(next.seats).toEqual({ autre: "t1" });
+        expect(next.activity[0]).toMatchObject({
+            kind: "removed",
+            text: "Marie & Thomas retiré de la liste",
+            subject: "lefevre",
+        });
+    });
+
+    it("ignores a household it does not know", () => {
+        expect(demoReducer(state, { type: "household-removed", householdId: "inconnu", at })).toBe(
+            state,
+        );
+    });
+
     it("sends a reminder to every household that has not answered", () => {
         const next = demoReducer(state, { type: "reminder-sent", at });
 

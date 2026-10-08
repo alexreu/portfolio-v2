@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
     createHousehold,
+    draftOf,
+    editHousehold,
     householdIdFor,
     personalize,
     sealInitials,
@@ -9,7 +11,7 @@ import {
     validateHouseholdDraft,
     type HouseholdDraft,
 } from "./drafts";
-import type { InvitationDesign } from "./types";
+import type { HouseholdRecord, InvitationDesign } from "./types";
 
 const draft: HouseholdDraft = {
     name: "  Famille Martin ",
@@ -134,5 +136,111 @@ describe("personalize", () => {
 describe("sealInitials", () => {
     it("engraves the couple's initials on the seal", () => {
         expect(sealInitials(" élise", "hugo")).toBe("É·H");
+    });
+});
+
+describe("draftOf and editHousehold", () => {
+    const moreau: HouseholdRecord = {
+        id: "moreau",
+        name: "Famille Moreau",
+        group: "famille-2",
+        email: "claire@exemple.fr",
+        guests: [
+            {
+                id: "claire",
+                firstName: "Claire",
+                child: false,
+                labels: { yes: "Présente", no: "Absente" },
+            },
+            { id: "antoine", firstName: "Antoine", child: false },
+            { id: "leo", firstName: "Léo", child: true },
+        ],
+        momentKeys: ["ceremonie", "diner"],
+        lastSeenAt: "2026-10-01T10:00:00+02:00",
+        attendance: {
+            claire: { ceremonie: "yes", diner: "yes" },
+            antoine: { ceremonie: "no", diner: "no" },
+            leo: { ceremonie: "yes", diner: "yes" },
+        },
+        diets: {
+            claire: { choice: "vegetarien", other: "" },
+            leo: { choice: "sans-gluten", other: "" },
+        },
+        answeredAt: "2026-10-01T10:00:00+02:00",
+        answeredBy: "invite",
+        createdAt: "2026-09-01T10:00:00+02:00",
+        questions: { chanson: "Respire" },
+        message: "Hâte !",
+    };
+
+    it("fills the form with the household as it stands, each guest with their id", () => {
+        expect(draftOf(moreau)).toEqual({
+            name: "Famille Moreau",
+            group: "famille-2",
+            email: "claire@exemple.fr",
+            guests: [
+                { id: "claire", firstName: "Claire", child: false },
+                { id: "antoine", firstName: "Antoine", child: false },
+                { id: "leo", firstName: "Léo", child: true },
+            ],
+            momentKeys: ["ceremonie", "diner"],
+        });
+    });
+
+    it("renames the household and its guests, keeping their answers and the link", () => {
+        const draft = draftOf(moreau);
+        const edited = editHousehold(moreau, {
+            ...draft,
+            name: "Famille Moreau-Petit",
+            guests: draft.guests.map((guest) =>
+                guest.id === "claire" ? { ...guest, firstName: "Clara" } : guest,
+            ),
+        });
+
+        expect(edited.id).toBe("moreau");
+        expect(edited.name).toBe("Famille Moreau-Petit");
+        expect(edited.guests[0]).toEqual({
+            id: "claire",
+            firstName: "Clara",
+            child: false,
+            labels: { yes: "Présente", no: "Absente" },
+        });
+        expect(edited.attendance.claire).toEqual({ ceremonie: "yes", diner: "yes" });
+        expect(edited.diets.claire).toEqual({ choice: "vegetarien", other: "" });
+        expect(edited.answeredAt).toBe(moreau.answeredAt);
+        expect(edited.lastSeenAt).toBe(moreau.lastSeenAt);
+    });
+
+    it("forgets a removed guest, and a removed moment's answers", () => {
+        const draft = draftOf(moreau);
+        const edited = editHousehold(moreau, {
+            ...draft,
+            guests: draft.guests.filter((guest) => guest.id !== "leo"),
+            momentKeys: ["ceremonie"],
+        });
+
+        expect(edited.guests.map((guest) => guest.id)).toEqual(["claire", "antoine"]);
+        expect(edited.attendance).toEqual({
+            claire: { ceremonie: "yes" },
+            antoine: { ceremonie: "no" },
+        });
+        expect(edited.diets).toEqual({ claire: { choice: "vegetarien", other: "" } });
+    });
+
+    it("gives a new guest an id of their own, never one already taken", () => {
+        const draft = draftOf(moreau);
+        const once = editHousehold(moreau, {
+            ...draft,
+            guests: [...draft.guests, { firstName: "Jade", child: true }],
+        });
+        const twice = editHousehold(once, {
+            ...draftOf(once),
+            guests: [...draftOf(once).guests, { firstName: "Noé", child: true }],
+        });
+
+        const ids = twice.guests.map((guest) => guest.id);
+        expect(ids).toHaveLength(5);
+        expect(new Set(ids).size).toBe(5);
+        expect(ids.slice(0, 3)).toEqual(["claire", "antoine", "leo"]);
     });
 });

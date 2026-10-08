@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { buildPageMetadata } from "@/lib/seo";
+import { isPreview } from "@/lib/wedding-dashboard/preview-link";
 import { DemoSite } from "@/components/wedding-demo/demo-site";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -21,6 +22,7 @@ export default async function WeddingDemoPage({ searchParams }: Props) {
             skipInvitation={"skip" in params}
             startOnWeddingDay={"jourj" in params}
             householdId={typeof params.foyer === "string" ? params.foyer : undefined}
+            preview={isPreview(params)}
         />
     );
 }

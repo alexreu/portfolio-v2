@@ -26,6 +26,26 @@ test.describe("site démo Camille & Hugo", () => {
         await expect(tabBar.getByRole("link", { name: "Répondu" })).toBeVisible();
     });
 
+    test("une fois la réponse envoyée, le merci s'affiche à l'écran et reçoit le focus", async ({
+        page,
+    }) => {
+        await page.goto("/mariage/demo?skip");
+        const form = page.getByRole("form", { name: "Votre réponse" });
+        for (const guest of ["Marie", "Thomas"]) {
+            for (const moment of ["Cérémonie & vin d'honneur", "Dîner & soirée", "Brunch"]) {
+                await form
+                    .getByRole("group", { name: `${guest}, ${moment}` })
+                    .getByRole("button", { name: /^Présent/ })
+                    .click();
+            }
+        }
+        await form.getByRole("button", { name: "Envoyer notre réponse" }).click();
+
+        const thanks = page.getByRole("status").filter({ hasText: "Merci" });
+        await expect(thanks).toBeInViewport({ ratio: 1 });
+        await expect(page.locator("#rsvp-answer")).toBeFocused();
+    });
+
     test("le jour J, le lien personnel montre la table, le moment en cours et l'envoi de photos signé", async ({
         page,
         isMobile,
@@ -135,5 +155,30 @@ test.describe("site démo Camille & Hugo", () => {
 
         const before = await countdown.textContent();
         await expect.poll(() => countdown.textContent(), { timeout: 2_500 }).not.toBe(before);
+    });
+});
+
+test.describe("lien personnel inconnu (démo)", () => {
+    test("la page envoyée ne contient l'invitation d'aucun autre foyer", async ({ request }) => {
+        for (const query of [
+            "foyer=inconnu-x1",
+            "foyer=inconnu-x1&skip",
+            "foyer=inconnu-x1&jourj",
+        ]) {
+            const html = await (await request.get(`/mariage/demo?${query}`)).text();
+
+            expect(html).not.toContain("Marie &amp; Thomas");
+        }
+    });
+
+    test("il finit sur « Ce lien n'est plus valide », sans passer par un autre foyer", async ({
+        page,
+    }) => {
+        await page.goto("/mariage/demo?foyer=inconnu-x1&skip");
+
+        await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+            "Ce lien n'est plus valide",
+        );
+        await expect(page.getByText("Marie & Thomas")).toHaveCount(0);
     });
 });

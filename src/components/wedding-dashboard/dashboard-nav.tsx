@@ -7,6 +7,8 @@ import { ArrowLeft, ExternalLink, PanelLeftClose, PanelLeftOpen, RotateCcw } fro
 
 import { cn } from "@/lib/utils";
 import { planOf } from "@/lib/wedding-dashboard/plans";
+import { previewOf } from "@/lib/wedding-dashboard/preview-link";
+import { useStoredFlag } from "@/hooks/use-stored-flag";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { ConfirmPopover } from "./confirm-popover";
@@ -54,27 +56,39 @@ const Hint = ({
     </Tooltip>
 );
 
+/** The visitor's choice of a folded menu, kept in this browser. */
+export const MENU_FOLDED_KEY = "mariage-demo-menu-replie";
+
+/** The menu's width eases in and out; texts fade out at once and back in once there is room. */
+const FOLD_EASE = "duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none";
+
+const fade = (shown: boolean) =>
+    cn(
+        "transition-opacity duration-150 ease-out motion-reduce:transition-none",
+        shown ? "opacity-100 delay-150" : "opacity-0",
+    );
+
 type DashboardNavProps = {
     couple: string;
     /** "C & H", for the narrow bar on phones. */
     monogram: string;
     subtitle: string;
     householdCount: number;
-    /** Only the icons on large screens, named on hover. */
-    folded: boolean;
-    onFold: (folded: boolean) => void;
     onReset: () => void;
 };
 
+/**
+ * The menu holds its own folded state: folding it re-renders the menu alone, not the page
+ * beside it, so the very first frame of the animation is not spent on the guest list.
+ */
 export const DashboardNav = ({
     couple,
     monogram,
     subtitle,
     householdCount,
-    folded,
-    onFold,
     onReset,
 }: DashboardNavProps) => {
+    const [folded, onFold] = useStoredFlag(MENU_FOLDED_KEY);
     const active = useActivePage();
     const strip = useRef<HTMLUListElement>(null);
 
@@ -98,7 +112,8 @@ export const DashboardNav = ({
     }, [active]);
 
     const sideItem = "flex min-h-10 items-center gap-2.5 rounded-full px-3.5 whitespace-nowrap";
-    const label = cn(folded && "sr-only");
+    /** Labels stay in place, still read aloud, and only fade: nothing jumps while it folds. */
+    const label = fade(!folded);
 
     /** On the folded menu, the name of the icon, with the guest count or the formula. */
     const hint = (id: string, name: string) => {
@@ -177,21 +192,31 @@ export const DashboardNav = ({
             <TooltipProvider delayDuration={150} skipDelayDuration={0}>
                 <aside
                     className={cn(
-                        "bg-wed-night text-wed-night-text sticky top-0 hidden h-dvh flex-col gap-8 overflow-x-hidden overflow-y-auto px-4 py-6 transition-[width] duration-200 ease-out motion-reduce:transition-none lg:flex",
+                        "bg-wed-night text-wed-night-text sticky top-0 hidden h-dvh flex-col gap-8 overflow-x-hidden overflow-y-auto px-4 py-6 transition-[width] lg:flex",
+                        FOLD_EASE,
                         folded ? "w-[4.875rem]" : "w-64",
                     )}
                 >
-                    {folded ? (
-                        <p className="font-wed-serif h-[3.4rem] text-center text-lg leading-[2.5rem] whitespace-nowrap italic">
-                            <span aria-hidden="true">{monogram}</span>
-                            <span className="sr-only">{couple}</span>
-                        </p>
-                    ) : (
-                        <div className="min-w-0 px-3.5">
-                            <p className="font-wed-serif text-[1.75rem] leading-tight">{couple}</p>
-                            <p className="text-wed-night-muted mt-1 text-xs">{subtitle}</p>
+                    {/* Both stay drawn at a fixed width and cross-fade: the name never rewraps. */}
+                    <div className="relative h-[3.4rem] shrink-0">
+                        <div className={cn("absolute top-0 left-0 w-56 px-3.5", label)}>
+                            <p className="font-wed-serif text-[1.75rem] leading-tight whitespace-nowrap">
+                                {couple}
+                            </p>
+                            <p className="text-wed-night-muted mt-1 text-xs whitespace-nowrap">
+                                {subtitle}
+                            </p>
                         </div>
-                    )}
+                        <p
+                            aria-hidden="true"
+                            className={cn(
+                                "font-wed-serif absolute top-0 left-0 w-[2.875rem] text-center text-lg leading-[2.5rem] whitespace-nowrap italic",
+                                fade(folded),
+                            )}
+                        >
+                            {monogram}
+                        </p>
+                    </div>
                     <nav id="menu-tableau-de-bord" aria-label="Sections du tableau de bord">
                         <ul className="grid gap-0.5">{links(false)}</ul>
                     </nav>
@@ -219,7 +244,7 @@ export const DashboardNav = ({
                         </Hint>
                         <Hint label="Site des invités" enabled={folded}>
                             <a
-                                href="/mariage/demo"
+                                href={previewOf("/mariage/demo")}
                                 target="_blank"
                                 rel="noopener"
                                 className={cn(sideItem, "hover:text-wed-night-text")}
