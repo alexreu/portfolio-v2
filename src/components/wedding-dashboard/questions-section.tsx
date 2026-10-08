@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import {
+    questionIdFor,
+    validateQuestions,
+    type DraftIssue,
+    type GuestQuestion,
+} from "@alexreu/wedding-core";
 import { ArrowDown, ArrowUp, Check, Plus, Trash2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { DraftIssue } from "@/lib/wedding-dashboard/drafts";
-import { questionIdFor, validateQuestions } from "@/lib/wedding-dashboard/seating";
-import type { GuestQuestion } from "@/lib/wedding/types";
 
 import {
     buttonStyles,

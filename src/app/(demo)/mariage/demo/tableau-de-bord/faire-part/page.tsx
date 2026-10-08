@@ -4,7 +4,7 @@ import { InvitationPage } from "@/components/wedding-dashboard/pages/invitation-
 
 import { dashboardPageMetadata } from "../page-metadata";
 
-export const metadata: Metadata = dashboardPageMetadata("faire-part");
+export const metadata: Metadata = dashboardPageMetadata("invitation");
 
 export default function DashboardInvitationPage() {
     return <InvitationPage />;

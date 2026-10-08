@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { countdownTo, type Countdown } from "@alexreu/wedding-core";
 import { motion, useReducedMotion, type Transition, type Variants } from "motion/react";
-
-import { countdownTo, type Countdown } from "@/lib/wedding/countdown";
 
 import { TickingNumber } from "./ticking-number";
 

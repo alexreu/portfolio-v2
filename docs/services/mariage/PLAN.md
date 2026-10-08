@@ -314,7 +314,9 @@ Calendrier conseillé au couple :
   peuvent retirer après coup une photo gênante depuis le tableau de bord, et
   tout invité peut demander le retrait d'une photo où il apparaît.
 - Téléchargement ZIP pour les mariés.
-- Fenêtre d'upload configurable (ex. J-1 → J+30).
+- Fenêtre d'upload configurable : ouverture à **un jour et une heure** choisis
+  par les mariés (par défaut la veille à 10 h, au plus tôt une semaine avant,
+  au plus tard le jour J), dans le fuseau du mariage ; fermeture J+30.
 
 ### 4.5 Tableau de bord mariés
 
@@ -360,7 +362,7 @@ WhatsApp. Le site est conçu pour le pouce, en deux états.
 - Formulaire de réponse : un moment par ligne, boutons Présent·e / Absent·e en
   pleine largeur (48 px de haut), libellés jamais écrasés.
 - Galerie : avant son ouverture, un simple encart « La galerie ouvre le
-  vendredi 11 juin ». Ensuite : bouton d'envoi en tête, aperçu sur 2 colonnes
+  vendredi 11 juin à 10 h ». Ensuite : bouton d'envoi en tête, aperçu sur 2 colonnes
   limité à 6 photos + « Voir les N photos ». Le QR code de la galerie est masqué sur mobile
   (inutile de montrer un QR au téléphone qui devrait le scanner).
 
@@ -413,8 +415,10 @@ aux réponses :
 
 **Règles :**
 
-- Tables **révélées le jour J** seulement (heure réglable, par défaut le matin
-  du mariage) : pas de négociation de placement les semaines d'avant.
+- Tables **révélées à un jour et une heure** choisis par les mariés (par
+  défaut le jour J à 10 h, au plus tôt une semaine avant, au plus tard le jour
+  J), dans le fuseau du mariage : pas de négociation de placement les semaines
+  d'avant.
 - Les données de la table sont **gardées en cache** sur le téléphone dès la
   veille pour les invités reconnus : la page fonctionne même sans réseau dans
   la salle.

@@ -719,8 +719,13 @@ test.describe("tableau de bord des mariés (démo)", () => {
         await dialog.getByLabel("Prénom").fill("Nina");
         await dialog.getByLabel("E-mail").fill("elsa.marchand@exemple.fr");
         await dialog.getByRole("button", { name: "Wedding planner" }).click();
+        await expect(dialog).not.toContainText("Ajusté");
         await dialog.getByRole("radiogroup", { name: "Relances" }).getByText("Voir").click();
-        await expect(dialog).toContainText("Sur mesure");
+        await expect(dialog.getByRole("button", { name: "Wedding planner" })).toHaveAttribute(
+            "aria-pressed",
+            "true",
+        );
+        await expect(dialog).toContainText("Ajusté");
 
         await dialog.getByRole("radiogroup", { name: "Invités" }).getByText("Masqué").click();
         await expect(
@@ -748,6 +753,36 @@ test.describe("tableau de bord des mariés (démo)", () => {
         await expect(page.getByRole("region", { name: "Activité récente" })).toContainText(
             "Invitation envoyée à Nina",
         );
+    });
+
+    test("la galerie et les tables ouvrent au jour et à l'heure choisis", async ({ page }) => {
+        await page.goto(`${dashboard("programme")}#dates`);
+        const dates = page.getByRole("form", { name: "Dates clés" });
+
+        await expect(dates.getByLabel("Ouverture de la galerie", { exact: true })).toHaveValue(
+            "2027-06-11",
+        );
+        await expect(dates.getByLabel("Affichage des tables, heure")).toHaveValue("10:00");
+        await dates.getByLabel("Affichage des tables, heure").fill("19:30");
+        await dates.getByLabel("Ouverture de la galerie, heure").fill("18:00");
+        await dates.getByRole("button", { name: "Enregistrer les dates" }).click();
+        await expect(dates.getByRole("status")).toContainText("Enregistrées");
+
+        await page.goto(dashboard("plan-de-table"));
+        await expect(page.getByRole("main")).toContainText(
+            "Tables dévoilées le samedi 12 juin à 19 h 30",
+        );
+        await page.goto(dashboard("galerie"));
+        await expect(page.getByRole("main")).toContainText("vendredi 11 juin à 18 h");
+    });
+
+    test("une ouverture hors de la semaine du mariage est refusée", async ({ page }) => {
+        await page.goto(`${dashboard("programme")}#dates`);
+        const dates = page.getByRole("form", { name: "Dates clés" });
+
+        await dates.getByLabel("Affichage des tables", { exact: true }).fill("2027-06-13");
+        await dates.getByRole("button", { name: "Enregistrer les dates" }).click();
+        await expect(dates).toContainText("Dans la semaine qui précède le mariage");
     });
 
     test("les accès d'une personne se modifient, et se retirent", async ({ page }) => {

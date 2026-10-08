@@ -3,12 +3,11 @@
 import { useEffect, useRef, type ReactElement } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { previewOf, type DashboardPage } from "@alexreu/wedding-core";
 import { ArrowLeft, ExternalLink, PanelLeftClose, PanelLeftOpen, RotateCcw } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { DashboardPage } from "@/lib/wedding-dashboard/pages";
-import { planOf } from "@/lib/wedding-dashboard/plans";
-import { previewOf } from "@/lib/wedding-dashboard/preview-link";
+import { pageBadge } from "@/lib/wedding-demo/badges";
 import { useStoredFlag } from "@/hooks/use-stored-flag";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -17,7 +16,7 @@ import { dashboardEntries, dashboardHref } from "./dashboard-pages";
 
 const entries = dashboardEntries.map((entry) => ({
     ...entry,
-    id: entry.page ?? "apercu",
+    id: entry.page ?? "overview",
     href: dashboardHref(entry.page),
 }));
 
@@ -28,7 +27,7 @@ const useActivePage = () => {
         [...entries]
             .reverse()
             .find((entry) => pathname === entry.href || pathname.startsWith(`${entry.href}/`))
-            ?.id ?? "apercu"
+            ?.id ?? "overview"
     );
 };
 
@@ -121,8 +120,8 @@ export const DashboardNav = ({
 
     /** On the folded menu, the name of the icon, with the guest count or the formula. */
     const hint = (id: string, name: string) => {
-        if (id === "invites") return `${name} · ${householdCount}`;
-        const plan = planOf(id);
+        if (id === "guests") return `${name} · ${householdCount}`;
+        const plan = pageBadge(id === "overview" ? null : (id as DashboardPage));
         return plan ? `${name} · ${plan.note}` : name;
     };
 
@@ -130,7 +129,7 @@ export const DashboardNav = ({
         entries
             .filter((entry) => canOpen(entry.page))
             .map(({ id, href, label: name, icon: Icon }) => {
-                const plan = planOf(id);
+                const plan = pageBadge(id === "overview" ? null : (id as DashboardPage));
                 const link = (
                     <Link
                         href={href}
@@ -145,7 +144,7 @@ export const DashboardNav = ({
                     >
                         <Icon aria-hidden="true" className="size-4.5 shrink-0" strokeWidth={1.6} />
                         <span className={cn(!compact && label)}>{name}</span>
-                        {id === "invites" && !compact && (
+                        {id === "guests" && !compact && (
                             <span
                                 className={cn(
                                     "bg-wed-night-line text-wed-night-text ml-auto rounded-full px-2 text-xs",

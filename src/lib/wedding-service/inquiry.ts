@@ -1,7 +1,7 @@
+import { failure, success, type Result } from "@alexreu/wedding-core";
 import { z } from "zod";
 
 import { site } from "@/lib/seo";
-import { failure, success, type Result } from "@/lib/wedding/result";
 
 const guestLabels = {
     "moins-60": "moins de 60",

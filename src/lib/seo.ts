@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { getProjectUrl } from "@/lib/projects";
 import type { PricingPlan, Project, Service, SiteSettings } from "@/lib/sanity/types";
-import { DASHBOARD_PATH } from "@/lib/wedding-dashboard/pages";
+import { DASHBOARD_PATH } from "@/lib/wedding-demo/routes";
 import type { WeddingPlan, WeddingService } from "@/lib/wedding-service/types";
 
 /**

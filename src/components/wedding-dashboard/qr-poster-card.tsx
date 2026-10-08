@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import type { Flag } from "@alexreu/wedding-core";
 import { ExternalLink } from "lucide-react";
 
 import { buttonStyles, Card } from "./dashboard-ui";
@@ -15,7 +16,7 @@ type QrPosterCardProps = {
     /** What scanning opens, for screen readers. */
     qrLabel: string;
     /** The section it belongs to, for the formula badge. */
-    plan: string;
+    plan: Flag;
     aside: string;
     children: ReactNode;
     downloadLabel: string;

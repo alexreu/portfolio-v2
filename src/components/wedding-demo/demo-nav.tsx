@@ -1,7 +1,8 @@
 "use client";
 
+import { type SiteMode } from "@alexreu/wedding-core";
+
 import { cn } from "@/lib/utils";
-import type { SiteMode } from "@/lib/wedding/site-mode";
 import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { SelectField } from "@/components/shared/select-field";
 

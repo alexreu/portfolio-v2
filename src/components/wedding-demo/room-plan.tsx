@@ -1,25 +1,26 @@
 "use client";
 
 import { useRef, useState, type ReactNode } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-
-import { cn } from "@/lib/utils";
-import {
-    followPointer,
-    startDrag,
-    type PlanDrag,
-    type PlanPointer,
-} from "@/lib/wedding-dashboard/plan-drag";
-import { isFixture, type Fixture } from "@/lib/wedding-dashboard/plan-selection";
 import {
     ENTRANCE_HALF,
     fixtureInside,
+    followPointer,
     HEAD_HALF,
+    isFixture,
     roomDimensions,
+    startDrag,
     TABLE_RADIUS,
     turned,
-} from "@/lib/wedding-dashboard/room";
-import type { RoomLayout, RoomPoint, SeatTable } from "@/lib/wedding-dashboard/types";
+    type Fixture,
+    type PlanDrag,
+    type PlanPointer,
+    type RoomLayout,
+    type RoomPoint,
+    type SeatTable,
+} from "@alexreu/wedding-core";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+
+import { cn } from "@/lib/utils";
 
 /** Below this many pixels, a press on an item is a click, not a drag: a finger trembles more. */
 const DRAG_THRESHOLD = { mouse: 5, touch: 10 } as const;

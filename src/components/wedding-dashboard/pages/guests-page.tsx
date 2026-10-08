@@ -17,21 +17,23 @@ export const GuestsPage = ({ openId }: { openId?: string }) => {
     useEffect(() => {
         if (!openId) return;
         openHousehold(openId);
-        router.replace(dashboardHref("invites"), { scroll: false });
+        router.replace(dashboardHref("guests"), { scroll: false });
     }, [openId, openHousehold, router]);
 
     return (
         <>
-            <PageHeader page="invites" />
+            <PageHeader page="guests" />
             <HouseholdsSection
                 households={state.households}
                 moments={moments}
                 design={state.design}
+                groups={state.groups}
                 now={now}
+                timezone={state.timezone}
                 highlightId={highlightId}
                 linkFor={linkFor}
-                onAddHousehold={can("household.create") ? createHousehold : undefined}
-                showDiets={can("diets.read")}
+                onAddHousehold={can("guests.write") ? createHousehold : undefined}
+                showDiets={can("guests.diets.read")}
                 onOpen={(household) => openHousehold(household.id)}
             />
         </>

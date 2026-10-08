@@ -1,21 +1,24 @@
 "use client";
 
 import { useState } from "react";
-
-import { cn } from "@/lib/utils";
 import {
+    formatHour,
     validateAnswer,
     type AnswerDraft,
     type AnswerIssue,
     type DietChoice,
+    type GuestQuestion,
     type Invitation,
+    type Moment,
     type Presence,
-} from "@/lib/wedding/answer";
-import { formatHour } from "@/lib/wedding/format-hour";
-import type { GuestQuestion, Moment } from "@/lib/wedding/types";
+} from "@alexreu/wedding-core";
+
+import { cn } from "@/lib/utils";
 import { SelectField } from "@/components/shared/select-field";
 
 type AnswerFormProps = {
+    /** Where the wedding takes place: every hour is read there. */
+    timezone: string;
     householdName: string;
     invitation: Invitation;
     moments: readonly Moment[];
@@ -36,11 +39,11 @@ type AnswerFormProps = {
 };
 
 const dietOptions: readonly { value: DietChoice; label: string }[] = [
-    { value: "aucune", label: "Aucune" },
-    { value: "vegetarien", label: "Végétarien" },
+    { value: "none", label: "Aucune" },
+    { value: "vegetarian", label: "Végétarien" },
     { value: "vegan", label: "Végan" },
-    { value: "sans-gluten", label: "Sans gluten" },
-    { value: "autre", label: "Autre (préciser)" },
+    { value: "gluten-free", label: "Sans gluten" },
+    { value: "other", label: "Autre (préciser)" },
 ];
 
 const issueMessages: Record<AnswerIssue["code"], string> = {
@@ -50,7 +53,7 @@ const issueMessages: Record<AnswerIssue["code"], string> = {
     "too-long": "C'est un peu long : raccourcissez un peu.",
 };
 
-const noDiet = { choice: "aucune", other: "" } as const satisfies {
+const noDiet = { choice: "none", other: "" } as const satisfies {
     choice: DietChoice;
     other: string;
 };
@@ -58,13 +61,13 @@ const noDiet = { choice: "aucune", other: "" } as const satisfies {
 const messageAt = (issues: readonly AnswerIssue[], path: string) =>
     issues.find((issue) => issue.path === path)?.code;
 
-const dayAndHour = (moment: Moment) => {
+const dayAndHour = (moment: Moment, timezone: string) => {
     const start = moment.slots[0].startsAt;
     const day = new Date(start).toLocaleDateString("fr-FR", {
         weekday: "long",
-        timeZone: "Europe/Paris",
+        timeZone: timezone,
     });
-    return `${day.charAt(0).toUpperCase()}${day.slice(1)} · ${formatHour(start)}`;
+    return `${day.charAt(0).toUpperCase()}${day.slice(1)} · ${formatHour(start, timezone)}`;
 };
 
 const ErrorText = ({ id, code }: { id: string; code: AnswerIssue["code"] | undefined }) =>
@@ -76,6 +79,7 @@ const ErrorText = ({ id, code }: { id: string; code: AnswerIssue["code"] | undef
 
 export const AnswerForm = ({
     householdName,
+    timezone,
     invitation,
     moments,
     questions,
@@ -196,7 +200,7 @@ export const AnswerForm = ({
                                     <p>
                                         {moment.title}
                                         <span className="text-demo-muted block text-sm">
-                                            {dayAndHour(moment)}
+                                            {dayAndHour(moment, timezone)}
                                         </span>
                                     </p>
                                     <div
@@ -261,7 +265,7 @@ export const AnswerForm = ({
                                     </option>
                                 ))}
                             </SelectField>
-                            {diet.choice === "autre" && (
+                            {diet.choice === "other" && (
                                 <div className="border-demo-olive mt-2.5 flex flex-col gap-1.5 border-l-2 pl-3.5">
                                     <label
                                         htmlFor={`detail-${guest.id}`}

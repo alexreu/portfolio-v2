@@ -1,6 +1,4 @@
-import type { Invitation } from "@/lib/wedding/answer";
-import type { WeddingDay } from "@/lib/wedding/site-mode";
-import type { GuestQuestion, Moment } from "@/lib/wedding/types";
+import type { GuestQuestion, Invitation, Moment, WeddingDay } from "@alexreu/wedding-core";
 
 import { weddingPhotos } from "./wedding-photos";
 
@@ -12,7 +10,7 @@ export const weddingDemo = {
     venue: "Domaine des Oliviers · Lourmarin, Vaucluse",
     ceremonyAt: "2027-06-12T16:00:00+02:00",
     answerDeadline: "1er mai 2027",
-    galleryOpensLabel: "vendredi 11 juin",
+    galleryOpensLabel: "vendredi 11 juin à 10 h",
     day: {
         startsAt: "2027-06-12T08:00:00+02:00",
         endsAt: "2027-06-13T15:00:00+02:00",

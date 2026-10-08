@@ -1,6 +1,27 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+    dateTimeLabel,
+    draftOf,
+    groupLabel,
+    guestAnswers,
+    householdStatus,
+    householdSummary,
+    householdTimeline,
+    previewOf,
+    sinceLabel,
+    type Activity,
+    type AnswerDraft,
+    type CellTone,
+    type GuestAnswer,
+    type GuestQuestion,
+    type HouseholdDraft,
+    type HouseholdGroup,
+    type HouseholdRecord,
+    type InvitationDesign,
+    type Moment,
+} from "@alexreu/wedding-core";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Check, Copy, ExternalLink, Music, PenLine, Trash2, UserPen, X } from "lucide-react";
 import {
@@ -13,21 +34,6 @@ import {
 } from "motion/react";
 
 import { cn } from "@/lib/utils";
-import { dateTimeLabel, sinceLabel } from "@/lib/wedding-dashboard/calendar";
-import { draftOf, type HouseholdDraft } from "@/lib/wedding-dashboard/drafts";
-import {
-    groupLabel,
-    guestAnswers,
-    householdStatus,
-    householdSummary,
-    householdTimeline,
-    type CellTone,
-    type GuestAnswer,
-} from "@/lib/wedding-dashboard/households";
-import { previewOf } from "@/lib/wedding-dashboard/preview-link";
-import type { Activity, HouseholdRecord, InvitationDesign } from "@/lib/wedding-dashboard/types";
-import type { AnswerDraft } from "@/lib/wedding/answer";
-import type { GuestQuestion, Moment } from "@/lib/wedding/types";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { cormorant } from "@/app/fonts/wedding";
 
@@ -44,6 +50,9 @@ type HouseholdPanelProps = {
     moments: readonly Moment[];
     questions: readonly GuestQuestion[];
     design: InvitationDesign;
+    /** Where the wedding takes place: answers are dated there. */
+    timezone: string;
+    groups: readonly HouseholdGroup[];
     activity: readonly Activity[];
     now: Date;
     linkFor: (household: HouseholdRecord) => string;
@@ -141,7 +150,15 @@ const useWideScreen = () =>
         () => true,
     );
 
-const StatusLine = ({ household, now }: { household: HouseholdRecord; now: Date }) => {
+const StatusLine = ({
+    household,
+    now,
+    timezone,
+}: {
+    household: HouseholdRecord;
+    now: Date;
+    timezone: string;
+}) => {
     const status = householdStatus(household);
     if (status === "incomplete")
         return (
@@ -150,14 +167,14 @@ const StatusLine = ({ household, now }: { household: HouseholdRecord; now: Date 
     if (status === "answered" && household.answeredAt)
         return (
             <Chip tone="yes">
-                {household.answeredBy === "maries" ? "Réponse papier" : "Répondu"} ·{" "}
-                {dateTimeLabel(household.answeredAt)}
+                {household.answeredBy === "couple" ? "Réponse papier" : "Répondu"} ·{" "}
+                {dateTimeLabel(household.answeredAt, timezone)}
             </Chip>
         );
     if (status === "opened" && household.lastSeenAt)
         return (
             <Chip tone="wait">
-                Lien ouvert {sinceLabel(household.lastSeenAt, now)}, sans réponse
+                Lien ouvert {sinceLabel(household.lastSeenAt, now, timezone)}, sans réponse
             </Chip>
         );
     return <Chip tone="closed">Lien jamais ouvert</Chip>;
@@ -168,6 +185,8 @@ const PanelBody = ({
     moments,
     questions,
     design,
+    timezone,
+    groups,
     activity,
     now,
     linkFor,
@@ -246,7 +265,7 @@ const PanelBody = ({
                         </p>
                         <HouseholdForm
                             moments={moments}
-                            design={design}
+                            groups={groups}
                             initial={draftOf(household)}
                             label={`Modifier ${household.name}`}
                             submitLabel="Enregistrer le foyer"
@@ -289,7 +308,7 @@ const PanelBody = ({
             className="grid gap-7"
         >
             <motion.div variants={rise} className="grid justify-items-start gap-3">
-                <StatusLine household={household} now={now} />
+                <StatusLine household={household} now={now} timezone={timezone} />
                 <p
                     role="status"
                     className="text-wed-yes flex items-center gap-1.5 text-sm empty:hidden"
@@ -368,7 +387,7 @@ const PanelBody = ({
                         <h3 id="detail-papier" className={cn(heading, "mb-0")}>
                             Son faire-part papier
                         </h3>
-                        <PlanBadge section="qr-foyer" />
+                        <PlanBadge flag="household-qr" />
                     </div>
                     <div className="border-wed-line-soft flex items-center gap-4 rounded-2xl border p-3">
                         <QrImage
@@ -511,7 +530,7 @@ const PanelBody = ({
                             />
                             {entry.label}
                             <time dateTime={entry.at} className="text-wed-muted block text-xs">
-                                {dateTimeLabel(entry.at)}
+                                {dateTimeLabel(entry.at, timezone)}
                             </time>
                         </motion.li>
                     ))}
@@ -568,7 +587,8 @@ export const HouseholdPanel = ({ household, onClose, ...body }: HouseholdPanelPr
                                                 {householdSummary(shown, {
                                                     diets: body.allowed.diets,
                                                 })}{" "}
-                                                · {groupLabel(shown.group, body.design)}
+                                                {groupLabel(body.groups, shown.group) &&
+                                                    ` · ${groupLabel(body.groups, shown.group)}`}
                                             </Dialog.Description>
                                         </div>
                                         <Dialog.Close aria-label="Fermer" className={iconButton}>

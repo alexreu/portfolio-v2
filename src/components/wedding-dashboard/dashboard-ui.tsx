@@ -1,10 +1,13 @@
 import type { ComponentProps, ReactNode } from "react";
+import {
+    type CellTone,
+    type DashboardPage,
+    type DraftIssue,
+    type Flag,
+} from "@alexreu/wedding-core";
 
 import { cn } from "@/lib/utils";
-import type { DraftIssue } from "@/lib/wedding-dashboard/drafts";
-import type { CellTone } from "@/lib/wedding-dashboard/households";
-import type { DashboardPage } from "@/lib/wedding-dashboard/pages";
-import { planOf } from "@/lib/wedding-dashboard/plans";
+import { pageBadge, planBadge } from "@/lib/wedding-demo/badges";
 import { SelectField } from "@/components/shared/select-field";
 
 import { dashboardEntry } from "./dashboard-pages";
@@ -26,23 +29,27 @@ type CardProps = {
     id?: string;
     title: string;
     titleId: string;
-    /** The section's key, to say which formula it comes with when not every one has it. */
-    plan?: string;
+    /** The section's function, to say which formula it comes with when not every one has it. */
+    plan?: Flag;
     aside?: ReactNode;
     className?: string;
     children: ReactNode;
 };
 
 /** The formula a section comes with: the demo plays Signature, the prospect may not. */
-export const PlanBadge = ({ section }: { section: string }) => {
-    const plan = planOf(section);
-    if (!plan) return null;
-    return (
+const Badge = ({ note }: { note: string | undefined }) =>
+    note ? (
         <span className="border-wed-line text-wed-ink-soft rounded-full border px-2.5 py-0.5 text-xs whitespace-nowrap">
-            {plan.note}
+            {note}
         </span>
-    );
-};
+    ) : null;
+
+export const PlanBadge = ({ flag }: { flag: Flag }) => <Badge note={planBadge(flag)?.note} />;
+
+/** The formula a page of the dashboard comes with, nothing for one every formula has. */
+export const PageBadge = ({ page }: { page: DashboardPage }) => (
+    <Badge note={pageBadge(page)?.note} />
+);
 
 /** The title of a page of the dashboard, with what it is for. */
 export const PageHeader = ({ page }: { page: DashboardPage }) => {
@@ -71,7 +78,7 @@ export const Card = ({ id, title, titleId, plan, aside, className, children }: C
                 >
                     {title}
                 </h2>
-                {plan && <PlanBadge section={plan} />}
+                {plan && <PlanBadge flag={plan} />}
             </div>
             {aside}
         </div>

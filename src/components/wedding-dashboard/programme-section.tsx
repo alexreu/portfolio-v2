@@ -1,19 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import {
+    addDays,
+    daysBetween,
+    formatHour,
+    momentKeyFor,
+    momentsFromPlans,
+    validateMoment,
+    weddingCalendar,
+    type DraftIssue,
+    type HouseholdRecord,
+    type MomentPlan,
+    type SlotPlan,
+} from "@alexreu/wedding-core";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Pencil, Plus, Trash2, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { addDays, daysBetween, weddingCalendar } from "@/lib/wedding-dashboard/calendar";
-import type { DraftIssue } from "@/lib/wedding-dashboard/drafts";
-import {
-    momentKeyFor,
-    momentsFromPlans,
-    validateMoment,
-} from "@/lib/wedding-dashboard/programme-plan";
-import type { HouseholdRecord, MomentPlan, SlotPlan } from "@/lib/wedding-dashboard/types";
-import { formatHour } from "@/lib/wedding/format-hour";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { cormorant } from "@/app/fonts/wedding";
 
@@ -32,6 +36,8 @@ type ProgrammeSectionProps = {
     moments: readonly MomentPlan[];
     households: readonly HouseholdRecord[];
     weddingDay: string;
+    /** Where the wedding takes place: every hour is read there. */
+    timezone: string;
     onSave: (moment: MomentPlan, inviteAll: boolean) => void;
     onRemove: (moment: MomentPlan) => void;
 };
@@ -45,12 +51,12 @@ const relativeDay = (offset: number) => {
 };
 
 /** "Samedi 12 juin": moments can be weeks apart, the mairie a week earlier. */
-const weekday = (iso: string) => {
+const weekday = (iso: string, timezone: string) => {
     const day = new Date(iso).toLocaleDateString("fr-FR", {
         weekday: "long",
         day: "numeric",
         month: "long",
-        timeZone: "Europe/Paris",
+        timeZone: timezone,
     });
     return `${day.charAt(0).toUpperCase()}${day.slice(1)}`;
 };
@@ -83,7 +89,7 @@ const MomentForm = ({
     onSave,
 }: MomentFormProps) => {
     const [draft, setDraft] = useState<MomentPlan>(
-        initial ?? { key: "", title: "", slots: [newSlot()] },
+        initial ?? { key: "", title: "", slots: [newSlot()], seated: false },
     );
     const [inviteAll, setInviteAll] = useState(true);
     const [issues, setIssues] = useState<readonly DraftIssue[]>([]);
@@ -269,6 +275,16 @@ const MomentForm = ({
                 </button>
             </fieldset>
 
+            <label className="text-wed-ink-soft flex min-h-11 cursor-pointer items-center gap-3 text-sm">
+                <input
+                    type="checkbox"
+                    checked={draft.seated}
+                    onChange={(event) => setDraft({ ...draft, seated: event.target.checked })}
+                    className="accent-wed-ink size-4.5"
+                />
+                Le plan de table est pour ce moment
+            </label>
+
             {initial === null && householdCount > 0 && (
                 <label className="text-wed-ink-soft flex min-h-11 cursor-pointer items-center gap-3 text-sm">
                     <input
@@ -293,11 +309,12 @@ export const ProgrammeSection = ({
     moments,
     households,
     weddingDay,
+    timezone,
     onSave,
     onRemove,
 }: ProgrammeSectionProps) => {
     const [editing, setEditing] = useState<MomentPlan | "new" | null>(null);
-    const dated = momentsFromPlans(moments, weddingDay);
+    const dated = momentsFromPlans(moments, weddingDay, timezone);
     const plans = new Map(moments.map((moment) => [moment.key, moment]));
     const invited = (key: string) =>
         households.filter((household) => household.momentKeys.includes(key)).length;
@@ -342,9 +359,10 @@ export const ProgrammeSection = ({
                                     {moment.slots.map((slot) => (
                                         <li key={slot.startsAt + slot.title}>
                                             <span className="text-wed-ink font-medium">
-                                                {weekday(slot.startsAt)} ·{" "}
-                                                {formatHour(slot.startsAt)}
-                                                {slot.endsAt && ` – ${formatHour(slot.endsAt)}`}
+                                                {weekday(slot.startsAt, timezone)} ·{" "}
+                                                {formatHour(slot.startsAt, timezone)}
+                                                {slot.endsAt &&
+                                                    ` – ${formatHour(slot.endsAt, timezone)}`}
                                             </span>{" "}
                                             {slot.title}
                                             {slot.place && (

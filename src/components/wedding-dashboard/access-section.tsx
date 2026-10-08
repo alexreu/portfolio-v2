@@ -1,20 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil, Send, ShieldCheck, Trash2, UserPlus } from "lucide-react";
-
-import { cn } from "@/lib/utils";
 import {
     accessSummary,
     collaboratorStatus,
     expiryLabel,
     ofPerson,
+    personFeatures,
     roleLabel,
+    sinceLabel,
+    type CellTone,
     type Collaborator,
     type CollaboratorDraft,
-} from "@/lib/wedding-dashboard/access";
-import { sinceLabel } from "@/lib/wedding-dashboard/calendar";
-import type { CellTone } from "@/lib/wedding-dashboard/households";
+} from "@alexreu/wedding-core";
+import { Pencil, Send, ShieldCheck, Trash2, UserPlus } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 import { AccessDialog } from "./access-dialog";
 import { ConfirmPopover } from "./confirm-popover";
@@ -24,7 +25,9 @@ type AccessSectionProps = {
     collaborators: readonly Collaborator[];
     couple: { first: string; second: string };
     now: Date;
-    onInvite: (collaborator: Collaborator) => void;
+    /** Where the wedding takes place: when someone joined is read there. */
+    timezone: string;
+    onInvite: (draft: CollaboratorDraft) => Collaborator | null;
     onUpdate: (collaborator: Collaborator, draft: CollaboratorDraft) => void;
     onReinvite: (collaborator: Collaborator) => void;
     onRemove: (collaborator: Collaborator) => void;
@@ -32,11 +35,15 @@ type AccessSectionProps = {
 
 type Editing = { readonly mode: "new" } | { readonly mode: "edit"; readonly id: string };
 
-const statusChip = (collaborator: Collaborator, now: Date): { tone: CellTone; label: string } => {
+const statusChip = (
+    collaborator: Collaborator,
+    now: Date,
+    timezone: string,
+): { tone: CellTone; label: string } => {
     const status = collaboratorStatus(collaborator, now);
     switch (status.kind) {
         case "active":
-            return { tone: "yes", label: `A rejoint ${sinceLabel(status.since, now)}` };
+            return { tone: "yes", label: `A rejoint ${sinceLabel(status.since, now, timezone)}` };
         case "pending":
             return { tone: "wait", label: `Invitation ${expiryLabel(status.expiresAt, now)}` };
         default:
@@ -64,6 +71,7 @@ export const AccessSection = ({
     collaborators,
     couple,
     now,
+    timezone,
     onInvite,
     onUpdate,
     onReinvite,
@@ -83,7 +91,7 @@ export const AccessSection = ({
             id="acces"
             title="Accès au tableau de bord"
             titleId="access-title"
-            plan="acces"
+            plan="collaborators"
             aside={
                 <button type="button" onClick={invite} className={buttonStyles.secondary}>
                     <UserPlus aria-hidden="true" />
@@ -113,7 +121,7 @@ export const AccessSection = ({
                     </li>
                     {collaborators.map((collaborator) => {
                         const status = collaboratorStatus(collaborator, now);
-                        const chip = statusChip(collaborator, now);
+                        const chip = statusChip(collaborator, now, timezone);
                         const who = ofPerson(collaborator.firstName);
                         return (
                             <li
@@ -134,7 +142,7 @@ export const AccessSection = ({
                                     <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-xs">
                                         <Chip tone={chip.tone}>{chip.label}</Chip>
                                         <span className="text-wed-ink-soft">
-                                            {accessSummary(collaborator.grant)}
+                                            {accessSummary(personFeatures(collaborator))}
                                         </span>
                                     </div>
                                 </div>
@@ -224,9 +232,9 @@ export const AccessSection = ({
                 taken={collaborators
                     .filter((collaborator) => collaborator.id !== edited?.id)
                     .map((collaborator) => collaborator.email)}
-                onInvite={(collaborator) => {
-                    onInvite(collaborator);
+                onInvite={(draft) => {
                     setNotice("");
+                    return onInvite(draft);
                 }}
                 onUpdate={(collaborator, draft) => {
                     onUpdate(collaborator, draft);

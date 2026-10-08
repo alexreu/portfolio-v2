@@ -1,12 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import {
+    automaticDates,
+    localDay,
+    validateDates,
+    weddingCalendar,
+    type DateOverrides,
+    type DraftIssue,
+    type Flag,
+    type Opening,
+} from "@alexreu/wedding-core";
 import { Check, RotateCcw } from "lucide-react";
 
-import { parisDay, weddingCalendar } from "@/lib/wedding-dashboard/calendar";
-import { automaticDates, validateDates } from "@/lib/wedding-dashboard/dates";
-import type { DraftIssue } from "@/lib/wedding-dashboard/drafts";
-import type { DateOverrides } from "@/lib/wedding-dashboard/types";
+import { cn } from "@/lib/utils";
 
 import { buttonStyles, Card, FieldError, inputStyles, PlanBadge } from "./dashboard-ui";
 
@@ -14,19 +21,24 @@ type DatesSectionProps = {
     day: string;
     dates: DateOverrides;
     now: Date;
+    /** Where the wedding takes place: "today" is read there. */
+    timezone: string;
     onSave: (day: string, dates: DateOverrides) => void;
 };
 
-type Field = keyof DateOverrides;
+type DayField = "answerDeadline" | "reminder";
+type OpeningField = "galleryOpens" | "tablesReveal";
 
-const fields: readonly {
-    key: Field;
-    label: string;
-    rule: string;
-    error: string;
+type FieldSpec<Key> = {
+    readonly key: Key;
+    readonly label: string;
+    readonly rule: string;
+    readonly error: string;
     /** The formula it comes with, when not every one has it. */
-    plan?: string;
-}[] = [
+    readonly plan?: Flag;
+};
+
+const dayFields: readonly FieldSpec<DayField>[] = [
     {
         key: "answerDeadline",
         label: "Date limite des réponses",
@@ -36,16 +48,26 @@ const fields: readonly {
     {
         key: "reminder",
         label: "Relance automatique",
-        plan: "relances",
+        plan: "reminders",
         rule: "Automatique : quinze jours avant la date limite",
         error: "Entre aujourd'hui et la date limite.",
     },
+];
+
+const openingFields: readonly FieldSpec<OpeningField>[] = [
     {
         key: "galleryOpens",
         label: "Ouverture de la galerie",
-        plan: "galerie",
-        rule: "Automatique : la veille",
-        error: "Dans la semaine qui précède le mariage, ou le jour même.",
+        plan: "gallery",
+        rule: "Automatique : la veille, à 10 h",
+        error: "Dans la semaine qui précède le mariage, ou le jour même, à une heure valide.",
+    },
+    {
+        key: "tablesReveal",
+        label: "Affichage des tables",
+        plan: "seating",
+        rule: "Automatique : le jour J, à 10 h",
+        error: "Dans la semaine qui précède le mariage, ou le jour même, à une heure valide.",
     },
 ];
 
@@ -54,8 +76,70 @@ const dayMessages: Partial<Record<DraftIssue["code"], string>> = {
     "date-past": "Choisissez une date à venir.",
 };
 
-/** The wedding day and the dates that follow from it, each one adjustable. */
-export const DatesSection = ({ day, dates, now, onSave }: DatesSectionProps) => {
+const sameOpening = (a: Opening | null, b: Opening | null) =>
+    a === b || (a !== null && b !== null && a.day === b.day && a.time === b.time);
+
+/** The label, its formula, and « Auto » while it follows the wedding day. */
+const FieldHead = ({
+    htmlFor,
+    spec,
+    automatic,
+}: {
+    htmlFor: string;
+    spec: FieldSpec<string>;
+    automatic: boolean;
+}) => (
+    <span className="flex items-center justify-between gap-2">
+        <span className="flex flex-wrap items-center gap-2">
+            <label htmlFor={htmlFor} className="text-wed-ink-soft">
+                {spec.label}
+            </label>
+            {spec.plan && <PlanBadge flag={spec.plan} />}
+        </span>
+        {automatic && (
+            <span
+                aria-hidden="true"
+                className="bg-wed-line-soft text-wed-muted rounded-full px-2 py-0.5 text-[0.7rem]"
+            >
+                Auto
+            </span>
+        )}
+    </span>
+);
+
+/** Back to the automatic date, or the rule that sets it. */
+const FieldHelp = ({
+    id,
+    spec,
+    set,
+    onReset,
+}: {
+    id: string;
+    spec: FieldSpec<string>;
+    set: boolean;
+    onReset: () => void;
+}) =>
+    set ? (
+        <button
+            id={id}
+            type="button"
+            onClick={onReset}
+            className="text-wed-ink-soft hover:text-wed-ink inline-flex min-h-8 cursor-pointer items-center gap-1.5 justify-self-start text-xs underline-offset-4 hover:underline"
+        >
+            <RotateCcw aria-hidden="true" className="size-3.5" />
+            Revenir à l&apos;automatique
+        </button>
+    ) : (
+        <span id={id} className="text-wed-muted text-xs">
+            {spec.rule}
+        </span>
+    );
+
+/**
+ * The wedding day and the dates that follow from it, each one adjustable. The gallery and the
+ * tables open at a day and an hour, where the wedding takes place.
+ */
+export const DatesSection = ({ day, dates, now, timezone, onSave }: DatesSectionProps) => {
     const [draft, setDraft] = useState({ day, overrides: dates });
     /** A reset or another tab changed the saved dates: start again from them. */
     const [base, setBase] = useState({ day, dates });
@@ -65,15 +149,17 @@ export const DatesSection = ({ day, dates, now, onSave }: DatesSectionProps) => 
     }
     const [issues, setIssues] = useState<readonly DraftIssue[]>([]);
     const [saved, setSaved] = useState(false);
-    const today = parisDay(now);
+    const today = localDay(now, timezone);
     const automatic = automaticDates(draft.day);
     const dirty =
         draft.day !== day ||
-        (Object.keys(dates) as Field[]).some((key) => draft.overrides[key] !== dates[key]);
-    const issueAt = (path: string) => issues.find((issue) => issue.path === path);
+        dayFields.some(({ key }) => draft.overrides[key] !== dates[key]) ||
+        openingFields.some(({ key }) => !sameOpening(draft.overrides[key], dates[key]));
+    const issueAt = (path: string) =>
+        issues.find((issue) => issue.path === path || issue.path.startsWith(`${path}.`));
 
-    const change = (next: typeof draft) => {
-        setDraft(next);
+    const change = (overrides: Partial<DateOverrides>, nextDay = draft.day) => {
+        setDraft({ day: nextDay, overrides: { ...draft.overrides, ...overrides } });
         setSaved(false);
     };
 
@@ -88,6 +174,7 @@ export const DatesSection = ({ day, dates, now, onSave }: DatesSectionProps) => 
     };
 
     const dayIssue = issueAt("day");
+    const calendar = weddingCalendar(day, dates);
 
     return (
         <Card id="dates" title="Dates clés" titleId="dates-titre">
@@ -97,7 +184,7 @@ export const DatesSection = ({ day, dates, now, onSave }: DatesSectionProps) => 
                 aria-label="Dates clés"
                 className="grid gap-5 px-5 py-4"
             >
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     <div className="grid content-start gap-1.5 text-sm">
                         <label htmlFor="dates-jour" className="text-wed-ink-soft">
                             Date du mariage
@@ -107,7 +194,7 @@ export const DatesSection = ({ day, dates, now, onSave }: DatesSectionProps) => 
                             type="date"
                             min={today}
                             value={draft.day}
-                            onChange={(event) => change({ ...draft, day: event.target.value })}
+                            onChange={(event) => change({}, event.target.value)}
                             aria-invalid={Boolean(dayIssue)}
                             aria-describedby={
                                 dayIssue ? "dates-jour-aide dates-jour-erreur" : "dates-jour-aide"
@@ -122,81 +209,86 @@ export const DatesSection = ({ day, dates, now, onSave }: DatesSectionProps) => 
                             message={dayIssue && dayMessages[dayIssue.code]}
                         />
                     </div>
-                    {fields.map((field) => {
+                    {dayFields.map((field) => {
                         const set = draft.overrides[field.key] !== null;
                         const issue = issueAt(field.key);
+                        const id = `dates-${field.key}`;
                         return (
                             <div key={field.key} className="grid content-start gap-1.5 text-sm">
-                                <span className="flex items-center justify-between gap-2">
-                                    <span className="flex flex-wrap items-center gap-2">
-                                        <label
-                                            htmlFor={`dates-${field.key}`}
-                                            className="text-wed-ink-soft"
-                                        >
-                                            {field.label}
-                                        </label>
-                                        {field.plan && <PlanBadge section={field.plan} />}
-                                    </span>
-                                    {!set && (
-                                        <span
-                                            aria-hidden="true"
-                                            className="bg-wed-line-soft text-wed-muted rounded-full px-2 py-0.5 text-[0.7rem]"
-                                        >
-                                            Auto
-                                        </span>
-                                    )}
-                                </span>
+                                <FieldHead htmlFor={id} spec={field} automatic={!set} />
                                 <input
-                                    id={`dates-${field.key}`}
+                                    id={id}
                                     type="date"
                                     value={draft.overrides[field.key] ?? automatic[field.key]}
                                     onChange={(event) =>
-                                        change({
-                                            ...draft,
-                                            overrides: {
-                                                ...draft.overrides,
-                                                [field.key]: event.target.value || null,
-                                            },
-                                        })
+                                        change({ [field.key]: event.target.value || null })
                                     }
                                     aria-invalid={Boolean(issue)}
                                     aria-describedby={
-                                        issue
-                                            ? `dates-${field.key}-aide dates-${field.key}-erreur`
-                                            : `dates-${field.key}-aide`
+                                        issue ? `${id}-aide ${id}-erreur` : `${id}-aide`
                                     }
                                     className={inputStyles}
                                 />
-                                {set ? (
-                                    <button
-                                        id={`dates-${field.key}-aide`}
-                                        type="button"
-                                        onClick={() =>
+                                <FieldHelp
+                                    id={`${id}-aide`}
+                                    spec={field}
+                                    set={set}
+                                    onReset={() => change({ [field.key]: null })}
+                                />
+                                <FieldError id={`${id}-erreur`} message={issue && field.error} />
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                    {openingFields.map((field) => {
+                        const set = draft.overrides[field.key] !== null;
+                        const value = draft.overrides[field.key] ?? automatic[field.key];
+                        const issue = issueAt(field.key);
+                        const id = `dates-${field.key}`;
+                        const described = issue ? `${id}-aide ${id}-erreur` : `${id}-aide`;
+                        return (
+                            <div key={field.key} className="grid content-start gap-1.5 text-sm">
+                                <FieldHead htmlFor={id} spec={field} automatic={!set} />
+                                <div className="grid grid-cols-[minmax(0,1fr)_7.5rem] gap-2">
+                                    <input
+                                        id={id}
+                                        type="date"
+                                        value={value.day}
+                                        onChange={(event) =>
+                                            event.target.value &&
                                             change({
-                                                ...draft,
-                                                overrides: {
-                                                    ...draft.overrides,
-                                                    [field.key]: null,
-                                                },
+                                                [field.key]: { ...value, day: event.target.value },
                                             })
                                         }
-                                        className="text-wed-ink-soft hover:text-wed-ink inline-flex min-h-8 cursor-pointer items-center gap-1.5 justify-self-start text-xs underline-offset-4 hover:underline"
-                                    >
-                                        <RotateCcw aria-hidden="true" className="size-3.5" />
-                                        Revenir à l&apos;automatique
-                                    </button>
-                                ) : (
-                                    <span
-                                        id={`dates-${field.key}-aide`}
-                                        className="text-wed-muted text-xs"
-                                    >
-                                        {field.rule}
-                                    </span>
-                                )}
-                                <FieldError
-                                    id={`dates-${field.key}-erreur`}
-                                    message={issue && field.error}
+                                        aria-invalid={Boolean(issue)}
+                                        aria-describedby={described}
+                                        className={inputStyles}
+                                    />
+                                    <input
+                                        id={`${id}-heure`}
+                                        type="time"
+                                        step={900}
+                                        value={value.time}
+                                        aria-label={`${field.label}, heure`}
+                                        onChange={(event) =>
+                                            event.target.value &&
+                                            change({
+                                                [field.key]: { ...value, time: event.target.value },
+                                            })
+                                        }
+                                        aria-invalid={Boolean(issue)}
+                                        aria-describedby={described}
+                                        className={cn(inputStyles, "tabular-nums")}
+                                    />
+                                </div>
+                                <FieldHelp
+                                    id={`${id}-aide`}
+                                    spec={field}
+                                    set={set}
+                                    onReset={() => change({ [field.key]: null })}
                                 />
+                                <FieldError id={`${id}-erreur`} message={issue && field.error} />
                             </div>
                         );
                     })}
@@ -209,8 +301,8 @@ export const DatesSection = ({ day, dates, now, onSave }: DatesSectionProps) => 
                         {saved && !dirty && (
                             <>
                                 <Check aria-hidden="true" className="size-4" />
-                                Enregistrées · {weddingCalendar(day, dates).dateLabel}, réponses
-                                avant le {weddingCalendar(day, dates).answerDeadlineLabel}.
+                                Enregistrées · {calendar.dateLabel}, réponses avant le{" "}
+                                {calendar.answerDeadlineLabel}.
                             </>
                         )}
                     </p>

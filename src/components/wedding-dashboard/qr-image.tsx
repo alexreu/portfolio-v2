@@ -1,7 +1,7 @@
 import { useMemo } from "react";
+import { qrCode } from "@alexreu/wedding-core/prints";
 
 import { cn } from "@/lib/utils";
-import { qrCode } from "@/lib/wedding-dashboard/qr";
 
 type QrImageProps = {
     url: string;

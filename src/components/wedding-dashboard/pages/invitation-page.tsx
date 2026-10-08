@@ -14,13 +14,11 @@ export const InvitationPage = () => {
         state,
         dispatch,
         now,
-        at,
         siteUrl,
         linkFor,
         downloadSharedInvitation,
         downloadHouseholdInvitations,
         can,
-        canRead,
     } = useDashboard();
     const sampleHousehold =
         state.households.find((household) => household.id === DEMO_GUEST_HOUSEHOLD) ??
@@ -28,18 +26,19 @@ export const InvitationPage = () => {
     const sampleGuest = sampleHousehold?.name ?? weddingDemo.household.name;
     return (
         <>
-            <PageHeader page="faire-part" />
-            {canRead("faire-part") && (
-                <ReadOnly locked={!can("faire-part.edit")}>
+            <PageHeader page="invitation" />
+            {can("invitation.read") && (
+                <ReadOnly locked={!can("invitation.write")}>
                     <InvitationEditor
                         design={state.design}
                         sampleGuest={sampleGuest}
                         now={now}
-                        onSave={(design) => dispatch({ type: "design-saved", design, at: at() })}
+                        timezone={state.timezone}
+                        onSave={(design) => dispatch({ type: "invitation.save", design })}
                     />
                 </ReadOnly>
             )}
-            {(can("faire-part.print") || can("household.print")) && (
+            {(can("invitation.print") || can("household.print")) && (
                 <InvitationPrintSection
                     siteUrl={siteUrl}
                     sample={{
@@ -48,20 +47,18 @@ export const InvitationPage = () => {
                     }}
                     householdCount={state.households.length}
                     onDownloadShared={
-                        can("faire-part.print") ? downloadSharedInvitation : undefined
+                        can("invitation.print") ? downloadSharedInvitation : undefined
                     }
                     onDownloadHouseholds={
                         can("household.print") ? () => downloadHouseholdInvitations() : undefined
                     }
                 />
             )}
-            {canRead("questions-perso") && (
-                <ReadOnly locked={!can("questions.edit")}>
+            {can("questions.read") && (
+                <ReadOnly locked={!can("questions.write")}>
                     <QuestionsSection
                         questions={state.questions}
-                        onSave={(questions) =>
-                            dispatch({ type: "questions-saved", questions, at: at() })
-                        }
+                        onSave={(questions) => dispatch({ type: "questions.save", questions })}
                     />
                 </ReadOnly>
             )}

@@ -1,20 +1,30 @@
-import { templateGrant, type Collaborator } from "@/lib/wedding-dashboard/access";
-import { plansFromMoments } from "@/lib/wedding-dashboard/programme-plan";
-import { demoReducer, type DemoAction } from "@/lib/wedding-dashboard/state";
-import type {
-    DemoState,
-    GroupKey,
-    GuestRecord,
-    HouseholdRecord,
-    InvitationDesign,
-    SeatTable,
-} from "@/lib/wedding-dashboard/types";
-import type { DietChoice, Presence } from "@/lib/wedding/answer";
+import {
+    FLAGS,
+    plansFromMoments,
+    runCommand,
+    type Actor,
+    type Collaborator,
+    type Command,
+    type DietChoice,
+    type GuestRecord,
+    type HouseholdGroup,
+    type HouseholdRecord,
+    type InvitationDesign,
+    type Presence,
+    type SeatTable,
+    type WeddingState,
+} from "@alexreu/wedding-core";
 
 import { weddingDemo } from "./wedding-demo";
 
-/** The seed replays only events that happened at a given time. */
-type TimedAction = Extract<DemoAction, { readonly at: string }>;
+/** One event of the seed: a command, who sent it, and when. */
+type TimedCommand = {
+    readonly command: Command;
+    readonly actor: Actor;
+    readonly at: string;
+    /** The id the command gives what it creates: a person the couple invited. */
+    readonly id?: string;
+};
 
 /** Marie & Thomas: the household visitors play on the guest site. */
 export const DEMO_GUEST_HOUSEHOLD = "lefevre";
@@ -22,7 +32,8 @@ export const DEMO_GUEST_HOUSEHOLD = "lefevre";
 /** The day the demo content is written for; another date moves the whole programme. */
 export const CONTENT_WEDDING_DAY = "2027-06-12";
 
-export const DEMO_STORAGE_KEY = "alexdevlab:mariage-demo:v1";
+/** v2: the wedding-core state, English identifiers, free groups and opening hours. */
+export const DEMO_STORAGE_KEY = "alexdevlab:mariage-demo:v2";
 
 export const defaultDesign: InvitationDesign = {
     first: weddingDemo.couple.first,
@@ -33,6 +44,14 @@ export const defaultDesign: InvitationDesign = {
         "Chers {invités}, nous nous marions et nous aimerions beaucoup que vous soyez là, pour la cérémonie et pour le dîner.",
     tone: "olive",
 };
+
+/** The couple's groups: families named after each of them, friends, colleagues. */
+const groups: readonly HouseholdGroup[] = [
+    { id: "family-1", label: `Famille ${weddingDemo.couple.first}` },
+    { id: "family-2", label: `Famille ${weddingDemo.couple.second}` },
+    { id: "friends", label: "Amis" },
+    { id: "colleagues", label: "Collègues" },
+];
 
 const C = "ceremonie-vin-honneur";
 const D = "diner";
@@ -52,13 +71,13 @@ type GuestPlan =
 type HouseholdPlan = {
     readonly id: string;
     readonly name: string;
-    readonly group: GroupKey;
+    readonly group: string;
     readonly guests: readonly GuestPlan[];
     readonly moments: readonly string[];
     readonly seen?: Ago;
     readonly answer?: {
         readonly at: Ago;
-        readonly by?: "maries";
+        readonly by?: "couple";
         /** The household's answer, moment by moment; `except` changes it for one guest. */
         readonly moments: Readonly<Record<string, Presence>>;
         readonly except?: Readonly<Record<string, Readonly<Record<string, Presence>>>>;
@@ -76,7 +95,7 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: DEMO_GUEST_HOUSEHOLD,
         name: weddingDemo.household.name,
-        group: "amis",
+        group: "friends",
         guests: weddingDemo.household.invitation.guests.map((guest) => ({
             firstName: guest.firstName,
             labels: (
@@ -91,7 +110,7 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "moreau",
         name: "Famille Moreau",
-        group: "famille-2",
+        group: "family-2",
         guests: [
             "Claire",
             "Antoine",
@@ -102,7 +121,7 @@ const plans: readonly HouseholdPlan[] = [
         answer: {
             at: { days: 1, hours: 6 },
             moments: yesAll,
-            diets: { Jade: "sans-gluten" },
+            diets: { Jade: "gluten-free" },
             song: "ABBA — Dancing Queen",
             message:
                 "On a hâte de danser avec vous ! Léo et Jade demandent s'il y aura un gâteau à étages.",
@@ -111,7 +130,7 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "bertrand",
         name: "Julien Bertrand",
-        group: "collegues",
+        group: "colleagues",
         guests: ["Julien"],
         moments: [C, D],
         answer: {
@@ -124,7 +143,7 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "haddad",
         name: "Inès & Karim",
-        group: "amis",
+        group: "friends",
         guests: [
             { firstName: "Inès", labels: { yes: "Présente", no: "Absente" } },
             { firstName: "Karim", labels: { yes: "Présent", no: "Absent" } },
@@ -135,34 +154,34 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "durand",
         name: "Mamie Jeanne",
-        group: "famille-1",
+        group: "family-1",
         guests: [{ firstName: "Jeanne", labels: { yes: "Présente", no: "Absente" } }],
         moments: [C, D],
         answer: {
             at: { days: 10, hours: 1 },
-            by: "maries",
+            by: "couple",
             moments: { [C]: "yes", [D]: "yes" },
-            diets: { Jeanne: "sans-gluten" },
+            diets: { Jeanne: "gluten-free" },
             message: "Au téléphone : « J'apporte mon châle, et je danserai au moins une valse. »",
         },
     },
     {
         id: "petit",
         name: "Lucas & Emma Petit",
-        group: "famille-2",
+        group: "family-2",
         guests: ["Lucas", "Emma"],
         moments: ALL,
     },
     {
         id: "garcia",
         name: "Sofia Garcia",
-        group: "amis",
+        group: "friends",
         guests: [{ firstName: "Sofia", labels: { yes: "Présente", no: "Absente" } }],
         moments: ALL,
         answer: {
             at: { hours: 2, minutes: 18 },
             moments: yesAll,
-            diets: { Sofia: "vegetarien" },
+            diets: { Sofia: "vegetarian" },
             song: "Daft Punk — One More Time",
             message: "Je viens avec mes plus belles chaussures (plates, promis, pour la pelouse).",
         },
@@ -170,7 +189,7 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "martin",
         name: "Famille Martin",
-        group: "famille-1",
+        group: "family-1",
         guests: ["Paul", "Hélène", { firstName: "Zoé", child: true }],
         moments: ALL,
         answer: {
@@ -183,7 +202,7 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "roux",
         name: "Nathalie & Éric Roux",
-        group: "famille-1",
+        group: "family-1",
         guests: ["Nathalie", "Éric"],
         moments: [C, D],
         seen: { days: 2, hours: 5 },
@@ -191,7 +210,7 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "lambert",
         name: "Chloé Lambert",
-        group: "collegues",
+        group: "colleagues",
         guests: [{ firstName: "Chloé", labels: { yes: "Présente", no: "Absente" } }],
         moments: [C],
         answer: { at: { days: 4, hours: 7 }, moments: { [C]: "yes" } },
@@ -199,13 +218,13 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "fontaine",
         name: "Antoine & Sarah Fontaine",
-        group: "amis",
+        group: "friends",
         guests: ["Antoine", "Sarah"],
         moments: ALL,
         answer: {
             at: { days: 7, hours: 2 },
             moments: yesAll,
-            diets: { Sarah: "vegetarien" },
+            diets: { Sarah: "vegetarian" },
             song: "Elvis Presley — Jailhouse Rock",
             message: "On réserve la piste pour le rock, prévenez l'orchestre !",
         },
@@ -213,7 +232,7 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "girard",
         name: "Michel & Anne Girard",
-        group: "famille-2",
+        group: "family-2",
         guests: ["Michel", "Anne"],
         moments: ALL,
         answer: { at: { days: 8, hours: 1 }, moments: { [C]: "yes", [D]: "yes", [B]: "no" } },
@@ -221,14 +240,14 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "bonnet",
         name: "Hélène Bonnet",
-        group: "famille-1",
+        group: "family-1",
         guests: ["Hélène"],
         moments: [C, D],
     },
     {
         id: "dupont",
         name: "Maxime & Julie Dupont",
-        group: "amis",
+        group: "friends",
         guests: ["Maxime", "Julie"],
         moments: ALL,
         answer: {
@@ -241,7 +260,7 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "mercier",
         name: "Famille Mercier",
-        group: "famille-2",
+        group: "family-2",
         guests: [
             "Stéphane",
             "Laure",
@@ -252,13 +271,13 @@ const plans: readonly HouseholdPlan[] = [
         answer: {
             at: { days: 12, hours: 4 },
             moments: { [C]: "yes", [D]: "yes" },
-            diets: { Laure: "sans-gluten" },
+            diets: { Laure: "gluten-free" },
         },
     },
     {
         id: "blanc",
         name: "Pierre Blanc",
-        group: "collegues",
+        group: "colleagues",
         guests: ["Pierre"],
         moments: [C],
         seen: { days: 3, hours: 6 },
@@ -266,7 +285,7 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "faure",
         name: "Léa & Nicolas Faure",
-        group: "amis",
+        group: "friends",
         guests: ["Léa", "Nicolas"],
         moments: ALL,
         answer: {
@@ -279,22 +298,22 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "chevalier",
         name: "Mathilde Chevalier",
-        group: "amis",
+        group: "friends",
         guests: ["Mathilde"],
         moments: ALL,
     },
     {
         id: "robin",
         name: "Papi André",
-        group: "famille-2",
+        group: "family-2",
         guests: ["André"],
         moments: [C, D],
-        answer: { at: { days: 15 }, by: "maries", moments: { [C]: "yes", [D]: "no" } },
+        answer: { at: { days: 15 }, by: "couple", moments: { [C]: "yes", [D]: "no" } },
     },
     {
         id: "morel",
         name: "Yanis & Clara Morel",
-        group: "collegues",
+        group: "colleagues",
         guests: ["Yanis", "Clara"],
         moments: [C, D],
         answer: {
@@ -306,7 +325,7 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "perrin",
         name: "Famille Perrin",
-        group: "famille-1",
+        group: "family-1",
         guests: ["Olivier", "Isabelle", { firstName: "Noé", child: true }],
         moments: ALL,
         seen: { days: 9, hours: 2 },
@@ -314,13 +333,13 @@ const plans: readonly HouseholdPlan[] = [
     {
         id: "caron",
         name: "Emma Caron",
-        group: "amis",
+        group: "friends",
         guests: [{ firstName: "Emma", labels: { yes: "Présente", no: "Absente" } }],
         moments: ALL,
         answer: {
             at: { hours: 20 },
             moments: { [C]: "yes", [D]: "yes", [B]: "no" },
-            diets: { Emma: "vegetarien" },
+            diets: { Emma: "vegetarian" },
             song: "Beyoncé — Crazy in Love",
         },
     },
@@ -369,8 +388,10 @@ const collaborators: readonly CollaboratorPlan[] = [
         id: "elsa",
         firstName: "Elsa",
         email: "elsa.marchand@exemple.fr",
-        role: "Témoin de Camille",
-        grant: templateGrant("temoin"),
+        title: "Témoin de Camille",
+        role: "witness",
+        added: [],
+        removed: [],
         invited: { days: 24 },
         joined: { days: 23, hours: 20 },
     },
@@ -378,34 +399,43 @@ const collaborators: readonly CollaboratorPlan[] = [
         id: "malik",
         firstName: "Malik",
         email: "malik.benali@exemple.fr",
-        role: "Témoin de Hugo",
-        grant: { ...templateGrant("temoin"), relances: "lecture" },
+        title: "Témoin de Hugo",
+        role: "witness",
+        added: ["reminders.read"],
+        removed: [],
         invited: { days: 5 },
     },
     {
         id: "agathe",
         firstName: "Agathe",
         email: "agathe@atelier-agathe.exemple.fr",
-        role: "Wedding planner",
-        grant: templateGrant("planner"),
+        title: "",
+        role: "planner",
+        added: [],
+        removed: [],
         invited: { hours: 20 },
     },
 ];
 
-const collaboratorActions = (plan: CollaboratorPlan, now: Date): readonly TimedAction[] => {
-    const { invited, joined, ...collaborator } = plan;
-    const at = ago(now, invited);
+const COUPLE: Actor = { kind: "couple" };
+
+const collaboratorCommands = (plan: CollaboratorPlan, now: Date): readonly TimedCommand[] => {
+    const { invited, joined, id, firstName, email, title, role, added, removed } = plan;
     return [
         {
-            type: "collaborator-invited",
-            collaborator: { ...collaborator, invitedAt: at, joinedAt: null },
-            at,
+            command: {
+                type: "collaborator.invite",
+                draft: { firstName, email, title, role, added, removed },
+            },
+            actor: COUPLE,
+            at: ago(now, invited),
+            id,
         },
         ...(joined
             ? [
                   {
-                      type: "collaborator-joined" as const,
-                      collaboratorId: plan.id,
+                      command: { type: "collaborator.join", collaboratorId: id } as const,
+                      actor: { kind: "invitee", collaboratorId: id } as const,
                       at: ago(now, joined),
                   },
               ]
@@ -442,66 +472,97 @@ const invited = (plan: HouseholdPlan, now: Date): HouseholdRecord => ({
     message: "",
 });
 
-const answerAction = (
+const answerCommand = (
     plan: HouseholdPlan,
     household: HouseholdRecord,
     now: Date,
-): readonly TimedAction[] => {
+): readonly TimedCommand[] => {
     if (!plan.answer) return [];
     const { at, by, moments, except = {}, diets = {}, song, message = "" } = plan.answer;
     return [
         {
-            type: "answer-recorded",
-            householdId: household.id,
-            at: ago(now, at),
-            by: by ?? "invite",
-            draft: {
-                attendance: Object.fromEntries(
-                    household.guests.map((guest) => [
-                        guest.id,
-                        { ...moments, ...except[guest.firstName] },
-                    ]),
-                ),
-                diets: Object.fromEntries(
-                    household.guests.flatMap((guest) => {
-                        const diet = diets[guest.firstName];
-                        if (!diet) return [];
-                        return [
-                            [
-                                guest.id,
-                                typeof diet === "string"
-                                    ? { choice: diet, other: "" }
-                                    : { choice: "autre" as const, other: diet.other },
-                            ],
-                        ];
-                    }),
-                ),
-                consent: Object.keys(diets).length > 0,
-                questions: song ? { chanson: song } : {},
-                message,
+            command: {
+                type: "household.answer",
+                householdId: household.id,
+                draft: {
+                    attendance: Object.fromEntries(
+                        household.guests.map((guest) => [
+                            guest.id,
+                            { ...moments, ...except[guest.firstName] },
+                        ]),
+                    ),
+                    diets: Object.fromEntries(
+                        household.guests.flatMap((guest) => {
+                            const diet = diets[guest.firstName];
+                            if (!diet) return [];
+                            return [
+                                [
+                                    guest.id,
+                                    typeof diet === "string"
+                                        ? { choice: diet, other: "" }
+                                        : { choice: "other" as const, other: diet.other },
+                                ],
+                            ];
+                        }),
+                    ),
+                    consent: Object.keys(diets).length > 0,
+                    questions: song ? { chanson: song } : {},
+                    message,
+                },
             },
+            actor: by === "couple" ? COUPLE : { kind: "guest", householdId: household.id },
+            at: ago(now, at),
         },
     ];
 };
 
+/** Every function of the Signature formula is open while the seed is replayed. */
+const ALL_FLAGS = new Set(FLAGS);
+
+/** One event replayed: the ids it needs are the plan's own, then numbered. */
+const replay = (state: WeddingState, event: TimedCommand, index: number): WeddingState => {
+    const ids = [...(event.id ? [event.id] : []), `seed-${index}-a`, `seed-${index}-b`];
+    const counter = { next: 0 };
+    const result = runCommand(state, event.command, {
+        at: event.at,
+        actor: event.actor,
+        flags: ALL_FLAGS,
+        newId: () => ids[counter.next++] ?? `seed-${index}-${counter.next}`,
+    });
+    if (!result.ok)
+        throw new Error(
+            `Demo seed: ${event.command.type} refused, ${JSON.stringify(result.error)}`,
+        );
+    return result.value.state;
+};
+
 /**
  * The guest list as the couple finds it, a month after sending the faire-parts. The activity
- * feed is replayed through the reducer, so it always reads like the dashboard writes it.
+ * feed is replayed through the wedding's commands, so it always reads like the dashboard writes
+ * it.
  */
-export const demoSeed = (now: Date): DemoState => {
+export const demoSeed = (now: Date): WeddingState => {
     const households = plans.map((plan) => invited(plan, now));
-    const actions: readonly TimedAction[] = [
-        ...plans.flatMap((plan, index): readonly TimedAction[] =>
+    const events: readonly TimedCommand[] = [
+        ...plans.flatMap((plan, index): readonly TimedCommand[] =>
             plan.seen
-                ? [{ type: "household-opened", householdId: plan.id, at: ago(now, plan.seen) }]
-                : answerAction(plan, households[index], now),
+                ? [
+                      {
+                          command: { type: "household.open", householdId: plan.id },
+                          actor: { kind: "guest", householdId: plan.id },
+                          at: ago(now, plan.seen),
+                      },
+                  ]
+                : answerCommand(plan, households[index], now),
         ),
-        { type: "reminder-sent", at: ago(now, { days: 9, hours: 5 }) },
-        ...collaborators.flatMap((plan) => collaboratorActions(plan, now)),
+        { command: { type: "reminders.send" }, actor: COUPLE, at: ago(now, { days: 9, hours: 5 }) },
+        ...collaborators.flatMap((plan) => collaboratorCommands(plan, now)),
     ];
-    const start: DemoState = {
+    const start: WeddingState = {
         version: 1,
+        timezone: "Europe/Paris",
         design: defaultDesign,
+        groups,
         households,
         activity: [],
         photos: weddingDemo.gallery.photos.map((photo, index) => ({
@@ -512,14 +573,13 @@ export const demoSeed = (now: Date): DemoState => {
             removed: false,
         })),
         lastReminder: null,
-        moments: plansFromMoments(weddingDemo.moments, CONTENT_WEDDING_DAY),
+        moments: plansFromMoments(weddingDemo.moments, CONTENT_WEDDING_DAY, D),
         questions: weddingDemo.questions,
         tables,
-        dates: { answerDeadline: null, reminder: null, galleryOpens: null },
+        dates: { answerDeadline: null, reminder: null, galleryOpens: null, tablesReveal: null },
         room: {
             name: "L'orangerie",
             size: "s",
-            revealAt: "10:00",
             head: { x: 50, y: 11, rotation: 0 },
             entrance: { x: 50, y: 91, rotation: 0 },
         },
@@ -532,5 +592,5 @@ export const demoSeed = (now: Date): DemoState => {
             ),
         ),
     };
-    return [...actions].sort((a, b) => a.at.localeCompare(b.at)).reduce(demoReducer, start);
+    return [...events].sort((a, b) => a.at.localeCompare(b.at)).reduce(replay, start);
 };

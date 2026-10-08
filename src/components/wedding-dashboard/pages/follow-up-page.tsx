@@ -2,8 +2,7 @@
 
 import { DEMO_GUEST_HOUSEHOLD } from "@/content/wedding-dashboard-demo";
 import { weddingDemo } from "@/content/wedding-demo";
-
-import { householdStatus } from "@/lib/wedding-dashboard/households";
+import { householdStatus } from "@alexreu/wedding-core";
 
 import { useDashboard } from "../dashboard-context";
 import { PageHeader } from "../dashboard-ui";
@@ -18,7 +17,7 @@ export const FollowUpPage = () => {
         weddingDemo.household.name;
     return (
         <>
-            <PageHeader page="relances" />
+            <PageHeader page="reminders" />
             <FollowUpSection
                 state={state}
                 calendar={calendar}

@@ -31,7 +31,7 @@ export const InvitationPrintSection = ({
         id="impression"
         title="Faire-part à imprimer"
         titleId="impression-titre"
-        plan="faire-part-pdf"
+        plan="invitation-print"
         aside={
             <span className="text-wed-muted text-[0.8rem]">
                 PDF au format A5, à imprimer où vous voulez
@@ -60,7 +60,7 @@ export const InvitationPrintSection = ({
                 <div className={panel}>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
                         <h3 className="font-semibold">Un par foyer</h3>
-                        <PlanBadge section="qr-foyer" />
+                        <PlanBadge flag="household-qr" />
                     </div>
                     {householdCount === 0 ? (
                         <p className="text-wed-muted text-sm">

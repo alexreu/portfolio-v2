@@ -1,5 +1,6 @@
 "use client";
 
+import { tabBar, type SiteMode, type Tab } from "@alexreu/wedding-core";
 import {
     Calendar,
     Camera,
@@ -13,8 +14,6 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { SiteMode } from "@/lib/wedding/site-mode";
-import { tabBar, type Tab } from "@/lib/wedding/tab-bar";
 import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 
 const icons: Record<string, LucideIcon> = {
@@ -60,7 +59,7 @@ export const DemoTabBar = ({ mode, answered, onAddPhotos }: DemoTabBarProps) => 
                         {tab.label}
                     </>
                 );
-                return tab.key === "ajouter" ? (
+                return tab.key === "add" ? (
                     <button
                         key={tab.key}
                         type="button"

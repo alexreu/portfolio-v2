@@ -9,22 +9,34 @@ import {
     demoSeed,
 } from "@/content/wedding-dashboard-demo";
 import { weddingDemo } from "@/content/wedding-demo";
+import {
+    answerDraftOf,
+    calendarFile,
+    celebrationsEnd,
+    formatClock,
+    hasOpened,
+    householdStatus,
+    householdTables,
+    localDay,
+    momentsFromPlans,
+    monogram,
+    moveToDay,
+    personalize,
+    programmeAt,
+    seatedMomentKey,
+    signPhoto,
+    siteModeAt,
+    slugOf,
+    thanksOf,
+    weddingCalendar,
+    type AnswerDraft,
+    type HouseholdRecord,
+    type SiteMode,
+} from "@alexreu/wedding-core";
 import { useLenis } from "lenis/react";
 import { AnimatePresence } from "motion/react";
 
-import { moveToDay, parisDay, weddingCalendar } from "@/lib/wedding-dashboard/calendar";
-import { monogram, personalize, slugOf, thanksOf } from "@/lib/wedding-dashboard/drafts";
-import { answerDraftOf, householdStatus } from "@/lib/wedding-dashboard/households";
-import { momentsFromPlans } from "@/lib/wedding-dashboard/programme-plan";
-import { tablesRevealAt, tablesRevealed } from "@/lib/wedding-dashboard/room";
-import { DINNER, householdTables } from "@/lib/wedding-dashboard/seating";
-import type { HouseholdRecord } from "@/lib/wedding-dashboard/types";
-import type { AnswerDraft } from "@/lib/wedding/answer";
-import { calendarFile } from "@/lib/wedding/calendar-file";
-import { formatHour } from "@/lib/wedding/format-hour";
-import { signPhoto } from "@/lib/wedding/photo-signature";
-import { programmeAt } from "@/lib/wedding/programme";
-import { celebrationsEnd, siteModeAt, type SiteMode } from "@/lib/wedding/site-mode";
+import { sealToneOf } from "@/lib/wedding-demo/tones";
 import { useNow } from "@/hooks/use-now";
 import { useWeddingDemo } from "@/hooks/use-wedding-demo";
 
@@ -127,14 +139,13 @@ export const DemoSite = ({
     /** A created household is only known once the browser copy is read. */
     const guestName = state === null && householdId !== undefined ? null : household.name;
 
-    const calendar = weddingCalendar(design.date, (state ?? fallback).dates);
-    const moved = (iso: string) => moveToDay(iso, CONTENT_WEDDING_DAY, design.date);
     /** The programme, questions and room plan as the couple last saved them. */
     const plan = state ?? fallback;
-    const invitedMoments = momentsFromPlans(plan.moments, design.date).filter((moment) =>
-        household.momentKeys.includes(moment.key),
-    );
-    const allMoments = momentsFromPlans(plan.moments, design.date);
+    const zone = plan.timezone;
+    const calendar = weddingCalendar(design.date, plan.dates);
+    const moved = (iso: string) => moveToDay(iso, CONTENT_WEDDING_DAY, design.date, zone);
+    const allMoments = momentsFromPlans(plan.moments, design.date, zone);
+    const invitedMoments = allMoments.filter((moment) => household.momentKeys.includes(moment.key));
     const realMode = siteModeAt(
         {
             startsAt: moved(weddingDemo.day.startsAt),
@@ -152,17 +163,22 @@ export const DemoSite = ({
     );
     const status = householdStatus(household);
     /** The couple's own preview may still type an answer in after the deadline. */
-    const closed = !preview && parisDay(now) > calendar.answerDeadline;
-    const galleryOpen = mode !== "before" || parisDay(now) >= calendar.galleryOpens;
+    const closed = !preview && localDay(now, zone) > calendar.answerDeadline;
+    const galleryOpen = mode !== "before" || hasOpened(calendar.galleryOpens, now, zone);
     const photos = state ? state.photos.filter((photo) => !photo.removed) : [];
+    const seatedKey = seatedMomentKey(plan.moments);
     const seated =
-        household.momentKeys.includes(DINNER) &&
-        household.guests.some((guest) => household.attendance[guest.id]?.[DINNER] !== "no");
-    /** Previewing the day shows the tables; on the real day, from the couple's hour only. */
+        seatedKey !== null &&
+        household.momentKeys.includes(seatedKey) &&
+        household.guests.some((guest) => household.attendance[guest.id]?.[seatedKey] !== "no");
+    /** Previewing the day shows the tables; for real, from the day and hour the couple chose. */
+    const { tablesReveal } = calendar;
     const tablesAt =
-        previewMode === "day" || tablesRevealed(design.date, plan.room.revealAt, now)
+        previewMode === "day" || hasOpened(tablesReveal, now, zone)
             ? null
-            : formatHour(tablesRevealAt(design.date, plan.room.revealAt));
+            : tablesReveal.day === localDay(now, zone)
+              ? `à ${formatClock(tablesReveal.time)}`
+              : `le ${calendar.tablesRevealLabel}`;
     const photoSignature = signatureOf(household);
 
     /** Read when the faire-part closes, so a change elsewhere never restarts its timers. */
@@ -180,12 +196,13 @@ export const DemoSite = ({
         else window.scrollTo(0, 0);
         setOpened(true);
         /** The couple's own preview is not the household's visit. */
-        if (visit.current.counted)
-            dispatch({
-                type: "household-opened",
-                householdId: visit.current.householdId,
-                at: new Date().toISOString(),
-            });
+        if (visit.current.counted) {
+            const { householdId: visited } = visit.current;
+            dispatch(
+                { type: "household.open", householdId: visited },
+                { actor: { kind: "guest", householdId: visited } },
+            );
+        }
     }, [lenis, dispatch]);
 
     /**
@@ -204,13 +221,13 @@ export const DemoSite = ({
     }, [sent, lenis]);
 
     const submitAnswer = (draft: AnswerDraft) => {
-        dispatch({
-            type: "answer-recorded",
-            householdId: household.id,
-            draft,
-            at: new Date().toISOString(),
-            by: preview ? "maries" : "invite",
-        });
+        /** The couple's preview answers as the couple; a guest only for their own household. */
+        dispatch(
+            { type: "household.answer", householdId: household.id, draft },
+            {
+                actor: preview ? { kind: "couple" } : { kind: "guest", householdId: household.id },
+            },
+        );
         setEditing(false);
         setSent((count) => count + 1);
     };
@@ -256,7 +273,7 @@ export const DemoSite = ({
                     first={design.first}
                     second={design.second}
                     dateLabel={`${calendar.dateLabel} · ${design.place}`}
-                    tone={design.tone}
+                    tone={sealToneOf(design.tone)}
                     onOpened={markOpened}
                 />
             )}
@@ -316,6 +333,7 @@ export const DemoSite = ({
                     />
                 ) : mode === "day" ? (
                     <DayPanel
+                        timezone={zone}
                         dateLabel={calendar.shortDateLabel}
                         guestName={household.name}
                         tables={plan.tables}
@@ -342,6 +360,7 @@ export const DemoSite = ({
                 <DemoStory story={weddingDemo.story} />
                 {mode !== "after" && (
                     <DemoProgramme
+                        timezone={zone}
                         programme={programme}
                         mode={mode}
                         onAddToCalendar={mode === "before" ? addToCalendar : undefined}
@@ -395,6 +414,7 @@ export const DemoSite = ({
                                     </p>
                                 ) : (
                                     <AnswerForm
+                                        timezone={zone}
                                         key={`${household.id}-${editing}`}
                                         householdName={household.name}
                                         invitation={{

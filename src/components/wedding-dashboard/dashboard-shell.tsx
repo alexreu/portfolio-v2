@@ -2,34 +2,35 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useLenis } from "lenis/react";
-import { ExternalLink, RotateCcw } from "lucide-react";
-
-import { roleLabel } from "@/lib/wedding-dashboard/access";
-import { weddingCalendar } from "@/lib/wedding-dashboard/calendar";
-import { catererSheet } from "@/lib/wedding-dashboard/caterer-sheet";
-import { guestListCsv } from "@/lib/wedding-dashboard/csv";
-import { householdIdFor, monogram } from "@/lib/wedding-dashboard/drafts";
-import { galleryArchive } from "@/lib/wedding-dashboard/gallery-archive";
-import { groupLabel } from "@/lib/wedding-dashboard/households";
-import type { DashboardPage } from "@/lib/wedding-dashboard/pages";
 import {
-    can,
-    canRead,
     canSee,
-    COUPLE,
-    viewerOf,
-    type Viewer,
-} from "@/lib/wedding-dashboard/permissions";
-import { previewOf } from "@/lib/wedding-dashboard/preview-link";
+    catererSheet,
+    galleryArchive,
+    groupLabel,
+    guestListCsv,
+    householdIdFor,
+    momentsFromPlans,
+    monogram,
+    previewOf,
+    resolveFeatures,
+    roleLabel,
+    weddingCalendar,
+    type Actor,
+    type HouseholdRecord,
+    type Resize,
+} from "@alexreu/wedding-core";
 import {
     galleryPoster,
     householdInvitations,
     seatingPoster,
     sharedInvitation,
-} from "@/lib/wedding-dashboard/prints";
-import { momentsFromPlans } from "@/lib/wedding-dashboard/programme-plan";
-import type { HouseholdRecord } from "@/lib/wedding-dashboard/types";
+} from "@alexreu/wedding-core/prints";
+import { FeatureFlagProvider } from "@alexreu/wedding-core/react";
+import { useLenis } from "lenis/react";
+import { ExternalLink, RotateCcw } from "lucide-react";
+
+import { DEMO_FLAGS } from "@/lib/wedding-demo/offer";
+import { pageAt } from "@/lib/wedding-demo/routes";
 import { useNow } from "@/hooks/use-now";
 import { useStoredFlag } from "@/hooks/use-stored-flag";
 import { useWeddingDemo } from "@/hooks/use-wedding-demo";
@@ -37,13 +38,13 @@ import { useWeddingDemo } from "@/hooks/use-wedding-demo";
 import { ConfirmPopover } from "./confirm-popover";
 import { DashboardProvider, type Dashboard } from "./dashboard-context";
 import { DashboardNav, MENU_FOLDED_KEY } from "./dashboard-nav";
-import { dashboardEntries, dashboardHref } from "./dashboard-pages";
+import { dashboardHref } from "./dashboard-pages";
 import { buttonStyles, Select } from "./dashboard-ui";
 import { HouseholdDialog } from "./household-dialog";
 import { HouseholdPanel } from "./household-panel";
 
 const HIGHLIGHT_MS = 2_500;
-const GUESTS = dashboardHref("invites");
+const GUESTS = dashboardHref("guests");
 
 const siteUrl = () => `${window.location.origin}/mariage/demo`;
 
@@ -56,12 +57,6 @@ const galleryUrl = () => `${siteUrl()}/galerie`;
 
 const dayAfterUrl = () => previewOf(`${siteUrl()}?apres`);
 
-/** The page a path opens, null for the overview. */
-const pageAt = (pathname: string): DashboardPage | null =>
-    dashboardEntries
-        .flatMap((entry) => (entry.page ? [entry.page] : []))
-        .find((page) => pathname.replace(/\/$/, "").startsWith(dashboardHref(page))) ?? null;
-
 const download = (filename: string, content: Blob) => {
     const url = URL.createObjectURL(content);
     const link = Object.assign(document.createElement("a"), { href: url, download: filename });
@@ -73,9 +68,15 @@ const downloadPdf = (filename: string, bytes: Uint8Array) =>
     download(filename, new Blob([new Uint8Array(bytes)], { type: "application/pdf" }));
 
 /** Only loaded when asked for: the PDF library stays out of the page. */
-const printPdf = () => import("@/lib/wedding-dashboard/print-pdf");
+const printPdf = () => import("@alexreu/wedding-core/pdf");
 
-const at = () => new Date().toISOString();
+/** The demo's photos come from photo libraries that resize them by their address. */
+const resizePhoto: Resize = (src, width) => {
+    const url = new URL(src);
+    url.searchParams.set("auto", "compress");
+    url.searchParams.set("w", String(width));
+    return url.toString();
+};
 
 /** A page the person looking has no access to: said plainly, with the way back. */
 const NoAccess = ({ name, onBack }: { name: string; onBack: () => void }) => (
@@ -153,10 +154,16 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
 
     const { design } = state;
     const calendar = weddingCalendar(design.date, state.dates);
-    const moments = momentsFromPlans(state.moments, design.date);
+    const moments = momentsFromPlans(state.moments, design.date, state.timezone);
     const looking = state.collaborators.find((collaborator) => collaborator.id === viewerId);
-    const viewer: Viewer = looking ? viewerOf(looking.grant) : COUPLE;
-    const open = canSee(viewer, pageAt(pathname));
+    /** The couple, or someone they let in: their role, adjusted, within the Signature formula. */
+    const access = looking
+        ? { role: looking.role, added: looking.added, removed: looking.removed }
+        : { role: "couple" as const, added: [], removed: [] };
+    const actor: Actor = looking ? { kind: "collaborator", access } : { kind: "couple" };
+    const features = resolveFeatures({ ...access, flags: DEMO_FLAGS });
+    const can = (feature: Parameters<typeof features.has>[0]) => features.has(feature);
+    const open = canSee(features, pageAt(pathname));
 
     const startAgain = () => {
         setDetailId(null);
@@ -166,14 +173,11 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
 
     const dashboard: Dashboard = {
         state,
-        viewer,
-        can: (action) => can(viewer, action),
-        canRead: (feature) => canRead(viewer, feature),
-        dispatch,
+        can,
+        dispatch: (command) => dispatch(command, { actor }),
         now,
         calendar,
         moments,
-        at,
         linkFor,
         siteUrl: siteUrl(),
         seatingUrl: seatingUrl(),
@@ -189,10 +193,8 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                         guestListCsv(
                             state.households,
                             moments,
-                            (group) => groupLabel(group, design),
-                            {
-                                diets: can(viewer, "diets.read"),
-                            },
+                            (group) => groupLabel(state.groups, group),
+                            { diets: can("guests.diets.read") },
                         ),
                     ],
                     { type: "text/csv;charset=utf-8" },
@@ -200,7 +202,7 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
             ),
         exportCatererPdf: async () => {
             /** Only loaded when asked for: the PDF library stays out of the page. */
-            const { catererPdf } = await import("@/lib/wedding-dashboard/caterer-pdf");
+            const { catererPdf } = await printPdf();
             const sheet = catererSheet(state, calendar, new Date());
             downloadPdf(sheet.filename, await catererPdf(sheet));
         },
@@ -223,7 +225,7 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
         downloadGallery: async () => {
             /** Only loaded when asked for, like the PDF library. */
             const { zipSync } = await import("fflate");
-            const archive = galleryArchive(design, state.photos);
+            const archive = galleryArchive(design, state.photos, resizePhoto);
             const files = await Promise.all(
                 archive.files.map(async (file) => {
                     const response = await fetch(file.url);
@@ -243,148 +245,157 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
             const poster = galleryPoster(design, calendar, galleryUrl());
             downloadPdf(poster.filename, await posterPdf(poster));
         },
-        remind: () => dispatch({ type: "reminder-sent", at: at() }),
+        remind: () => {
+            dispatch({ type: "reminders.send" }, { actor });
+        },
     };
 
     return (
         <DashboardProvider value={dashboard}>
-            <div className="grid min-h-dvh grid-cols-[minmax(0,1fr)] lg:grid-cols-[auto_minmax(0,1fr)]">
-                <DashboardNav
-                    couple={`${design.first} & ${design.second}`}
-                    monogram={monogram(design.first, design.second)}
-                    subtitle={`${calendar.dateLabel} · Signature`}
-                    householdCount={state.households.length}
-                    canOpen={(entry) => canSee(viewer, entry)}
-                    onReset={startAgain}
-                />
-                <main className="mx-auto grid w-full max-w-[76rem] grid-cols-[minmax(0,1fr)] content-start gap-4 px-4 pt-6 pb-16 md:px-8 md:pt-8">
-                    <aside
-                        aria-label="À propos de cette démo"
-                        className="border-wed-line bg-wed-paper/70 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-dashed px-5 py-3 text-sm"
-                    >
-                        <p className="text-wed-ink-soft min-w-0 flex-1 basis-96">
-                            <strong className="font-semibold">Démo interactive.</strong> Invités
-                            fictifs, données gardées dans ce navigateur, rien n&apos;est envoyé.
-                            Répondez comme un invité sur le site : vos chiffres bougent ici.
-                        </p>
-                        <div className="flex flex-wrap items-center gap-1">
-                            {state.collaborators.length > 0 && (
-                                <label className="text-wed-ink-soft flex items-center gap-2">
-                                    <span className="whitespace-nowrap">Voir en tant que</span>
-                                    <Select
-                                        value={viewerId ?? ""}
-                                        onChange={(event) =>
-                                            setViewerId(event.target.value || null)
-                                        }
-                                        wrapperClassName="w-auto"
-                                        className="min-h-10 py-0 text-sm"
-                                    >
-                                        <option value="">Vous deux</option>
-                                        {state.collaborators.map((collaborator) => (
-                                            <option key={collaborator.id} value={collaborator.id}>
-                                                {collaborator.firstName} · {roleLabel(collaborator)}
-                                            </option>
-                                        ))}
-                                    </Select>
-                                </label>
-                            )}
-                            <a
-                                href={previewOf("/mariage/demo")}
-                                target="_blank"
-                                rel="noopener"
-                                className={buttonStyles.quiet}
-                            >
-                                <ExternalLink aria-hidden="true" />
-                                Site des invités
-                            </a>
-                            <ConfirmPopover
-                                question="Revenir aux données de départ ?"
-                                detail="Vos essais dans ce navigateur seront effacés."
-                                confirmLabel="Réinitialiser"
-                                align="end"
-                                onConfirm={startAgain}
-                            >
-                                <button type="button" className={buttonStyles.quiet}>
-                                    <RotateCcw aria-hidden="true" />
-                                    Réinitialiser
-                                </button>
-                            </ConfirmPopover>
-                        </div>
-                    </aside>
-                    {open ? (
-                        children
-                    ) : (
-                        <NoAccess
-                            name={looking?.firstName ?? ""}
-                            onBack={() => setViewerId(null)}
-                        />
-                    )}
-                </main>
-                <HouseholdPanel
-                    household={
-                        state.households.find((household) => household.id === detailId) ?? null
-                    }
-                    moments={moments}
-                    questions={state.questions}
-                    design={design}
-                    activity={state.activity}
-                    now={now}
-                    linkFor={linkFor}
-                    allowed={{
-                        edit: can(viewer, "household.edit"),
-                        answer: can(viewer, "household.answer"),
-                        remove: can(viewer, "household.remove"),
-                        print: can(viewer, "household.print"),
-                        diets: can(viewer, "diets.read"),
-                    }}
-                    onDownloadInvitation={(household) =>
-                        dashboard.downloadHouseholdInvitations([household])
-                    }
-                    onEdit={(household, draft) =>
-                        dispatch({
-                            type: "household-edited",
-                            householdId: household.id,
-                            draft,
-                            at: at(),
-                        })
-                    }
-                    onAnswer={(household, draft) =>
-                        dispatch({
-                            type: "answer-recorded",
-                            householdId: household.id,
-                            draft,
-                            at: at(),
-                            by: "maries",
-                        })
-                    }
-                    onRemove={(household) => {
-                        setDetailId(null);
-                        dispatch({
-                            type: "household-removed",
-                            householdId: household.id,
-                            at: at(),
-                        });
-                        /** Its row is gone: the list's title holds the focus instead of the page. */
-                        window.setTimeout(
-                            () => document.getElementById("invites-titre")?.focus(),
-                            0,
-                        );
-                    }}
-                    onClose={() => setDetailId(null)}
-                />
-                <HouseholdDialog
-                    takenIds={new Set(state.households.map((household) => household.id))}
-                    open={creating}
-                    onOpenChange={setCreating}
-                    moments={moments}
-                    design={design}
-                    linkFor={linkFor}
-                    onCreate={(household) => {
-                        dispatch({ type: "household-added", household, at: at() });
-                        setHighlightId(household.id);
-                    }}
-                />
-            </div>
+            <FeatureFlagProvider {...access} flags={DEMO_FLAGS}>
+                <div className="grid min-h-dvh grid-cols-[minmax(0,1fr)] lg:grid-cols-[auto_minmax(0,1fr)]">
+                    <DashboardNav
+                        couple={`${design.first} & ${design.second}`}
+                        monogram={monogram(design.first, design.second)}
+                        subtitle={`${calendar.dateLabel} · Signature`}
+                        householdCount={state.households.length}
+                        canOpen={(page) => canSee(features, page)}
+                        onReset={startAgain}
+                    />
+                    <main className="mx-auto grid w-full max-w-[76rem] grid-cols-[minmax(0,1fr)] content-start gap-4 px-4 pt-6 pb-16 md:px-8 md:pt-8">
+                        <aside
+                            aria-label="À propos de cette démo"
+                            className="border-wed-line bg-wed-paper/70 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-dashed px-5 py-3 text-sm"
+                        >
+                            <p className="text-wed-ink-soft min-w-0 flex-1 basis-96">
+                                <strong className="font-semibold">Démo interactive.</strong> Invités
+                                fictifs, données gardées dans ce navigateur, rien n&apos;est envoyé.
+                                Répondez comme un invité sur le site : vos chiffres bougent ici.
+                            </p>
+                            <div className="flex flex-wrap items-center gap-1">
+                                {state.collaborators.length > 0 && (
+                                    <label className="text-wed-ink-soft flex items-center gap-2">
+                                        <span className="whitespace-nowrap">Voir en tant que</span>
+                                        <Select
+                                            value={viewerId ?? ""}
+                                            onChange={(event) =>
+                                                setViewerId(event.target.value || null)
+                                            }
+                                            wrapperClassName="w-auto"
+                                            className="min-h-10 py-0 text-sm"
+                                        >
+                                            <option value="">Vous deux</option>
+                                            {state.collaborators.map((collaborator) => (
+                                                <option
+                                                    key={collaborator.id}
+                                                    value={collaborator.id}
+                                                >
+                                                    {collaborator.firstName} ·{" "}
+                                                    {roleLabel(collaborator)}
+                                                </option>
+                                            ))}
+                                        </Select>
+                                    </label>
+                                )}
+                                <a
+                                    href={previewOf("/mariage/demo")}
+                                    target="_blank"
+                                    rel="noopener"
+                                    className={buttonStyles.quiet}
+                                >
+                                    <ExternalLink aria-hidden="true" />
+                                    Site des invités
+                                </a>
+                                <ConfirmPopover
+                                    question="Revenir aux données de départ ?"
+                                    detail="Vos essais dans ce navigateur seront effacés."
+                                    confirmLabel="Réinitialiser"
+                                    align="end"
+                                    onConfirm={startAgain}
+                                >
+                                    <button type="button" className={buttonStyles.quiet}>
+                                        <RotateCcw aria-hidden="true" />
+                                        Réinitialiser
+                                    </button>
+                                </ConfirmPopover>
+                            </div>
+                        </aside>
+                        {open ? (
+                            children
+                        ) : (
+                            <NoAccess
+                                name={looking?.firstName ?? ""}
+                                onBack={() => setViewerId(null)}
+                            />
+                        )}
+                    </main>
+                    <HouseholdPanel
+                        household={
+                            state.households.find((household) => household.id === detailId) ?? null
+                        }
+                        moments={moments}
+                        questions={state.questions}
+                        design={design}
+                        timezone={state.timezone}
+                        groups={state.groups}
+                        activity={state.activity}
+                        now={now}
+                        linkFor={linkFor}
+                        allowed={{
+                            edit: can("guests.write"),
+                            answer: can("guests.write"),
+                            remove: can("guests.write"),
+                            print: can("household.print"),
+                            diets: can("guests.diets.read"),
+                        }}
+                        onDownloadInvitation={(household) =>
+                            dashboard.downloadHouseholdInvitations([household])
+                        }
+                        onEdit={(household, draft) =>
+                            dashboard.dispatch({
+                                type: "household.update",
+                                householdId: household.id,
+                                draft,
+                            })
+                        }
+                        onAnswer={(household, draft) =>
+                            dashboard.dispatch({
+                                type: "household.answer",
+                                householdId: household.id,
+                                draft,
+                            })
+                        }
+                        onRemove={(household) => {
+                            setDetailId(null);
+                            dashboard.dispatch({
+                                type: "household.remove",
+                                householdId: household.id,
+                            });
+                            /** Its row is gone: the list's title holds the focus instead of the page. */
+                            window.setTimeout(
+                                () => document.getElementById("invites-titre")?.focus(),
+                                0,
+                            );
+                        }}
+                        onClose={() => setDetailId(null)}
+                    />
+                    <HouseholdDialog
+                        open={creating}
+                        onOpenChange={setCreating}
+                        moments={moments}
+                        groups={state.groups}
+                        linkFor={linkFor}
+                        onCreate={(draft) => {
+                            const result = dashboard.dispatch({ type: "household.create", draft });
+                            if (!result.ok) return null;
+                            /** New households come first in the list. */
+                            const [household] = result.value.households;
+                            setHighlightId(household.id);
+                            return household;
+                        }}
+                    />
+                </div>
+            </FeatureFlagProvider>
         </DashboardProvider>
     );
 };

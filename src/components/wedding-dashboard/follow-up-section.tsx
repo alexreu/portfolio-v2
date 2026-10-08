@@ -1,13 +1,17 @@
+import {
+    overview,
+    sinceLabel,
+    type Activity,
+    type HouseholdRecord,
+    type WeddingCalendar,
+    type WeddingState,
+} from "@alexreu/wedding-core";
 import { Mail, Send } from "lucide-react";
-
-import { sinceLabel, type WeddingCalendar } from "@/lib/wedding-dashboard/calendar";
-import { overview } from "@/lib/wedding-dashboard/stats";
-import type { Activity, DemoState, HouseholdRecord } from "@/lib/wedding-dashboard/types";
 
 import { buttonStyles, Card, plural } from "./dashboard-ui";
 
 type FollowUpSectionProps = {
-    state: DemoState;
+    state: WeddingState;
     calendar: WeddingCalendar;
     now: Date;
     /** The household the reminder template is shown for. */
@@ -33,11 +37,19 @@ type ActivityCardProps = {
     activity: readonly Activity[];
     households: readonly HouseholdRecord[];
     now: Date;
+    /** Where the wedding takes place: events are dated there. */
+    timezone: string;
     onOpenHousehold: (householdId: string) => void;
 };
 
 /** Everything that happened, latest first; an event about a household opens its detail. */
-export const ActivityCard = ({ activity, households, now, onOpenHousehold }: ActivityCardProps) => {
+export const ActivityCard = ({
+    activity,
+    households,
+    now,
+    timezone,
+    onOpenHousehold,
+}: ActivityCardProps) => {
     const isHousehold = (id: string) => households.some((household) => household.id === id);
     return (
         <Card
@@ -70,7 +82,7 @@ export const ActivityCard = ({ activity, households, now, onOpenHousehold }: Act
                             dateTime={entry.at}
                             className="text-wed-muted text-xs whitespace-nowrap"
                         >
-                            {sinceLabel(entry.at, now)}
+                            {sinceLabel(entry.at, now, timezone)}
                         </time>
                     </li>
                 ))}
@@ -96,7 +108,7 @@ export const FollowUpSection = ({
             <Card
                 title="Relances"
                 titleId="relances-titre"
-                plan="relances"
+                plan="reminders"
                 aside={
                     <span className="text-wed-muted text-[0.8rem]">
                         Seulement aux foyers sans réponse
@@ -134,7 +146,7 @@ export const FollowUpSection = ({
                         )}
                         {state.lastReminder && (
                             <p className="text-wed-muted text-sm">
-                                Dernière : {sinceLabel(state.lastReminder.at, now)},{" "}
+                                Dernière : {sinceLabel(state.lastReminder.at, now, state.timezone)},{" "}
                                 {plural(state.lastReminder.count, "foyer", "foyers")}
                             </p>
                         )}
@@ -143,6 +155,7 @@ export const FollowUpSection = ({
             </Card>
 
             <ActivityCard
+                timezone={state.timezone}
                 activity={state.activity}
                 households={state.households}
                 now={now}

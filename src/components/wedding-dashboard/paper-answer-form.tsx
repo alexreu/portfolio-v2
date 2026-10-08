@@ -1,18 +1,19 @@
 "use client";
 
 import { useState } from "react";
-
-import { cn } from "@/lib/utils";
-import { answerDraftOf } from "@/lib/wedding-dashboard/households";
-import type { HouseholdRecord } from "@/lib/wedding-dashboard/types";
 import {
+    answerDraftOf,
     validateAnswer,
     type AnswerDraft,
     type AnswerIssue,
     type DietChoice,
+    type GuestQuestion,
+    type HouseholdRecord,
+    type Moment,
     type Presence,
-} from "@/lib/wedding/answer";
-import type { GuestQuestion, Moment } from "@/lib/wedding/types";
+} from "@alexreu/wedding-core";
+
+import { cn } from "@/lib/utils";
 
 import { buttonStyles, FieldError, inputStyles, Select } from "./dashboard-ui";
 
@@ -26,11 +27,11 @@ type PaperAnswerFormProps = {
 };
 
 const dietOptions: readonly { value: DietChoice; label: string }[] = [
-    { value: "aucune", label: "Aucune" },
-    { value: "vegetarien", label: "Végétarien" },
+    { value: "none", label: "Aucune" },
+    { value: "vegetarian", label: "Végétarien" },
     { value: "vegan", label: "Végan" },
-    { value: "sans-gluten", label: "Sans gluten" },
-    { value: "autre", label: "Autre (préciser)" },
+    { value: "gluten-free", label: "Sans gluten" },
+    { value: "other", label: "Autre (préciser)" },
 ];
 
 const messages: Record<AnswerIssue["code"], string> = {
@@ -40,7 +41,7 @@ const messages: Record<AnswerIssue["code"], string> = {
     "too-long": "Un peu long : raccourcissez.",
 };
 
-const noDiet = { choice: "aucune" as const, other: "" };
+const noDiet = { choice: "none" as const, other: "" };
 
 const issueAt = (issues: readonly AnswerIssue[], path: string) =>
     issues.find((issue) => issue.path === path);
@@ -61,7 +62,7 @@ export const PaperAnswerForm = ({
 }: PaperAnswerFormProps) => {
     const [draft, setDraft] = useState<AnswerDraft>(() => answerDraftOf(household));
     const [issues, setIssues] = useState<readonly AnswerIssue[]>([]);
-    const sharesDiet = Object.values(draft.diets).some((diet) => diet.choice !== "aucune");
+    const sharesDiet = Object.values(draft.diets).some((diet) => diet.choice !== "none");
 
     const setPresence = (guestId: string, key: string, presence: Presence) =>
         setDraft((current) => ({
@@ -196,7 +197,7 @@ export const PaperAnswerForm = ({
                                         </option>
                                     ))}
                                 </Select>
-                                {diet.choice === "autre" && (
+                                {diet.choice === "other" && (
                                     <>
                                         <input
                                             value={diet.other}

@@ -1,28 +1,27 @@
 "use client";
 
 import { createContext, useContext } from "react";
-
-import type { AccessFeature } from "@/lib/wedding-dashboard/access";
-import type { WeddingCalendar } from "@/lib/wedding-dashboard/calendar";
-import type { DashboardAction, Viewer } from "@/lib/wedding-dashboard/permissions";
-import type { DemoAction } from "@/lib/wedding-dashboard/state";
-import type { DemoState, HouseholdRecord } from "@/lib/wedding-dashboard/types";
-import type { Moment } from "@/lib/wedding/types";
+import type {
+    Command,
+    CommandIssue,
+    Feature,
+    HouseholdRecord,
+    Moment,
+    Result,
+    WeddingCalendar,
+    WeddingState,
+} from "@alexreu/wedding-core";
 
 /** What every page of the dashboard reads, once the browser copy is loaded. */
 export type Dashboard = {
-    readonly state: DemoState;
-    /** Who looks: the couple, or someone they let in, as the demo can show. */
-    readonly viewer: Viewer;
-    /** Whether the person looking may do this; its button stays out otherwise. */
-    readonly can: (action: DashboardAction) => boolean;
-    readonly canRead: (feature: AccessFeature) => boolean;
-    readonly dispatch: (action: DemoAction) => void;
+    readonly state: WeddingState;
+    /** Whether the person looking holds this feature; its button or section stays out otherwise. */
+    readonly can: (feature: Feature) => boolean;
+    /** Runs a command as the person looking; a refusal leaves everything as it was. */
+    readonly dispatch: (command: Command) => Result<WeddingState, readonly CommandIssue[]>;
     readonly now: Date;
     readonly calendar: WeddingCalendar;
     readonly moments: readonly Moment[];
-    /** The time an action is recorded at. */
-    readonly at: () => string;
     readonly linkFor: (household: HouseholdRecord) => string;
     /** The guest site, where the shared faire-part's QR code leads. */
     readonly siteUrl: string;

@@ -1,30 +1,37 @@
+import { formatHour, type Programme, type SiteMode } from "@alexreu/wedding-core";
 import { CalendarPlus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { formatHour } from "@/lib/wedding/format-hour";
-import type { Programme } from "@/lib/wedding/programme";
-import type { SiteMode } from "@/lib/wedding/site-mode";
 
 import { DemoHeading } from "./demo-heading";
 
 type DemoProgrammeProps = {
+    /** Where the wedding takes place: every hour is read there. */
+    timezone: string;
     programme: Programme;
     mode: SiteMode;
     /** Downloads the household's moments as a calendar file; before the wedding only. */
     onAddToCalendar?: () => void;
 };
 
-const dayOf = (iso: string) =>
+const dayOf = (iso: string, timezone: string) =>
     new Date(iso).toLocaleDateString("fr-FR", {
         weekday: "long",
         day: "numeric",
         month: "long",
-        timeZone: "Europe/Paris",
+        timeZone: timezone,
     });
 
 /** Only the moments this household is invited to; on the day, past slots fade and the current one is flagged. */
-export const DemoProgramme = ({ programme, mode, onAddToCalendar }: DemoProgrammeProps) => {
-    const days = [...new Set(programme.moments.map((moment) => dayOf(moment.slots[0].startsAt)))];
+export const DemoProgramme = ({
+    programme,
+    mode,
+    timezone,
+    onAddToCalendar,
+}: DemoProgrammeProps) => {
+    const days = [
+        ...new Set(programme.moments.map((moment) => dayOf(moment.slots[0].startsAt, timezone))),
+    ];
 
     return (
         <section
@@ -69,7 +76,7 @@ export const DemoProgramme = ({ programme, mode, onAddToCalendar }: DemoProgramm
                             {day}
                         </h3>
                         {programme.moments
-                            .filter((moment) => dayOf(moment.slots[0].startsAt) === day)
+                            .filter((moment) => dayOf(moment.slots[0].startsAt, timezone) === day)
                             .map((moment) => (
                                 <div
                                     key={moment.key}
@@ -98,7 +105,7 @@ export const DemoProgramme = ({ programme, mode, onAddToCalendar }: DemoProgramm
                                                                 "text-demo-sand",
                                                         )}
                                                     >
-                                                        {formatHour(slot.startsAt)}
+                                                        {formatHour(slot.startsAt, timezone)}
                                                     </span>
                                                     <span className="text-lg">
                                                         {slot.title}

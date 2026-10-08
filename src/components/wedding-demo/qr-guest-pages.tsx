@@ -2,11 +2,8 @@
 
 import { useState, type ReactNode } from "react";
 import { demoSeed } from "@/content/wedding-dashboard-demo";
+import { hasOpened, seatedMomentKey, seatingBoard, weddingCalendar } from "@alexreu/wedding-core";
 
-import { parisDay, weddingCalendar } from "@/lib/wedding-dashboard/calendar";
-import { tablesRevealAt, tablesRevealed } from "@/lib/wedding-dashboard/room";
-import { seatingBoard } from "@/lib/wedding-dashboard/table-finder";
-import { formatHour } from "@/lib/wedding/format-hour";
 import { useNow } from "@/hooks/use-now";
 import { useWeddingDemo } from "@/hooks/use-wedding-demo";
 
@@ -75,7 +72,6 @@ const useDemoCopy = () => {
 export const SeatingQrPage = () => {
     const { copy, couple, when, calendar } = useDemoCopy();
     const now = useNow();
-    const { date } = copy.design;
     return (
         <GuestPageFrame
             first={copy.design.first}
@@ -84,12 +80,17 @@ export const SeatingQrPage = () => {
             demoNote="Démo : le plan placé dans le tableau de bord, avec des invités fictifs. Seuls les invités attendus au dîner y figurent."
         >
             <Gate
-                open={tablesRevealed(date, copy.room.revealAt, now)}
+                open={hasOpened(calendar.tablesReveal, now, copy.timezone)}
                 title="Le plan de table arrive bientôt"
-                when={`Il s'affiche ici le ${calendar.shortDateLabel.toLowerCase()} à ${formatHour(tablesRevealAt(date, copy.room.revealAt))}.`}
+                when={`Il s'affiche ici le ${calendar.tablesRevealLabel}.`}
             >
                 <SeatingFinder
-                    board={seatingBoard(copy.households, copy.tables, copy.seats)}
+                    board={seatingBoard(
+                        copy.households,
+                        copy.tables,
+                        copy.seats,
+                        seatedMomentKey(copy.moments),
+                    )}
                     room={copy.room}
                 />
             </Gate>
@@ -109,7 +110,7 @@ export const GalleryQrPage = () => {
             demoNote="Démo : aucune photo n'est envoyée. Les photos retirées dans le tableau de bord disparaissent ici."
         >
             <Gate
-                open={parisDay(now) >= calendar.galleryOpens}
+                open={hasOpened(calendar.galleryOpens, now, copy.timezone)}
                 title={`La galerie de ${couple} ouvre bientôt`}
                 when={`Revenez le ${calendar.galleryOpensLabel} : vos photos arriveront ici, sans application.`}
             >

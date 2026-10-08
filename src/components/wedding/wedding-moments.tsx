@@ -1,5 +1,6 @@
+import { romanNumeral } from "@alexreu/wedding-core";
+
 import type { WeddingService } from "@/lib/wedding-service/types";
-import { romanNumeral } from "@/lib/wedding/roman";
 
 import { SectionIntro } from "./section-intro";
 

@@ -1,23 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { Check, ChevronRight, Copy, ExternalLink, Plus, Search } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
-
-import { cn } from "@/lib/utils";
-import { sinceLabel } from "@/lib/wedding-dashboard/calendar";
 import {
     filterHouseholds,
     groupLabel,
     householdSummary,
     momentCell,
+    previewOf,
+    sinceLabel,
     statusCounts,
     type HouseholdFilter,
+    type HouseholdGroup,
+    type HouseholdRecord,
+    type InvitationDesign,
+    type Moment,
     type StatusFilter,
-} from "@/lib/wedding-dashboard/households";
-import { previewOf } from "@/lib/wedding-dashboard/preview-link";
-import type { GroupKey, HouseholdRecord, InvitationDesign } from "@/lib/wedding-dashboard/types";
-import type { Moment } from "@/lib/wedding/types";
+} from "@alexreu/wedding-core";
+import { Check, ChevronRight, Copy, ExternalLink, Plus, Search } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+
+import { cn } from "@/lib/utils";
 
 import { buttonStyles, Card, Chip, iconButton, inputStyles, plural, Select } from "./dashboard-ui";
 
@@ -25,7 +27,11 @@ type HouseholdsSectionProps = {
     households: readonly HouseholdRecord[];
     moments: readonly Moment[];
     design: InvitationDesign;
+    /** The couple's groups, in their order. */
+    groups: readonly HouseholdGroup[];
     now: Date;
+    /** Where the wedding takes place: visits are dated there. */
+    timezone: string;
     /** The household just created, shown first and lit up. */
     highlightId: string | null;
     linkFor: (household: HouseholdRecord) => string;
@@ -47,11 +53,9 @@ const statusTabs: readonly { value: StatusFilter; label: string }[] = [
     { value: "never-opened", label: "Jamais ouvert" },
 ];
 
-const groups: readonly GroupKey[] = ["famille-1", "famille-2", "amis", "collegues"];
-
-const lastSeen = (household: HouseholdRecord, now: Date) => {
-    if (household.lastSeenAt) return sinceLabel(household.lastSeenAt, now);
-    return household.answeredBy === "maries" ? "réponse papier" : "—";
+const lastSeen = (household: HouseholdRecord, now: Date, timezone: string) => {
+    if (household.lastSeenAt) return sinceLabel(household.lastSeenAt, now, timezone);
+    return household.answeredBy === "couple" ? "réponse papier" : "—";
 };
 
 /** The household's name opens its detail: the keyboard way into the whole row. */
@@ -78,7 +82,7 @@ const HouseholdName = ({
         </span>
         <span className="text-wed-muted block text-xs">
             {householdSummary(household, { diets: showDiets })}
-            {household.answeredBy === "maries" && ` · réponse saisie par ${design.first}`}
+            {household.answeredBy === "couple" && ` · réponse saisie par ${design.first}`}
         </span>
     </button>
 );
@@ -94,7 +98,9 @@ export const HouseholdsSection = ({
     households,
     moments,
     design,
+    groups,
     now,
+    timezone,
     highlightId,
     linkFor,
     onAddHousehold,
@@ -261,10 +267,11 @@ export const HouseholdsSection = ({
                 >
                     <option value="all">Tous les groupes</option>
                     {groups.map((group) => (
-                        <option key={group} value={group}>
-                            {groupLabel(group, design)}
+                        <option key={group.id} value={group.id}>
+                            {group.label}
                         </option>
                     ))}
+                    <option value="">Sans groupe</option>
                 </Select>
             </div>
 
@@ -327,7 +334,7 @@ export const HouseholdsSection = ({
                                         </td>
                                         <td className="px-3 py-3">
                                             <span className="border-wed-line text-wed-muted rounded-md border px-2 py-0.5 text-xs whitespace-nowrap">
-                                                {groupLabel(household.group, design)}
+                                                {groupLabel(groups, household.group) || "—"}
                                             </span>
                                         </td>
                                         {moments.map((moment) => {
@@ -339,7 +346,7 @@ export const HouseholdsSection = ({
                                             );
                                         })}
                                         <td className="text-wed-muted px-3 py-3 text-[0.8rem] whitespace-nowrap">
-                                            {lastSeen(household, now)}
+                                            {lastSeen(household, now, timezone)}
                                         </td>
                                         <td className="px-5 py-1.5">{actions(household)}</td>
                                     </tr>
@@ -384,8 +391,8 @@ export const HouseholdsSection = ({
                                     })}
                                 </dl>
                                 <p className="text-wed-muted col-span-2 text-xs">
-                                    {groupLabel(household.group, design)} · dernier accès{" "}
-                                    {lastSeen(household, now)}
+                                    {groupLabel(groups, household.group) || "Sans groupe"} · dernier
+                                    accès {lastSeen(household, now, timezone)}
                                 </p>
                             </li>
                         ))}

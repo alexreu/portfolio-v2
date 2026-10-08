@@ -1,25 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { AlertTriangle, Plus, RotateCw, Trash2, X } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-import type { DraftIssue } from "@/lib/wedding-dashboard/drafts";
-import { isFixture, pick, type Fixture } from "@/lib/wedding-dashboard/plan-selection";
-import { freeSpot } from "@/lib/wedding-dashboard/room";
 import {
+    freeSpot,
+    isFixture,
     nextTableNumber,
+    pick,
     seatingPlan,
     tablesRemoval,
     validateTable,
+    type DraftIssue,
+    type Fixture,
+    type HouseholdRecord,
+    type RoomLayout,
+    type RoomSize,
     type SeatedGuest,
-} from "@/lib/wedding-dashboard/seating";
-import type {
-    HouseholdRecord,
-    RoomLayout,
-    RoomSize,
-    SeatTable,
-} from "@/lib/wedding-dashboard/types";
+    type SeatTable,
+} from "@alexreu/wedding-core";
+import { AlertTriangle, Plus, RotateCw, Trash2, X } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 import { RoomPlan } from "@/components/wedding-demo/room-plan";
 
 import { ConfirmPopover } from "./confirm-popover";
@@ -39,7 +39,13 @@ type SeatingSectionProps = {
     tables: readonly SeatTable[];
     seats: Readonly<Record<string, string>>;
     room: RoomLayout;
-    onSaveRoom: (name: string, size: RoomSize, revealAt: string) => void;
+    onSaveRoom: (name: string, size: RoomSize) => void;
+    /** The seated moment's key: whose answers place guests at tables. */
+    seatedKey: string | null;
+    /** "samedi 12 juin à 10 h": when guests see their table, set with the key dates. */
+    revealLabel: string;
+    /** Where the key dates are set. */
+    datesHref: string;
     /** Seen by someone who may not change it: the plan stays still. */
     readOnly?: boolean;
     onMoveFixture: (fixture: Fixture, x: number, y: number) => void;
@@ -148,18 +154,22 @@ const sizes: readonly { value: RoomSize; label: string; fits: number }[] = [
 const RoomSettings = ({
     room,
     tableCount,
+    revealLabel,
+    datesHref,
     onSave,
 }: {
     room: RoomLayout;
     tableCount: number;
-    onSave: (name: string, size: RoomSize, revealAt: string) => void;
+    revealLabel: string;
+    datesHref: string;
+    onSave: (name: string, size: RoomSize) => void;
 }) => {
     const [name, setName] = useState(room.name);
     const fits = sizes.find((size) => size.value === room.size)?.fits ?? 10;
     const bigger = sizes.find((size) => size.fits >= tableCount && size.fits > fits);
     const saveName = () => {
         const trimmed = name.trim().slice(0, 40);
-        if (trimmed && trimmed !== room.name) onSave(trimmed, room.size, room.revealAt);
+        if (trimmed && trimmed !== room.name) onSave(trimmed, room.size);
         else setName(room.name);
     };
     return (
@@ -180,9 +190,7 @@ const RoomSettings = ({
                 <span className="text-wed-muted">Taille</span>
                 <Select
                     value={room.size}
-                    onChange={(event) =>
-                        onSave(room.name, event.target.value as RoomSize, room.revealAt)
-                    }
+                    onChange={(event) => onSave(room.name, event.target.value as RoomSize)}
                 >
                     {sizes.map((size) => (
                         <option key={size.value} value={size.value}>
@@ -191,22 +199,13 @@ const RoomSettings = ({
                     ))}
                 </Select>
             </label>
-            <label className="grid content-start gap-1 text-sm sm:col-span-2">
-                <span className="text-wed-muted">
-                    Tables dévoilées le jour J à{" "}
-                    <small>(pas de négociation de placement les semaines d&apos;avant)</small>
-                </span>
-                <input
-                    type="time"
-                    step={900}
-                    value={room.revealAt}
-                    onChange={(event) =>
-                        /^\d{2}:\d{2}$/.test(event.target.value) &&
-                        onSave(room.name, room.size, event.target.value)
-                    }
-                    className={cn(inputStyles, "sm:max-w-40")}
-                />
-            </label>
+            <p className="text-wed-muted text-sm sm:col-span-2">
+                Tables dévoilées le <strong className="text-wed-ink-soft">{revealLabel}</strong>,
+                pas avant : pas de négociation de placement les semaines d&apos;avant.{" "}
+                <a href={datesHref} className="text-wed-ink underline underline-offset-4">
+                    Changer dans les dates clés
+                </a>
+            </p>
             {tableCount > fits && bigger && (
                 <p className="text-wed-wait text-xs sm:col-span-2">
                     {tableCount} tables : la salle « {bigger.label.split(" · ")[0].toLowerCase()} »
@@ -224,6 +223,9 @@ export const SeatingSection = ({
     seats,
     room,
     onSaveRoom,
+    seatedKey,
+    revealLabel,
+    datesHref,
     onMoveFixture,
     onRotateFixture,
     onSaveTable,
@@ -234,7 +236,7 @@ export const SeatingSection = ({
     readOnly = false,
 }: SeatingSectionProps) => {
     const [picked, setPicked] = useState<readonly string[]>([]);
-    const plan = seatingPlan(households, tables, seats);
+    const plan = seatingPlan(households, tables, seats, seatedKey);
     /** Tables removed meanwhile, in the guest site's tab for instance, drop out. */
     const selection = picked.filter(
         (item) => isFixture(item) || tables.some((table) => table.id === item),
@@ -285,7 +287,7 @@ export const SeatingSection = ({
             id="plan-de-table"
             title="Plan de table · dîner"
             titleId="plan-de-table-titre"
-            plan="plan-de-table"
+            plan="seating"
             aside={
                 <span className="text-wed-muted text-[0.8rem]">
                     {seatedCount} placés ·{" "}
@@ -415,6 +417,8 @@ export const SeatingSection = ({
                         key={room.name}
                         room={room}
                         tableCount={tables.length}
+                        revealLabel={revealLabel}
+                        datesHref={datesHref}
                         onSave={onSaveRoom}
                     />
                 </div>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { type DashboardPage } from "@alexreu/wedding-core";
 
 import { buildPageMetadata, weddingDemoImage } from "@/lib/seo";
-import type { DashboardPage } from "@/lib/wedding-dashboard/pages";
 import { dashboardEntry, dashboardHref } from "@/components/wedding-dashboard/dashboard-pages";
 
 /** The pages under the overview repeat its fictional data: shown, linked, not indexed. */

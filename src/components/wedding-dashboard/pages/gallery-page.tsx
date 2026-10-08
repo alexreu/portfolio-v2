@@ -10,7 +10,6 @@ export const GalleryPage = () => {
         state,
         dispatch,
         calendar,
-        at,
         galleryUrl,
         downloadGalleryPoster,
         downloadGallery,
@@ -19,26 +18,25 @@ export const GalleryPage = () => {
     } = useDashboard();
     return (
         <>
-            <PageHeader page="galerie" />
+            <PageHeader page="gallery" />
             <GallerySection
                 photos={state.photos}
                 opensLabel={calendar.galleryOpensLabel}
                 onToggle={
                     can("gallery.moderate")
-                        ? (photo) =>
-                              dispatch({ type: "photo-toggled", photoId: photo.id, at: at() })
+                        ? (photo) => dispatch({ type: "photo.toggle", photoId: photo.id })
                         : undefined
                 }
-                onDownload={can("gallery.download") ? downloadGallery : undefined}
+                onDownload={can("gallery.read") ? downloadGallery : undefined}
                 dayAfterUrl={dayAfterUrl}
             />
-            {can("gallery.print") && (
+            {can("gallery.read") && (
                 <QrPosterCard
                     id="qr-galerie"
                     title="QR code de la galerie"
                     url={galleryUrl}
                     qrLabel="QR code de la galerie : ouvre la galerie des invités"
-                    plan="galerie"
+                    plan="gallery"
                     aside="Sur chaque table"
                     downloadLabel="Affiche et cartes de table"
                     openLabel="Ouvrir la galerie des invités"

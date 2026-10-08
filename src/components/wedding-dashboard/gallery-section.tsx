@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { type GalleryPhoto } from "@alexreu/wedding-core";
 import { ExternalLink, RotateCcw, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { GalleryPhoto } from "@/lib/wedding-dashboard/types";
 import { PhotoLightbox } from "@/components/wedding-demo/photo-lightbox";
 
 import { buttonStyles, Card, plural } from "./dashboard-ui";
@@ -38,7 +38,7 @@ export const GallerySection = ({
             id="galerie"
             title="Galerie des invités"
             titleId="galerie-titre"
-            plan="galerie"
+            plan="gallery"
             aside={
                 <span className="text-wed-muted text-[0.8rem]">
                     Exemple après le jour J · ouverture le {opensLabel}

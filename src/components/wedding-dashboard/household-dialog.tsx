@@ -1,21 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import {
+    previewOf,
+    validateHouseholdDraft,
+    type DraftIssue,
+    type HouseholdDraft,
+    type HouseholdGroup,
+    type HouseholdRecord,
+    type Moment,
+} from "@alexreu/wedding-core";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Check, Copy, ExternalLink, Plus, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import {
-    createHousehold,
-    freshHouseholdId,
-    validateHouseholdDraft,
-    type DraftIssue,
-    type HouseholdDraft,
-} from "@/lib/wedding-dashboard/drafts";
-import { groupLabel } from "@/lib/wedding-dashboard/households";
-import { previewOf } from "@/lib/wedding-dashboard/preview-link";
-import type { GroupKey, HouseholdRecord, InvitationDesign } from "@/lib/wedding-dashboard/types";
-import type { Moment } from "@/lib/wedding/types";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { cormorant } from "@/app/fonts/wedding";
 
@@ -32,22 +30,23 @@ type HouseholdDialogProps = {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     moments: readonly Moment[];
-    design: InvitationDesign;
+    /** The couple's groups, in their order. */
+    groups: readonly HouseholdGroup[];
     linkFor: (household: HouseholdRecord) => string;
-    /** Ids already given: a new household never takes one of them. */
-    takenIds: ReadonlySet<string>;
-    onCreate: (household: HouseholdRecord) => void;
+    /** Creates the household from the draft; null when the wedding refused it. */
+    onCreate: (draft: HouseholdDraft) => HouseholdRecord | null;
 };
 
 const MAX_GUESTS = 8;
 
-const groups: readonly GroupKey[] = ["famille-1", "famille-2", "amis", "collegues"];
-
 const messages = issueMessages;
 
-const emptyDraft = (moments: readonly Moment[]): HouseholdDraft => ({
+const emptyDraft = (
+    moments: readonly Moment[],
+    groups: readonly HouseholdGroup[],
+): HouseholdDraft => ({
     name: "",
-    group: "amis",
+    group: groups[0]?.id ?? "",
     email: "",
     guests: [{ firstName: "", child: false }],
     momentKeys: moments.map((moment) => moment.key),
@@ -57,7 +56,6 @@ const issueAt = (issues: readonly DraftIssue[], path: string) =>
     issues.find((issue) => issue.path === path);
 
 /** Short random suffix: two « Famille Martin » never share a link. */
-const randomSuffix = () => Math.random().toString(36).slice(2, 6);
 
 const CreatedPanel = ({
     household,
@@ -120,7 +118,7 @@ const CreatedPanel = ({
     );
 };
 
-type HouseholdFormProps = Pick<HouseholdDialogProps, "moments" | "design"> & {
+type HouseholdFormProps = Pick<HouseholdDialogProps, "moments" | "groups"> & {
     /** The household being corrected; a new one starts empty. */
     initial?: HouseholdDraft;
     /** The form's name, for assistive technologies. */
@@ -133,14 +131,16 @@ type HouseholdFormProps = Pick<HouseholdDialogProps, "moments" | "design"> & {
 /** Who the household is, and what it is invited to: to create it, or to correct it. */
 export const HouseholdForm = ({
     moments,
-    design,
+    groups,
     initial,
     label,
     submitLabel,
     onSubmit,
     onCancel,
 }: HouseholdFormProps) => {
-    const [draft, setDraft] = useState<HouseholdDraft>(() => initial ?? emptyDraft(moments));
+    const [draft, setDraft] = useState<HouseholdDraft>(
+        () => initial ?? emptyDraft(moments, groups),
+    );
     const [issues, setIssues] = useState<readonly DraftIssue[]>([]);
 
     const setGuest = (index: number, change: Partial<HouseholdDraft["guests"][number]>) =>
@@ -205,15 +205,14 @@ export const HouseholdForm = ({
                     <span className="text-wed-ink-soft">Groupe</span>
                     <Select
                         value={draft.group}
-                        onChange={(event) =>
-                            setDraft({ ...draft, group: event.target.value as GroupKey })
-                        }
+                        onChange={(event) => setDraft({ ...draft, group: event.target.value })}
                     >
                         {groups.map((group) => (
-                            <option key={group} value={group}>
-                                {groupLabel(group, design)}
+                            <option key={group.id} value={group.id}>
+                                {group.label}
                             </option>
                         ))}
+                        <option value="">Sans groupe</option>
                     </Select>
                 </label>
             </div>
@@ -350,9 +349,8 @@ export const HouseholdForm = ({
 
 const DialogBody = ({
     moments,
-    design,
+    groups,
     linkFor,
-    takenIds,
     onCreate,
 }: Omit<HouseholdDialogProps, "open" | "onOpenChange">) => {
     const [created, setCreated] = useState<HouseholdRecord | null>(null);
@@ -373,16 +371,12 @@ const DialogBody = ({
         <HouseholdForm
             key={round}
             moments={moments}
-            design={design}
+            groups={groups}
             label="Nouveau faire-part"
             submitLabel="Créer le faire-part"
             onSubmit={(draft) => {
-                const household = createHousehold(draft, {
-                    id: freshHouseholdId(draft.name, takenIds, randomSuffix),
-                    at: new Date().toISOString(),
-                });
-                onCreate(household);
-                setCreated(household);
+                const household = onCreate(draft);
+                if (household) setCreated(household);
             }}
         />
     );

@@ -1,9 +1,12 @@
+import {
+    collaboratorStatus,
+    householdStatus,
+    householdTables,
+    overview,
+    seatedMomentKey,
+    seatingPlan,
+} from "@alexreu/wedding-core";
 import { describe, expect, it } from "vitest";
-
-import { collaboratorStatus } from "@/lib/wedding-dashboard/access";
-import { householdStatus } from "@/lib/wedding-dashboard/households";
-import { householdTables, seatingPlan } from "@/lib/wedding-dashboard/seating";
-import { overview } from "@/lib/wedding-dashboard/stats";
 
 import { DEMO_GUEST_HOUSEHOLD, demoSeed } from "./wedding-dashboard-demo";
 
@@ -69,7 +72,12 @@ describe("demoSeed", () => {
     });
 
     it("starts the room plan half done: most dinner guests seated, one family waiting", () => {
-        const plan = seatingPlan(seed.households, seed.tables, seed.seats);
+        const plan = seatingPlan(
+            seed.households,
+            seed.tables,
+            seed.seats,
+            seatedMomentKey(seed.moments),
+        );
 
         expect(plan.tables).toHaveLength(8);
         expect(plan.unseated.map((guest) => guest.householdName)).toEqual(
@@ -87,6 +95,21 @@ describe("demoSeed", () => {
             "brunch",
         ]);
         expect(seed.moments[2].slots[0]).toMatchObject({ dayOffset: 1, start: "11:00" });
+        expect(seed.moments.filter((moment) => moment.seated).map((moment) => moment.key)).toEqual([
+            "diner",
+        ]);
+    });
+
+    it("sorts the households into the couple's groups, in Paris time", () => {
+        const known = new Set(seed.groups.map((group) => group.id));
+        expect(seed.households.every((household) => known.has(household.group))).toBe(true);
+        expect(seed.groups.map((group) => group.label)).toEqual([
+            "Famille Camille",
+            "Famille Hugo",
+            "Amis",
+            "Collègues",
+        ]);
+        expect(seed.timezone).toBe("Europe/Paris");
     });
 
     it("gives every household and guest a unique id", () => {

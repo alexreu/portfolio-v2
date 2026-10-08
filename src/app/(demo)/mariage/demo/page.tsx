@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { isPreview } from "@alexreu/wedding-core";
 
 import { buildPageMetadata, weddingDemoImage } from "@/lib/seo";
-import { isPreview } from "@/lib/wedding-dashboard/preview-link";
 import { DemoSite } from "@/components/wedding-demo/demo-site";
 
 export const metadata: Metadata = buildPageMetadata({

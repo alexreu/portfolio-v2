@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { formatHour, type Programme, type RoomLayout, type SeatTable } from "@alexreu/wedding-core";
 import { Camera } from "lucide-react";
-
-import type { RoomLayout, SeatTable } from "@/lib/wedding-dashboard/types";
-import { formatHour } from "@/lib/wedding/format-hour";
-import type { Programme } from "@/lib/wedding/programme";
 
 import { RoomPlan } from "./room-plan";
 
 type DayPanelProps = {
+    /** Where the wedding takes place: every hour is read there. */
+    timezone: string;
     /** "Samedi 12 juin" */
     dateLabel: string;
     guestName: string;
@@ -29,6 +28,7 @@ type DayPanelProps = {
 
 /** The personal link on the wedding day: table, what is on now, and photo upload. */
 export const DayPanel = ({
+    timezone,
     dateLabel,
     guestName,
     tables,
@@ -59,7 +59,7 @@ export const DayPanel = ({
                     <p className="bg-demo-ink text-demo-paper rounded-lg px-5 py-4.5">
                         <span className="text-demo-night-muted block text-sm">Votre table</span>
                         <span className="font-demo-serif block text-2xl leading-snug">
-                            Dévoilée à {tablesAt}
+                            Dévoilée {tablesAt}
                         </span>
                     </p>
                 )}
@@ -131,14 +131,15 @@ export const DayPanel = ({
                             <span className="font-demo-serif text-2xl">{current.title}</span>
                             <span className="text-demo-ink-2 text-[0.95rem]">
                                 {current.place}
-                                {current.endsAt && ` · jusqu'à ${formatHour(current.endsAt)}`}
+                                {current.endsAt &&
+                                    ` · jusqu'à ${formatHour(current.endsAt, timezone)}`}
                             </span>
                         </p>
                     )}
                     {next && (
                         <p className="border-demo-line grid gap-0.5 border-b py-3.5">
                             <span className="text-demo-muted text-sm">
-                                Ensuite · {formatHour(next.startsAt)}
+                                Ensuite · {formatHour(next.startsAt, timezone)}
                             </span>
                             <span className="font-demo-serif text-2xl">{next.title}</span>
                             <span className="text-demo-ink-2 text-[0.95rem]">{next.place}</span>

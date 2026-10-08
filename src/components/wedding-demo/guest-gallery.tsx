@@ -2,9 +2,9 @@
 
 import { useCallback, useState } from "react";
 import Image from "next/image";
+import { signPhoto, type SignatureError } from "@alexreu/wedding-core";
 import { Camera } from "lucide-react";
 
-import { signPhoto, type SignatureError } from "@/lib/wedding/photo-signature";
 import { useStoredText } from "@/hooks/use-stored-text";
 
 import { PhotoLightbox } from "./photo-lightbox";

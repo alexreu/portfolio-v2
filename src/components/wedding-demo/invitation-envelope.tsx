@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useId, useState, type CSSProperties } from "react";
+import { sealInitials } from "@alexreu/wedding-core";
 import { motion, MotionConfig, type Variants } from "motion/react";
 
 import { cn } from "@/lib/utils";
-import { sealInitials } from "@/lib/wedding-dashboard/drafts";
-import type { SealTone } from "@/lib/wedding-dashboard/types";
+import type { SealTone } from "@/lib/wedding-demo/tones";
 
 import { OliveSprig } from "./olive-sprig";
 
@@ -108,8 +108,8 @@ const FLAP = "polygon(0 0, 100% 0, 50% 56%)";
 /** Wax and lining colours; the couple picks one in their dashboard. */
 const tones: Record<SealTone, CSSProperties> = {
     olive: { "--seal": "var(--demo-olive)", "--seal-dark": "var(--demo-olive-dark)" },
-    terre: { "--seal": "var(--demo-earth)", "--seal-dark": "var(--demo-earth-dark)" },
-    encre: { "--seal": "var(--demo-ink-2)", "--seal-dark": "var(--demo-ink)" },
+    earth: { "--seal": "var(--demo-earth)", "--seal-dark": "var(--demo-earth-dark)" },
+    ink: { "--seal": "var(--demo-ink-2)", "--seal-dark": "var(--demo-ink)" },
 } as Record<SealTone, CSSProperties>;
 
 /** Wax seal with the couple's initials and two pressed olive leaves. */

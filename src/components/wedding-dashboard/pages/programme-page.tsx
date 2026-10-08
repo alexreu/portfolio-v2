@@ -6,34 +6,32 @@ import { DatesSection } from "../dates-section";
 import { ProgrammeSection } from "../programme-section";
 
 export const ProgrammePage = () => {
-    const { state, dispatch, now, at, can, canRead } = useDashboard();
+    const { state, dispatch, now, can } = useDashboard();
     return (
         <>
             <PageHeader page="programme" />
-            {canRead("dates") && (
-                <ReadOnly locked={!can("dates.edit")}>
+            {can("dates.read") && (
+                <ReadOnly locked={!can("dates.write")}>
                     <DatesSection
                         day={state.design.date}
                         dates={state.dates}
                         now={now}
-                        onSave={(day, dates) =>
-                            dispatch({ type: "dates-saved", day, dates, at: at() })
-                        }
+                        timezone={state.timezone}
+                        onSave={(day, dates) => dispatch({ type: "dates.save", day, dates })}
                     />
                 </ReadOnly>
             )}
-            {canRead("programme") && (
-                <ReadOnly locked={!can("programme.edit")}>
+            {can("programme.read") && (
+                <ReadOnly locked={!can("programme.write")}>
                     <ProgrammeSection
                         moments={state.moments}
                         households={state.households}
                         weddingDay={state.design.date}
+                        timezone={state.timezone}
                         onSave={(moment, inviteAll) =>
-                            dispatch({ type: "moment-saved", moment, inviteAll, at: at() })
+                            dispatch({ type: "moment.save", moment, inviteAll })
                         }
-                        onRemove={(moment) =>
-                            dispatch({ type: "moment-removed", key: moment.key, at: at() })
-                        }
+                        onRemove={(moment) => dispatch({ type: "moment.remove", key: moment.key })}
                     />
                 </ReadOnly>
             )}

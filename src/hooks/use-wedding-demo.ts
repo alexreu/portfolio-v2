@@ -2,8 +2,9 @@
 
 import { useSyncExternalStore } from "react";
 import { DEMO_STORAGE_KEY, demoSeed } from "@/content/wedding-dashboard-demo";
+import { createLocalStore, type DashboardStore } from "@alexreu/wedding-core";
 
-import { createDemoStore, type DemoStore } from "@/lib/wedding-dashboard/store";
+import { DEMO_FLAGS } from "@/lib/wedding-demo/offer";
 
 const browserStorage = () => {
     try {
@@ -13,14 +14,26 @@ const browserStorage = () => {
     }
 };
 
-let store: DemoStore | null = null;
+/** Short ids for what the visitor creates: households, people, activity entries. */
+const newId = () => Math.random().toString(36).slice(2, 8);
 
-/** One store per page, created in the browser only. */
+let store: DashboardStore | null = null;
+
+/**
+ * One store per page, created in the browser only. Commands are the couple's unless the caller
+ * says otherwise, as the guest site does.
+ */
 const demoStore = () =>
-    (store ??= createDemoStore({
+    (store ??= createLocalStore({
         storage: browserStorage(),
         key: DEMO_STORAGE_KEY,
         seed: () => demoSeed(new Date()),
+        context: () => ({
+            at: new Date().toISOString(),
+            newId,
+            actor: { kind: "couple" },
+            flags: DEMO_FLAGS,
+        }),
     }));
 
 /** Also wakes up when the guest site, open in another tab, saves an answer. */
@@ -42,7 +55,8 @@ const getSnapshot = () => demoStore().getSnapshot();
 const getServerSnapshot = () => null;
 
 /** Stable references, safe in effect dependencies. */
-const dispatch: DemoStore["dispatch"] = (action) => demoStore().dispatch(action);
+const dispatch: DashboardStore["dispatch"] = (command, overrides) =>
+    demoStore().dispatch(command, overrides);
 const reset = () => demoStore().reset();
 
 /**

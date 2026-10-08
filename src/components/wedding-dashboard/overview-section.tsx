@@ -1,18 +1,25 @@
 "use client";
 
+import {
+    catererSummary,
+    daysUntil,
+    formatHour,
+    momentTallies,
+    overview,
+    seatedMomentKey,
+    sinceLabel,
+    type Flag,
+    type Moment,
+    type WeddingCalendar,
+    type WeddingState,
+} from "@alexreu/wedding-core";
 import { Clock, Download, Plus, Send } from "lucide-react";
-
-import { daysUntil, sinceLabel, type WeddingCalendar } from "@/lib/wedding-dashboard/calendar";
-import { catererSummary, momentTallies, overview } from "@/lib/wedding-dashboard/stats";
-import type { DemoState } from "@/lib/wedding-dashboard/types";
-import { formatHour } from "@/lib/wedding/format-hour";
-import type { Moment } from "@/lib/wedding/types";
 
 import { buttonStyles, Card, PlanBadge, plural } from "./dashboard-ui";
 import { PdfButton } from "./pdf-button";
 
 type OverviewSectionProps = {
-    state: DemoState;
+    state: WeddingState;
     moments: readonly Moment[];
     calendar: WeddingCalendar;
     now: Date;
@@ -24,15 +31,13 @@ type OverviewSectionProps = {
     onRemind?: () => void;
 };
 
-const DINNER = "diner";
-
-const todayLabel = (now: Date) => {
+const todayLabel = (now: Date, timezone: string) => {
     const label = now.toLocaleDateString("fr-FR", {
         weekday: "long",
         day: "numeric",
         month: "long",
         year: "numeric",
-        timeZone: "Europe/Paris",
+        timeZone: timezone,
     });
     return `${label.charAt(0).toUpperCase()}${label.slice(1)}`;
 };
@@ -43,14 +48,14 @@ const countdownLabel = (days: number) => {
 };
 
 /** "Samedi · 16 h": when the moment starts. */
-const momentStart = (moment: Moment) => {
+const momentStart = (moment: Moment, timezone: string) => {
     const start = moment.slots[0]?.startsAt;
     if (!start) return "";
     const day = new Date(start).toLocaleDateString("fr-FR", {
         weekday: "long",
-        timeZone: "Europe/Paris",
+        timeZone: timezone,
     });
-    return `${day.charAt(0).toUpperCase()}${day.slice(1)} · ${formatHour(start)}`;
+    return `${day.charAt(0).toUpperCase()}${day.slice(1)} · ${formatHour(start, timezone)}`;
 };
 
 const pendingSentence = (households: number, pending: number, neverOpened: number) => {
@@ -80,12 +85,12 @@ const Kpi = ({
     detail: string;
     progress?: number;
     /** The section's formula, when not every one has it. */
-    plan?: string;
+    plan?: Flag;
 }) => (
     <div className="border-wed-line-soft bg-wed-paper rounded-2xl border px-5 py-4.5">
         <dt className="text-wed-muted flex flex-wrap items-center gap-2 text-[0.8rem]">
             {label}
-            {plan && <PlanBadge section={plan} />}
+            {plan && <PlanBadge flag={plan} />}
         </dt>
         <dd>
             <span className="font-wed-serif mt-1 block text-[2.6rem] leading-none font-medium lining-nums">
@@ -124,9 +129,11 @@ export const OverviewSection = ({
 }: OverviewSectionProps) => {
     const counts = overview(state.households);
     const tallies = momentTallies(state.households, moments);
-    const dinner = tallies.find((tally) => tally.key === DINNER);
-    const caterer = catererSummary(state.households, DINNER);
-    const deadlineIn = daysUntil(calendar.answerDeadline, now);
+    /** The seated moment, usually the dinner: the caterer's figures are for it. */
+    const seated = seatedMomentKey(state.moments) ?? "";
+    const dinner = tallies.find((tally) => tally.key === seated);
+    const caterer = catererSummary(state.households, seated);
+    const deadlineIn = daysUntil(calendar.answerDeadline, now, state.timezone);
     const answeredShare = percent(counts.guestsAnswered, counts.guests);
 
     return (
@@ -137,7 +144,8 @@ export const OverviewSection = ({
                         Bonjour {state.design.first} &amp; {state.design.second}
                     </h1>
                     <p className="text-wed-muted">
-                        {todayLabel(now)} · {countdownLabel(daysUntil(calendar.day, now))}
+                        {todayLabel(now, state.timezone)} ·{" "}
+                        {countdownLabel(daysUntil(calendar.day, now, state.timezone))}
                     </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -171,7 +179,7 @@ export const OverviewSection = ({
                             ({calendar.answerDeadlineLabel}).{" "}
                             {pendingSentence(counts.households, counts.pending, counts.neverOpened)}{" "}
                             Relance automatique prévue le {calendar.reminderLabel}{" "}
-                            <PlanBadge section="relances" />
+                            <PlanBadge flag="reminders" />
                         </>
                     ) : (
                         <strong className="font-semibold">
@@ -180,7 +188,8 @@ export const OverviewSection = ({
                     )}
                     {state.lastReminder && (
                         <span className="text-wed-muted mt-0.5 block text-sm">
-                            Dernière relance : {sinceLabel(state.lastReminder.at, now)}, à{" "}
+                            Dernière relance :{" "}
+                            {sinceLabel(state.lastReminder.at, now, state.timezone)}, à{" "}
                             {plural(state.lastReminder.count, "foyer", "foyers")}.
                         </span>
                     )}
@@ -219,7 +228,7 @@ export const OverviewSection = ({
                 />
                 <Kpi
                     label="Galerie photos"
-                    plan="galerie"
+                    plan="gallery"
                     value="—"
                     detail={`Ouverture le ${calendar.galleryOpensLabel}`}
                 />
@@ -243,7 +252,7 @@ export const OverviewSection = ({
                                     <p className="font-medium">
                                         {tally.title}
                                         <span className="text-wed-muted block text-xs font-normal">
-                                            {moment && momentStart(moment)}
+                                            {moment && momentStart(moment, state.timezone)}
                                         </span>
                                     </p>
                                     <p className="text-wed-muted text-right text-sm sm:order-last">
@@ -326,7 +335,7 @@ export const OverviewSection = ({
                                 >
                                     <dt>
                                         {diet.label}
-                                        {diet.choice === "autre" && caterer.details.length > 0 && (
+                                        {diet.choice === "other" && caterer.details.length > 0 && (
                                             <span className="text-wed-muted block text-xs">
                                                 {caterer.details.join(", ")}
                                             </span>

@@ -2,19 +2,21 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Check, ExternalLink, RotateCcw } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-import { parisDay, weddingCalendar } from "@/lib/wedding-dashboard/calendar";
 import {
+    localDay,
     personalize,
+    previewOf,
     THANKS_MAX,
     thanksOf,
     validateDesign,
+    weddingCalendar,
     type DraftIssue,
-} from "@/lib/wedding-dashboard/drafts";
-import { previewOf } from "@/lib/wedding-dashboard/preview-link";
-import type { InvitationDesign, SealTone } from "@/lib/wedding-dashboard/types";
+    type InvitationDesign,
+} from "@alexreu/wedding-core";
+import { Check, ExternalLink, RotateCcw } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { sealToneOf, type SealTone } from "@/lib/wedding-demo/tones";
 import { InvitationEnvelope } from "@/components/wedding-demo/invitation-envelope";
 
 import { dashboardHref } from "./dashboard-pages";
@@ -25,6 +27,8 @@ type InvitationEditorProps = {
     /** The household the preview greets, as the site would. */
     sampleGuest: string;
     now: Date;
+    /** Where the wedding takes place: "today" is read there. */
+    timezone: string;
     onSave: (design: InvitationDesign) => void;
 };
 
@@ -32,8 +36,8 @@ const WELCOME_MAX = 220;
 
 const tones: readonly { value: SealTone; label: string; swatch: string }[] = [
     { value: "olive", label: "Olivier", swatch: "bg-demo-olive" },
-    { value: "terre", label: "Terre", swatch: "bg-demo-earth" },
-    { value: "encre", label: "Encre", swatch: "bg-demo-ink" },
+    { value: "earth", label: "Terre", swatch: "bg-demo-earth" },
+    { value: "ink", label: "Encre", swatch: "bg-demo-ink" },
 ];
 
 const messages: Partial<Record<DraftIssue["code"], string>> = {
@@ -53,13 +57,19 @@ const sameDesign = (a: InvitationDesign, b: InvitationDesign) =>
         .every((key) => (a[key] ?? "") === (b[key] ?? ""));
 
 /** What every guest discovers first: names, date, place, greeting and the colour of the seal. */
-export const InvitationEditor = ({ design, sampleGuest, now, onSave }: InvitationEditorProps) => {
+export const InvitationEditor = ({
+    design,
+    sampleGuest,
+    now,
+    timezone,
+    onSave,
+}: InvitationEditorProps) => {
     const [draft, setDraft] = useState(design);
     const [issues, setIssues] = useState<readonly DraftIssue[]>([]);
     const [saved, setSaved] = useState(false);
     const [opening, setOpening] = useState(false);
     const [take, setTake] = useState(0);
-    const today = parisDay(now);
+    const today = localDay(now, timezone);
     /** The date is set in « Dates clés »: the editor always works on the saved one. */
     const check = validateDesign({ ...draft, date: design.date }, today);
     /** The preview keeps the last valid date while one is being typed. */
@@ -302,7 +312,7 @@ export const InvitationEditor = ({ design, sampleGuest, now, onSave }: Invitatio
                     first={draft.first.trim() || design.first}
                     second={draft.second.trim() || design.second}
                     dateLabel={`${weddingCalendar(previewDate).dateLabel} · ${draft.place.trim() || design.place}`}
-                    tone={draft.tone}
+                    tone={sealToneOf(draft.tone)}
                     opening={opening}
                     onSealTouched={() => setOpening(true)}
                     sealLabel="Voir l'ouverture du faire-part"

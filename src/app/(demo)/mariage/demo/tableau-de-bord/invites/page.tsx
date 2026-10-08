@@ -4,7 +4,7 @@ import { GuestsPage } from "@/components/wedding-dashboard/pages/guests-page";
 
 import { dashboardPageMetadata } from "../page-metadata";
 
-export const metadata: Metadata = dashboardPageMetadata("invites");
+export const metadata: Metadata = dashboardPageMetadata("guests");
 
 type Props = {
     searchParams: Promise<Record<string, string | string[] | undefined>>;

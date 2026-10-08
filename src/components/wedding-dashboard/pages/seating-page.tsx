@@ -1,16 +1,19 @@
 "use client";
 
+import { seatedMomentKey } from "@alexreu/wedding-core";
+
 import { useDashboard } from "../dashboard-context";
+import { dashboardHref } from "../dashboard-pages";
 import { PageHeader, ReadOnly } from "../dashboard-ui";
 import { QrPosterCard } from "../qr-poster-card";
 import { SeatingSection } from "../seating-section";
 
 export const SeatingPage = () => {
-    const { state, dispatch, seatingUrl, downloadSeatingPoster, can } = useDashboard();
-    const locked = !can("seating.edit");
+    const { state, calendar, dispatch, seatingUrl, downloadSeatingPoster, can } = useDashboard();
+    const locked = !can("seating.write");
     return (
         <>
-            <PageHeader page="plan-de-table" />
+            <PageHeader page="seating" />
             <ReadOnly locked={locked}>
                 <SeatingSection
                     readOnly={locked}
@@ -18,33 +21,32 @@ export const SeatingPage = () => {
                     tables={state.tables}
                     seats={state.seats}
                     room={state.room}
-                    onSaveRoom={(name, size, revealAt) =>
-                        dispatch({ type: "room-saved", name, size, revealAt })
-                    }
+                    seatedKey={seatedMomentKey(state.moments)}
+                    revealLabel={calendar.tablesRevealLabel}
+                    datesHref={`${dashboardHref("programme")}#dates`}
+                    onSaveRoom={(name, size) => dispatch({ type: "room.save", name, size })}
                     onMoveFixture={(fixture, x, y) =>
-                        dispatch({ type: "fixture-moved", fixture, x, y })
+                        dispatch({ type: "fixture.move", fixture, x, y })
                     }
-                    onRotateFixture={(fixture) => dispatch({ type: "fixture-rotated", fixture })}
-                    onSaveTable={(table) => dispatch({ type: "table-saved", table })}
-                    onMoveTable={(tableId, x, y) =>
-                        dispatch({ type: "table-moved", tableId, x, y })
-                    }
-                    onRemoveTables={(tableIds) => dispatch({ type: "tables-removed", tableIds })}
+                    onRotateFixture={(fixture) => dispatch({ type: "fixture.rotate", fixture })}
+                    onSaveTable={(table) => dispatch({ type: "table.save", table })}
+                    onMoveTable={(tableId, x, y) => dispatch({ type: "table.move", tableId, x, y })}
+                    onRemoveTables={(tableIds) => dispatch({ type: "tables.remove", tableIds })}
                     onSeatGuest={(guestId, tableId) =>
-                        dispatch({ type: "guest-seated", guestId, tableId })
+                        dispatch({ type: "guest.seat", guestId, tableId })
                     }
                     onSeatHousehold={(householdId, tableId) =>
-                        dispatch({ type: "household-seated", householdId, tableId })
+                        dispatch({ type: "household.seat", householdId, tableId })
                     }
                 />
             </ReadOnly>
-            {can("seating.print") && (
+            {can("seating.read") && (
                 <QrPosterCard
                     id="qr-plan-de-table"
                     title="QR code du plan de table"
                     url={seatingUrl}
                     qrLabel="QR code du plan de table : ouvre le plan de la salle"
-                    plan="plan-de-table"
+                    plan="seating"
                     aside="À l'entrée du dîner"
                     downloadLabel="Affiche du plan de table"
                     openLabel="Ouvrir le plan des invités"

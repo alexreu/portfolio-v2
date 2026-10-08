@@ -1,27 +1,27 @@
 "use client";
 
 import { useState } from "react";
+import {
+    areaLevel,
+    AREAS,
+    INVITATION_HOURS,
+    levelName,
+    ofPerson,
+    PERSON_ROLES,
+    personFeatures,
+    ROLE_NAMES,
+    validateCollaboratorDraft,
+    withAreaLevel,
+    type AccessLevel,
+    type Collaborator,
+    type CollaboratorDraft,
+    type DraftIssue,
+    type PersonRole,
+} from "@alexreu/wedding-core";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Plus, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import {
-    ACCESS_FEATURES,
-    createCollaborator,
-    INVITATION_HOURS,
-    levelName,
-    ofPerson,
-    templateGrant,
-    templateNames,
-    templateOf,
-    validateCollaboratorDraft,
-    withLevel,
-    type AccessLevel,
-    type AccessTemplate,
-    type Collaborator,
-    type CollaboratorDraft,
-} from "@/lib/wedding-dashboard/access";
-import { householdIdFor, type DraftIssue } from "@/lib/wedding-dashboard/drafts";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { cormorant } from "@/app/fonts/wedding";
 
@@ -36,29 +36,26 @@ type AccessDialogProps = {
     couple: { first: string; second: string };
     /** Addresses that already have access. */
     taken: readonly string[];
-    onInvite: (collaborator: Collaborator) => void;
+    /** Invites the person; null when the wedding refused it. */
+    onInvite: (draft: CollaboratorDraft) => Collaborator | null;
     onUpdate: (collaborator: Collaborator, draft: CollaboratorDraft) => void;
 };
 
-const templates: readonly { key: AccessTemplate; detail: string }[] = [
-    {
-        key: "temoin",
-        detail: "Voit les invités, sans les régimes ; gère le plan de table et la galerie.",
-    },
-    { key: "planner", detail: "Voit et modifie tout, sauf les accès." },
-];
+/** What each role opens before any adjustment. */
+const ROLE_DETAILS: Readonly<Record<PersonRole, string>> = {
+    witness: "Voit les invités, sans les régimes ; gère le plan de table et la galerie.",
+    planner: "Voit et modifie tout, sauf les accès.",
+    custom: "Rien d'ouvert au départ : vous choisissez fonction par fonction.",
+};
 
 const checkedTone: Record<AccessLevel, string> = {
-    aucun: "peer-checked:bg-wed-paper peer-checked:text-wed-muted peer-checked:shadow-sm",
-    lecture: "peer-checked:bg-wed-paper peer-checked:text-wed-ink peer-checked:shadow-sm",
-    modification: "peer-checked:bg-wed-ink peer-checked:text-wed-paper",
+    none: "peer-checked:bg-wed-paper peer-checked:text-wed-muted peer-checked:shadow-sm",
+    read: "peer-checked:bg-wed-paper peer-checked:text-wed-ink peer-checked:shadow-sm",
+    write: "peer-checked:bg-wed-ink peer-checked:text-wed-paper",
 };
 
 const issueAt = (issues: readonly DraftIssue[], path: string) =>
     issues.find((issue) => issue.path === path);
-
-/** Short random suffix: two Julien never share an id. */
-const randomSuffix = () => Math.random().toString(36).slice(2, 6);
 
 /** One row per function: hidden, read or edit, as a segmented choice. */
 const GrantFields = ({
@@ -69,9 +66,12 @@ const GrantFields = ({
     onChange: (draft: CollaboratorDraft) => void;
 }) => (
     <ul className="divide-wed-line-soft border-wed-line-soft divide-y rounded-2xl border">
-        {ACCESS_FEATURES.map((feature) => {
+        {AREAS.map((feature) => {
             const id = `access-${feature.key.replace(".", "-")}`;
-            const locked = Boolean(feature.requires && draft.grant[feature.requires] === "aucun");
+            const features = personFeatures(draft);
+            const locked = Boolean(
+                feature.requires && areaLevel(features, feature.requires) === "none",
+            );
             return (
                 <li
                     key={feature.key}
@@ -103,14 +103,16 @@ const GrantFields = ({
                                     type="radio"
                                     name={id}
                                     value={level}
-                                    checked={draft.grant[feature.key] === level}
+                                    checked={areaLevel(features, feature.key) === level}
                                     disabled={locked}
-                                    onChange={() =>
-                                        onChange({
-                                            ...draft,
-                                            grant: withLevel(draft.grant, feature.key, level),
-                                        })
-                                    }
+                                    onChange={() => {
+                                        const { added, removed } = withAreaLevel(
+                                            draft,
+                                            feature.key,
+                                            level,
+                                        );
+                                        onChange({ ...draft, added, removed });
+                                    }}
                                     className="peer sr-only"
                                 />
                                 <span
@@ -138,28 +140,31 @@ const AccessForm = ({
     onUpdate,
 }: Omit<AccessDialogProps, "open" | "onOpenChange">) => {
     const [draft, setDraft] = useState<CollaboratorDraft>(
-        editing ?? { firstName: "", email: "", role: "", grant: templateGrant("temoin") },
+        editing ?? {
+            firstName: "",
+            email: "",
+            title: "",
+            role: "witness",
+            added: [],
+            removed: [],
+        },
     );
     const [issues, setIssues] = useState<readonly DraftIssue[]>([]);
-    const template = templateOf(draft.grant);
+    /** The couple changed a function the role sets otherwise. */
+    const adjusted = draft.added.length > 0 || draft.removed.length > 0;
 
     const submit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const result = validateCollaboratorDraft(draft, taken);
         if (!result.ok) return setIssues(result.error);
         if (editing) return onUpdate(editing, result.value);
-        onInvite(
-            createCollaborator(result.value, {
-                id: householdIdFor(result.value.firstName, randomSuffix()),
-                at: new Date().toISOString(),
-            }),
-        );
+        onInvite(result.value);
     };
 
     const firstNameIssue = issueAt(issues, "firstName");
     const emailIssue = issueAt(issues, "email");
-    const roleIssue = issueAt(issues, "role");
-    const grantIssue = issueAt(issues, "grant");
+    const titleIssue = issueAt(issues, "title");
+    const accessIssue = issueAt(issues, "access");
 
     return (
         <form
@@ -195,20 +200,20 @@ const AccessForm = ({
                 </label>
                 <label className="grid content-start gap-1.5 text-sm">
                     <span className="text-wed-ink-soft">
-                        Rôle <small className="text-wed-muted">(facultatif)</small>
+                        Intitulé <small className="text-wed-muted">(facultatif)</small>
                     </span>
                     <input
-                        value={draft.role}
-                        onChange={(event) => setDraft({ ...draft, role: event.target.value })}
+                        value={draft.title}
+                        onChange={(event) => setDraft({ ...draft, title: event.target.value })}
                         placeholder={`Témoin de ${couple.first}…`}
                         autoComplete="off"
-                        aria-invalid={Boolean(roleIssue)}
-                        aria-describedby={roleIssue ? "access-role-error" : undefined}
+                        aria-invalid={Boolean(titleIssue)}
+                        aria-describedby={titleIssue ? "access-title-error" : undefined}
                         className={inputStyles}
                     />
                     <FieldError
-                        id="access-role-error"
-                        message={roleIssue && issueMessages[roleIssue.code]}
+                        id="access-title-error"
+                        message={titleIssue && issueMessages[titleIssue.code]}
                     />
                 </label>
             </div>
@@ -241,42 +246,42 @@ const AccessForm = ({
                         Ce qu&apos;elle ou il peut faire
                     </h3>
                     <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-wed-muted text-xs">Modèle :</span>
-                        {templates.map(({ key }) => (
+                        <span className="text-wed-muted text-xs">Rôle :</span>
+                        {PERSON_ROLES.map((role) => (
                             <button
-                                key={key}
+                                key={role}
                                 type="button"
-                                aria-pressed={template === key}
-                                onClick={() => setDraft({ ...draft, grant: templateGrant(key) })}
+                                aria-pressed={draft.role === role}
+                                onClick={() => setDraft({ ...draft, role, added: [], removed: [] })}
                                 className={cn(
                                     buttonStyles.secondary,
                                     "aria-pressed:bg-wed-ink aria-pressed:text-wed-paper aria-pressed:border-wed-ink min-h-9 px-3.5 text-[0.8rem]",
                                 )}
                             >
-                                {templateNames[key]}
+                                {ROLE_NAMES[role]}
                             </button>
                         ))}
-                        {template === "sur-mesure" && (
+                        {adjusted && (
                             <span className="border-wed-line text-wed-ink-soft rounded-full border border-dashed px-3 py-1.5 text-[0.8rem]">
-                                {templateNames["sur-mesure"]}
+                                Ajusté
                             </span>
                         )}
                     </div>
                 </div>
                 <p className="text-wed-muted text-xs" aria-live="polite">
-                    {templates.find(({ key }) => key === template)?.detail ??
-                        "Réglé fonction par fonction."}
+                    {ROLE_DETAILS[draft.role]}
+                    {adjusted && " Vous l'avez ajusté fonction par fonction."}
                 </p>
                 <GrantFields
                     draft={draft}
                     onChange={(next) => {
                         setDraft(next);
-                        setIssues(issues.filter((issue) => issue.path !== "grant"));
+                        setIssues(issues.filter((issue) => issue.path !== "access"));
                     }}
                 />
                 <FieldError
                     id="access-functions-error"
-                    message={grantIssue && issueMessages[grantIssue.code]}
+                    message={accessIssue && issueMessages[accessIssue.code]}
                 />
                 <p className="text-wed-muted text-xs">
                     Toujours réservés à vous deux : gérer les accès, l&apos;export complet et votre
@@ -336,9 +341,10 @@ const DialogBody = (props: Omit<AccessDialogProps, "open" | "onOpenChange">) => 
         <AccessForm
             key={round}
             {...props}
-            onInvite={(collaborator) => {
-                props.onInvite(collaborator);
-                setSent(collaborator);
+            onInvite={(draft) => {
+                const collaborator = props.onInvite(draft);
+                if (collaborator) setSent(collaborator);
+                return collaborator;
             }}
         />
     );

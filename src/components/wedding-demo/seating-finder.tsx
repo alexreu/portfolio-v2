@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { findGuests, type BoardTable, type RoomLayout } from "@alexreu/wedding-core";
 import { Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { findGuests, type BoardTable } from "@/lib/wedding-dashboard/table-finder";
-import type { RoomLayout } from "@/lib/wedding-dashboard/types";
 
 import { RoomPlan } from "./room-plan";
 

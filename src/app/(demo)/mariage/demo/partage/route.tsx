@@ -1,8 +1,6 @@
 import { ImageResponse } from "next/og";
 import { defaultDesign } from "@/content/wedding-dashboard-demo";
-
-import { weddingCalendar } from "@/lib/wedding-dashboard/calendar";
-import { sealInitials } from "@/lib/wedding-dashboard/drafts";
+import { sealInitials, weddingCalendar } from "@alexreu/wedding-core";
 
 /** Built once at deploy time, like the offer's. */
 export const dynamic = "force-static";
