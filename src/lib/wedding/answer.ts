@@ -40,20 +40,26 @@ const missingAttendance = (invitation: Invitation, draft: AnswerDraft): readonly
             })),
     );
 
-const missingDietDetails = (draft: AnswerDraft): readonly AnswerIssue[] =>
-    Object.entries(draft.diets)
+/** Only the household's current guests: a guest taken out meanwhile leaves nothing to fill. */
+const currentDiets = (invitation: Invitation, draft: AnswerDraft) =>
+    Object.entries(draft.diets).filter(([guestId]) =>
+        invitation.guests.some((guest) => guest.id === guestId),
+    );
+
+const missingDietDetails = (invitation: Invitation, draft: AnswerDraft): readonly AnswerIssue[] =>
+    currentDiets(invitation, draft)
         .filter(([, diet]) => diet.choice === "autre" && diet.other.trim() === "")
         .map(([guestId]) => ({
             path: `diets.${guestId}.other`,
             code: "diet-detail-required" as const,
         }));
 
-const sharesDietaryConstraint = (draft: AnswerDraft) =>
-    Object.values(draft.diets).some((diet) => diet.choice !== "aucune");
+const sharesDietaryConstraint = (invitation: Invitation, draft: AnswerDraft) =>
+    currentDiets(invitation, draft).some(([, diet]) => diet.choice !== "aucune");
 
 /** Dietary constraints may reveal health data (GDPR art. 9): explicit consent. */
-const missingConsent = (draft: AnswerDraft): readonly AnswerIssue[] =>
-    sharesDietaryConstraint(draft) && !draft.consent
+const missingConsent = (invitation: Invitation, draft: AnswerDraft): readonly AnswerIssue[] =>
+    sharesDietaryConstraint(invitation, draft) && !draft.consent
         ? [{ path: "consent", code: "consent-required" }]
         : [];
 
@@ -72,8 +78,8 @@ export const validateAnswer = (
 ): Result<AnswerDraft, readonly AnswerIssue[]> => {
     const issues = [
         ...missingAttendance(invitation, draft),
-        ...missingDietDetails(draft),
-        ...missingConsent(draft),
+        ...missingDietDetails(invitation, draft),
+        ...missingConsent(invitation, draft),
         ...tooLong(draft),
     ];
     return issues.length === 0 ? success(draft) : failure(issues);

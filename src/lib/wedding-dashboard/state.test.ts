@@ -68,6 +68,7 @@ const state: DemoState = {
     room: {
         name: "L'orangerie",
         size: "s",
+        revealAt: "10:00",
         head: { x: 50, y: 11, rotation: 0 },
         entrance: { x: 50, y: 96, rotation: 0 },
     },
@@ -389,6 +390,71 @@ describe("demoReducer · programme, questions and room plan", () => {
         });
     });
 
+    it("reminds a household whose answer misses a moment added since", () => {
+        const widened = demoReducer(answeredLefevre, {
+            type: "moment-saved",
+            moment: brunch,
+            inviteAll: true,
+            at,
+        });
+
+        expect(
+            demoReducer(answeredLefevre, { type: "reminder-sent", at }).lastReminder?.count,
+        ).toBe(0);
+        expect(demoReducer(widened, { type: "reminder-sent", at }).lastReminder?.count).toBe(1);
+    });
+
+    it("does not remind a household invited to nothing any more", () => {
+        const nothing: DemoState = {
+            ...state,
+            households: [{ ...lefevre, momentKeys: [] }],
+        };
+
+        expect(demoReducer(nothing, { type: "reminder-sent", at }).lastReminder?.count).toBe(0);
+    });
+
+    it("frees every seat when the dinner leaves the programme", () => {
+        const next = demoReducer(answeredLefevre, { type: "moment-removed", key: "diner", at });
+
+        expect(next.seats).toEqual({});
+    });
+
+    it("keeps at least one moment in the programme", () => {
+        const one = demoReducer(state, { type: "moment-removed", key: "diner", at });
+
+        expect(demoReducer(one, { type: "moment-removed", key: "ceremonie", at })).toBe(one);
+    });
+
+    it("forgets the answers to a question taken off the faire-part", () => {
+        const answeredSong: DemoState = {
+            ...state,
+            households: [{ ...lefevre, questions: { chanson: "Respire", autre: "?" } }],
+        };
+        const next = demoReducer(answeredSong, { type: "questions-saved", questions: [], at });
+
+        expect(next.households[0].questions).toEqual({});
+    });
+
+    it("keeps only the answers to the faire-part's questions", () => {
+        const next = demoReducer(state, {
+            type: "answer-recorded",
+            householdId: "lefevre",
+            draft: {
+                attendance: {
+                    marie: { ceremonie: "yes", diner: "yes" },
+                    thomas: { ceremonie: "no", diner: "no" },
+                },
+                diets: {},
+                consent: false,
+                questions: { chanson: "Respire", "question-9": "fantôme" },
+                message: "",
+            },
+            at,
+        });
+
+        expect(next.households[0].questions).toEqual({ chanson: "Respire" });
+    });
+
     it("saves the faire-part's questions", () => {
         const questions = [{ id: "covoiturage", label: "Covoiturage ?", placeholder: "" }];
         const next = demoReducer(state, { type: "questions-saved", questions, at });
@@ -523,6 +589,21 @@ describe("demoReducer · access", () => {
         });
     });
 
+    it("refuses an invitation accepted after its 72 hours", () => {
+        const invited = demoReducer(state, {
+            type: "collaborator-invited",
+            collaborator: sophie,
+            at,
+        });
+        const late = demoReducer(invited, {
+            type: "collaborator-joined",
+            collaboratorId: "sophie",
+            at: "2026-10-09T10:00:01+02:00",
+        });
+
+        expect(late).toBe(invited);
+    });
+
     it("records the day the invitation is accepted", () => {
         const invited = demoReducer(state, {
             type: "collaborator-invited",
@@ -605,7 +686,31 @@ describe("demoReducer · access", () => {
     });
 });
 
+describe("demoReducer · activity", () => {
+    it("never gives two entries of the feed the same id", () => {
+        const once = demoReducer(state, { type: "reminder-sent", at });
+        const twice = demoReducer(once, { type: "reminder-sent", at });
+
+        expect(new Set(twice.activity.map((entry) => entry.id)).size).toBe(2);
+    });
+});
+
 describe("parseDemoState", () => {
+    it("drops one unreadable entry of the feed instead of the whole demo", () => {
+        const damaged = {
+            ...state,
+            activity: [
+                { id: "a", at, kind: "opened", text: "t", detail: "d", badge: "" },
+                { id: "b", at, kind: "inconnu", text: "t", detail: "d", badge: "" },
+            ],
+        };
+
+        const parsed = parseDemoState(JSON.stringify(damaged), extras);
+
+        expect(parsed?.households).toEqual(state.households);
+        expect(parsed?.activity.map((entry) => entry.id)).toEqual(["a"]);
+    });
+
     it("reads back what was saved", () => {
         expect(parseDemoState(JSON.stringify(state), extras)).toEqual(state);
     });

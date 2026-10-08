@@ -8,7 +8,7 @@ import { automaticDates, validateDates } from "@/lib/wedding-dashboard/dates";
 import type { DraftIssue } from "@/lib/wedding-dashboard/drafts";
 import type { DateOverrides } from "@/lib/wedding-dashboard/types";
 
-import { buttonStyles, Card, FieldError, inputStyles } from "./dashboard-ui";
+import { buttonStyles, Card, FieldError, inputStyles, PlanBadge } from "./dashboard-ui";
 
 type DatesSectionProps = {
     day: string;
@@ -19,7 +19,14 @@ type DatesSectionProps = {
 
 type Field = keyof DateOverrides;
 
-const fields: readonly { key: Field; label: string; rule: string; error: string }[] = [
+const fields: readonly {
+    key: Field;
+    label: string;
+    rule: string;
+    error: string;
+    /** The formula it comes with, when not every one has it. */
+    plan?: string;
+}[] = [
     {
         key: "answerDeadline",
         label: "Date limite des réponses",
@@ -29,12 +36,14 @@ const fields: readonly { key: Field; label: string; rule: string; error: string 
     {
         key: "reminder",
         label: "Relance automatique",
+        plan: "relances",
         rule: "Automatique : quinze jours avant la date limite",
         error: "Entre aujourd'hui et la date limite.",
     },
     {
         key: "galleryOpens",
         label: "Ouverture de la galerie",
+        plan: "galerie",
         rule: "Automatique : la veille",
         error: "Dans la semaine qui précède le mariage, ou le jour même.",
     },
@@ -70,7 +79,7 @@ export const DatesSection = ({ day, dates, now, onSave }: DatesSectionProps) => 
 
     const submit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const result = validateDates(draft, today);
+        const result = validateDates(draft, today, dates);
         if (!result.ok) return setIssues(result.error);
         setIssues([]);
         setDraft(result.value);
@@ -119,12 +128,15 @@ export const DatesSection = ({ day, dates, now, onSave }: DatesSectionProps) => 
                         return (
                             <div key={field.key} className="grid content-start gap-1.5 text-sm">
                                 <span className="flex items-center justify-between gap-2">
-                                    <label
-                                        htmlFor={`dates-${field.key}`}
-                                        className="text-wed-ink-soft"
-                                    >
-                                        {field.label}
-                                    </label>
+                                    <span className="flex flex-wrap items-center gap-2">
+                                        <label
+                                            htmlFor={`dates-${field.key}`}
+                                            className="text-wed-ink-soft"
+                                        >
+                                            {field.label}
+                                        </label>
+                                        {field.plan && <PlanBadge section={field.plan} />}
+                                    </span>
                                     {!set && (
                                         <span
                                             aria-hidden="true"

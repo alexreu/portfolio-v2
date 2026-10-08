@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 
 import { cn } from "@/lib/utils";
 import type { SealTone } from "@/lib/wedding-dashboard/types";
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 
 import { envelopeTimeline, InvitationEnvelope } from "./invitation-envelope";
@@ -41,24 +42,33 @@ export const InvitationOverlay = ({
     const state = opening ? "open" : "closed";
 
     useScrollLock();
+    useFocusTrap(dialog);
+
+    /** Escape, « Passer » and the end of the animation may all ask: the site opens once. */
+    const done = useRef(false);
+    const finish = useCallback(() => {
+        if (done.current) return;
+        done.current = true;
+        onOpened();
+    }, [onOpened]);
 
     useEffect(() => {
         dialog.current?.focus({ preventScroll: true });
     }, []);
 
     useEffect(() => {
-        const skipOnEscape = (event: KeyboardEvent) => event.key === "Escape" && onOpened();
+        const skipOnEscape = (event: KeyboardEvent) => event.key === "Escape" && finish();
         document.addEventListener("keydown", skipOnEscape);
         return () => document.removeEventListener("keydown", skipOnEscape);
-    }, [onOpened]);
+    }, [finish]);
 
     useEffect(() => {
         if (!opening) return;
-        const timer = window.setTimeout(onOpened, envelopeTimeline.handOver * 1_000);
+        const timer = window.setTimeout(finish, envelopeTimeline.handOver * 1_000);
         return () => window.clearTimeout(timer);
-    }, [opening, onOpened]);
+    }, [opening, finish]);
 
-    const open = () => (instant ? onOpened() : setOpening(true));
+    const open = () => (instant ? finish() : setOpening(true));
 
     return (
         <motion.div
@@ -110,7 +120,7 @@ export const InvitationOverlay = ({
             {opening && (
                 <motion.button
                     type="button"
-                    onClick={onOpened}
+                    onClick={finish}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1, transition: { delay: 0.4, duration: 0.3 } }}
                     className="text-demo-ink-2 hover:text-demo-ink absolute right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] inline-flex min-h-11 cursor-pointer items-center rounded-full px-4 text-sm underline-offset-4 hover:underline"

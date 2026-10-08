@@ -22,11 +22,14 @@ type Field = keyof DateOverrides;
 export const validateDates = (
     { day, overrides }: DatesDraft,
     today: string,
+    /** The dates saved so far: one already past, a reminder sent, may stay as it is. */
+    saved?: DateOverrides,
 ): Result<DatesDraft, readonly DraftIssue[]> => {
     if (!isRealDay(day)) return failure([{ path: "day", code: "date-invalid" }]);
     if (day < today) return failure([{ path: "day", code: "date-past" }]);
     const automatic = automaticDates(day);
     const effective = (field: Field) => overrides[field] ?? automatic[field];
+    const upcoming = (field: Field, date: string) => date >= today || date === saved?.[field];
     const check = (field: Field, inRange: (date: string) => boolean): readonly DraftIssue[] => {
         const value = overrides[field];
         if (value === null) return [];
@@ -34,8 +37,11 @@ export const validateDates = (
         return inRange(value) ? [] : [{ path: field, code: "out-of-range" }];
     };
     const issues = [
-        ...check("answerDeadline", (date) => date >= today && date < day),
-        ...check("reminder", (date) => date >= today && date < effective("answerDeadline")),
+        ...check("answerDeadline", (date) => upcoming("answerDeadline", date) && date < day),
+        ...check(
+            "reminder",
+            (date) => upcoming("reminder", date) && date < effective("answerDeadline"),
+        ),
         ...check("galleryOpens", (date) => date >= addDays(day, -7) && date <= day),
     ];
     if (issues.length > 0) return failure(issues);

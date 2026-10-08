@@ -4,9 +4,11 @@ import {
     createHousehold,
     draftOf,
     editHousehold,
+    freshHouseholdId,
     householdIdFor,
     personalize,
     sealInitials,
+    thanksOf,
     validateDesign,
     validateHouseholdDraft,
     type HouseholdDraft,
@@ -100,6 +102,17 @@ const design: InvitationDesign = {
 };
 
 describe("validateDesign", () => {
+    it("keeps the day-after message short enough to read on a phone", () => {
+        const result = validateDesign({ ...design, thanks: "Merci ".repeat(80) }, "2026-10-06");
+
+        expect(!result.ok && result.error).toEqual([{ path: "thanks", code: "too-long" }]);
+    });
+
+    it("falls back on a default thank-you when the couple wrote none", () => {
+        expect(thanksOf({ ...design, thanks: "  " })).toMatch(/^Merci/);
+        expect(thanksOf({ ...design, thanks: " À très vite ! " })).toBe("À très vite !");
+    });
+
     it("accepts a faire-part dated today or later", () => {
         expect(validateDesign(design, "2026-10-06").ok).toBe(true);
         expect(validateDesign({ ...design, date: "2026-10-06" }, "2026-10-06").ok).toBe(true);
@@ -242,5 +255,22 @@ describe("draftOf and editHousehold", () => {
         expect(ids).toHaveLength(5);
         expect(new Set(ids).size).toBe(5);
         expect(ids.slice(0, 3)).toEqual(["claire", "antoine", "leo"]);
+    });
+});
+
+describe("household ids", () => {
+    it("still makes an id from a name without a Latin letter", () => {
+        expect(householdIdFor("李 & 王", "ab12")).toBe("foyer-ab12");
+    });
+
+    it("draws another suffix while the id is taken", () => {
+        const suffixes = ["ab12", "ab12", "cd34"];
+        const id = freshHouseholdId(
+            "Famille Martin",
+            new Set(["famille-martin-ab12"]),
+            () => suffixes.shift() ?? "zz99",
+        );
+
+        expect(id).toBe("famille-martin-cd34");
     });
 });

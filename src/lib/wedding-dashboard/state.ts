@@ -5,6 +5,7 @@ import type { GuestQuestion } from "@/lib/wedding/types";
 
 import {
     accessSummary,
+    collaboratorStatus,
     grantOf,
     isOpen,
     ofPerson,
@@ -16,7 +17,7 @@ import { weddingCalendar } from "./calendar";
 import { editHousehold, type HouseholdDraft } from "./drafts";
 import { dietSummary, householdStatus, householdSummary } from "./households";
 import type { Fixture } from "./plan-selection";
-import { ENTRANCE_HALF, fixtureInside, HEAD_HALF } from "./room";
+import { DEFAULT_REVEAL, ENTRANCE_HALF, fixtureInside, HEAD_HALF } from "./room";
 import { DINNER } from "./seating";
 import type {
     Activity,
@@ -80,7 +81,13 @@ export type DemoAction =
           readonly dates: DateOverrides;
           readonly at: string;
       }
-    | { readonly type: "room-saved"; readonly name: string; readonly size: RoomSize }
+    | {
+          readonly type: "room-saved";
+          readonly name: string;
+          readonly size: RoomSize;
+          /** "10:00"; kept as it is when left out. */
+          readonly revealAt?: string;
+      }
     | {
           readonly type: "fixture-moved";
           readonly fixture: Fixture;
@@ -124,6 +131,16 @@ export const badgeFor = (name: string) =>
         .map((word) => word.charAt(0).toUpperCase())
         .join("");
 
+/** Two events of the same kind at the same instant still get an id each, for React's keys. */
+const freshId = (activity: readonly Activity[], base: string) => {
+    const taken = new Set(activity.map((entry) => entry.id));
+    return (
+        [...Array(taken.size + 1).keys()]
+            .map((index) => (index === 0 ? base : `${base}-${index + 1}`))
+            .find((id) => !taken.has(id)) ?? base
+    );
+};
+
 const withActivity = (
     state: DemoState,
     entry: Omit<Activity, "id" | "subject">,
@@ -131,7 +148,7 @@ const withActivity = (
 ): DemoState => ({
     ...state,
     activity: [
-        { ...entry, subject, id: `${entry.kind}-${entry.at}-${subject}` },
+        { ...entry, subject, id: freshId(state.activity, `${entry.kind}-${entry.at}-${subject}`) },
         ...state.activity,
     ].slice(0, ACTIVITY_KEPT),
 });
@@ -147,8 +164,12 @@ const updateHousehold = (
     ),
 });
 
-/** Keeps only the household's own guests and moments, whatever the form sent. */
-const answerOf = (household: HouseholdRecord, draft: AnswerDraft) => ({
+/** Keeps only the household's own guests and moments, and the faire-part's questions. */
+const answerOf = (
+    household: HouseholdRecord,
+    draft: AnswerDraft,
+    questionIds: readonly string[],
+) => ({
     attendance: Object.fromEntries(
         household.guests.map((guest) => [
             guest.id,
@@ -168,7 +189,7 @@ const answerOf = (household: HouseholdRecord, draft: AnswerDraft) => ({
     ),
     questions: Object.fromEntries(
         Object.entries(draft.questions).flatMap(([id, answer]) =>
-            answer.trim() ? [[id, answer.trim()]] : [],
+            answer.trim() && questionIds.includes(id) ? [[id, answer.trim()]] : [],
         ),
     ),
     message: draft.message.trim(),
@@ -227,7 +248,11 @@ const answered = (
     if (!household) return state;
     const updated: HouseholdRecord = {
         ...household,
-        ...answerOf(household, draft),
+        ...answerOf(
+            household,
+            draft,
+            state.questions.map((question) => question.id),
+        ),
         answeredAt: at,
         answeredBy: by,
         lastSeenAt: by === "invite" ? at : household.lastSeenAt,
@@ -306,8 +331,9 @@ const removed = (state: DemoState, householdId: string, at: string): DemoState =
 };
 
 const reminded = (state: DemoState, at: string): DemoState => {
+    /** Only households still invited to something, whose answer is missing or incomplete. */
     const count = state.households.filter(
-        (household) => householdStatus(household) !== "answered",
+        (household) => household.momentKeys.length > 0 && householdStatus(household) !== "answered",
     ).length;
     return withActivity(
         { ...state, lastReminder: { at, count } },
@@ -410,7 +436,19 @@ export const demoReducer = (state: DemoState, action: DemoAction): DemoState => 
             return momentRemoved(state, action.key, action.at);
         case "questions-saved":
             return withActivity(
-                { ...state, questions: action.questions },
+                {
+                    ...state,
+                    questions: action.questions,
+                    /** An answer to a question taken off never resurfaces under a new one. */
+                    households: state.households.map((household) => ({
+                        ...household,
+                        questions: Object.fromEntries(
+                            Object.entries(household.questions).filter(([id]) =>
+                                action.questions.some((question) => question.id === id),
+                            ),
+                        ),
+                    })),
+                },
                 {
                     at: action.at,
                     kind: "design",
@@ -473,6 +511,8 @@ const access = (state: DemoState, action: DemoAction): DemoState => {
         );
     switch (action.type) {
         case "collaborator-joined":
+            /** An invitation past its 72 hours cannot be accepted any more. */
+            if (collaboratorStatus(collaborator, new Date(at)).kind === "expired") return state;
             return change(
                 { ...collaborator, joinedAt: at },
                 `${collaborator.firstName} a rejoint votre tableau de bord`,
@@ -536,10 +576,13 @@ const withoutKey = <Value>(record: Readonly<Record<string, Value>>, key: string)
 
 const momentRemoved = (state: DemoState, key: string, at: string): DemoState => {
     const moment = state.moments.find((candidate) => candidate.key === key);
-    if (!moment) return state;
+    /** A programme keeps one moment at least: there is nothing to invite to otherwise. */
+    if (!moment || state.moments.length === 1) return state;
     return withActivity(
         {
             ...state,
+            /** Without the dinner, nobody sits anywhere: no seat may come back with a new one. */
+            seats: key === DINNER ? {} : state.seats,
             moments: state.moments.filter((candidate) => candidate.key !== key),
             households: state.households.map((household) => ({
                 ...household,
@@ -631,7 +674,15 @@ const roomPlan = (state: DemoState, action: DemoAction): DemoState => {
             );
         }
         case "room-saved":
-            return { ...state, room: { ...state.room, name: action.name, size: action.size } };
+            return {
+                ...state,
+                room: {
+                    ...state.room,
+                    name: action.name,
+                    size: action.size,
+                    revealAt: action.revealAt ?? state.room.revealAt,
+                },
+            };
         case "fixture-moved":
             return placed(state, action.fixture, {
                 ...state.room[action.fixture],
@@ -660,6 +711,27 @@ const fixtureSchema = z.object({
     rotation: z.union([z.literal(0), z.literal(90)]).default(0),
 });
 
+const activityEntry = z.object({
+    id: z.string(),
+    at: z.string(),
+    kind: z.enum([
+        "answered",
+        "updated",
+        "opened",
+        "created",
+        "edited",
+        "removed",
+        "reminded",
+        "design",
+        "photo",
+        "access",
+    ]),
+    text: z.string(),
+    detail: z.string(),
+    badge: z.string(),
+    subject: z.string().default(""),
+});
+
 const demoStateSchema = z.object({
     version: z.literal(1),
     design: z.object({
@@ -669,6 +741,8 @@ const demoStateSchema = z.object({
         place: z.string(),
         welcome: z.string(),
         tone: z.enum(["olive", "terre", "encre"]),
+        /** Absent from copies saved before the day-after message. */
+        thanks: z.string().optional(),
     }),
     households: z.array(
         z.object({
@@ -696,26 +770,11 @@ const demoStateSchema = z.object({
             message: z.string().default(""),
         }),
     ),
-    activity: z.array(
-        z.object({
-            id: z.string(),
-            at: z.string(),
-            kind: z.enum([
-                "answered",
-                "updated",
-                "opened",
-                "created",
-                "edited",
-                "removed",
-                "reminded",
-                "design",
-                "photo",
-                "access",
-            ]),
-            text: z.string(),
-            detail: z.string(),
-            badge: z.string(),
-            subject: z.string().default(""),
+    /** One unreadable entry is dropped, never the whole demo with it. */
+    activity: z.array(z.unknown()).transform((entries) =>
+        entries.flatMap((entry) => {
+            const read = activityEntry.safeParse(entry);
+            return read.success ? [read.data] : [];
         }),
     ),
     photos: z.array(
@@ -769,6 +828,11 @@ const demoStateSchema = z.object({
             size: z.enum(["s", "m", "l", "xl"]),
             head: fixtureSchema,
             entrance: fixtureSchema,
+            /** Absent from copies saved before the tables' hour could be set. */
+            revealAt: z
+                .string()
+                .regex(/^\d{2}:\d{2}$/)
+                .default(DEFAULT_REVEAL),
         })
         .optional(),
     dates: z
@@ -797,6 +861,7 @@ const demoStateSchema = z.object({
 const defaultRoom = {
     name: "La salle",
     size: "s",
+    revealAt: DEFAULT_REVEAL,
     head: { x: 50, y: 11, rotation: 0 },
     entrance: { x: 50, y: 91, rotation: 0 },
 } as const;

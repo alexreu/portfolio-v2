@@ -20,7 +20,7 @@ test.describe("site démo Camille & Hugo", () => {
                     .click();
             }
         }
-        await form.getByRole("button", { name: "Envoyer notre réponse" }).click();
+        await form.getByRole("button", { name: /^Envoyer (ma|notre) réponse$/ }).click();
 
         await expect(page.getByRole("status")).toContainText("Merci");
         await expect(tabBar.getByRole("link", { name: "Répondu" })).toBeVisible();
@@ -39,7 +39,7 @@ test.describe("site démo Camille & Hugo", () => {
                     .click();
             }
         }
-        await form.getByRole("button", { name: "Envoyer notre réponse" }).click();
+        await form.getByRole("button", { name: /^Envoyer (ma|notre) réponse$/ }).click();
 
         const thanks = page.getByRole("status").filter({ hasText: "Merci" });
         await expect(thanks).toBeInViewport({ ratio: 1 });
@@ -53,7 +53,7 @@ test.describe("site démo Camille & Hugo", () => {
         test.skip(!isMobile, "la barre du bas n'existe que sur mobile");
         await page.goto("/mariage/demo?skip");
 
-        await page.getByRole("button", { name: "Aperçu jour J" }).click();
+        await page.getByLabel("Démonstration : voir le site").selectOption("day");
 
         const day = page.getByRole("region", { name: "Bienvenue Marie & Thomas" });
         await expect(day).toContainText("Votre table");
@@ -76,7 +76,7 @@ test.describe("site démo Camille & Hugo", () => {
         await page.goto("/mariage/demo?skip");
         const form = page.getByRole("form", { name: "Votre réponse" });
 
-        await form.getByRole("button", { name: "Envoyer notre réponse" }).click();
+        await form.getByRole("button", { name: /^Envoyer (ma|notre) réponse$/ }).click();
 
         await expect(form.getByRole("alert")).toContainText("Il reste 6 points à compléter");
         await expect(page.getByRole("status")).toHaveCount(0);

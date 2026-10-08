@@ -5,6 +5,7 @@ import {
     Camera,
     CircleCheck,
     CircleHelp,
+    Heart,
     MapPin,
     Send,
     Target,
@@ -23,6 +24,8 @@ const icons: Record<string, LucideIcon> = {
     reponse: Send,
     table: Target,
     ajouter: Camera,
+    merci: Heart,
+    photos: Camera,
 };
 
 const iconOf = (tab: Tab) => (tab.emphasis === "done" ? CircleCheck : (icons[tab.key] ?? Calendar));

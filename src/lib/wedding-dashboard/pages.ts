@@ -28,13 +28,18 @@ const reminders = (state: DemoState, calendar: WeddingCalendar, now: Date) => {
 const access = (state: DemoState, now: Date) => {
     const { collaborators } = state;
     if (collaborators.length === 0) return "Vous deux seulement";
-    const waiting = collaborators.filter(
-        (collaborator) => collaboratorStatus(collaborator, now).kind !== "active",
-    ).length;
-    const people = plural(collaborators.length, "personne", "personnes");
-    return waiting > 0
-        ? `${people} · ${plural(waiting, "invitation", "invitations")} en attente`
-        : people;
+    const count = (kind: "pending" | "expired") =>
+        collaborators.filter((collaborator) => collaboratorStatus(collaborator, now).kind === kind)
+            .length;
+    const waiting = count("pending");
+    const expired = count("expired");
+    return [
+        plural(collaborators.length, "personne", "personnes"),
+        ...(waiting > 0 ? [`${plural(waiting, "invitation", "invitations")} en attente`] : []),
+        ...(expired > 0
+            ? [`${plural(expired, "invitation expirée", "invitations expirées")}`]
+            : []),
+    ].join(" · ");
 };
 
 /** One line per page, on the overview's shortcuts: what is waiting there. */
@@ -47,9 +52,15 @@ export const pageSummaries = (
     const { unseated } = seatingPlan(state.households, state.tables, state.seats);
     const visible = state.photos.filter((photo) => !photo.removed).length;
     return {
-        invites: `${plural(households, "foyer", "foyers")} · ${pending > 0 ? `${pending} sans réponse` : "tous ont répondu"}`,
+        invites:
+            households === 0
+                ? "Aucun foyer pour l'instant"
+                : `${plural(households, "foyer", "foyers")} · ${pending > 0 ? `${pending} sans réponse` : "tous ont répondu"}`,
         programme: `${plural(state.moments.length, "moment", "moments")} · réponses avant le ${calendar.answerDeadlineLabel}`,
-        "plan-de-table": `${plural(state.tables.length, "table", "tables")} · ${unseated.length > 0 ? `${plural(unseated.length, "invité", "invités")} sans table` : "tout le monde est placé"}`,
+        "plan-de-table":
+            state.tables.length === 0
+                ? "Aucune table pour l'instant"
+                : `${plural(state.tables.length, "table", "tables")} · ${unseated.length > 0 ? `${plural(unseated.length, "invité", "invités")} sans table` : "tout le monde est placé"}`,
         "faire-part":
             state.questions.length > 0
                 ? `${plural(state.questions.length, "question", "questions")} aux invités`

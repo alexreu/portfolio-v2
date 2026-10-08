@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Camera, Images } from "lucide-react";
 
+import { useFocusTrap } from "@/hooks/use-focus-trap";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 
 type Upload = {
@@ -40,12 +41,14 @@ const toUploads = (files: FileList): readonly Upload[] =>
 export const UploadSheet = ({ signature, onClose }: UploadSheetProps) => {
     const [uploads, setUploads] = useState<readonly Upload[]>([]);
     const title = useRef<HTMLHeadingElement>(null);
+    const sheet = useRef<HTMLDivElement>(null);
     const cameraInput = useRef<HTMLInputElement>(null);
     const galleryInput = useRef<HTMLInputElement>(null);
     const sending = uploads.some((upload) => upload.progress < 100);
     const done = uploads.length > 0 && !sending;
 
     useScrollLock();
+    useFocusTrap(sheet);
 
     useEffect(() => {
         title.current?.focus();
@@ -85,6 +88,7 @@ export const UploadSheet = ({ signature, onClose }: UploadSheetProps) => {
             onClick={(event) => event.target === event.currentTarget && onClose()}
         >
             <div
+                ref={sheet}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="envoi-titre"
@@ -143,7 +147,7 @@ export const UploadSheet = ({ signature, onClose }: UploadSheetProps) => {
                     />
                 </div>
                 {uploads.length > 0 && (
-                    <ul aria-live="polite" className="mt-4.5 grid gap-3">
+                    <ul className="mt-4.5 grid gap-3">
                         {uploads.map((upload) => (
                             <li
                                 key={upload.id}

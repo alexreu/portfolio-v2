@@ -27,4 +27,13 @@ describe("tabBar", () => {
             "Lieux:normal",
         ]);
     });
+
+    it("the day after, puts the photos forward and keeps no answer to give", () => {
+        expect(summary(tabBar("after", { answered: true }))).toEqual([
+            "Merci:normal",
+            "Photos:primary",
+            "Lieux:normal",
+            "Questions:normal",
+        ]);
+    });
 });

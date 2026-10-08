@@ -1,3 +1,4 @@
+import { parisOffset } from "./calendar";
 import type { RoomFixture, RoomLayout, RoomPoint, RoomSize, SeatTable } from "./types";
 
 /** A round table on the plan, in room units. */
@@ -99,3 +100,14 @@ export const freeSpot = (tables: readonly SeatTable[], room: RoomLayout): RoomPo
         y: Math.round((spot.y / height) * 1000) / 10,
     };
 };
+
+/** The morning of the wedding, unless the couple chose another hour. */
+export const DEFAULT_REVEAL = "10:00";
+
+/** The moment the tables show on the wedding day: the couple's hour, Paris time. */
+export const tablesRevealAt = (day: string, revealAt: string) =>
+    `${day}T${revealAt}:00${parisOffset(day)}`;
+
+/** Tables stay hidden until the day: no negotiating seats in the weeks before. */
+export const tablesRevealed = (day: string, revealAt: string, now: Date) =>
+    now.getTime() >= new Date(tablesRevealAt(day, revealAt)).getTime();

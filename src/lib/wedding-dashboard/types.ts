@@ -88,6 +88,8 @@ export type RoomFixture = RoomPoint & { readonly rotation: FixtureRotation };
 
 /** The dinner room: its name, its size, and where the couple's table and the entrance stand. */
 export type RoomLayout = {
+    /** "10:00": when the tables show on the wedding day, Paris time. */
+    readonly revealAt: string;
     /** "L'orangerie": shown at the entrance. */
     readonly name: string;
     readonly size: RoomSize;
@@ -108,6 +110,8 @@ export type InvitationDesign = {
     /** Greeting on the site; `{invités}` becomes the household's name. */
     readonly welcome: string;
     readonly tone: SealTone;
+    /** The day after: the couple's thanks over the gallery. A default one when left out. */
+    readonly thanks?: string;
 };
 
 export type ActivityKind =

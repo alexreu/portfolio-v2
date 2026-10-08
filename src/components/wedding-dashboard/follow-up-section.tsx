@@ -12,7 +12,8 @@ type FollowUpSectionProps = {
     now: Date;
     /** The household the reminder template is shown for. */
     sampleGuest: string;
-    onRemind: () => void;
+    /** Left out for whoever may only follow the reminders, with its button. */
+    onRemind?: () => void;
     /** Opens the detail of the household an event is about. */
     onOpenHousehold: (householdId: string) => void;
 };
@@ -120,15 +121,17 @@ export const FollowUpSection = ({
                         <p className="mt-2">À très vite !</p>
                     </figure>
                     <div className="flex flex-wrap items-center gap-3">
-                        <button
-                            type="button"
-                            onClick={onRemind}
-                            disabled={pending === 0}
-                            className={buttonStyles.primary}
-                        >
-                            <Send aria-hidden="true" />
-                            Relancer maintenant
-                        </button>
+                        {onRemind && (
+                            <button
+                                type="button"
+                                onClick={onRemind}
+                                disabled={pending === 0}
+                                className={buttonStyles.primary}
+                            >
+                                <Send aria-hidden="true" />
+                                Relancer maintenant
+                            </button>
+                        )}
                         {state.lastReminder && (
                             <p className="text-wed-muted text-sm">
                                 Dernière : {sinceLabel(state.lastReminder.at, now)},{" "}

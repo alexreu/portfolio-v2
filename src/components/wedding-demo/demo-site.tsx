@@ -12,16 +12,20 @@ import { weddingDemo } from "@/content/wedding-demo";
 import { useLenis } from "lenis/react";
 import { AnimatePresence } from "motion/react";
 
-import { moveToDay, weddingCalendar } from "@/lib/wedding-dashboard/calendar";
-import { monogram, personalize } from "@/lib/wedding-dashboard/drafts";
-import { answerDraftOf } from "@/lib/wedding-dashboard/households";
+import { moveToDay, parisDay, weddingCalendar } from "@/lib/wedding-dashboard/calendar";
+import { monogram, personalize, slugOf, thanksOf } from "@/lib/wedding-dashboard/drafts";
+import { answerDraftOf, householdStatus } from "@/lib/wedding-dashboard/households";
 import { momentsFromPlans } from "@/lib/wedding-dashboard/programme-plan";
-import { householdTables } from "@/lib/wedding-dashboard/seating";
+import { tablesRevealAt, tablesRevealed } from "@/lib/wedding-dashboard/room";
+import { DINNER, householdTables } from "@/lib/wedding-dashboard/seating";
 import type { HouseholdRecord } from "@/lib/wedding-dashboard/types";
 import type { AnswerDraft } from "@/lib/wedding/answer";
+import { calendarFile } from "@/lib/wedding/calendar-file";
+import { formatHour } from "@/lib/wedding/format-hour";
 import { signPhoto } from "@/lib/wedding/photo-signature";
 import { programmeAt } from "@/lib/wedding/programme";
-import { siteModeAt } from "@/lib/wedding/site-mode";
+import { celebrationsEnd, siteModeAt, type SiteMode } from "@/lib/wedding/site-mode";
+import { useNow } from "@/hooks/use-now";
 import { useWeddingDemo } from "@/hooks/use-wedding-demo";
 
 import { AnswerForm } from "./answer-form";
@@ -37,6 +41,7 @@ import { DemoProgramme } from "./demo-programme";
 import { DemoStory } from "./demo-story";
 import { DemoTabBar } from "./demo-tab-bar";
 import { InvitationOverlay } from "./invitation-overlay";
+import { ThanksPanel } from "./thanks-panel";
 import { UploadSheet } from "./upload-sheet";
 
 /** The page behind a personal link the couple removed from their list. */
@@ -84,6 +89,8 @@ type DemoSiteProps = {
     skipInvitation: boolean;
     /** `?jourj`: open on the wedding-day preview. */
     startOnWeddingDay: boolean;
+    /** `?apres`: open on the day-after preview, thanks and photos. */
+    startAfter?: boolean;
     /** `?foyer=`: the household whose personal link this is. */
     householdId?: string;
     /** `?apercu`: opened by the couple from their dashboard, not by the household. */
@@ -94,11 +101,15 @@ export const DemoSite = ({
     skipInvitation,
     startOnWeddingDay,
     householdId,
+    startAfter = false,
     preview = false,
 }: DemoSiteProps) => {
     const { state, dispatch } = useWeddingDemo();
-    const [opened, setOpened] = useState(skipInvitation || startOnWeddingDay);
-    const [previewDay, setPreviewDay] = useState(startOnWeddingDay);
+    const now = useNow();
+    const [opened, setOpened] = useState(skipInvitation || startOnWeddingDay || startAfter);
+    const [previewMode, setPreviewMode] = useState<SiteMode | null>(
+        startOnWeddingDay ? "day" : startAfter ? "after" : null,
+    );
     const [editing, setEditing] = useState(false);
     const [uploading, setUploading] = useState(false);
     const openUpload = useCallback(() => setUploading(true), []);
@@ -106,12 +117,14 @@ export const DemoSite = ({
     const lenis = useLenis();
 
     const design = state?.design ?? defaultDesign;
+    /** Marie & Thomas by default; the first household left when the couple removed them. */
     const household =
         state?.households.find((candidate) => candidate.id === householdId) ??
         state?.households.find((candidate) => candidate.id === DEMO_GUEST_HOUSEHOLD) ??
+        state?.households[0] ??
         fallbackHousehold;
     /** A created household is only known once the browser copy is read. */
-    const guestName = state === null && householdId ? null : household.name;
+    const guestName = state === null && householdId !== undefined ? null : household.name;
 
     const calendar = weddingCalendar(design.date, (state ?? fallback).dates);
     const moved = (iso: string) => moveToDay(iso, CONTENT_WEDDING_DAY, design.date);
@@ -120,13 +133,35 @@ export const DemoSite = ({
     const invitedMoments = momentsFromPlans(plan.moments, design.date).filter((moment) =>
         household.momentKeys.includes(moment.key),
     );
-    const mode = previewDay
-        ? "day"
-        : siteModeAt({ startsAt: moved(weddingDemo.day.startsAt) }, new Date());
+    const allMoments = momentsFromPlans(plan.moments, design.date);
+    const realMode = siteModeAt(
+        {
+            startsAt: moved(weddingDemo.day.startsAt),
+            endsAt: celebrationsEnd(design.date, allMoments),
+        },
+        now,
+    );
+    const mode = previewMode ?? realMode;
+    /** The demo's clock only when previewing a day still to come; the real one otherwise. */
     const programme = programmeAt(
         invitedMoments,
-        mode === "day" ? new Date(moved(weddingDemo.dayPreviewAt)) : new Date(),
+        previewMode === "day" && realMode === "before"
+            ? new Date(moved(weddingDemo.dayPreviewAt))
+            : now,
     );
+    const status = householdStatus(household);
+    /** The couple's own preview may still type an answer in after the deadline. */
+    const closed = !preview && parisDay(now) > calendar.answerDeadline;
+    const galleryOpen = mode !== "before" || parisDay(now) >= calendar.galleryOpens;
+    const photos = state ? state.photos.filter((photo) => !photo.removed) : [];
+    const seated =
+        household.momentKeys.includes(DINNER) &&
+        household.guests.some((guest) => household.attendance[guest.id]?.[DINNER] !== "no");
+    /** Previewing the day shows the tables; on the real day, from the couple's hour only. */
+    const tablesAt =
+        previewMode === "day" || tablesRevealed(design.date, plan.room.revealAt, now)
+            ? null
+            : formatHour(tablesRevealAt(design.date, plan.room.revealAt));
     const photoSignature = signatureOf(household);
 
     /** Read when the faire-part closes, so a change elsewhere never restarts its timers. */
@@ -179,10 +214,35 @@ export const DemoSite = ({
         setSent((count) => count + 1);
     };
 
-    const answered = household.answeredAt !== null;
+    const answered = status === "answered";
+    const notice =
+        status === "incomplete"
+            ? "Nous avons complété votre invitation depuis votre réponse : il reste à nous dire pour ce qui est nouveau."
+            : undefined;
 
-    /** A link the couple took back: it shows nobody else's invitation instead. */
-    if (householdId && state && !state.households.some((candidate) => candidate.id === householdId))
+    const addToCalendar = () => {
+        const file = calendarFile({
+            couple: `${design.first} & ${design.second}`,
+            moments: invitedMoments,
+            url: window.location.href.split("#")[0],
+            stamp: new Date(),
+        });
+        const url = URL.createObjectURL(new Blob([file], { type: "text/calendar;charset=utf-8" }));
+        const link = Object.assign(document.createElement("a"), {
+            href: url,
+            download: `mariage-${slugOf(`${design.first} ${design.second}`) || "invitation"}.ics`,
+        });
+        link.click();
+        URL.revokeObjectURL(url);
+    };
+
+    /** A link the couple took back, or no invitation left at all: nobody else's is shown. */
+    if (
+        state &&
+        (state.households.length === 0 ||
+            (householdId !== undefined &&
+                !state.households.some((candidate) => candidate.id === householdId)))
+    )
         return <ExpiredLink couple={`${design.first} & ${design.second}`} />;
 
     /** Opened first, before the site: shown alike while the browser copy is read. */
@@ -206,7 +266,7 @@ export const DemoSite = ({
      * Until the browser copy is read, a personal link cannot be told from one the couple took
      * back: nothing of another household is rendered meanwhile, not even under the faire-part.
      */
-    if (householdId && state === null)
+    if (householdId !== undefined && state === null)
         return (
             <>
                 {overlay}
@@ -238,13 +298,22 @@ export const DemoSite = ({
             <DemoNav
                 monogram={monogram(design.first, design.second)}
                 mode={mode}
-                onTogglePreview={() => {
-                    setPreviewDay((day) => !day);
+                preview={previewMode}
+                onPreview={(next) => {
+                    setPreviewMode(next);
                     lenis?.scrollTo(0, { immediate: true });
                 }}
             />
             <main id="top" className="pb-24 md:pb-0">
-                {mode === "day" ? (
+                {mode === "after" ? (
+                    <ThanksPanel
+                        couple={`${design.first} & ${design.second}`}
+                        dateLabel={calendar.dateLabel}
+                        thanks={thanksOf(design)}
+                        photoCount={Math.max(weddingDemo.gallery.count, photos.length)}
+                        onAddPhotos={openUpload}
+                    />
+                ) : mode === "day" ? (
                     <DayPanel
                         dateLabel={calendar.shortDateLabel}
                         guestName={household.name}
@@ -253,6 +322,8 @@ export const DemoSite = ({
                         ownTables={householdTables(household, plan.tables, plan.seats)}
                         programme={programme}
                         photoCount={weddingDemo.gallery.count}
+                        seated={seated}
+                        tablesAt={tablesAt}
                         onAddPhotos={openUpload}
                     />
                 ) : (
@@ -268,9 +339,20 @@ export const DemoSite = ({
                     />
                 )}
                 <DemoStory story={weddingDemo.story} />
-                <DemoProgramme programme={programme} mode={mode} />
+                {mode !== "after" && (
+                    <DemoProgramme
+                        programme={programme}
+                        mode={mode}
+                        onAddToCalendar={mode === "before" ? addToCalendar : undefined}
+                    />
+                )}
                 <DemoPlaces places={weddingDemo.places} />
-                <DemoDressCode dressCode={weddingDemo.dressCode} photo={weddingDemo.dressPhoto} />
+                {mode !== "after" && (
+                    <DemoDressCode
+                        dressCode={weddingDemo.dressCode}
+                        photo={weddingDemo.dressPhoto}
+                    />
+                )}
                 {mode === "before" && (
                     <section
                         id="rsvp"
@@ -289,11 +371,12 @@ export const DemoSite = ({
                                     }}
                                 />
                                 <p className="text-demo-ink-2 mt-5 max-w-[40ch]">
-                                    Une réponse par personne et par moment. Vous pourrez la modifier
-                                    avec ce même lien jusqu&apos;à la date limite.
+                                    {closed
+                                        ? "Les réponses sont closes : pour un changement, écrivez-nous directement."
+                                        : "Une réponse par personne et par moment. Vous pourrez la modifier avec ce même lien jusqu'à la date limite."}
                                 </p>
                                 <p className="bg-demo-card border-demo-line mt-7 inline-flex gap-2.5 rounded-full border px-5 py-3">
-                                    Date limite{" "}
+                                    {closed ? "Closes depuis le" : "Date limite"}{" "}
                                     <strong className="font-demo-serif font-medium">
                                         {calendar.answerDeadlineLabel}
                                     </strong>
@@ -304,33 +387,40 @@ export const DemoSite = ({
                                 tabIndex={-1}
                                 className="bg-demo-card border-demo-line border p-5 outline-none md:p-9"
                             >
-                                <AnswerForm
-                                    key={`${household.id}-${editing}`}
-                                    householdName={household.name}
-                                    invitation={{
-                                        guests: household.guests,
-                                        momentKeys: household.momentKeys,
-                                    }}
-                                    moments={invitedMoments}
-                                    questions={plan.questions}
-                                    presenceLabels={presenceLabels(household)}
-                                    initialDraft={answerDraftOf(household)}
-                                    answered={answered && !editing}
-                                    onSubmit={submitAnswer}
-                                    onEdit={() => setEditing(true)}
-                                />
+                                {household.momentKeys.length === 0 ? (
+                                    <p role="status" className="text-demo-ink-2 py-8 text-center">
+                                        Votre invitation est en cours de mise à jour. Revenez sur ce
+                                        lien dans quelques jours.
+                                    </p>
+                                ) : (
+                                    <AnswerForm
+                                        key={`${household.id}-${editing}`}
+                                        householdName={household.name}
+                                        invitation={{
+                                            guests: household.guests,
+                                            momentKeys: household.momentKeys,
+                                        }}
+                                        moments={invitedMoments}
+                                        questions={plan.questions}
+                                        presenceLabels={presenceLabels(household)}
+                                        initialDraft={answerDraftOf(household)}
+                                        answered={answered && !editing}
+                                        closed={closed}
+                                        deadlineLabel={calendar.answerDeadlineLabel}
+                                        notice={notice}
+                                        onSubmit={submitAnswer}
+                                        onEdit={() => setEditing(true)}
+                                    />
+                                )}
                             </div>
                         </div>
                     </section>
                 )}
                 <DemoGallery
-                    mode={mode}
+                    open={galleryOpen}
                     opensLabel={calendar.galleryOpensLabel}
                     count={weddingDemo.gallery.count}
-                    photos={
-                        state?.photos.filter((photo) => !photo.removed) ??
-                        weddingDemo.gallery.photos
-                    }
+                    photos={photos}
                     onAddPhotos={openUpload}
                 />
                 <DemoFaq items={weddingDemo.faq} />
@@ -339,9 +429,11 @@ export const DemoSite = ({
                 <p className="font-demo-script text-5xl">
                     {design.first} &amp; {design.second}
                 </p>
-                <p className="text-demo-muted mt-2.5 text-sm">Nous avons hâte de vous voir.</p>
+                <p className="text-demo-muted mt-2.5 text-sm">
+                    {mode === "after" ? "Merci d'avoir été là." : "Nous avons hâte de vous voir."}
+                </p>
                 <p className="text-demo-muted mt-10 flex flex-wrap justify-center gap-4.5 text-[0.8rem]">
-                    <span>Vos données restent en Europe et sont supprimées après le mariage</span>
+                    <span>Vos données sont supprimées après le mariage</span>
                     <Link
                         href="/mariage/demo/tableau-de-bord"
                         className="inline-flex min-h-11 items-center underline underline-offset-4"

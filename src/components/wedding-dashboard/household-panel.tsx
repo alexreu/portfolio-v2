@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Check, Copy, ExternalLink, Music, PenLine, Trash2, UserPen, X } from "lucide-react";
 import {
     AnimatePresence,
     motion,
     MotionConfig,
+    useReducedMotion,
     type Transition,
     type Variants,
 } from "motion/react";
@@ -53,6 +54,14 @@ type HouseholdPanelProps = {
     /** An answer received by post or by phone, typed in by the couple. */
     onAnswer: (household: HouseholdRecord, draft: AnswerDraft) => void;
     onRemove: (household: HouseholdRecord) => void;
+    /** What the person looking may do here; the couple may do it all. */
+    allowed: {
+        readonly edit: boolean;
+        readonly answer: boolean;
+        readonly remove: boolean;
+        readonly print: boolean;
+        readonly diets: boolean;
+    };
     onClose: () => void;
 };
 
@@ -134,6 +143,10 @@ const useWideScreen = () =>
 
 const StatusLine = ({ household, now }: { household: HouseholdRecord; now: Date }) => {
     const status = householdStatus(household);
+    if (status === "incomplete")
+        return (
+            <Chip tone="wait">Réponse à compléter · un moment ou une personne ajouté depuis</Chip>
+        );
     if (status === "answered" && household.answeredAt)
         return (
             <Chip tone="yes">
@@ -162,11 +175,33 @@ const PanelBody = ({
     onEdit,
     onAnswer,
     onRemove,
+    allowed,
 }: Omit<HouseholdPanelProps, "household" | "onClose"> & { household: HouseholdRecord }) => {
     const [copied, setCopied] = useState(false);
     /** The detail, or one of the forms that correct it, in the same panel. */
     const [view, setView] = useState<"detail" | "edit" | "answer">("detail");
+    /** Said once a form is saved, back on the detail. */
+    const [saved, setSaved] = useState("");
     const top = useRef<HTMLDivElement>(null);
+    const title = useRef<HTMLHeadingElement>(null);
+    const still = useReducedMotion() ?? false;
+
+    /** The button that opened a view is gone: its title takes the focus instead. */
+    useEffect(() => {
+        if (view !== "detail") title.current?.focus();
+    }, [view]);
+
+    /** Escape leaves a form for the detail, not the whole panel with what was typed. */
+    useEffect(() => {
+        if (view === "detail") return;
+        const back = (event: KeyboardEvent) => {
+            if (event.key !== "Escape") return;
+            event.stopPropagation();
+            setView("detail");
+        };
+        window.addEventListener("keydown", back, true);
+        return () => window.removeEventListener("keydown", back, true);
+    }, [view]);
     const answered = household.answeredAt !== null;
     const timeline = householdTimeline(household, activity, design.first);
 
@@ -182,15 +217,21 @@ const PanelBody = ({
     };
 
     /** Each view starts at the top of the panel, its first field in reach. */
-    const show = (next: typeof view) => {
+    const show = (next: typeof view, message = "") => {
         setView(next);
+        setSaved(message);
         top.current?.closest("[data-lenis-prevent]")?.scrollTo({ top: 0 });
     };
 
     if (view !== "detail")
         return (
             <section ref={top} aria-labelledby="detail-formulaire" className="grid gap-5">
-                <h3 id="detail-formulaire" className="font-wed-serif text-2xl font-medium">
+                <h3
+                    id="detail-formulaire"
+                    ref={title}
+                    tabIndex={-1}
+                    className="font-wed-serif text-2xl font-medium outline-none"
+                >
                     {view === "edit"
                         ? "Modifier le foyer"
                         : answered
@@ -211,7 +252,7 @@ const PanelBody = ({
                             submitLabel="Enregistrer le foyer"
                             onSubmit={(draft) => {
                                 onEdit(household, draft);
-                                show("detail");
+                                show("detail", "Foyer enregistré.");
                             }}
                             onCancel={() => show("detail")}
                         />
@@ -230,7 +271,7 @@ const PanelBody = ({
                             questions={questions}
                             onSubmit={(draft) => {
                                 onAnswer(household, draft);
-                                show("detail");
+                                show("detail", "Réponse enregistrée.");
                             }}
                             onCancel={() => show("detail")}
                         />
@@ -249,6 +290,17 @@ const PanelBody = ({
         >
             <motion.div variants={rise} className="grid justify-items-start gap-3">
                 <StatusLine household={household} now={now} />
+                <p
+                    role="status"
+                    className="text-wed-yes flex items-center gap-1.5 text-sm empty:hidden"
+                >
+                    {saved && (
+                        <>
+                            <Check aria-hidden="true" className="size-4" />
+                            {saved}
+                        </>
+                    )}
+                </p>
                 <div className="flex flex-wrap gap-2">
                     <button type="button" onClick={copy} className={buttonStyles.secondary}>
                         {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
@@ -264,68 +316,81 @@ const PanelBody = ({
                         Son faire-part
                     </a>
                 </div>
-                <div className="border-wed-line-soft flex w-full flex-wrap gap-2 border-t pt-3">
-                    <button
-                        type="button"
-                        onClick={() => show("answer")}
-                        className={buttonStyles.secondary}
-                    >
-                        <PenLine aria-hidden="true" />
-                        {answered ? "Modifier sa réponse" : "Saisir sa réponse"}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => show("edit")}
-                        className={buttonStyles.quiet}
-                    >
-                        <UserPen aria-hidden="true" />
-                        Modifier le foyer
-                    </button>
-                    <ConfirmPopover
-                        question={`Retirer ${household.name} ?`}
-                        detail="Son lien personnel ne fonctionnera plus. Sa réponse et ses places à table sont effacées."
-                        confirmLabel="Retirer le foyer"
-                        align="end"
-                        onConfirm={() => onRemove(household)}
-                    >
-                        <button
-                            type="button"
-                            className={cn(buttonStyles.quiet, "text-wed-no hover:text-wed-no")}
-                        >
-                            <Trash2 aria-hidden="true" />
-                            Retirer
-                        </button>
-                    </ConfirmPopover>
-                </div>
+                {(allowed.answer || allowed.edit || allowed.remove) && (
+                    <div className="border-wed-line-soft flex w-full flex-wrap gap-2 border-t pt-3">
+                        {allowed.answer && (
+                            <button
+                                type="button"
+                                onClick={() => show("answer")}
+                                className={buttonStyles.secondary}
+                            >
+                                <PenLine aria-hidden="true" />
+                                {answered ? "Modifier sa réponse" : "Saisir sa réponse"}
+                            </button>
+                        )}
+                        {allowed.edit && (
+                            <button
+                                type="button"
+                                onClick={() => show("edit")}
+                                className={buttonStyles.quiet}
+                            >
+                                <UserPen aria-hidden="true" />
+                                Modifier le foyer
+                            </button>
+                        )}
+                        {allowed.remove && (
+                            <ConfirmPopover
+                                question={`Retirer ${household.name} ?`}
+                                detail="Son lien personnel ne fonctionnera plus. Sa réponse et ses places à table sont effacées."
+                                confirmLabel="Retirer le foyer"
+                                align="end"
+                                onConfirm={() => onRemove(household)}
+                            >
+                                <button
+                                    type="button"
+                                    className={cn(
+                                        buttonStyles.quiet,
+                                        "text-wed-no hover:text-wed-no",
+                                    )}
+                                >
+                                    <Trash2 aria-hidden="true" />
+                                    Retirer
+                                </button>
+                            </ConfirmPopover>
+                        )}
+                    </div>
+                )}
             </motion.div>
 
-            <motion.section variants={rise} aria-labelledby="detail-papier">
-                <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                    <h3 id="detail-papier" className={cn(heading, "mb-0")}>
-                        Son faire-part papier
-                    </h3>
-                    <PlanBadge section="qr-foyer" />
-                </div>
-                <div className="border-wed-line-soft flex items-center gap-4 rounded-2xl border p-3">
-                    <QrImage
-                        url={linkFor(household)}
-                        label={`QR code personnel de ${household.name}`}
-                        className="size-24 shrink-0"
-                    />
-                    <div className="grid justify-items-start gap-2">
-                        <p className="text-wed-ink-soft text-sm">
-                            Imprimé sur son faire-part, ce code ouvre sa réponse sans rien taper, et
-                            le jour J, sa table.
-                        </p>
-                        <PdfButton
-                            onExport={() => onDownloadInvitation(household)}
-                            className="min-h-9 px-3.5 text-[0.8rem]"
-                        >
-                            Son faire-part PDF
-                        </PdfButton>
+            {allowed.print && (
+                <motion.section variants={rise} aria-labelledby="detail-papier">
+                    <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                        <h3 id="detail-papier" className={cn(heading, "mb-0")}>
+                            Son faire-part papier
+                        </h3>
+                        <PlanBadge section="qr-foyer" />
                     </div>
-                </div>
-            </motion.section>
+                    <div className="border-wed-line-soft flex items-center gap-4 rounded-2xl border p-3">
+                        <QrImage
+                            url={linkFor(household)}
+                            label={`QR code personnel de ${household.name}`}
+                            className="size-24 shrink-0"
+                        />
+                        <div className="grid justify-items-start gap-2">
+                            <p className="text-wed-ink-soft text-sm">
+                                Imprimé sur son faire-part, ce code ouvre sa réponse sans rien
+                                taper, et le jour J, sa table.
+                            </p>
+                            <PdfButton
+                                onExport={() => onDownloadInvitation(household)}
+                                className="min-h-9 px-3.5 text-[0.8rem]"
+                            >
+                                Son faire-part PDF
+                            </PdfButton>
+                        </div>
+                    </div>
+                </motion.section>
+            )}
 
             <motion.section variants={rise} aria-labelledby="detail-qui">
                 <h3 id="detail-qui" className={heading}>
@@ -364,7 +429,7 @@ const PanelBody = ({
                                     </li>
                                 ))}
                             </ul>
-                            {guest.diet && (
+                            {allowed.diets && guest.diet && (
                                 <p className="text-wed-ink-soft text-sm">
                                     <span className="text-wed-muted">Régime :</span> {guest.diet}
                                 </p>
@@ -374,33 +439,37 @@ const PanelBody = ({
                 </motion.ul>
             </motion.section>
 
-            <motion.section variants={rise} aria-labelledby="detail-reponses">
-                <h3 id="detail-reponses" className={heading}>
-                    Vos questions
-                </h3>
-                <dl className="grid gap-3 text-sm">
-                    {questions.map((question) => (
-                        <div key={question.id}>
-                            <dt className="text-wed-muted">{question.label}</dt>
-                            <dd className="mt-0.5 flex items-center gap-2">
-                                {household.questions[question.id] ? (
-                                    <>
-                                        <Music
-                                            aria-hidden="true"
-                                            className="text-wed-gold size-4 shrink-0"
-                                        />
-                                        {household.questions[question.id]}
-                                    </>
-                                ) : (
-                                    <span className="text-wed-muted italic">
-                                        {answered ? "Pas de réponse" : "En attente de leur réponse"}
-                                    </span>
-                                )}
-                            </dd>
-                        </div>
-                    ))}
-                </dl>
-            </motion.section>
+            {questions.length > 0 && (
+                <motion.section variants={rise} aria-labelledby="detail-reponses">
+                    <h3 id="detail-reponses" className={heading}>
+                        Vos questions
+                    </h3>
+                    <dl className="grid gap-3 text-sm">
+                        {questions.map((question) => (
+                            <div key={question.id}>
+                                <dt className="text-wed-muted">{question.label}</dt>
+                                <dd className="mt-0.5 flex items-center gap-2">
+                                    {household.questions[question.id] ? (
+                                        <>
+                                            <Music
+                                                aria-hidden="true"
+                                                className="text-wed-gold size-4 shrink-0"
+                                            />
+                                            {household.questions[question.id]}
+                                        </>
+                                    ) : (
+                                        <span className="text-wed-muted italic">
+                                            {answered
+                                                ? "Pas de réponse"
+                                                : "En attente de leur réponse"}
+                                        </span>
+                                    )}
+                                </dd>
+                            </div>
+                        ))}
+                    </dl>
+                </motion.section>
+            )}
 
             <motion.section variants={rise} aria-labelledby="detail-mot">
                 <h3 id="detail-mot" className={heading}>
@@ -409,7 +478,7 @@ const PanelBody = ({
                 {household.message ? (
                     <blockquote className="border-wed-gold-soft border-l-2 pl-4">
                         <motion.p
-                            variants={ink}
+                            variants={still ? undefined : ink}
                             className="font-wed-serif text-wed-ink text-xl leading-snug italic"
                         >
                             « {household.message} »
@@ -492,12 +561,14 @@ export const HouseholdPanel = ({ household, onClose, ...body }: HouseholdPanelPr
                                         className="mb-5 flex items-start justify-between gap-4"
                                     >
                                         <div>
-                                            <Dialog.Title className="font-wed-serif text-3xl leading-tight font-medium">
+                                            <Dialog.Title className="font-wed-serif text-3xl leading-tight font-medium [overflow-wrap:anywhere]">
                                                 {shown.name}
                                             </Dialog.Title>
                                             <Dialog.Description className="text-wed-muted mt-1 text-sm">
-                                                {householdSummary(shown)} ·{" "}
-                                                {groupLabel(shown.group, body.design)}
+                                                {householdSummary(shown, {
+                                                    diets: body.allowed.diets,
+                                                })}{" "}
+                                                · {groupLabel(shown.group, body.design)}
                                             </Dialog.Description>
                                         </div>
                                         <Dialog.Close aria-label="Fermer" className={iconButton}>

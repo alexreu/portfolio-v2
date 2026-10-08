@@ -107,6 +107,22 @@ export const parisOffset = (day: string) => {
     return zone?.startsWith("GMT+") || zone?.startsWith("GMT-") ? zone.slice(3) : "+00:00";
 };
 
+/**
+ * The Paris offset at that very hour of that day: the night the clocks go back, 1:30 is still
+ * summer time though noon is not. An hour that does not exist, skipped in spring, takes the day's.
+ */
+export const parisOffsetAt = (day: string, time: string) => {
+    const local = (offset: string) =>
+        new Date(`${day}T${time}:00${offset}`).toLocaleString("sv-SE", {
+            timeZone: "Europe/Paris",
+            hour12: false,
+        });
+    return (
+        ["+02:00", "+01:00"].find((offset) => local(offset).startsWith(`${day} ${time}`)) ??
+        parisOffset(day)
+    );
+};
+
 /** Moves a programme time from one wedding day to another, keeping its local hour. */
 export const moveToDay = (iso: string, fromDay: string, toDay: string) => {
     const day = addDays(toDay, daysBetween(fromDay, iso.slice(0, 10)));

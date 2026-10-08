@@ -8,7 +8,7 @@ import type { DemoState } from "@/lib/wedding-dashboard/types";
 import { formatHour } from "@/lib/wedding/format-hour";
 import type { Moment } from "@/lib/wedding/types";
 
-import { buttonStyles, Card, plural } from "./dashboard-ui";
+import { buttonStyles, Card, PlanBadge, plural } from "./dashboard-ui";
 import { PdfButton } from "./pdf-button";
 
 type OverviewSectionProps = {
@@ -16,11 +16,12 @@ type OverviewSectionProps = {
     moments: readonly Moment[];
     calendar: WeddingCalendar;
     now: Date;
-    onAddHousehold: () => void;
-    onExport: () => void;
-    /** Builds the caterer's PDF and downloads it. */
-    onExportCaterer: () => Promise<void>;
-    onRemind: () => void;
+    /** Each action is left out for whoever may not do it, and its button with it. */
+    onAddHousehold?: () => void;
+    onExport?: () => void;
+    /** Builds the caterer's PDF and downloads it; out with the diets it holds. */
+    onExportCaterer?: () => Promise<void>;
+    onRemind?: () => void;
 };
 
 const DINNER = "diner";
@@ -52,7 +53,8 @@ const momentStart = (moment: Moment) => {
     return `${day.charAt(0).toUpperCase()}${day.slice(1)} · ${formatHour(start)}`;
 };
 
-const pendingSentence = (pending: number, neverOpened: number) => {
+const pendingSentence = (households: number, pending: number, neverOpened: number) => {
+    if (households === 0) return "Aucun foyer pour l'instant : créez votre premier faire-part.";
     if (pending === 0) return "Tous les foyers ont répondu.";
     const never =
         neverOpened > 0
@@ -70,15 +72,21 @@ const Kpi = ({
     of,
     detail,
     progress,
+    plan,
 }: {
     label: string;
     value: string;
     of?: string;
     detail: string;
     progress?: number;
+    /** The section's formula, when not every one has it. */
+    plan?: string;
 }) => (
     <div className="border-wed-line-soft bg-wed-paper rounded-2xl border px-5 py-4.5">
-        <dt className="text-wed-muted text-[0.8rem]">{label}</dt>
+        <dt className="text-wed-muted flex flex-wrap items-center gap-2 text-[0.8rem]">
+            {label}
+            {plan && <PlanBadge section={plan} />}
+        </dt>
         <dd>
             <span className="font-wed-serif mt-1 block text-[2.6rem] leading-none font-medium lining-nums">
                 {value}
@@ -133,14 +141,22 @@ export const OverviewSection = ({
                     </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={onExport} className={buttonStyles.secondary}>
-                        <Download aria-hidden="true" />
-                        Exporter CSV
-                    </button>
-                    <button type="button" onClick={onAddHousehold} className={buttonStyles.primary}>
-                        <Plus aria-hidden="true" />
-                        Créer un faire-part
-                    </button>
+                    {onExport && (
+                        <button type="button" onClick={onExport} className={buttonStyles.secondary}>
+                            <Download aria-hidden="true" />
+                            Exporter CSV
+                        </button>
+                    )}
+                    {onAddHousehold && (
+                        <button
+                            type="button"
+                            onClick={onAddHousehold}
+                            className={buttonStyles.primary}
+                        >
+                            <Plus aria-hidden="true" />
+                            Créer un faire-part
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -153,8 +169,9 @@ export const OverviewSection = ({
                                 Date limite dans {plural(deadlineIn, "jour", "jours")}
                             </strong>{" "}
                             ({calendar.answerDeadlineLabel}).{" "}
-                            {pendingSentence(counts.pending, counts.neverOpened)} Relance
-                            automatique prévue le {calendar.reminderLabel}.
+                            {pendingSentence(counts.households, counts.pending, counts.neverOpened)}{" "}
+                            Relance automatique prévue le {calendar.reminderLabel}{" "}
+                            <PlanBadge section="relances" />
                         </>
                     ) : (
                         <strong className="font-semibold">
@@ -168,15 +185,17 @@ export const OverviewSection = ({
                         </span>
                     )}
                 </p>
-                <button
-                    type="button"
-                    onClick={onRemind}
-                    disabled={counts.pending === 0}
-                    className={buttonStyles.secondary}
-                >
-                    <Send aria-hidden="true" />
-                    Relancer maintenant
-                </button>
+                {onRemind && (
+                    <button
+                        type="button"
+                        onClick={onRemind}
+                        disabled={counts.pending === 0}
+                        className={buttonStyles.secondary}
+                    >
+                        <Send aria-hidden="true" />
+                        Relancer maintenant
+                    </button>
+                )}
             </div>
 
             <dl aria-label="Indicateurs" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -200,6 +219,7 @@ export const OverviewSection = ({
                 />
                 <Kpi
                     label="Galerie photos"
+                    plan="galerie"
                     value="—"
                     detail={`Ouverture le ${calendar.galleryOpensLabel}`}
                 />
@@ -269,68 +289,70 @@ export const OverviewSection = ({
                     </p>
                 </Card>
 
-                <Card
-                    id="traiteur"
-                    title="Récap traiteur · dîner"
-                    titleId="traiteur-titre"
-                    aside={
-                        <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1.5">
-                            <span className="text-wed-muted text-[0.8rem]">
-                                {plural(caterer.total, "couvert", "couverts")}
-                            </span>
-                            <PdfButton
-                                onExport={onExportCaterer}
-                                ariaLabel="Exporter le récap traiteur en PDF"
-                                className="min-h-9 px-3.5 text-[0.8rem]"
-                            >
-                                PDF
-                            </PdfButton>
-                        </div>
-                    }
-                >
-                    <dl className="divide-wed-line-soft grid divide-y divide-dashed px-5 py-2">
-                        <div className="flex items-center justify-between py-2.5">
-                            <dt>
-                                Menu standard
-                                <span className="text-wed-muted block text-xs">adultes</span>
-                            </dt>
-                            <dd className="font-wed-serif text-2xl font-medium lining-nums">
-                                {caterer.standard}
-                            </dd>
-                        </div>
-                        {caterer.diets.map((diet) => (
-                            <div
-                                key={diet.choice}
-                                className="flex items-center justify-between py-2.5"
-                            >
+                {onExportCaterer && (
+                    <Card
+                        id="traiteur"
+                        title="Récap traiteur · dîner"
+                        titleId="traiteur-titre"
+                        aside={
+                            <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1.5">
+                                <span className="text-wed-muted text-[0.8rem]">
+                                    {plural(caterer.total, "couvert", "couverts")}
+                                </span>
+                                <PdfButton
+                                    onExport={onExportCaterer}
+                                    ariaLabel="Exporter le récap traiteur en PDF"
+                                    className="min-h-9 px-3.5 text-[0.8rem]"
+                                >
+                                    PDF
+                                </PdfButton>
+                            </div>
+                        }
+                    >
+                        <dl className="divide-wed-line-soft grid divide-y divide-dashed px-5 py-2">
+                            <div className="flex items-center justify-between py-2.5">
                                 <dt>
-                                    {diet.label}
-                                    {diet.choice === "autre" && caterer.details.length > 0 && (
+                                    Menu standard
+                                    <span className="text-wed-muted block text-xs">adultes</span>
+                                </dt>
+                                <dd className="font-wed-serif text-2xl font-medium lining-nums">
+                                    {caterer.standard}
+                                </dd>
+                            </div>
+                            {caterer.diets.map((diet) => (
+                                <div
+                                    key={diet.choice}
+                                    className="flex items-center justify-between py-2.5"
+                                >
+                                    <dt>
+                                        {diet.label}
+                                        {diet.choice === "autre" && caterer.details.length > 0 && (
+                                            <span className="text-wed-muted block text-xs">
+                                                {caterer.details.join(", ")}
+                                            </span>
+                                        )}
+                                    </dt>
+                                    <dd className="font-wed-serif text-2xl font-medium lining-nums">
+                                        {diet.count}
+                                    </dd>
+                                </div>
+                            ))}
+                            <div className="flex items-center justify-between py-2.5">
+                                <dt>
+                                    Menu enfant
+                                    {caterer.childrenDiets.length > 0 && (
                                         <span className="text-wed-muted block text-xs">
-                                            {caterer.details.join(", ")}
+                                            dont {caterer.childrenDiets.join(", ")}
                                         </span>
                                     )}
                                 </dt>
                                 <dd className="font-wed-serif text-2xl font-medium lining-nums">
-                                    {diet.count}
+                                    {caterer.children}
                                 </dd>
                             </div>
-                        ))}
-                        <div className="flex items-center justify-between py-2.5">
-                            <dt>
-                                Menu enfant
-                                {caterer.childrenDiets.length > 0 && (
-                                    <span className="text-wed-muted block text-xs">
-                                        dont {caterer.childrenDiets.join(", ")}
-                                    </span>
-                                )}
-                            </dt>
-                            <dd className="font-wed-serif text-2xl font-medium lining-nums">
-                                {caterer.children}
-                            </dd>
-                        </div>
-                    </dl>
-                </Card>
+                        </dl>
+                    </Card>
+                )}
             </div>
         </div>
     );

@@ -34,6 +34,8 @@ export const guestListCsv = (
     households: readonly HouseholdRecord[],
     moments: readonly Moment[],
     groupName: (group: GroupKey) => string,
+    /** False for whoever may not read the diets, health data: their columns stay out. */
+    { diets = true }: { diets?: boolean } = {},
 ) => {
     const header = [
         "Foyer",
@@ -41,8 +43,7 @@ export const guestListCsv = (
         "Prénom",
         "Enfant",
         ...moments.map((moment) => moment.title),
-        "Régime",
-        "Précision",
+        ...(diets ? ["Régime", "Précision"] : []),
     ];
     const rows = households.flatMap((household) =>
         household.guests.map((guest) => {
@@ -53,8 +54,9 @@ export const guestListCsv = (
                 guest.firstName,
                 guest.child ? "Oui" : "Non",
                 ...moments.map((moment) => presence(household, guest.id, moment.key)),
-                dietLabels[diet.choice],
-                diet.choice === "autre" ? diet.other.trim() : "",
+                ...(diets
+                    ? [dietLabels[diet.choice], diet.choice === "autre" ? diet.other.trim() : ""]
+                    : []),
             ];
         }),
     );

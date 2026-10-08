@@ -20,6 +20,10 @@ type DayPanelProps = {
     ownTables: readonly SeatTable[];
     programme: Programme;
     photoCount: number;
+    /** Invited to dinner and not all declined: the table card has something to say. */
+    seated: boolean;
+    /** "10 h": while the tables are not shown yet; null once they are. */
+    tablesAt: string | null;
     onAddPhotos: () => void;
 };
 
@@ -32,6 +36,8 @@ export const DayPanel = ({
     ownTables,
     programme,
     photoCount,
+    seated,
+    tablesAt,
     onAddPhotos,
 }: DayPanelProps) => {
     const [mapOpen, setMapOpen] = useState(false);
@@ -49,41 +55,53 @@ export const DayPanel = ({
                 >
                     Bienvenue {guestName}
                 </h2>
-                <div className="bg-demo-ink text-demo-paper flex items-center justify-between gap-4 rounded-lg px-5 py-4.5">
-                    {ownTables.length > 0 ? (
-                        <p>
-                            <span className="text-demo-night-muted block text-sm">
-                                {ownTables.length > 1 ? "Vos tables" : "Votre table"}
-                            </span>
-                            <span className="font-demo-serif block text-6xl leading-none">
-                                {ownTables.map((table) => table.number).join(" · ")}
-                            </span>
-                            <span className="font-demo-serif text-demo-sand text-xl italic">
-                                {ownTables.map((table) => table.name).join(" · ")}
-                            </span>
-                        </p>
-                    ) : (
-                        <p>
-                            <span className="text-demo-night-muted block text-sm">Votre table</span>
-                            <span className="font-demo-serif block text-2xl leading-snug">
-                                Pas encore attribuée
-                            </span>
-                            <span className="text-demo-night-muted text-sm">
-                                Les témoins vous guideront à l&apos;arrivée.
-                            </span>
-                        </p>
-                    )}
-                    <button
-                        type="button"
-                        aria-expanded={mapOpen}
-                        aria-controls="plan-salle"
-                        onClick={() => setMapOpen((open) => !open)}
-                        className="border-demo-ink-2 hover:border-demo-paper min-h-12 cursor-pointer rounded-full border px-5 whitespace-nowrap transition-colors"
-                    >
-                        {mapOpen ? "Masquer le plan" : "Voir le plan"}
-                    </button>
-                </div>
-                {mapOpen && (
+                {seated && tablesAt !== null && (
+                    <p className="bg-demo-ink text-demo-paper rounded-lg px-5 py-4.5">
+                        <span className="text-demo-night-muted block text-sm">Votre table</span>
+                        <span className="font-demo-serif block text-2xl leading-snug">
+                            Dévoilée à {tablesAt}
+                        </span>
+                    </p>
+                )}
+                {seated && tablesAt === null && (
+                    <div className="bg-demo-ink text-demo-paper flex items-center justify-between gap-4 rounded-lg px-5 py-4.5">
+                        {ownTables.length > 0 ? (
+                            <p>
+                                <span className="text-demo-night-muted block text-sm">
+                                    {ownTables.length > 1 ? "Vos tables" : "Votre table"}
+                                </span>
+                                <span className="font-demo-serif block text-6xl leading-none">
+                                    {ownTables.map((table) => table.number).join(" · ")}
+                                </span>
+                                <span className="font-demo-serif text-demo-sand text-xl italic">
+                                    {ownTables.map((table) => table.name).join(" · ")}
+                                </span>
+                            </p>
+                        ) : (
+                            <p>
+                                <span className="text-demo-night-muted block text-sm">
+                                    Votre table
+                                </span>
+                                <span className="font-demo-serif block text-2xl leading-snug">
+                                    Pas encore attribuée
+                                </span>
+                                <span className="text-demo-night-muted text-sm">
+                                    Les témoins vous guideront à l&apos;arrivée.
+                                </span>
+                            </p>
+                        )}
+                        <button
+                            type="button"
+                            aria-expanded={mapOpen}
+                            aria-controls="plan-salle"
+                            onClick={() => setMapOpen((open) => !open)}
+                            className="border-demo-ink-2 hover:border-demo-paper min-h-12 cursor-pointer rounded-full border px-5 whitespace-nowrap transition-colors"
+                        >
+                            {mapOpen ? "Masquer le plan" : "Voir le plan"}
+                        </button>
+                    </div>
+                )}
+                {seated && tablesAt === null && mapOpen && (
                     <div
                         id="plan-salle"
                         className="bg-demo-card border-demo-line mt-2 rounded-lg border p-2.5"

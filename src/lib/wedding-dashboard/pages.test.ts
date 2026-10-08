@@ -59,6 +59,7 @@ const state: DemoState = {
     room: {
         name: "L'orangerie",
         size: "s",
+        revealAt: "10:00",
         head: { x: 50, y: 11, rotation: 0 },
         entrance: { x: 50, y: 96, rotation: 0 },
     },
@@ -118,5 +119,20 @@ describe("pageSummaries", () => {
                 collaborators: [{ ...collaborator("elsa", "x"), grant: noGrant }],
             }).acces,
         ).toBe("1 personne");
+    });
+
+    it("tells an expired invitation from one still waiting", () => {
+        const late = { ...collaborator("elsa", null), invitedAt: "2026-10-01T10:00:00Z" };
+
+        expect(summaries({ ...state, collaborators: [late] }).acces).toBe(
+            "1 personne · 1 invitation expirée",
+        );
+    });
+
+    it("says there is nothing yet rather than « tous ont répondu » or « tout le monde est placé »", () => {
+        expect(summaries({ ...state, households: [] }).invites).toBe("Aucun foyer pour l'instant");
+        expect(summaries({ ...state, tables: [] })["plan-de-table"]).toBe(
+            "Aucune table pour l'instant",
+        );
     });
 });

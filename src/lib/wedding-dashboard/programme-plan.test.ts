@@ -98,3 +98,29 @@ describe("momentKeyFor", () => {
         expect(momentKeyFor("Mairie", [])).toBe("mairie");
     });
 });
+
+describe("momentsFromPlans · change of hour", () => {
+    it("dates a ball ending at 1:30 on the night the clocks go back in summer time", () => {
+        const [moment] = momentsFromPlans(
+            [
+                {
+                    key: "bal",
+                    title: "Bal",
+                    slots: [
+                        {
+                            id: "b",
+                            title: "Bal",
+                            place: "",
+                            dayOffset: 0,
+                            start: "22:00",
+                            end: "01:30",
+                        },
+                    ],
+                },
+            ],
+            "2027-10-30",
+        );
+
+        expect(moment.slots[0].endsAt).toBe("2027-10-31T01:30:00+02:00");
+    });
+});

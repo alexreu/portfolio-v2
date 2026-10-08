@@ -4,7 +4,7 @@ import { DEMO_GUEST_HOUSEHOLD } from "@/content/wedding-dashboard-demo";
 import { weddingDemo } from "@/content/wedding-demo";
 
 import { useDashboard } from "../dashboard-context";
-import { PageHeader } from "../dashboard-ui";
+import { PageHeader, ReadOnly } from "../dashboard-ui";
 import { InvitationEditor } from "../invitation-editor";
 import { InvitationPrintSection } from "../invitation-print-section";
 import { QuestionsSection } from "../questions-section";
@@ -19,6 +19,8 @@ export const InvitationPage = () => {
         linkFor,
         downloadSharedInvitation,
         downloadHouseholdInvitations,
+        can,
+        canRead,
     } = useDashboard();
     const sampleHousehold =
         state.households.find((household) => household.id === DEMO_GUEST_HOUSEHOLD) ??
@@ -27,26 +29,42 @@ export const InvitationPage = () => {
     return (
         <>
             <PageHeader page="faire-part" />
-            <InvitationEditor
-                design={state.design}
-                sampleGuest={sampleGuest}
-                now={now}
-                onSave={(design) => dispatch({ type: "design-saved", design, at: at() })}
-            />
-            <InvitationPrintSection
-                siteUrl={siteUrl}
-                sample={{
-                    name: sampleGuest,
-                    link: sampleHousehold ? linkFor(sampleHousehold) : siteUrl,
-                }}
-                householdCount={state.households.length}
-                onDownloadShared={downloadSharedInvitation}
-                onDownloadHouseholds={() => downloadHouseholdInvitations()}
-            />
-            <QuestionsSection
-                questions={state.questions}
-                onSave={(questions) => dispatch({ type: "questions-saved", questions, at: at() })}
-            />
+            {canRead("faire-part") && (
+                <ReadOnly locked={!can("faire-part.edit")}>
+                    <InvitationEditor
+                        design={state.design}
+                        sampleGuest={sampleGuest}
+                        now={now}
+                        onSave={(design) => dispatch({ type: "design-saved", design, at: at() })}
+                    />
+                </ReadOnly>
+            )}
+            {(can("faire-part.print") || can("household.print")) && (
+                <InvitationPrintSection
+                    siteUrl={siteUrl}
+                    sample={{
+                        name: sampleGuest,
+                        link: sampleHousehold ? linkFor(sampleHousehold) : siteUrl,
+                    }}
+                    householdCount={state.households.length}
+                    onDownloadShared={
+                        can("faire-part.print") ? downloadSharedInvitation : undefined
+                    }
+                    onDownloadHouseholds={
+                        can("household.print") ? () => downloadHouseholdInvitations() : undefined
+                    }
+                />
+            )}
+            {canRead("questions-perso") && (
+                <ReadOnly locked={!can("questions.edit")}>
+                    <QuestionsSection
+                        questions={state.questions}
+                        onSave={(questions) =>
+                            dispatch({ type: "questions-saved", questions, at: at() })
+                        }
+                    />
+                </ReadOnly>
+            )}
         </>
     );
 };

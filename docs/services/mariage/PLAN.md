@@ -120,7 +120,7 @@ les invités le jour J, le QR personnel par foyer et le plan de table sur télé
 | Réponses des invités par lien personnel | ✓ | ✓ | ✓ |
 | Questions aux invités | De base : contraintes alimentaires, mot pour les mariés | + vos propres questions, sans limite | idem Essentiel |
 | Tableau de bord | Liste, statuts, statistiques, export CSV ; textes, programme et dates modifiés par les mariés | idem | + plan de table, co-gestion (témoins, wedding planner) |
-| Relances automatiques | — | ✓ (J-30, J-15, J-7 avant date limite) | ✓ |
+| Relances automatiques | — | ✓ (une relance J-15 avant la date limite, date réglable) | ✓ |
 | Galerie photos invités (QR jour J) | option | ✓ | ✓ |
 | Faire-part PDF + QR | option | ✓ 1 visuel, QR vers le site | ✓ **QR personnel par foyer** (ouvre directement sa réponse) |
 | Plan de table numérique (QR jour J) | — | option | ✓ chaque invité trouve sa table sur son téléphone (§4.7) |
@@ -300,9 +300,9 @@ Calendrier conseillé au couple :
     imprimer pour tout le jour J.
 - **Chaque photo est signée.** Téléphone reconnu ou lien personnel : signature
   automatique avec le nom du foyer. Invité qui vient de chercher sa table
-  (Signature) : on réutilise son nom. Sinon, via le QR jour J : champ
-  « Votre prénom » **obligatoire** (2 caractères minimum) avant de choisir les
-  photos, demandé une seule fois puis mémorisé sur le téléphone.
+  (Signature) : on réutilise son nom. Sinon, via le QR de la galerie : champs
+  « Prénom » (2 caractères minimum) et « Nom » **obligatoires** avant d'entrer,
+  demandés une seule fois puis mémorisés sur le téléphone.
 - Qui voit la galerie : les invités via leur lien personnel, et toute personne
   ayant scanné le QR sur place pendant la fenêtre du jour J. Sans l'un ou
   l'autre, rien n'est visible.
@@ -376,8 +376,8 @@ WhatsApp. Le site est conçu pour le pouce, en deux états.
   moment », lien « Itinéraire » sous chaque moment.
 - Envoi des photos dans une feuille qui monte du bas : « Prendre une photo » /
   « Choisir dans ma galerie ». Aucun champ à remplir : l'envoi est signé du nom
-  du foyer grâce au lien personnel (via le QR jour J sur un téléphone non
-  reconnu : prénom obligatoire, demandé une seule fois, cf. §4.4). Progression photo par photo, reprise
+  du foyer grâce au lien personnel (via le QR de la galerie : prénom et nom
+  obligatoires, demandés une seule fois, cf. §4.4). Progression photo par photo, reprise
   automatique si le réseau coupe, confirmation « 3 photos partagées, merci ! ».
 - Cibles tactiles ≥ 44 px partout, textes ≥ 13 px, aucune barre horizontale,
   marges de sécurité de l'iPhone respectées (`env(safe-area-inset-bottom)`).

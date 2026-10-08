@@ -63,7 +63,12 @@ export const Card = ({ id, title, titleId, plan, aside, className, children }: C
     >
         <div className="border-wed-line-soft flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b px-5 py-4">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                <h2 id={titleId} className="text-[0.95rem] font-semibold">
+                {/* Focusable from code only: where focus lands when what held it disappears. */}
+                <h2
+                    id={titleId}
+                    tabIndex={-1}
+                    className="text-[0.95rem] font-semibold outline-none"
+                >
                     {title}
                 </h2>
                 {plan && <PlanBadge section={plan} />}
@@ -95,6 +100,22 @@ export const Chip = ({ tone, children }: { tone: CellTone; children: ReactNode }
         {children}
     </span>
 );
+
+/**
+ * What the person looking may see but not change: every field and button inside is disabled
+ * at once, links still open. The couple, or a « Modifier » access, see it as it is.
+ */
+export const ReadOnly = ({ locked, children }: { locked: boolean; children: ReactNode }) =>
+    locked ? (
+        <fieldset disabled className="contents">
+            <p className="text-wed-muted border-wed-line rounded-xl border border-dashed px-4 py-2.5 text-sm">
+                Lecture seule : cette partie peut être vue, pas modifiée.
+            </p>
+            {children}
+        </fieldset>
+    ) : (
+        children
+    );
 
 export const inputStyles =
     "border-wed-line bg-wed-paper text-wed-ink placeholder:text-wed-muted/70 aria-invalid:border-wed-no min-h-11 w-full rounded-xl border px-3.5 text-[0.95rem]";

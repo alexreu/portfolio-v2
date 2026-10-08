@@ -187,7 +187,17 @@ export const slugOf = (text: string) =>
 
 /** "famille-helene-zoe-x7": readable in a link; the suffix keeps two Martin families apart. */
 export const householdIdFor = (name: string, suffix: string) =>
-    `${slugOf(name).slice(0, 32)}-${suffix}`;
+    `${slugOf(name).slice(0, 32) || "foyer"}-${suffix}`;
+
+/** A household id no other household holds: another suffix is drawn while it is taken. */
+export const freshHouseholdId = (
+    name: string,
+    taken: ReadonlySet<string>,
+    suffix: () => string,
+): string => {
+    const id = householdIdFor(name, suffix());
+    return taken.has(id) ? freshHouseholdId(name, taken, suffix) : id;
+};
 
 const isRealDay = (day: string) =>
     /^\d{4}-\d{2}-\d{2}$/.test(day) &&
@@ -198,6 +208,14 @@ const dateIssues = (day: string, today: string): readonly DraftIssue[] => {
     if (!isRealDay(day)) return [{ path: "date", code: "date-invalid" }];
     return day < today ? [{ path: "date", code: "date-past" }] : [];
 };
+
+export const THANKS_MAX = 300;
+
+const DEFAULT_THANKS =
+    "Merci d'avoir été là. Retrouvez ici les photos de la journée, et ajoutez les vôtres.";
+
+/** What guests read the day after: the couple's own words, or a simple thank-you. */
+export const thanksOf = (design: InvitationDesign) => design.thanks?.trim() || DEFAULT_THANKS;
 
 /** `today` is Paris's date, "YYYY-MM-DD": a wedding cannot be planned in the past. */
 export const validateDesign = (
@@ -212,6 +230,9 @@ export const validateDesign = (
         ...(design.welcome.trim().length > 220
             ? [{ path: "welcome", code: "too-long" as const }]
             : []),
+        ...((design.thanks ?? "").trim().length > THANKS_MAX
+            ? [{ path: "thanks", code: "too-long" as const }]
+            : []),
     ];
     return issues.length > 0
         ? failure(issues)
@@ -221,6 +242,7 @@ export const validateDesign = (
               second: design.second.trim(),
               place: design.place.trim(),
               welcome: design.welcome.trim(),
+              thanks: (design.thanks ?? "").trim(),
           });
 };
 

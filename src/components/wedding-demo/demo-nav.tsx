@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import type { SiteMode } from "@/lib/wedding/site-mode";
 import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
+import { SelectField } from "@/components/shared/select-field";
 
 const links = [
     { label: "Notre histoire", href: "#histoire" },
@@ -16,10 +17,19 @@ const links = [
 type DemoNavProps = {
     monogram: string;
     mode: SiteMode;
-    onTogglePreview: () => void;
+    /** The moment the demo shows instead of today: the wedding day, or the day after. */
+    preview: SiteMode | null;
+    onPreview: (preview: SiteMode | null) => void;
 };
 
-export const DemoNav = ({ monogram, mode, onTogglePreview }: DemoNavProps) => {
+/** "Aperçu" is the site as it is today; the others show it ahead of time. */
+const previews: readonly { value: string; label: string }[] = [
+    { value: "", label: "Aperçu" },
+    { value: "day", label: "Jour J" },
+    { value: "after", label: "Lendemain" },
+];
+
+export const DemoNav = ({ monogram, mode, preview, onPreview }: DemoNavProps) => {
     const scrollTo = useAnchorScroll();
     return (
         <header className="bg-demo-paper/90 border-demo-line sticky top-0 z-30 border-b backdrop-blur-md">
@@ -47,20 +57,34 @@ export const DemoNav = ({ monogram, mode, onTogglePreview }: DemoNavProps) => {
                     </ul>
                 </nav>
                 <div className="absolute right-4 flex items-center gap-2.5 md:static">
-                    <button
-                        type="button"
-                        aria-pressed={mode === "day"}
-                        onClick={onTogglePreview}
-                        title="Démonstration : voir le site tel qu'il apparaît le jour du mariage"
+                    <label className="sr-only" htmlFor="apercu-du-site">
+                        Démonstration : voir le site
+                    </label>
+                    <SelectField
+                        id="apercu-du-site"
+                        value={preview ?? ""}
+                        onChange={(event) =>
+                            onPreview((event.target.value || null) as SiteMode | null)
+                        }
+                        title="Démonstration : voir le site tel qu'il apparaît le jour du mariage, ou le lendemain"
+                        wrapperClassName="w-auto"
+                        chevronClassName={cn(
+                            "right-3 size-3.5",
+                            preview ? "text-white" : "text-demo-olive",
+                        )}
                         className={cn(
-                            "min-h-10 cursor-pointer rounded-full border border-dashed px-3.5 text-[0.8rem] whitespace-nowrap transition-colors md:text-sm",
-                            mode === "day"
+                            "min-h-11 rounded-full border border-dashed pr-8 pl-3.5 text-[0.8rem] md:text-sm",
+                            preview
                                 ? "bg-demo-olive border-demo-olive border-solid text-white"
-                                : "border-demo-olive text-demo-olive",
+                                : "border-demo-olive text-demo-olive bg-transparent",
                         )}
                     >
-                        Aperçu jour J
-                    </button>
+                        {previews.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </SelectField>
                     {mode === "before" && (
                         <a
                             href="#rsvp"

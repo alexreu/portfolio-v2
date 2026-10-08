@@ -29,14 +29,20 @@ type HouseholdsSectionProps = {
     /** The household just created, shown first and lit up. */
     highlightId: string | null;
     linkFor: (household: HouseholdRecord) => string;
-    onAddHousehold: () => void;
+    /** Left out for whoever may not create a household, with its button. */
+    onAddHousehold?: () => void;
+    /** Whether the person looking may read the diets, health data. */
+    showDiets: boolean;
     /** Opens the household's whole answer. */
     onOpen: (household: HouseholdRecord) => void;
 };
 
+const NO_FILTER: HouseholdFilter = { query: "", status: "all", group: "all" };
+
 const statusTabs: readonly { value: StatusFilter; label: string }[] = [
     { value: "all", label: "Tous" },
     { value: "answered", label: "Répondu" },
+    { value: "incomplete", label: "À compléter" },
     { value: "opened", label: "Lien ouvert" },
     { value: "never-opened", label: "Jamais ouvert" },
 ];
@@ -52,24 +58,26 @@ const lastSeen = (household: HouseholdRecord, now: Date) => {
 const HouseholdName = ({
     household,
     design,
+    showDiets,
     onOpen,
 }: {
     household: HouseholdRecord;
     design: InvitationDesign;
+    showDiets: boolean;
     onOpen: (household: HouseholdRecord) => void;
 }) => (
     <button
         type="button"
         onClick={() => onOpen(household)}
         aria-label={`Voir la réponse de ${household.name}`}
-        className="group/name -mx-1.5 cursor-pointer rounded-lg px-1.5 py-0.5 text-left"
+        className="group/name -mx-1.5 min-w-0 cursor-pointer rounded-lg px-1.5 py-0.5 text-left"
     >
-        <span className="flex items-center gap-1 font-medium group-hover/name:underline group-hover/name:underline-offset-4">
+        <span className="flex items-center gap-1 font-medium [overflow-wrap:anywhere] group-hover/name:underline group-hover/name:underline-offset-4">
             {household.name}
             <ChevronRight aria-hidden="true" className="text-wed-muted size-4" />
         </span>
         <span className="text-wed-muted block text-xs">
-            {householdSummary(household)}
+            {householdSummary(household, { diets: showDiets })}
             {household.answeredBy === "maries" && ` · réponse saisie par ${design.first}`}
         </span>
     </button>
@@ -90,14 +98,17 @@ export const HouseholdsSection = ({
     highlightId,
     linkFor,
     onAddHousehold,
+    showDiets,
     onOpen,
 }: HouseholdsSectionProps) => {
     const still = useReducedMotion() ?? false;
-    const [filter, setFilter] = useState<HouseholdFilter>({
-        query: "",
-        status: "all",
-        group: "all",
-    });
+    const [filter, setFilter] = useState<HouseholdFilter>(NO_FILTER);
+    /** A household just created is shown whatever was filtered: the filters start over. */
+    const [litFor, setLitFor] = useState(highlightId);
+    if (highlightId !== litFor) {
+        setLitFor(highlightId);
+        if (highlightId) setFilter(NO_FILTER);
+    }
     const [copied, setCopied] = useState<HouseholdRecord | null>(null);
     const counts = statusCounts(households);
     const visible = filterHouseholds(households, filter);
@@ -149,14 +160,16 @@ export const HouseholdsSection = ({
                         {plural(households.length, "foyer", "foyers")} ·{" "}
                         {plural(guests, "invité", "invités")}
                     </span>
-                    <button
-                        type="button"
-                        onClick={onAddHousehold}
-                        className={buttonStyles.secondary}
-                    >
-                        <Plus aria-hidden="true" />
-                        Créer un faire-part
-                    </button>
+                    {onAddHousehold && (
+                        <button
+                            type="button"
+                            onClick={onAddHousehold}
+                            className={buttonStyles.secondary}
+                        >
+                            <Plus aria-hidden="true" />
+                            Créer un faire-part
+                        </button>
+                    )}
                 </div>
             }
         >
@@ -180,52 +193,60 @@ export const HouseholdsSection = ({
                     aria-label="Filtrer par statut"
                     className="bg-wed-ivory flex max-w-full min-w-0 gap-1 overflow-x-auto rounded-full p-1"
                 >
-                    {statusTabs.map((tab) => {
-                        const current = filter.status === tab.value;
-                        return (
-                            <button
-                                key={tab.value}
-                                type="button"
-                                aria-pressed={current}
-                                onClick={() => setFilter({ ...filter, status: tab.value })}
-                                className={cn(
-                                    "relative min-h-9 cursor-pointer rounded-full px-3.5 text-[0.8rem] whitespace-nowrap transition-colors duration-200",
-                                    current ? "text-wed-ink" : "text-wed-muted hover:text-wed-ink",
-                                )}
-                            >
-                                {/* One pill, shared by the tabs: it slides to the one picked. */}
-                                {current && (
-                                    <motion.span
-                                        aria-hidden="true"
-                                        layoutId="household-status-pill"
-                                        transition={
-                                            still
-                                                ? { duration: 0 }
-                                                : { type: "spring", stiffness: 500, damping: 38 }
-                                        }
-                                        className="bg-wed-paper absolute inset-0 rounded-full shadow-sm"
-                                    />
-                                )}
-                                {/* A hidden bold copy holds the width: tabs never shift as the weight changes. */}
-                                <span className="relative grid">
-                                    <span
-                                        className={cn(
-                                            "col-start-1 row-start-1",
-                                            current && "font-medium",
-                                        )}
-                                    >
-                                        {tab.label} {counts[tab.value]}
+                    {statusTabs
+                        .filter((tab) => tab.value !== "incomplete" || counts.incomplete > 0)
+                        .map((tab) => {
+                            const current = filter.status === tab.value;
+                            return (
+                                <button
+                                    key={tab.value}
+                                    type="button"
+                                    aria-pressed={current}
+                                    onClick={() => setFilter({ ...filter, status: tab.value })}
+                                    className={cn(
+                                        "relative min-h-9 cursor-pointer rounded-full px-3.5 text-[0.8rem] whitespace-nowrap transition-colors duration-200",
+                                        current
+                                            ? "text-wed-ink"
+                                            : "text-wed-muted hover:text-wed-ink",
+                                    )}
+                                >
+                                    {/* One pill, shared by the tabs: it slides to the one picked. */}
+                                    {current && (
+                                        <motion.span
+                                            aria-hidden="true"
+                                            layoutId="household-status-pill"
+                                            transition={
+                                                still
+                                                    ? { duration: 0 }
+                                                    : {
+                                                          type: "spring",
+                                                          stiffness: 500,
+                                                          damping: 38,
+                                                      }
+                                            }
+                                            className="bg-wed-paper absolute inset-0 rounded-full shadow-sm"
+                                        />
+                                    )}
+                                    {/* A hidden bold copy holds the width: tabs never shift as the weight changes. */}
+                                    <span className="relative grid">
+                                        <span
+                                            className={cn(
+                                                "col-start-1 row-start-1",
+                                                current && "font-medium",
+                                            )}
+                                        >
+                                            {tab.label} {counts[tab.value]}
+                                        </span>
+                                        <span
+                                            aria-hidden="true"
+                                            className="invisible col-start-1 row-start-1 font-medium"
+                                        >
+                                            {tab.label} {counts[tab.value]}
+                                        </span>
                                     </span>
-                                    <span
-                                        aria-hidden="true"
-                                        className="invisible col-start-1 row-start-1 font-medium"
-                                    >
-                                        {tab.label} {counts[tab.value]}
-                                    </span>
-                                </span>
-                            </button>
-                        );
-                    })}
+                                </button>
+                            );
+                        })}
                 </div>
                 <Select
                     aria-label="Filtrer par groupe"
@@ -252,7 +273,11 @@ export const HouseholdsSection = ({
             </p>
 
             {visible.length === 0 ? (
-                <p className="text-wed-muted px-5 py-10 text-center">Aucun foyer ne correspond.</p>
+                <p className="text-wed-muted px-5 py-10 text-center">
+                    {households.length === 0
+                        ? "Aucun foyer pour l'instant : créez votre premier faire-part."
+                        : "Aucun foyer ne correspond."}
+                </p>
             ) : (
                 <>
                     <div className="relative hidden overflow-x-auto xl:block">
@@ -294,6 +319,7 @@ export const HouseholdsSection = ({
                                     >
                                         <td className="px-5 py-3">
                                             <HouseholdName
+                                                showDiets={showDiets}
                                                 household={household}
                                                 design={design}
                                                 onOpen={onOpen}
@@ -334,6 +360,7 @@ export const HouseholdsSection = ({
                             >
                                 <p className="text-sm">
                                     <HouseholdName
+                                        showDiets={showDiets}
                                         household={household}
                                         design={design}
                                         onOpen={onOpen}

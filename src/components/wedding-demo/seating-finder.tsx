@@ -110,7 +110,7 @@ export const SeatingFinder = ({ board, room }: SeatingFinderProps) => {
                                                 {match.firstName}
                                             </span>
                                             <span className="text-demo-muted text-sm">
-                                                {match.householdName}
+                                                {match.household}
                                             </span>
                                         </span>
                                         <span className="text-right">

@@ -6,7 +6,13 @@ import { Check, ExternalLink, RotateCcw } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { parisDay, weddingCalendar } from "@/lib/wedding-dashboard/calendar";
-import { personalize, validateDesign, type DraftIssue } from "@/lib/wedding-dashboard/drafts";
+import {
+    personalize,
+    THANKS_MAX,
+    thanksOf,
+    validateDesign,
+    type DraftIssue,
+} from "@/lib/wedding-dashboard/drafts";
 import { previewOf } from "@/lib/wedding-dashboard/preview-link";
 import type { InvitationDesign, SealTone } from "@/lib/wedding-dashboard/types";
 import { InvitationEnvelope } from "@/components/wedding-demo/invitation-envelope";
@@ -40,10 +46,11 @@ const messages: Partial<Record<DraftIssue["code"], string>> = {
 const issueAt = (issues: readonly DraftIssue[], path: keyof InvitationDesign) =>
     issues.find((issue) => issue.path === path);
 
+/** A message left out reads as an empty one: neither makes the editor think it changed. */
 const sameDesign = (a: InvitationDesign, b: InvitationDesign) =>
-    (Object.keys(a) as (keyof InvitationDesign)[])
+    ([...new Set([...Object.keys(a), ...Object.keys(b)])] as (keyof InvitationDesign)[])
         .filter((key) => key !== "date")
-        .every((key) => a[key] === b[key]);
+        .every((key) => (a[key] ?? "") === (b[key] ?? ""));
 
 /** What every guest discovers first: names, date, place, greeting and the colour of the seal. */
 export const InvitationEditor = ({ design, sampleGuest, now, onSave }: InvitationEditorProps) => {
@@ -95,6 +102,7 @@ export const InvitationEditor = ({ design, sampleGuest, now, onSave }: Invitatio
     const second = field("second");
     const place = field("place");
     const welcome = field("welcome");
+    const thanks = field("thanks");
 
     return (
         <section
@@ -189,6 +197,49 @@ export const InvitationEditor = ({ design, sampleGuest, now, onSave }: Invitatio
                     <span className="font-demo-serif text-wed-ink-soft border-wed-line border-l-2 pl-3 italic">
                         {personalize(draft.welcome.trim() || design.welcome, sampleGuest)}
                     </span>
+                </label>
+                <label className="grid gap-1.5 text-sm">
+                    <span className="text-wed-ink-soft">
+                        Message du lendemain{" "}
+                        <small className="text-wed-muted">
+                            (au-dessus des photos, après le mariage)
+                        </small>
+                    </span>
+                    <textarea
+                        rows={2}
+                        value={draft.thanks ?? ""}
+                        onChange={(event) => change({ thanks: event.target.value })}
+                        placeholder={thanksOf({ ...draft, thanks: "" })}
+                        aria-invalid={thanks["aria-invalid"]}
+                        aria-describedby={["faire-part-thanks-aide", thanks["aria-describedby"]]
+                            .filter(Boolean)
+                            .join(" ")}
+                        className={cn(inputStyles, "py-3")}
+                    />
+                    <span
+                        id="faire-part-thanks-aide"
+                        className="text-wed-muted flex justify-between gap-3 text-xs"
+                    >
+                        <span>
+                            Laissé vide, ce message par défaut s&apos;affiche.{" "}
+                            <a
+                                href={previewOf("/mariage/demo?apres")}
+                                target="_blank"
+                                rel="noopener"
+                                className="text-wed-ink-soft underline underline-offset-4"
+                            >
+                                Voir le lendemain
+                            </a>
+                        </span>
+                        <span
+                            className={cn(
+                                (draft.thanks ?? "").length > THANKS_MAX && "text-wed-no",
+                            )}
+                        >
+                            {(draft.thanks ?? "").length} / {THANKS_MAX}
+                        </span>
+                    </span>
+                    {thanks.error}
                 </label>
                 <fieldset>
                     <legend className="text-wed-ink-soft mb-2 text-sm">Couleur du sceau</legend>

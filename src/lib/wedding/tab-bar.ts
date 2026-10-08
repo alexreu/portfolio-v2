@@ -23,18 +23,31 @@ const programmeTab: Tab = {
 };
 const placesTab: Tab = { key: "lieux", label: "Lieux", href: "#lieux", emphasis: "normal" };
 
-/** Before the wedding the gallery is empty, so no photo tab; on the day, answers are closed. */
-export const tabBar = (mode: SiteMode, state: { readonly answered: boolean }): readonly Tab[] =>
-    mode === "day"
+const questionsTab: Tab = {
+    key: "questions",
+    label: "Questions",
+    href: "#faq",
+    emphasis: "normal",
+};
+
+/**
+ * Before the wedding the gallery is empty, so no photo tab; on the day, answers are closed; the
+ * day after, the couple's thanks and the photos come first.
+ */
+export const tabBar = (mode: SiteMode, state: { readonly answered: boolean }): readonly Tab[] => {
+    if (mode === "after")
+        return [
+            { key: "merci", label: "Merci", href: "#top", emphasis: "normal" },
+            { key: "photos", label: "Photos", href: "#photos", emphasis: "primary" },
+            placesTab,
+            questionsTab,
+        ];
+    return mode === "day"
         ? [
               programmeTab,
               { key: "table", label: "Ma table", href: "#jourj", emphasis: "normal" },
               { key: "ajouter", label: "Ajouter", href: "#photos", emphasis: "primary" },
               placesTab,
           ]
-        : [
-              programmeTab,
-              placesTab,
-              { key: "questions", label: "Questions", href: "#faq", emphasis: "normal" },
-              answerTab(state.answered),
-          ];
+        : [programmeTab, placesTab, questionsTab, answerTab(state.answered)];
+};

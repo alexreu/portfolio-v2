@@ -64,4 +64,21 @@ describe("validateDates", () => {
         );
         expect(result.ok && result.value.overrides.answerDeadline).toBeNull();
     });
+
+    it("lets the couple move the day once a reminder already went out", () => {
+        const sent = { ...none, reminder: "2026-09-20" };
+        const result = validateDates({ day: "2027-06-19", overrides: sent }, today, sent);
+
+        expect(result.ok).toBe(true);
+    });
+
+    it("still refuses a date newly set in the past", () => {
+        const result = validateDates(
+            { day: "2027-06-12", overrides: { ...none, reminder: "2026-09-20" } },
+            today,
+            none,
+        );
+
+        expect(!result.ok && result.error).toEqual([{ path: "reminder", code: "out-of-range" }]);
+    });
 });

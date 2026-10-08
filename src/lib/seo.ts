@@ -75,13 +75,20 @@ type PageMetadataOptions = {
     title: string;
     description: string;
     path: string;
+    /** A page's own share image, 1200 × 630; the studio's card otherwise. */
+    image?: { url: string; alt: string };
 };
 
 /**
  * Child routes inherit `alternates` and `openGraph` from the root layout, so every
  * page must declare its own canonical and og:url or Google folds it into the homepage.
  */
-export const buildPageMetadata = ({ title, description, path }: PageMetadataOptions): Metadata => ({
+export const buildPageMetadata = ({
+    title,
+    description,
+    path,
+    image,
+}: PageMetadataOptions): Metadata => ({
     title,
     description,
     alternates: { canonical: path },
@@ -92,13 +99,13 @@ export const buildPageMetadata = ({ title, description, path }: PageMetadataOpti
         siteName: site.name,
         locale: site.locale,
         type: "website",
-        images: [ogImage],
+        images: [image ? { ...ogImage, ...image } : ogImage],
     },
     twitter: {
         card: "summary_large_image",
         title: `${title} | ${site.name}`,
         description,
-        images: [ogImage.url],
+        images: [image?.url ?? ogImage.url],
     },
 });
 

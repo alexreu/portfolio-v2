@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { findGuests, seatingBoard } from "./table-finder";
+import { findGuests, householdLabel, seatingBoard } from "./table-finder";
 import type { HouseholdRecord, SeatTable } from "./types";
 
 /** Nothing answered yet for the dinner. */
@@ -71,10 +71,10 @@ describe("seatingBoard", () => {
     it("says which household each guest comes with", () => {
         const [first] = seatingBoard(households, tables, seats);
 
-        expect(first.guests[0]).toEqual({
+        expect(first.guests[0]).toMatchObject({
             guestId: "claire",
             firstName: "Claire",
-            householdName: "Famille Moreau",
+            household: "Famille M.",
         });
     });
 });
@@ -106,5 +106,27 @@ describe("findGuests", () => {
         expect(findGuests(board, "  ")).toEqual([]);
         expect(findGuests(board, "Antoine")).toEqual([]);
         expect(findGuests(board, "Julien")).toEqual([]);
+    });
+
+    it("never finds a guest through a housemate's first name, seated or not", () => {
+        const unseated = seatingBoard(households, tables, { ...seats, thomas: "" });
+
+        expect(findGuests(unseated, "Thomas")).toEqual([]);
+        expect(findGuests(unseated, "Marie").map((match) => match.firstName)).toEqual(["Marie"]);
+    });
+});
+
+describe("householdLabel", () => {
+    it("keeps only the initial of a last name, never the whole name", () => {
+        expect(householdLabel("Julien Bertrand", ["Julien"])).toBe("Julien B.");
+        expect(householdLabel("Famille Moreau", ["Claire"])).toBe("Famille M.");
+        expect(householdLabel("Lucas & Emma Petit", ["Lucas", "Emma"])).toBe("Lucas & Emma P.");
+        expect(householdLabel("Famille Moreau-Petit", ["Claire"])).toBe("Famille M.");
+    });
+
+    it("leaves a household named after first names as it is", () => {
+        expect(householdLabel("Marie & Thomas", ["Marie", "Thomas"])).toBe("Marie & Thomas");
+        expect(householdLabel("Mamie Jeanne", ["Jeanne"])).toBe("Mamie Jeanne");
+        expect(householdLabel("Sofia", ["Sofia"])).toBe("Sofia");
     });
 });

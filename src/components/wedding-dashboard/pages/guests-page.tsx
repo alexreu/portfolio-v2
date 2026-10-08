@@ -10,7 +10,7 @@ import { HouseholdsSection } from "../households-section";
 
 /** `openId`: a household to show straight away, then dropped from the address. */
 export const GuestsPage = ({ openId }: { openId?: string }) => {
-    const { state, moments, now, highlightId, linkFor, createHousehold, openHousehold } =
+    const { state, moments, now, highlightId, linkFor, createHousehold, openHousehold, can } =
         useDashboard();
     const router = useRouter();
 
@@ -30,7 +30,8 @@ export const GuestsPage = ({ openId }: { openId?: string }) => {
                 now={now}
                 highlightId={highlightId}
                 linkFor={linkFor}
-                onAddHousehold={createHousehold}
+                onAddHousehold={can("household.create") ? createHousehold : undefined}
+                showDiets={can("diets.read")}
                 onOpen={(household) => openHousehold(household.id)}
             />
         </>

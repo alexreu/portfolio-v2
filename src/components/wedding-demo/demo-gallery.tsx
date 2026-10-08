@@ -5,13 +5,13 @@ import Image from "next/image";
 import { Upload } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { SiteMode } from "@/lib/wedding/site-mode";
 
 import { DemoHeading } from "./demo-heading";
 import { PhotoLightbox } from "./photo-lightbox";
 
 type DemoGalleryProps = {
-    mode: SiteMode;
+    /** From the opening date the couple set, or the wedding day at the latest. */
+    open: boolean;
     opensLabel: string;
     count: number;
     photos: readonly { readonly src: string; readonly alt: string; readonly author: string }[];
@@ -19,7 +19,7 @@ type DemoGalleryProps = {
 };
 
 /** Empty until the day: before, it only announces its opening; then upload comes first. */
-export const DemoGallery = ({ mode, opensLabel, count, photos, onAddPhotos }: DemoGalleryProps) => {
+export const DemoGallery = ({ open, opensLabel, count, photos, onAddPhotos }: DemoGalleryProps) => {
     const [shown, setShown] = useState<number | null>(null);
     return (
         <section
@@ -39,7 +39,7 @@ export const DemoGallery = ({ mode, opensLabel, count, photos, onAddPhotos }: De
                     Le jour J, scannez le code posé sur votre table : vos photos arrivent ici, sans
                     application. Elles restent privées, entre nous.
                 </p>
-                {mode === "before" ? (
+                {!open ? (
                     <p className="border-demo-ink-2 text-demo-night-muted max-w-160 rounded-lg border border-dashed px-5.5 py-5">
                         <strong className="text-demo-paper font-medium">
                             La galerie ouvre le {opensLabel}.
@@ -63,6 +63,11 @@ export const DemoGallery = ({ mode, opensLabel, count, photos, onAddPhotos }: De
                                 envoi repris si le réseau coupe
                             </p>
                         </div>
+                        {photos.length === 0 && (
+                            <p className="border-demo-ink-2 text-demo-night-muted max-w-160 rounded-lg border border-dashed px-5.5 py-5">
+                                Pas encore de photo ici : partagez la première.
+                            </p>
+                        )}
                         <ul className="columns-2 gap-2 md:columns-4 md:gap-3">
                             {photos.map((photo, index) => (
                                 <li
@@ -93,15 +98,18 @@ export const DemoGallery = ({ mode, opensLabel, count, photos, onAddPhotos }: De
                                 </li>
                             ))}
                         </ul>
-                        <p className="mt-6 flex justify-center">
-                            <button
-                                type="button"
-                                onClick={() => setShown(0)}
-                                className="border-demo-ink-2 hover:border-demo-paper inline-flex min-h-11 cursor-pointer items-center rounded-full border px-5 transition-colors"
-                            >
-                                Voir les {count.toLocaleString("fr-FR")} photos
-                            </button>
-                        </p>
+                        {photos.length > 0 && (
+                            <p className="mt-6 flex justify-center">
+                                <button
+                                    type="button"
+                                    onClick={() => setShown(0)}
+                                    className="border-demo-ink-2 hover:border-demo-paper inline-flex min-h-11 cursor-pointer items-center rounded-full border px-5 transition-colors"
+                                >
+                                    Voir les{" "}
+                                    {Math.max(count, photos.length).toLocaleString("fr-FR")} photos
+                                </button>
+                            </p>
+                        )}
                     </>
                 )}
             </div>

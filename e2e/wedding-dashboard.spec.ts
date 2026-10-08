@@ -22,7 +22,7 @@ const answerEveryMoment = async (
         if (guests.some((guest) => name?.startsWith(`${guest},`)))
             await group.getByRole("button", { name: answer }).click();
     }
-    await form.getByRole("button", { name: "Envoyer notre réponse" }).click();
+    await form.getByRole("button", { name: /^Envoyer (ma|notre) réponse$/ }).click();
     await expect(page.getByRole("status").filter({ hasText: "Merci" })).toBeVisible();
 };
 
@@ -215,7 +215,9 @@ test.describe("tableau de bord des mariés (démo)", () => {
     test("chaque raccourci de la vue d'ensemble mène à sa page", async ({ page }) => {
         await page.goto(DASHBOARD);
         const shortcuts = page.getByRole("region", { name: "Tout le tableau de bord" });
-        await expect(shortcuts).toContainText("3 personnes · 2 invitations en attente");
+        await expect(shortcuts).toContainText(
+            "3 personnes · 1 invitation en attente · 1 invitation expirée",
+        );
 
         await shortcuts.getByRole("link", { name: /^Plan de table/ }).click();
         await expect(page).toHaveURL(dashboard("plan-de-table"));

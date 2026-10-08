@@ -118,4 +118,36 @@ describe("catererSummary", () => {
             childrenDiets: ["sans gluten (1)"],
         });
     });
+
+    it("keeps a child's own allergy for the children's menu, never lost with the adults'", () => {
+        const child = {
+            ...base,
+            id: "anne",
+            name: "Anne & Léo",
+            guests: [
+                { id: "anne", firstName: "Anne", child: false },
+                { id: "leo", firstName: "Léo", child: true },
+            ],
+            momentKeys: ["diner"],
+            lastSeenAt: null,
+            answeredAt: "2026-10-01T10:05:00+02:00",
+            answeredBy: "invite" as const,
+            attendance: { anne: { diner: "yes" as const }, leo: { diner: "yes" as const } },
+            diets: { leo: { choice: "autre" as const, other: "allergie arachides" } },
+        };
+
+        const summary = catererSummary([child], "diner");
+
+        expect(summary.details).toEqual([]);
+        expect(summary.childrenDiets).toEqual(["autre : allergie arachides"]);
+    });
+});
+
+describe("overview · an answer to complete", () => {
+    it("does not count a household whose answer misses a moment added since", () => {
+        const [moreau] = households;
+        const widened = { ...moreau, momentKeys: [...moreau.momentKeys, "brunch"] };
+
+        expect(overview([widened])).toMatchObject({ householdsAnswered: 0, pending: 1 });
+    });
 });

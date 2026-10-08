@@ -59,4 +59,13 @@ describe("guestListCsv", () => {
         const formula = { ...moreau, name: '=HYPERLINK("http://x")' };
         expect(csv([formula]).split("\r\n")[1].startsWith("\"'=HYPERLINK(")).toBe(true);
     });
+
+    it("leaves the diets out for whoever may not read them", () => {
+        const lines = guestListCsv([moreau], moments, () => "Famille Hugo", { diets: false })
+            .replace("\uFEFF", "")
+            .split("\r\n");
+
+        expect(lines[0]).toBe("Foyer;Groupe;Prénom;Enfant;Cérémonie;Dîner;Brunch");
+        expect(lines.join("\n")).not.toContain("lactose");
+    });
 });

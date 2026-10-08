@@ -45,6 +45,9 @@ export type QrPoster = {
 
 const coupleOf = (design: InvitationDesign) => `${design.first} & ${design.second}`;
 
+/** "camille-hugo"; "mariage" for names without a Latin letter, never an empty file name. */
+const coupleSlug = (design: InvitationDesign) => slugOf(coupleOf(design)) || "mariage";
+
 const whenOf = (design: InvitationDesign, calendar: WeddingCalendar) =>
     `${calendar.dateLabel} · ${design.place}`;
 
@@ -75,7 +78,7 @@ export const sharedInvitation = (
     title: `Faire-part de ${coupleOf(design)}`,
     tone: design.tone,
     cards: [card(design, calendar, siteUrl, null, siteUrl)],
-    filename: `faire-part-${slugOf(coupleOf(design))}.pdf`,
+    filename: `faire-part-${coupleSlug(design)}.pdf`,
 });
 
 /**
@@ -96,8 +99,8 @@ export const householdInvitations = (
     ),
     filename:
         households.length === 1
-            ? `faire-part-${slugOf(households[0].name)}.pdf`
-            : `faire-part-par-foyer-${slugOf(coupleOf(design))}.pdf`,
+            ? `faire-part-${slugOf(households[0].name) || "foyer"}.pdf`
+            : `faire-part-par-foyer-${coupleSlug(design)}.pdf`,
 });
 
 const poster = (
@@ -118,7 +121,7 @@ const poster = (
     addressLabel: siteLabelOf(page.qrUrl),
     tableCards: page.tableCards,
     tone: design.tone,
-    filename: `affiche-${page.slug}-${slugOf(coupleOf(design))}.pdf`,
+    filename: `affiche-${page.slug}-${coupleSlug(design)}.pdf`,
 });
 
 /** At the entrance of the dinner: its code opens the room plan, and nothing else. */

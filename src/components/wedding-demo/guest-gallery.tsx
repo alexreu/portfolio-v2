@@ -157,6 +157,11 @@ export const GuestGallery = ({ couple, photos }: GuestGalleryProps) => {
                 <Camera aria-hidden="true" className="size-5.5" strokeWidth={1.6} />
                 Ajouter mes photos
             </button>
+            {photos.length === 0 && (
+                <p className="border-demo-line text-demo-ink-2 rounded-lg border border-dashed px-5 py-4">
+                    Pas encore de photo ici : partagez la première.
+                </p>
+            )}
             <ul aria-label="Photos partagées" className="columns-2 gap-2 md:columns-3 md:gap-3">
                 {photos.map((photo, index) => (
                     <li key={photo.src} className="relative mb-2 break-inside-avoid md:mb-3">

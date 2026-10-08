@@ -47,6 +47,13 @@ const answered = household({
     diets: { claire: { choice: "vegetarien", other: "" } },
 });
 
+describe("householdSummary", () => {
+    it("leaves the diets out for whoever may not read them", () => {
+        expect(householdSummary(answered)).toBe("2 adultes · 1 enfant · végétarien (1)");
+        expect(householdSummary(answered, { diets: false })).toBe("2 adultes · 1 enfant");
+    });
+});
+
 describe("householdStatus", () => {
     it("tells answered, opened and never-opened links apart", () => {
         expect(householdStatus(household({}))).toBe("never-opened");
@@ -55,9 +62,28 @@ describe("householdStatus", () => {
         );
         expect(householdStatus(answered)).toBe("answered");
     });
+
+    it("asks to complete an answer when a moment or a guest was added since", () => {
+        expect(
+            householdStatus({ ...answered, momentKeys: [...answered.momentKeys, "brunch"] }),
+        ).toBe("incomplete");
+        expect(
+            householdStatus({
+                ...answered,
+                guests: [...answered.guests, { id: "jade", firstName: "Jade", child: true }],
+            }),
+        ).toBe("incomplete");
+    });
 });
 
 describe("momentCell", () => {
+    it("says a moment added after the answer is still to be answered", () => {
+        const widened = { ...answered, momentKeys: [...answered.momentKeys, "brunch"] };
+
+        expect(momentCell(widened, "brunch")).toEqual({ tone: "wait", label: "À compléter" });
+        expect(momentCell(widened, "diner")).toEqual({ tone: "yes", label: "2 sur 3" });
+    });
+
     it("counts who comes to a moment once the household has answered", () => {
         expect(momentCell(answered, "ceremonie")).toEqual({ tone: "yes", label: "3 présents" });
         expect(momentCell(answered, "diner")).toEqual({ tone: "yes", label: "2 sur 3" });
@@ -162,6 +188,7 @@ describe("filterHouseholds", () => {
         expect(statusCounts(list)).toEqual({
             all: 3,
             answered: 1,
+            incomplete: 0,
             opened: 1,
             "never-opened": 1,
         });

@@ -367,21 +367,24 @@ export const ProgrammeSection = ({
                                     >
                                         <Pencil aria-hidden="true" />
                                     </button>
-                                    <ConfirmPopover
-                                        question={`Retirer « ${moment.title} » ?`}
-                                        detail={`Il disparaît du programme et des invitations de ${plural(invited(moment.key), "foyer", "foyers")}, avec leurs réponses.`}
-                                        confirmLabel="Retirer"
-                                        align="end"
-                                        onConfirm={() => onRemove(plan)}
-                                    >
-                                        <button
-                                            type="button"
-                                            aria-label={`Retirer ${moment.title}`}
-                                            className={iconButton}
+                                    {/* The programme keeps one moment: there is nothing to invite to otherwise. */}
+                                    {moments.length > 1 && (
+                                        <ConfirmPopover
+                                            question={`Retirer « ${moment.title} » ?`}
+                                            detail={`Il disparaît du programme et des invitations de ${plural(invited(moment.key), "foyer", "foyers")}, avec leurs réponses.`}
+                                            confirmLabel="Retirer"
+                                            align="end"
+                                            onConfirm={() => onRemove(plan)}
                                         >
-                                            <Trash2 aria-hidden="true" />
-                                        </button>
-                                    </ConfirmPopover>
+                                            <button
+                                                type="button"
+                                                aria-label={`Retirer ${moment.title}`}
+                                                className={iconButton}
+                                            >
+                                                <Trash2 aria-hidden="true" />
+                                            </button>
+                                        </ConfirmPopover>
+                                    )}
                                 </div>
                             )}
                         </li>

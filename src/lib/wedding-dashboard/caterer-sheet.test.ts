@@ -137,4 +137,28 @@ describe("catererSheet", () => {
         expect(done.unseated).toBeNull();
         expect(done.tables[1].notes).toEqual(["Autre (allergie aux arachides) : Sofia"]);
     });
+
+    it("names a child's allergy under the children's menu, even before they sit down", () => {
+        const child: HouseholdRecord = {
+            ...answered,
+            id: "anne",
+            name: "Anne & Léo",
+            guests: [
+                { id: "anne", firstName: "Anne", child: false },
+                { id: "leo-a", firstName: "Léo", child: true },
+            ],
+            momentKeys: ["diner"],
+            attendance: { anne: { diner: "yes" }, "leo-a": { diner: "yes" } },
+            diets: { "leo-a": { choice: "autre", other: "allergie arachides" } },
+        };
+        const alone = catererSheet(
+            { ...state, households: [child], tables: [], seats: {} },
+            weddingCalendar(state.design.date),
+            now,
+        );
+
+        expect(alone.menus.find((menu) => menu.label === "Menu enfant")?.detail).toContain(
+            "allergie arachides",
+        );
+    });
 });

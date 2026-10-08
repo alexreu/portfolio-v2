@@ -39,7 +39,9 @@ type SeatingSectionProps = {
     tables: readonly SeatTable[];
     seats: Readonly<Record<string, string>>;
     room: RoomLayout;
-    onSaveRoom: (name: string, size: RoomSize) => void;
+    onSaveRoom: (name: string, size: RoomSize, revealAt: string) => void;
+    /** Seen by someone who may not change it: the plan stays still. */
+    readOnly?: boolean;
     onMoveFixture: (fixture: Fixture, x: number, y: number) => void;
     onRotateFixture: (fixture: Fixture) => void;
     onSaveTable: (table: SeatTable) => void;
@@ -142,7 +144,7 @@ const sizes: readonly { value: RoomSize; label: string; fits: number }[] = [
     { value: "xl", label: "Très grande · ~60 tables", fits: 64 },
 ];
 
-/** The room's name, written at the entrance, and its size. */
+/** The room's name, written at the entrance, its size, and when its tables show. */
 const RoomSettings = ({
     room,
     tableCount,
@@ -150,14 +152,14 @@ const RoomSettings = ({
 }: {
     room: RoomLayout;
     tableCount: number;
-    onSave: (name: string, size: RoomSize) => void;
+    onSave: (name: string, size: RoomSize, revealAt: string) => void;
 }) => {
     const [name, setName] = useState(room.name);
     const fits = sizes.find((size) => size.value === room.size)?.fits ?? 10;
     const bigger = sizes.find((size) => size.fits >= tableCount && size.fits > fits);
     const saveName = () => {
         const trimmed = name.trim().slice(0, 40);
-        if (trimmed && trimmed !== room.name) onSave(trimmed, room.size);
+        if (trimmed && trimmed !== room.name) onSave(trimmed, room.size, room.revealAt);
         else setName(room.name);
     };
     return (
@@ -178,7 +180,9 @@ const RoomSettings = ({
                 <span className="text-wed-muted">Taille</span>
                 <Select
                     value={room.size}
-                    onChange={(event) => onSave(room.name, event.target.value as RoomSize)}
+                    onChange={(event) =>
+                        onSave(room.name, event.target.value as RoomSize, room.revealAt)
+                    }
                 >
                     {sizes.map((size) => (
                         <option key={size.value} value={size.value}>
@@ -186,6 +190,22 @@ const RoomSettings = ({
                         </option>
                     ))}
                 </Select>
+            </label>
+            <label className="grid content-start gap-1 text-sm sm:col-span-2">
+                <span className="text-wed-muted">
+                    Tables dévoilées le jour J à{" "}
+                    <small>(pas de négociation de placement les semaines d&apos;avant)</small>
+                </span>
+                <input
+                    type="time"
+                    step={900}
+                    value={room.revealAt}
+                    onChange={(event) =>
+                        /^\d{2}:\d{2}$/.test(event.target.value) &&
+                        onSave(room.name, room.size, event.target.value)
+                    }
+                    className={cn(inputStyles, "sm:max-w-40")}
+                />
             </label>
             {tableCount > fits && bigger && (
                 <p className="text-wed-wait text-xs sm:col-span-2">
@@ -211,6 +231,7 @@ export const SeatingSection = ({
     onRemoveTables,
     onSeatGuest,
     onSeatHousehold,
+    readOnly = false,
 }: SeatingSectionProps) => {
     const [picked, setPicked] = useState<readonly string[]>([]);
     const plan = seatingPlan(households, tables, seats);
@@ -303,8 +324,8 @@ export const SeatingSection = ({
                         <RoomPlan
                             tables={tables}
                             room={room}
-                            onMoveFixture={onMoveFixture}
-                            onRotateFixture={onRotateFixture}
+                            onMoveFixture={readOnly ? undefined : onMoveFixture}
+                            onRotateFixture={readOnly ? undefined : onRotateFixture}
                             selectedAction={
                                 fixture ? (
                                     <button
@@ -347,10 +368,12 @@ export const SeatingSection = ({
                             seated={counts}
                             selectedIds={selection}
                             label="Plan de la salle : glissez une table pour la déplacer, touchez-la pour la composer"
-                            onSelect={(item, additive) =>
-                                setPicked(pick(selection, item, additive))
+                            onSelect={
+                                readOnly
+                                    ? undefined
+                                    : (item, additive) => setPicked(pick(selection, item, additive))
                             }
-                            onMove={onMoveTable}
+                            onMove={readOnly ? undefined : onMoveTable}
                         />
                     </div>
                     <div className="grid gap-3">

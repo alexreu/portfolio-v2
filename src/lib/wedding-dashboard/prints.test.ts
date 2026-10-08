@@ -127,3 +127,11 @@ describe("galleryPoster", () => {
         expect(poster.detail).toContain("votre nom");
     });
 });
+
+describe("file names", () => {
+    it("never ends up as « faire-part-.pdf » for names without a Latin letter", () => {
+        const print = sharedInvitation({ ...design, first: "李", second: "王" }, calendar, SITE);
+
+        expect(print.filename).toBe("faire-part-mariage.pdf");
+    });
+});

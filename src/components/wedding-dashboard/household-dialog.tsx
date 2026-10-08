@@ -7,7 +7,7 @@ import { Check, Copy, ExternalLink, Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
     createHousehold,
-    householdIdFor,
+    freshHouseholdId,
     validateHouseholdDraft,
     type DraftIssue,
     type HouseholdDraft,
@@ -34,6 +34,8 @@ type HouseholdDialogProps = {
     moments: readonly Moment[];
     design: InvitationDesign;
     linkFor: (household: HouseholdRecord) => string;
+    /** Ids already given: a new household never takes one of them. */
+    takenIds: ReadonlySet<string>;
     onCreate: (household: HouseholdRecord) => void;
 };
 
@@ -350,6 +352,7 @@ const DialogBody = ({
     moments,
     design,
     linkFor,
+    takenIds,
     onCreate,
 }: Omit<HouseholdDialogProps, "open" | "onOpenChange">) => {
     const [created, setCreated] = useState<HouseholdRecord | null>(null);
@@ -375,7 +378,7 @@ const DialogBody = ({
             submitLabel="Créer le faire-part"
             onSubmit={(draft) => {
                 const household = createHousehold(draft, {
-                    id: householdIdFor(draft.name, randomSuffix()),
+                    id: freshHouseholdId(draft.name, takenIds, randomSuffix),
                     at: new Date().toISOString(),
                 });
                 onCreate(household);

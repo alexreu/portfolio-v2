@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 import { pageSummaries } from "@/lib/wedding-dashboard/pages";
+import { canSee } from "@/lib/wedding-dashboard/permissions";
 
 import { useDashboard } from "../dashboard-context";
 import { dashboardEntries, dashboardHref } from "../dashboard-pages";
@@ -23,6 +24,9 @@ export const OverviewPage = () => {
         exportCatererPdf,
         remind,
         openHousehold,
+        can,
+        canRead,
+        viewer,
     } = useDashboard();
     const summaries = pageSummaries(state, calendar, now);
 
@@ -33,16 +37,16 @@ export const OverviewPage = () => {
                 moments={moments}
                 calendar={calendar}
                 now={now}
-                onAddHousehold={createHousehold}
-                onExport={exportCsv}
-                onExportCaterer={exportCatererPdf}
-                onRemind={remind}
+                onAddHousehold={can("household.create") ? createHousehold : undefined}
+                onExport={can("export.csv") ? exportCsv : undefined}
+                onExportCaterer={can("export.caterer") ? exportCatererPdf : undefined}
+                onRemind={can("reminders.send") ? remind : undefined}
             />
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
                 <Card title="Tout le tableau de bord" titleId="pages-title">
                     <ul className="divide-wed-line-soft divide-y px-2 py-1.5">
                         {dashboardEntries.flatMap(({ page, label, icon: Icon }) =>
-                            page
+                            page && canSee(viewer, page)
                                 ? [
                                       <li key={page}>
                                           <Link
@@ -75,12 +79,14 @@ export const OverviewPage = () => {
                         )}
                     </ul>
                 </Card>
-                <ActivityCard
-                    activity={state.activity}
-                    households={state.households}
-                    now={now}
-                    onOpenHousehold={openHousehold}
-                />
+                {canRead("invites") && (
+                    <ActivityCard
+                        activity={state.activity}
+                        households={state.households}
+                        now={now}
+                        onOpenHousehold={openHousehold}
+                    />
+                )}
             </div>
         </>
     );

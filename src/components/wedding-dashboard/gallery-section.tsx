@@ -9,15 +9,27 @@ import type { GalleryPhoto } from "@/lib/wedding-dashboard/types";
 import { PhotoLightbox } from "@/components/wedding-demo/photo-lightbox";
 
 import { buttonStyles, Card, plural } from "./dashboard-ui";
+import { PdfButton } from "./pdf-button";
 
 type GallerySectionProps = {
     photos: readonly GalleryPhoto[];
     opensLabel: string;
-    onToggle: (photo: GalleryPhoto) => void;
+    /** Left out for whoever may only look: no photo can be removed then. */
+    onToggle?: (photo: GalleryPhoto) => void;
+    /** Every photo still in the gallery, in one archive. */
+    onDownload?: () => Promise<void>;
+    /** The guest site the day after: the couple's thanks over the photos. */
+    dayAfterUrl: string;
 };
 
 /** Guests publish straight away; the couple removes an awkward photo in one touch. */
-export const GallerySection = ({ photos, opensLabel, onToggle }: GallerySectionProps) => {
+export const GallerySection = ({
+    photos,
+    opensLabel,
+    onToggle,
+    onDownload,
+    dayAfterUrl,
+}: GallerySectionProps) => {
     const visible = photos.filter((photo) => !photo.removed).length;
     const [shown, setShown] = useState<number | null>(null);
 
@@ -59,22 +71,24 @@ export const GallerySection = ({ photos, opensLabel, onToggle }: GallerySectionP
                         <span className="bg-wed-night/70 absolute top-2 left-2 rounded-md px-2 py-0.5 text-[0.7rem] text-white">
                             {photo.removed ? "Retirée" : photo.author}
                         </span>
-                        <button
-                            type="button"
-                            onClick={() => onToggle(photo)}
-                            aria-label={
-                                photo.removed
-                                    ? `Remettre la photo de ${photo.author}`
-                                    : `Retirer la photo de ${photo.author}`
-                            }
-                            className="bg-wed-paper/90 text-wed-ink hover:bg-wed-paper absolute right-2 bottom-2 grid size-11 cursor-pointer place-items-center rounded-full shadow-sm transition-colors [&_svg]:size-4"
-                        >
-                            {photo.removed ? (
-                                <RotateCcw aria-hidden="true" />
-                            ) : (
-                                <X aria-hidden="true" />
-                            )}
-                        </button>
+                        {onToggle && (
+                            <button
+                                type="button"
+                                onClick={() => onToggle(photo)}
+                                aria-label={
+                                    photo.removed
+                                        ? `Remettre la photo de ${photo.author}`
+                                        : `Retirer la photo de ${photo.author}`
+                                }
+                                className="bg-wed-paper/90 text-wed-ink hover:bg-wed-paper absolute right-2 bottom-2 grid size-11 cursor-pointer place-items-center rounded-full shadow-sm transition-colors [&_svg]:size-4"
+                            >
+                                {photo.removed ? (
+                                    <RotateCcw aria-hidden="true" />
+                                ) : (
+                                    <X aria-hidden="true" />
+                                )}
+                            </button>
+                        )}
                     </li>
                 ))}
             </ul>
@@ -83,15 +97,26 @@ export const GallerySection = ({ photos, opensLabel, onToggle }: GallerySectionP
                     {plural(visible, "photo visible", "photos visibles")} · une photo gênante se
                     retire en un geste, sans modération préalable.
                 </p>
-                <a
-                    href="/mariage/demo?skip&jourj#photos"
-                    target="_blank"
-                    rel="noopener"
-                    className={buttonStyles.quiet}
-                >
-                    <ExternalLink aria-hidden="true" />
-                    Voir côté invités
-                </a>
+                <div className="flex flex-wrap items-center gap-1">
+                    {onDownload && visible > 0 && (
+                        <PdfButton
+                            onExport={onDownload}
+                            busyText="Préparation de l'archive…"
+                            failedText="L'archive n'a pas pu être préparée. Réessayez dans un instant."
+                        >
+                            Tout télécharger (ZIP)
+                        </PdfButton>
+                    )}
+                    <a
+                        href={dayAfterUrl}
+                        target="_blank"
+                        rel="noopener"
+                        className={buttonStyles.quiet}
+                    >
+                        <ExternalLink aria-hidden="true" />
+                        Voir le lendemain
+                    </a>
+                </div>
             </div>
             <PhotoLightbox
                 photos={photos.map((photo) => ({
@@ -102,6 +127,7 @@ export const GallerySection = ({ photos, opensLabel, onToggle }: GallerySectionP
                 onIndexChange={setShown}
                 actions={(_, index) => {
                     const photo = photos[index];
+                    if (!onToggle) return null;
                     return (
                         <button
                             type="button"

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ArrowLeft, ExternalLink, PanelLeftClose, PanelLeftOpen, RotateCcw } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import type { DashboardPage } from "@/lib/wedding-dashboard/pages";
 import { planOf } from "@/lib/wedding-dashboard/plans";
 import { previewOf } from "@/lib/wedding-dashboard/preview-link";
 import { useStoredFlag } from "@/hooks/use-stored-flag";
@@ -74,6 +75,8 @@ type DashboardNavProps = {
     monogram: string;
     subtitle: string;
     householdCount: number;
+    /** The pages the person looking may open; the others leave the menu. */
+    canOpen: (page: DashboardPage | null) => boolean;
     onReset: () => void;
 };
 
@@ -86,6 +89,7 @@ export const DashboardNav = ({
     monogram,
     subtitle,
     householdCount,
+    canOpen,
     onReset,
 }: DashboardNavProps) => {
     const [folded, onFold] = useStoredFlag(MENU_FOLDED_KEY);
@@ -123,57 +127,59 @@ export const DashboardNav = ({
     };
 
     const links = (compact: boolean) =>
-        entries.map(({ id, href, label: name, icon: Icon }) => {
-            const plan = planOf(id);
-            const link = (
-                <Link
-                    href={href}
-                    aria-current={active === id ? "page" : undefined}
-                    className={cn(
-                        "flex items-center gap-3 rounded-full whitespace-nowrap transition-colors",
-                        compact ? "min-h-10 px-3.5 text-[0.8rem]" : "min-h-11 px-3.5 text-sm",
-                        active === id
-                            ? "bg-wed-night-line text-wed-night-text"
-                            : "text-wed-night-muted hover:bg-wed-night-line/60 hover:text-wed-night-text",
-                    )}
-                >
-                    <Icon aria-hidden="true" className="size-4.5 shrink-0" strokeWidth={1.6} />
-                    <span className={cn(!compact && label)}>{name}</span>
-                    {id === "invites" && !compact && (
-                        <span
-                            className={cn(
-                                "bg-wed-night-line text-wed-night-text ml-auto rounded-full px-2 text-xs",
-                                label,
-                            )}
-                        >
-                            {householdCount}
-                        </span>
-                    )}
-                    {plan && !compact && (
-                        <span
-                            aria-hidden="true"
-                            className={cn(
-                                "border-wed-night-line text-wed-night-muted ml-auto rounded-full border px-2 text-[0.7rem]",
-                                label,
-                            )}
-                        >
-                            {plan.from}
-                        </span>
-                    )}
-                </Link>
-            );
-            return (
-                <li key={id}>
-                    {compact ? (
-                        link
-                    ) : (
-                        <Hint label={hint(id, name)} enabled={folded}>
-                            {link}
-                        </Hint>
-                    )}
-                </li>
-            );
-        });
+        entries
+            .filter((entry) => canOpen(entry.page))
+            .map(({ id, href, label: name, icon: Icon }) => {
+                const plan = planOf(id);
+                const link = (
+                    <Link
+                        href={href}
+                        aria-current={active === id ? "page" : undefined}
+                        className={cn(
+                            "flex items-center gap-3 rounded-full whitespace-nowrap transition-colors",
+                            compact ? "min-h-10 px-3.5 text-[0.8rem]" : "min-h-11 px-3.5 text-sm",
+                            active === id
+                                ? "bg-wed-night-line text-wed-night-text"
+                                : "text-wed-night-muted hover:bg-wed-night-line/60 hover:text-wed-night-text",
+                        )}
+                    >
+                        <Icon aria-hidden="true" className="size-4.5 shrink-0" strokeWidth={1.6} />
+                        <span className={cn(!compact && label)}>{name}</span>
+                        {id === "invites" && !compact && (
+                            <span
+                                className={cn(
+                                    "bg-wed-night-line text-wed-night-text ml-auto rounded-full px-2 text-xs",
+                                    label,
+                                )}
+                            >
+                                {householdCount}
+                            </span>
+                        )}
+                        {plan && !compact && (
+                            <span
+                                aria-hidden="true"
+                                className={cn(
+                                    "border-wed-night-line text-wed-night-muted ml-auto rounded-full border px-2 text-[0.7rem]",
+                                    label,
+                                )}
+                            >
+                                {plan.from}
+                            </span>
+                        )}
+                    </Link>
+                );
+                return (
+                    <li key={id}>
+                        {compact ? (
+                            link
+                        ) : (
+                            <Hint label={hint(id, name)} enabled={folded}>
+                                {link}
+                            </Hint>
+                        )}
+                    </li>
+                );
+            });
 
     return (
         <>

@@ -68,6 +68,15 @@ export const dietRows: readonly { choice: Exclude<DietChoice, "aucune">; label: 
 const dietOf = (household: HouseholdRecord, guest: GuestRecord) =>
     household.diets[guest.id] ?? { choice: "aucune" as const, other: "" };
 
+/** The free text of every « autre » diet in the list, as the guests typed it. */
+const otherDetails = (
+    list: readonly { readonly household: HouseholdRecord; readonly guest: GuestRecord }[],
+) =>
+    list.flatMap(({ household, guest }) => {
+        const diet = dietOf(household, guest);
+        return diet.choice === "autre" && diet.other.trim() ? [diet.other.trim()] : [];
+    });
+
 /** Adults by menu, then children, with every free-text detail the kitchen must read. */
 export const catererSummary = (households: readonly HouseholdRecord[], momentKey: string) => {
     const coming = invitedTo(households, momentKey).filter(({ presence }) => presence === "yes");
@@ -80,14 +89,16 @@ export const catererSummary = (households: readonly HouseholdRecord[], momentKey
         total: coming.length,
         standard: countBy(adults, "aucune"),
         diets: dietRows.map((row) => ({ ...row, count: countBy(adults, row.choice) })),
-        details: coming.flatMap(({ household, guest }) => {
-            const diet = dietOf(household, guest);
-            return diet.choice === "autre" && diet.other.trim() ? [diet.other.trim()] : [];
-        }),
+        /** The adults' « autre » diets; the children's are read under their own menu. */
+        details: otherDetails(adults),
         children: children.length,
-        childrenDiets: dietRows.flatMap(({ choice }) => {
-            const count = countBy(children, choice);
-            return count > 0 ? [`${dietNames[choice]} (${count})`] : [];
-        }),
+        childrenDiets: [
+            ...dietRows.flatMap(({ choice }) => {
+                if (choice === "autre") return [];
+                const count = countBy(children, choice);
+                return count > 0 ? [`${dietNames[choice]} (${count})`] : [];
+            }),
+            ...otherDetails(children).map((detail) => `autre : ${detail}`),
+        ],
     };
 };

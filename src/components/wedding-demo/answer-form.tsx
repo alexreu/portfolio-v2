@@ -25,6 +25,12 @@ type AnswerFormProps = {
     /** The saved answer when the household edits it, empty otherwise. */
     initialDraft: AnswerDraft;
     answered: boolean;
+    /** Past the answer deadline: the answer is shown, no longer sent nor changed. */
+    closed: boolean;
+    /** "1er mai 2027" */
+    deadlineLabel: string;
+    /** Above the form, when the couple added a moment or a guest since the answer. */
+    notice?: string;
     onSubmit: (draft: AnswerDraft) => void;
     onEdit: () => void;
 };
@@ -76,6 +82,9 @@ export const AnswerForm = ({
     presenceLabels,
     initialDraft,
     answered,
+    closed,
+    deadlineLabel,
+    notice,
     onSubmit,
     onEdit,
 }: AnswerFormProps) => {
@@ -108,6 +117,22 @@ export const AnswerForm = ({
         if (result.ok) onSubmit(result.value);
     };
 
+    const alone = invitation.guests.length === 1;
+
+    if (closed)
+        return (
+            <div role="status" className="py-8 text-center">
+                <p className="font-demo-serif text-4xl italic">
+                    {answered ? "Merci !" : "Les réponses sont closes"}
+                </p>
+                <p className="text-demo-ink-2 mx-auto mt-3 max-w-[40ch]">
+                    {answered
+                        ? `Votre réponse est enregistrée. Les réponses sont closes depuis le ${deadlineLabel} : pour un changement, écrivez-nous directement.`
+                        : `La date limite était le ${deadlineLabel}. Écrivez-nous directement : nous trouverons une solution.`}
+                </p>
+            </div>
+        );
+
     if (answered)
         return (
             <div role="status" className="py-8 text-center">
@@ -120,7 +145,7 @@ export const AnswerForm = ({
                     onClick={onEdit}
                     className="min-h-11 cursor-pointer underline underline-offset-4"
                 >
-                    Modifier ma réponse
+                    Modifier {alone ? "ma" : "notre"} réponse
                 </button>
             </div>
         );
@@ -129,8 +154,18 @@ export const AnswerForm = ({
         <form aria-label="Votre réponse" noValidate onSubmit={submit}>
             <p className="font-demo-serif text-3xl leading-tight">{householdName}</p>
             <p className="text-demo-muted mb-7 text-[0.95rem]">
-                Foyer de {invitation.guests.length} personnes · invités à {invited.length} moments
+                {alone
+                    ? `Invité${invited.length > 1 ? ` à ${invited.length} moments` : " à 1 moment"}`
+                    : `Foyer de ${invitation.guests.length} personnes · invités à ${invited.length} ${invited.length > 1 ? "moments" : "moment"}`}
             </p>
+            {notice && (
+                <p
+                    role="status"
+                    className="border-demo-olive/40 bg-demo-paper text-demo-ink mb-5 rounded-xl border p-3.5 text-sm"
+                >
+                    {notice}
+                </p>
+            )}
             {issues.length > 0 && (
                 <p
                     role="alert"
@@ -193,7 +228,7 @@ export const AnswerForm = ({
                                                     setPresence(guest.id, moment.key, presence)
                                                 }
                                                 className={cn(
-                                                    "text-demo-ink-2 relative min-h-11 cursor-pointer rounded-full px-4.5 transition-colors duration-300 md:min-w-22",
+                                                    "text-demo-ink-2 relative min-h-12 cursor-pointer rounded-full px-4.5 transition-colors duration-300 md:min-w-22",
                                                     value === presence
                                                         ? "text-white"
                                                         : "hover:bg-demo-card hover:text-demo-ink",
@@ -329,7 +364,7 @@ export const AnswerForm = ({
                 type="submit"
                 className="bg-demo-ink text-demo-card hover:bg-demo-ink-2 min-h-13.5 w-full cursor-pointer rounded-full font-medium transition-[background-color,scale] active:scale-[0.99]"
             >
-                Envoyer notre réponse
+                Envoyer {alone ? "ma" : "notre"} réponse
             </button>
         </form>
     );

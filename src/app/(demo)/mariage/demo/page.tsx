@@ -9,7 +9,17 @@ export const metadata: Metadata = buildPageMetadata({
     description:
         "Exemple de site de mariage : faire-part animé, programme personnalisé, réponses des invités par lien personnel et galerie photo du jour J.",
     path: "/mariage/demo",
+    image: {
+        url: "/mariage/demo/partage",
+        alt: "Faire-part de Camille & Hugo : vous êtes invités",
+    },
 });
+
+/** `?foyer=` as given; an empty or repeated one names no household, so it opens none. */
+const householdIdOf = (foyer: string | string[] | undefined) => {
+    if (foyer === undefined) return undefined;
+    return typeof foyer === "string" ? foyer : "";
+};
 
 type Props = {
     searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -21,7 +31,8 @@ export default async function WeddingDemoPage({ searchParams }: Props) {
         <DemoSite
             skipInvitation={"skip" in params}
             startOnWeddingDay={"jourj" in params}
-            householdId={typeof params.foyer === "string" ? params.foyer : undefined}
+            startAfter={"apres" in params}
+            householdId={householdIdOf(params.foyer)}
             preview={isPreview(params)}
         />
     );

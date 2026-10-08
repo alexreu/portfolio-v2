@@ -2,7 +2,9 @@
 
 import { createContext, useContext } from "react";
 
+import type { AccessFeature } from "@/lib/wedding-dashboard/access";
 import type { WeddingCalendar } from "@/lib/wedding-dashboard/calendar";
+import type { DashboardAction, Viewer } from "@/lib/wedding-dashboard/permissions";
 import type { DemoAction } from "@/lib/wedding-dashboard/state";
 import type { DemoState, HouseholdRecord } from "@/lib/wedding-dashboard/types";
 import type { Moment } from "@/lib/wedding/types";
@@ -10,6 +12,11 @@ import type { Moment } from "@/lib/wedding/types";
 /** What every page of the dashboard reads, once the browser copy is loaded. */
 export type Dashboard = {
     readonly state: DemoState;
+    /** Who looks: the couple, or someone they let in, as the demo can show. */
+    readonly viewer: Viewer;
+    /** Whether the person looking may do this; its button stays out otherwise. */
+    readonly can: (action: DashboardAction) => boolean;
+    readonly canRead: (feature: AccessFeature) => boolean;
     readonly dispatch: (action: DemoAction) => void;
     readonly now: Date;
     readonly calendar: WeddingCalendar;
@@ -40,6 +47,10 @@ export type Dashboard = {
     readonly downloadSeatingPoster: () => Promise<void>;
     /** The gallery's poster, and four cards for the tables. */
     readonly downloadGalleryPoster: () => Promise<void>;
+    /** Every photo still in the gallery, in one ZIP. */
+    readonly downloadGallery: () => Promise<void>;
+    /** The guest site the day after: the couple's thanks and the photos. */
+    readonly dayAfterUrl: string;
     readonly remind: () => void;
 };
 

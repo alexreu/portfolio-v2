@@ -1,3 +1,5 @@
+import { CalendarPlus } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import { formatHour } from "@/lib/wedding/format-hour";
 import type { Programme } from "@/lib/wedding/programme";
@@ -8,6 +10,8 @@ import { DemoHeading } from "./demo-heading";
 type DemoProgrammeProps = {
     programme: Programme;
     mode: SiteMode;
+    /** Downloads the household's moments as a calendar file; before the wedding only. */
+    onAddToCalendar?: () => void;
 };
 
 const dayOf = (iso: string) =>
@@ -19,7 +23,7 @@ const dayOf = (iso: string) =>
     });
 
 /** Only the moments this household is invited to; on the day, past slots fade and the current one is flagged. */
-export const DemoProgramme = ({ programme, mode }: DemoProgrammeProps) => {
+export const DemoProgramme = ({ programme, mode, onAddToCalendar }: DemoProgrammeProps) => {
     const days = [...new Set(programme.moments.map((moment) => dayOf(moment.slots[0].startsAt)))];
 
     return (
@@ -37,10 +41,27 @@ export const DemoProgramme = ({ programme, mode }: DemoProgrammeProps) => {
                         heading={{ text: "Le déroulé", emphasis: "déroulé" }}
                         tone="dark"
                     />
-                    <p className="border-demo-ink-2 text-demo-sand inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm">
-                        <span aria-hidden="true" className="bg-demo-earth size-1.5 rounded-full" />
-                        {programme.moments.length} moments vous attendent
-                    </p>
+                    <div className="flex flex-wrap items-center gap-2.5">
+                        <p className="border-demo-ink-2 text-demo-sand inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm">
+                            <span
+                                aria-hidden="true"
+                                className="bg-demo-earth size-1.5 rounded-full"
+                            />
+                            {programme.moments.length > 1
+                                ? `${programme.moments.length} moments vous attendent`
+                                : "1 moment vous attend"}
+                        </p>
+                        {onAddToCalendar && programme.moments.length > 0 && (
+                            <button
+                                type="button"
+                                onClick={onAddToCalendar}
+                                className="border-demo-ink-2 text-demo-paper hover:border-demo-paper inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-4 text-sm transition-colors"
+                            >
+                                <CalendarPlus aria-hidden="true" className="size-4" />
+                                Ajouter à mon agenda
+                            </button>
+                        )}
+                    </div>
                 </div>
                 {days.map((day) => (
                     <div key={day} className="mt-8 first:mt-0">

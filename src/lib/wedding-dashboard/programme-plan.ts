@@ -1,13 +1,13 @@
 import { failure, success, type Result } from "@/lib/wedding/result";
 import type { Moment, Slot } from "@/lib/wedding/types";
 
-import { addDays, daysBetween, parisOffset } from "./calendar";
+import { addDays, daysBetween, parisOffsetAt } from "./calendar";
 import type { DraftIssue } from "./drafts";
 import type { MomentPlan, SlotPlan } from "./types";
 
 const TIME = /^([01]\d|2[0-3]):[0-5]\d$/;
 
-const at = (day: string, time: string) => `${day}T${time}:00${parisOffset(day)}`;
+const at = (day: string, time: string) => `${day}T${time}:00${parisOffsetAt(day, time)}`;
 
 const datedSlot = (slot: SlotPlan, weddingDay: string): Slot => {
     const day = addDays(weddingDay, slot.dayOffset);

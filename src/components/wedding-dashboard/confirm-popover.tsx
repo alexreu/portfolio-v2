@@ -34,7 +34,7 @@ export const ConfirmPopover = ({
                 align={align}
                 sideOffset={8}
                 aria-label={question}
-                className="border-wed-line bg-wed-paper text-wed-ink font-main w-72 rounded-2xl p-4 shadow-lg"
+                className="border-wed-line bg-wed-paper text-wed-ink font-main w-72 rounded-2xl p-4 shadow-lg motion-reduce:animate-none"
             >
                 <p className="text-sm font-medium">{question}</p>
                 {detail && <p className="text-wed-muted mt-1 text-xs">{detail}</p>}

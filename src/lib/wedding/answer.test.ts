@@ -81,4 +81,13 @@ describe("validateAnswer", () => {
             { path: "message", code: "too-long" },
         ]);
     });
+
+    it("ignores the diet of a guest no longer in the household", () => {
+        const draft: AnswerDraft = {
+            ...complete,
+            diets: { paul: { choice: "autre", other: "" } },
+        };
+
+        expect(issues(draft)).toEqual([]);
+    });
 });

@@ -13,7 +13,10 @@ export const weddingDemo = {
     ceremonyAt: "2027-06-12T16:00:00+02:00",
     answerDeadline: "1er mai 2027",
     galleryOpensLabel: "vendredi 11 juin",
-    day: { startsAt: "2027-06-12T08:00:00+02:00" } satisfies WeddingDay,
+    day: {
+        startsAt: "2027-06-12T08:00:00+02:00",
+        endsAt: "2027-06-13T15:00:00+02:00",
+    } satisfies WeddingDay,
     /** Clock used by the « Aperçu jour J » preview: during the vin d'honneur. */
     dayPreviewAt: "2027-06-12T18:10:00+02:00",
     household: {

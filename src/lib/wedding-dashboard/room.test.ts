@@ -7,6 +7,8 @@ import {
     HEAD_HALF,
     roomDimensions,
     TABLE_RADIUS,
+    tablesRevealAt,
+    tablesRevealed,
     WALL_GAP,
 } from "./room";
 import type { RoomLayout, SeatTable } from "./types";
@@ -14,6 +16,7 @@ import type { RoomLayout, SeatTable } from "./types";
 const room: RoomLayout = {
     name: "L'orangerie",
     size: "s",
+    revealAt: "10:00",
     head: { x: 50, y: 11, rotation: 0 },
     entrance: { x: 50, y: 96, rotation: 0 },
 };
@@ -115,5 +118,21 @@ describe("fixtureInside", () => {
 
     it("leaves a fixture already clear of the walls where it is", () => {
         expect(fixtureInside(room, room.head, HEAD_HALF)).toEqual(room.head);
+    });
+});
+
+describe("tablesRevealed", () => {
+    it("shows the tables on the wedding day from the hour the couple chose, Paris time", () => {
+        expect(tablesRevealAt("2027-06-12", "10:00")).toBe("2027-06-12T10:00:00+02:00");
+        expect(tablesRevealed("2027-06-12", "10:00", new Date("2027-06-12T09:59:00+02:00"))).toBe(
+            false,
+        );
+        expect(tablesRevealed("2027-06-12", "10:00", new Date("2027-06-12T10:00:00+02:00"))).toBe(
+            true,
+        );
+    });
+
+    it("counts the winter hour too", () => {
+        expect(tablesRevealAt("2027-12-18", "09:30")).toBe("2027-12-18T09:30:00+01:00");
     });
 });

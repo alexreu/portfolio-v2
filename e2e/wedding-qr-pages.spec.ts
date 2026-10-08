@@ -5,6 +5,10 @@ test.describe("pages ouvertes par les QR codes du jour J (démo)", () => {
         page,
     }) => {
         await page.goto("/mariage/demo/plan-de-table");
+        await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+            "Le plan de table arrive bientôt",
+        );
+        await page.getByRole("button", { name: "Démo : voir la page en avance" }).click();
         await expect(page.getByRole("heading", { level: 1 })).toHaveText("Trouvez votre table");
         await expect(page.getByRole("button", { name: /ouvrir le faire-part/i })).toHaveCount(0);
 
@@ -30,6 +34,7 @@ test.describe("pages ouvertes par les QR codes du jour J (démo)", () => {
 
     test("un nom inconnu le dit, sans rien allumer", async ({ page }) => {
         await page.goto("/mariage/demo/plan-de-table");
+        await page.getByRole("button", { name: "Démo : voir la page en avance" }).click();
         await page.getByLabel("Votre prénom ou votre nom").fill("Zzz");
 
         await expect(page.getByText("Personne à ce nom parmi les invités du dîner.")).toBeVisible();
@@ -39,6 +44,7 @@ test.describe("pages ouvertes par les QR codes du jour J (démo)", () => {
         page,
     }) => {
         await page.goto("/mariage/demo/galerie");
+        await page.getByRole("button", { name: "Démo : voir la page en avance" }).click();
         const door = page.getByRole("form", { name: "Qui êtes-vous ?" });
         await door.getByRole("button", { name: "Entrer dans la galerie" }).click();
         await expect(door.getByText("Votre nom.")).toBeVisible();
@@ -56,6 +62,7 @@ test.describe("pages ouvertes par les QR codes du jour J (démo)", () => {
         );
 
         await page.reload();
+        await page.getByRole("button", { name: "Démo : voir la page en avance" }).click();
         await expect(page.getByText("Bonjour Léa Dubois")).toBeVisible();
     });
 });

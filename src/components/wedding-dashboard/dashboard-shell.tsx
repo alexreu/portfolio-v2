@@ -1,15 +1,26 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useLenis } from "lenis/react";
 import { ExternalLink, RotateCcw } from "lucide-react";
 
+import { roleLabel } from "@/lib/wedding-dashboard/access";
 import { weddingCalendar } from "@/lib/wedding-dashboard/calendar";
 import { catererSheet } from "@/lib/wedding-dashboard/caterer-sheet";
 import { guestListCsv } from "@/lib/wedding-dashboard/csv";
 import { householdIdFor, monogram } from "@/lib/wedding-dashboard/drafts";
+import { galleryArchive } from "@/lib/wedding-dashboard/gallery-archive";
 import { groupLabel } from "@/lib/wedding-dashboard/households";
+import type { DashboardPage } from "@/lib/wedding-dashboard/pages";
+import {
+    can,
+    canRead,
+    canSee,
+    COUPLE,
+    viewerOf,
+    type Viewer,
+} from "@/lib/wedding-dashboard/permissions";
 import { previewOf } from "@/lib/wedding-dashboard/preview-link";
 import {
     galleryPoster,
@@ -26,8 +37,8 @@ import { useWeddingDemo } from "@/hooks/use-wedding-demo";
 import { ConfirmPopover } from "./confirm-popover";
 import { DashboardProvider, type Dashboard } from "./dashboard-context";
 import { DashboardNav, MENU_FOLDED_KEY } from "./dashboard-nav";
-import { dashboardHref } from "./dashboard-pages";
-import { buttonStyles } from "./dashboard-ui";
+import { dashboardEntries, dashboardHref } from "./dashboard-pages";
+import { buttonStyles, Select } from "./dashboard-ui";
 import { HouseholdDialog } from "./household-dialog";
 import { HouseholdPanel } from "./household-panel";
 
@@ -43,6 +54,14 @@ const seatingUrl = () => `${siteUrl()}/plan-de-table`;
 
 const galleryUrl = () => `${siteUrl()}/galerie`;
 
+const dayAfterUrl = () => previewOf(`${siteUrl()}?apres`);
+
+/** The page a path opens, null for the overview. */
+const pageAt = (pathname: string): DashboardPage | null =>
+    dashboardEntries
+        .flatMap((entry) => (entry.page ? [entry.page] : []))
+        .find((page) => pathname.replace(/\/$/, "").startsWith(dashboardHref(page))) ?? null;
+
 const download = (filename: string, content: Blob) => {
     const url = URL.createObjectURL(content);
     const link = Object.assign(document.createElement("a"), { href: url, download: filename });
@@ -57,6 +76,24 @@ const downloadPdf = (filename: string, bytes: Uint8Array) =>
 const printPdf = () => import("@/lib/wedding-dashboard/print-pdf");
 
 const at = () => new Date().toISOString();
+
+/** A page the person looking has no access to: said plainly, with the way back. */
+const NoAccess = ({ name, onBack }: { name: string; onBack: () => void }) => (
+    <section
+        aria-labelledby="sans-acces-titre"
+        className="border-wed-line-soft bg-wed-paper grid justify-items-start gap-3 rounded-2xl border p-6"
+    >
+        <h1 id="sans-acces-titre" className="font-wed-serif text-3xl font-medium">
+            {name} n&apos;a pas accès à cette page
+        </h1>
+        <p className="text-wed-muted text-sm">
+            Vous lui avez ouvert d&apos;autres fonctions : elles seules apparaissent dans son menu.
+        </p>
+        <button type="button" onClick={onBack} className={buttonStyles.secondary}>
+            Revenir à votre vue
+        </button>
+    </section>
+);
 
 /** Same frame as the dashboard, so nothing jumps once the browser copy is read. */
 const DashboardSkeleton = () => {
@@ -95,12 +132,19 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
     const [creating, setCreating] = useState(false);
     const [highlightId, setHighlightId] = useState<string | null>(null);
     const [detailId, setDetailId] = useState<string | null>(null);
+    /** The demo can show the dashboard as someone the couple let in sees it. */
+    const [viewerId, setViewerId] = useState<string | null>(null);
+    /** The household the guest list was last sent to: once, never again on another page. */
+    const sentTo = useRef<string | null>(null);
 
     /** A faire-part just created: once its dialog closes, the guest list shows it lit up. */
     useEffect(() => {
         if (!highlightId || creating) return;
-        if (pathname !== GUESTS) router.push(GUESTS);
-        else lenis?.scrollTo("#invites", { offset: -80 });
+        if (sentTo.current !== highlightId) {
+            sentTo.current = highlightId;
+            if (pathname !== GUESTS) return router.push(GUESTS);
+        }
+        if (pathname === GUESTS) lenis?.scrollTo("#invites", { offset: -80 });
         const timer = window.setTimeout(() => setHighlightId(null), HIGHLIGHT_MS);
         return () => window.clearTimeout(timer);
     }, [highlightId, creating, pathname, router, lenis]);
@@ -110,9 +154,21 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
     const { design } = state;
     const calendar = weddingCalendar(design.date, state.dates);
     const moments = momentsFromPlans(state.moments, design.date);
+    const looking = state.collaborators.find((collaborator) => collaborator.id === viewerId);
+    const viewer: Viewer = looking ? viewerOf(looking.grant) : COUPLE;
+    const open = canSee(viewer, pageAt(pathname));
+
+    const startAgain = () => {
+        setDetailId(null);
+        setViewerId(null);
+        reset();
+    };
 
     const dashboard: Dashboard = {
         state,
+        viewer,
+        can: (action) => can(viewer, action),
+        canRead: (feature) => canRead(viewer, feature),
         dispatch,
         now,
         calendar,
@@ -129,7 +185,16 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
             download(
                 `${householdIdFor(`invites ${design.first} ${design.second}`, "export")}.csv`,
                 new Blob(
-                    [guestListCsv(state.households, moments, (group) => groupLabel(group, design))],
+                    [
+                        guestListCsv(
+                            state.households,
+                            moments,
+                            (group) => groupLabel(group, design),
+                            {
+                                diets: can(viewer, "diets.read"),
+                            },
+                        ),
+                    ],
                     { type: "text/csv;charset=utf-8" },
                 ),
             ),
@@ -154,6 +219,25 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
             const poster = seatingPoster(design, calendar, state.room.name, seatingUrl());
             downloadPdf(poster.filename, await posterPdf(poster));
         },
+        dayAfterUrl: dayAfterUrl(),
+        downloadGallery: async () => {
+            /** Only loaded when asked for, like the PDF library. */
+            const { zipSync } = await import("fflate");
+            const archive = galleryArchive(design, state.photos);
+            const files = await Promise.all(
+                archive.files.map(async (file) => {
+                    const response = await fetch(file.url);
+                    if (!response.ok) throw new Error(`Photo ${file.name}: ${response.status}`);
+                    return [file.name, new Uint8Array(await response.arrayBuffer())] as const;
+                }),
+            );
+            /** Photos are compressed already: stored as they are, the archive builds at once. */
+            const zipped = zipSync(Object.fromEntries(files), { level: 0 });
+            download(
+                archive.filename,
+                new Blob([new Uint8Array(zipped)], { type: "application/zip" }),
+            );
+        },
         downloadGalleryPoster: async () => {
             const { posterPdf } = await printPdf();
             const poster = galleryPoster(design, calendar, galleryUrl());
@@ -170,7 +254,8 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                     monogram={monogram(design.first, design.second)}
                     subtitle={`${calendar.dateLabel} · Signature`}
                     householdCount={state.households.length}
-                    onReset={reset}
+                    canOpen={(entry) => canSee(viewer, entry)}
+                    onReset={startAgain}
                 />
                 <main className="mx-auto grid w-full max-w-[76rem] grid-cols-[minmax(0,1fr)] content-start gap-4 px-4 pt-6 pb-16 md:px-8 md:pt-8">
                     <aside
@@ -182,7 +267,27 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                             fictifs, données gardées dans ce navigateur, rien n&apos;est envoyé.
                             Répondez comme un invité sur le site : vos chiffres bougent ici.
                         </p>
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap items-center gap-1">
+                            {state.collaborators.length > 0 && (
+                                <label className="text-wed-ink-soft flex items-center gap-2">
+                                    <span className="whitespace-nowrap">Voir en tant que</span>
+                                    <Select
+                                        value={viewerId ?? ""}
+                                        onChange={(event) =>
+                                            setViewerId(event.target.value || null)
+                                        }
+                                        wrapperClassName="w-auto"
+                                        className="min-h-10 py-0 text-sm"
+                                    >
+                                        <option value="">Vous deux</option>
+                                        {state.collaborators.map((collaborator) => (
+                                            <option key={collaborator.id} value={collaborator.id}>
+                                                {collaborator.firstName} · {roleLabel(collaborator)}
+                                            </option>
+                                        ))}
+                                    </Select>
+                                </label>
+                            )}
                             <a
                                 href={previewOf("/mariage/demo")}
                                 target="_blank"
@@ -197,7 +302,7 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                                 detail="Vos essais dans ce navigateur seront effacés."
                                 confirmLabel="Réinitialiser"
                                 align="end"
-                                onConfirm={reset}
+                                onConfirm={startAgain}
                             >
                                 <button type="button" className={buttonStyles.quiet}>
                                     <RotateCcw aria-hidden="true" />
@@ -206,7 +311,14 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                             </ConfirmPopover>
                         </div>
                     </aside>
-                    {children}
+                    {open ? (
+                        children
+                    ) : (
+                        <NoAccess
+                            name={looking?.firstName ?? ""}
+                            onBack={() => setViewerId(null)}
+                        />
+                    )}
                 </main>
                 <HouseholdPanel
                     household={
@@ -218,6 +330,13 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                     activity={state.activity}
                     now={now}
                     linkFor={linkFor}
+                    allowed={{
+                        edit: can(viewer, "household.edit"),
+                        answer: can(viewer, "household.answer"),
+                        remove: can(viewer, "household.remove"),
+                        print: can(viewer, "household.print"),
+                        diets: can(viewer, "diets.read"),
+                    }}
                     onDownloadInvitation={(household) =>
                         dashboard.downloadHouseholdInvitations([household])
                     }
@@ -238,12 +357,23 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                             by: "maries",
                         })
                     }
-                    onRemove={(household) =>
-                        dispatch({ type: "household-removed", householdId: household.id, at: at() })
-                    }
+                    onRemove={(household) => {
+                        setDetailId(null);
+                        dispatch({
+                            type: "household-removed",
+                            householdId: household.id,
+                            at: at(),
+                        });
+                        /** Its row is gone: the list's title holds the focus instead of the page. */
+                        window.setTimeout(
+                            () => document.getElementById("invites-titre")?.focus(),
+                            0,
+                        );
+                    }}
                     onClose={() => setDetailId(null)}
                 />
                 <HouseholdDialog
+                    takenIds={new Set(state.households.map((household) => household.id))}
                     open={creating}
                     onOpenChange={setCreating}
                     moments={moments}

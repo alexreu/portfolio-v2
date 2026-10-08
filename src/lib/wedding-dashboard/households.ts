@@ -3,10 +3,17 @@ import type { Moment } from "@/lib/wedding/types";
 
 import type { Activity, GroupKey, HouseholdRecord } from "./types";
 
-export type HouseholdStatus = "answered" | "opened" | "never-opened";
+/** "incomplete": answered, but a moment or a guest was added since, still unanswered. */
+export type HouseholdStatus = "answered" | "incomplete" | "opened" | "never-opened";
+
+/** Whether every guest said yes or no to every moment the household is invited to. */
+export const answerComplete = (household: HouseholdRecord) =>
+    household.guests.every((guest) =>
+        household.momentKeys.every((key) => household.attendance[guest.id]?.[key] !== undefined),
+    );
 
 export const householdStatus = (household: HouseholdRecord): HouseholdStatus => {
-    if (household.answeredAt) return "answered";
+    if (household.answeredAt) return answerComplete(household) ? "answered" : "incomplete";
     return household.lastSeenAt ? "opened" : "never-opened";
 };
 
@@ -25,6 +32,8 @@ export const momentCell = (household: HouseholdRecord, momentKey: string): Cell 
     const status = householdStatus(household);
     if (status === "never-opened") return { tone: "closed", label: "Jamais ouvert" };
     if (status === "opened") return { tone: "wait", label: "Lien ouvert" };
+    if (household.guests.some((guest) => household.attendance[guest.id]?.[momentKey] === undefined))
+        return { tone: "wait", label: "À compléter" };
 
     const coming = household.guests.filter(
         (guest) => household.attendance[guest.id]?.[momentKey] === "yes",
@@ -61,10 +70,14 @@ export const dietSummary = (household: HouseholdRecord) =>
     });
 
 /** "2 adultes · 1 enfant · végétarien (1)" */
-export const householdSummary = (household: HouseholdRecord) => {
+export const householdSummary = (
+    household: HouseholdRecord,
+    /** False for whoever may not read the diets: they stay out of the line. */
+    { diets: withDiets = true }: { diets?: boolean } = {},
+) => {
     const children = household.guests.filter((guest) => guest.child).length;
     const adults = household.guests.length - children;
-    const diets = dietSummary(household);
+    const diets = withDiets ? dietSummary(household) : [];
     return [
         adults > 0 && `${adults} ${plural(adults, "adulte", "adultes")}`,
         children > 0 && `${children} ${plural(children, "enfant", "enfants")}`,
@@ -116,6 +129,8 @@ export const filterHouseholds = (
 export const statusCounts = (households: readonly HouseholdRecord[]) => ({
     all: households.length,
     answered: households.filter((household) => householdStatus(household) === "answered").length,
+    incomplete: households.filter((household) => householdStatus(household) === "incomplete")
+        .length,
     opened: households.filter((household) => householdStatus(household) === "opened").length,
     "never-opened": households.filter((household) => householdStatus(household) === "never-opened")
         .length,

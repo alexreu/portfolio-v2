@@ -82,7 +82,7 @@ export const defaultWeddingService: WeddingService = {
             },
             {
                 title: "Tableau de bord",
-                text: "Qui a ouvert, qui a répondu, combien de végétariens. Export pour le traiteur, et vos textes, votre programme et vos dates modifiés par vous-mêmes.",
+                text: "Qui a ouvert, qui a répondu, combien de végétariens. Export pour le traiteur, et votre faire-part, votre programme et vos dates modifiés par vous-mêmes.",
                 availability: "Toutes formules",
             },
             {
@@ -163,7 +163,7 @@ export const defaultWeddingService: WeddingService = {
                     "Votre dress code en une ligne, bien visible",
                     "Questions de base : contraintes alimentaires, mot pour les mariés",
                     "Tableau de bord + export CSV",
-                    "Textes, programme et dates modifiables par vous, à tout moment",
+                    "Faire-part, programme et dates modifiables par vous, à tout moment",
                     "Votre nom de domaine, 12 mois en ligne",
                     "1 aller-retour sur le design",
                 ],
@@ -241,7 +241,7 @@ export const defaultWeddingService: WeddingService = {
                 us: "Non",
             },
             {
-                label: "Données hébergées en Europe",
+                label: "Données supprimées après le mariage",
                 platforms: "Pas toujours",
                 agency: "Variable",
                 us: "Oui, purge programmée",
@@ -274,11 +274,11 @@ export const defaultWeddingService: WeddingService = {
             },
             {
                 question: "Peut-on modifier le site après la mise en ligne ?",
-                answer: "Oui. Textes, programme, horaires et dates se modifient depuis votre tableau de bord, à tout moment. Pour la FAQ ou un détail de mise en page, un message suffit, c'est inclus pendant toute la durée de mise en ligne.",
+                answer: "Oui. Le faire-part et son mot d'accueil, le message du lendemain, le programme, les horaires et les dates se modifient depuis votre tableau de bord, à tout moment. Pour votre histoire, la FAQ ou un détail de mise en page, un message suffit, c'est inclus pendant toute la durée de mise en ligne.",
             },
             {
                 question: "Que deviennent les données de nos invités ?",
-                answer: "Elles sont hébergées en Europe, jamais revendues, et supprimées trois mois après le mariage. Vous recevez un export complet avant.",
+                answer: "Elles ne sont jamais revendues et sont supprimées trois mois après le mariage, les régimes alimentaires dès le premier mois. Vous recevez un export complet avant.",
             },
             {
                 question: "Le nom de domaine nous appartient-il ?",

@@ -519,6 +519,7 @@ export const demoSeed = (now: Date): DemoState => {
         room: {
             name: "L'orangerie",
             size: "s",
+            revealAt: "10:00",
             head: { x: 50, y: 11, rotation: 0 },
             entrance: { x: 50, y: 91, rotation: 0 },
         },
