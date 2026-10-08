@@ -105,7 +105,7 @@ test.describe("tableau de bord des mariés (démo) · formules, import, réglage
         );
     });
 
-    test("les réglages changent les groupes, l'adresse du site, et donnent toutes les données", async ({
+    test("les réglages changent les groupes, le lieu du mariage, et donnent toutes les données", async ({
         page,
     }) => {
         await page.goto(dashboard("reglages"));
@@ -115,14 +115,11 @@ test.describe("tableau de bord des mariés (démo) · formules, import, réglage
         await groups.getByRole("button", { name: "Enregistrer les groupes" }).click();
         await expect(groups.getByRole("status")).toContainText("Groupes enregistrés.");
 
-        const site = page.getByRole("form", { name: "Votre site" });
-        await site.getByLabel("Adresse du site").fill("camille et hugo");
-        await site.getByRole("button", { name: "Enregistrer" }).click();
-        await expect(site).toContainText("Une adresse comme camille-et-hugo.fr.");
-        await site.getByLabel("Adresse du site").fill("camille-hugo.fr");
-        await site.getByLabel("Lieu du mariage").selectOption({ label: "La Réunion" });
-        await site.getByRole("button", { name: "Enregistrer" }).click();
-        await expect(site.getByRole("status")).toContainText("Enregistré");
+        const place = page.getByRole("form", { name: "Lieu du mariage" });
+        await expect(page.getByLabel(/Adresse du site|Contact des invités/)).toHaveCount(0);
+        await place.getByLabel("Fuseau horaire").selectOption({ label: "La Réunion" });
+        await place.getByRole("button", { name: "Enregistrer" }).click();
+        await expect(place.getByRole("status")).toContainText("Enregistré");
 
         const [download] = await Promise.all([
             page.waitForEvent("download"),
@@ -131,7 +128,7 @@ test.describe("tableau de bord des mariés (démo) · formules, import, réglage
         expect(download.suggestedFilename()).toMatch(/^donnees-camille-hugo-.*\.json$/);
         const exported = JSON.parse(await readFile((await download.path()) ?? "", "utf8"));
         expect(exported.wedding.timezone).toBe("Indian/Reunion");
-        expect(exported.wedding.settings.domain).toBe("camille-hugo.fr");
+        expect(exported.wedding.settings.domain).toBe("camille-et-hugo.fr");
         expect(exported.wedding.groups[0].label).toBe("Famille de Camille");
     });
 

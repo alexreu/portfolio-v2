@@ -2,9 +2,9 @@
 
 import { useDashboard } from "../dashboard-context";
 import { PageHeader } from "../dashboard-ui";
-import { DataSection, GroupsSection, OfferSection, SiteSection } from "../settings-sections";
+import { DataSection, GroupsSection, OfferSection, PlaceSection } from "../settings-sections";
 
-/** The couple's own page: their groups, their site, their formula and their data. */
+/** The couple's own page: their groups, where the wedding takes place, their formula and data. */
 export const SettingsPage = () => {
     const { state, dispatch, planName, flags, exportData } = useDashboard();
     const refusals = (result: ReturnType<typeof dispatch>) => (result.ok ? [] : result.error);
@@ -16,10 +16,11 @@ export const SettingsPage = () => {
                 households={state.households}
                 onSave={(groups) => refusals(dispatch({ type: "groups.save", groups }))}
             />
-            <SiteSection
+            <PlaceSection
                 timezone={state.timezone}
-                settings={state.settings}
-                onSave={(draft) => refusals(dispatch({ type: "settings.save", ...draft }))}
+                onSave={(timezone) =>
+                    refusals(dispatch({ type: "settings.save", timezone, ...state.settings }))
+                }
             />
             <OfferSection plan={planName} flags={flags} />
             <DataSection

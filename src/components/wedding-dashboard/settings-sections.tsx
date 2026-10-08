@@ -7,7 +7,6 @@ import {
     type Flag,
     type HouseholdGroup,
     type HouseholdRecord,
-    type WeddingSettings,
 } from "@alexreu/wedding-core";
 import { Check, Download, Plus, Trash2 } from "lucide-react";
 
@@ -172,123 +171,72 @@ export const GroupsSection = ({
     );
 };
 
-type SiteDraft = { readonly timezone: string } & WeddingSettings;
-
-const siteMessages: Readonly<Record<string, string>> = {
-    timezone: "Choisissez le fuseau du lieu du mariage.",
-    contactEmail: "Cette adresse ne semble pas complète.",
-    domain: "Une adresse comme camille-et-hugo.fr.",
-};
-
-/** Where the site lives, who guests write to, and where the wedding takes place. */
-export const SiteSection = ({
+/**
+ * « Lieu du mariage » : the time zone every hour of the site is read in. The domain and the
+ * guests' contact are set with AlexDevLab when the site is created, not here.
+ */
+export const PlaceSection = ({
     timezone,
-    settings,
     onSave,
 }: {
     timezone: string;
-    settings: WeddingSettings;
-    onSave: (draft: SiteDraft) => readonly CommandIssue[];
+    onSave: (timezone: string) => readonly CommandIssue[];
 }) => {
-    const initial = { timezone, ...settings };
-    const [draft, setDraft] = useState<SiteDraft>(initial);
-    const [base, setBase] = useState(initial);
-    if (JSON.stringify(initial) !== JSON.stringify(base)) {
-        setBase(initial);
-        setDraft(initial);
+    const [draft, setDraft] = useState(timezone);
+    const [base, setBase] = useState(timezone);
+    if (base !== timezone) {
+        setBase(timezone);
+        setDraft(timezone);
     }
     const [issues, setIssues] = useState<readonly CommandIssue[]>([]);
     const [saved, setSaved] = useState(false);
-    const dirty = JSON.stringify(draft) !== JSON.stringify(initial);
-    const issueAt = (path: string) => issues.find((issue) => issue.path === path);
-    const known = TIME_ZONES.some((zone) => zone.value === draft.timezone);
-
-    const change = (patch: Partial<SiteDraft>) => {
-        setDraft({ ...draft, ...patch });
-        setSaved(false);
-    };
+    const dirty = draft !== timezone;
+    const refused = issues.some((issue) => issue.path === "timezone");
+    const known = TIME_ZONES.some((zone) => zone.value === draft);
 
     const submit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const refused = onSave(draft);
-        setIssues(refused);
-        setSaved(refused.length === 0);
+        const result = onSave(draft);
+        setIssues(result);
+        setSaved(result.length === 0);
     };
 
-    const field = (path: keyof SiteDraft, label: string, hint: string, input: React.ReactNode) => (
-        <div className="grid content-start gap-1.5 text-sm">
-            <label htmlFor={`site-${path}`} className="text-wed-ink-soft">
-                {label}
-            </label>
-            {input}
-            <span id={`site-${path}-hint`} className="text-wed-muted text-xs">
-                {hint}
-            </span>
-            <FieldError id={`site-${path}-error`} message={issueAt(path) && siteMessages[path]} />
-        </div>
-    );
-
-    const describedBy = (path: string) =>
-        cn(`site-${path}-hint`, issueAt(path) && `site-${path}-error`);
-
     return (
-        <Card id="site" title="Votre site" titleId="site-titre">
+        <Card id="lieu" title="Lieu du mariage" titleId="lieu-titre">
             <form
                 noValidate
                 onSubmit={submit}
-                aria-label="Votre site"
+                aria-label="Lieu du mariage"
                 className="grid gap-4 px-5 py-4"
             >
-                <div className="grid gap-4 md:grid-cols-3">
-                    {field(
-                        "domain",
-                        "Adresse du site",
-                        "Votre nom de domaine, inclus dans la formule.",
-                        <input
-                            id="site-domain"
-                            value={draft.domain}
-                            onChange={(event) => change({ domain: event.target.value })}
-                            placeholder="camille-et-hugo.fr"
-                            autoComplete="off"
-                            aria-invalid={Boolean(issueAt("domain"))}
-                            aria-describedby={describedBy("domain")}
-                            className={inputStyles}
-                        />,
-                    )}
-                    {field(
-                        "contactEmail",
-                        "Contact des invités",
-                        "Affiché sur le site pour toute question. Vide : aucun.",
-                        <input
-                            id="site-contactEmail"
-                            type="email"
-                            value={draft.contactEmail}
-                            onChange={(event) => change({ contactEmail: event.target.value })}
-                            autoComplete="off"
-                            aria-invalid={Boolean(issueAt("contactEmail"))}
-                            aria-describedby={describedBy("contactEmail")}
-                            className={inputStyles}
-                        />,
-                    )}
-                    {field(
-                        "timezone",
-                        "Lieu du mariage",
-                        "Toutes les heures du site s'y lisent : programme, galerie, tables.",
-                        <Select
-                            id="site-timezone"
-                            value={draft.timezone}
-                            onChange={(event) => change({ timezone: event.target.value })}
-                            aria-invalid={Boolean(issueAt("timezone"))}
-                            aria-describedby={describedBy("timezone")}
-                        >
-                            {!known && <option value={draft.timezone}>{draft.timezone}</option>}
-                            {TIME_ZONES.map((zone) => (
-                                <option key={zone.value} value={zone.value}>
-                                    {zone.label}
-                                </option>
-                            ))}
-                        </Select>,
-                    )}
+                <div className="grid max-w-sm content-start gap-1.5 text-sm">
+                    <label htmlFor="lieu-fuseau" className="text-wed-ink-soft">
+                        Fuseau horaire
+                    </label>
+                    <Select
+                        id="lieu-fuseau"
+                        value={draft}
+                        onChange={(event) => {
+                            setDraft(event.target.value);
+                            setSaved(false);
+                        }}
+                        aria-invalid={refused}
+                        aria-describedby={cn("lieu-fuseau-aide", refused && "lieu-fuseau-erreur")}
+                    >
+                        {!known && <option value={draft}>{draft}</option>}
+                        {TIME_ZONES.map((zone) => (
+                            <option key={zone.value} value={zone.value}>
+                                {zone.label}
+                            </option>
+                        ))}
+                    </Select>
+                    <span id="lieu-fuseau-aide" className="text-wed-muted text-xs">
+                        Toutes les heures du site s&apos;y lisent : programme, galerie, tables.
+                    </span>
+                    <FieldError
+                        id="lieu-fuseau-erreur"
+                        message={refused ? "Choisissez le fuseau du lieu du mariage." : undefined}
+                    />
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                     <button type="submit" disabled={!dirty} className={buttonStyles.primary}>

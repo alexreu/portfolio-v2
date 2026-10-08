@@ -79,7 +79,7 @@ export const dashboardEntries: readonly DashboardEntry[] = [
         page: "settings",
         label: "Réglages",
         icon: Settings,
-        intro: "Vos groupes d'invités, l'adresse du site, qui vos invités contactent, et vos données.",
+        intro: "Vos groupes d'invités, le lieu du mariage, votre formule et vos données.",
     },
 ];
 
