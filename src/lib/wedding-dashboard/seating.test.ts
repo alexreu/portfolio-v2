@@ -5,6 +5,7 @@ import {
     nextTableNumber,
     questionIdFor,
     seatingPlan,
+    tablesRemoval,
     validateQuestions,
     validateTable,
 } from "./seating";
@@ -111,6 +112,35 @@ describe("seatingPlan", () => {
         expect(plan.alerts).toEqual([
             { kind: "unseated", text: "3 invités au dîner n'ont pas encore de table." },
         ]);
+    });
+});
+
+describe("tablesRemoval", () => {
+    const plan = seatingPlan([moreau, garcia], tables, { claire: "t1", leo: "t1", sofia: "t2" });
+
+    it("names the table and says how many guests lose their seat", () => {
+        expect(tablesRemoval(plan.tables, ["t1"])).toEqual({
+            question: "Retirer la table 1 ?",
+            detail: "Ses 2 invités repasseront « sans table ».",
+        });
+        expect(tablesRemoval(plan.tables, ["t2"]).detail).toBe(
+            "Son invité repassera « sans table ».",
+        );
+    });
+
+    it("counts the tables and their guests when several go at once", () => {
+        expect(tablesRemoval(plan.tables, ["t1", "t2"])).toEqual({
+            question: "Retirer les 2 tables ?",
+            detail: "Leurs 3 invités repasseront « sans table ».",
+        });
+        expect(
+            tablesRemoval(seatingPlan([garcia], tables, { sofia: "t2" }).tables, ["t1", "t2"])
+                .detail,
+        ).toBe("Un invité repassera « sans table ».");
+    });
+
+    it("has nothing to warn about for empty tables", () => {
+        expect(tablesRemoval(seatingPlan([], tables, {}).tables, ["t1"]).detail).toBeUndefined();
     });
 });
 

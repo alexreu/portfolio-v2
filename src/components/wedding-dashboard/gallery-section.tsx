@@ -26,6 +26,7 @@ export const GallerySection = ({ photos, opensLabel, onToggle }: GallerySectionP
             id="galerie"
             title="Galerie des invités"
             titleId="galerie-titre"
+            plan="galerie"
             aside={
                 <span className="text-wed-muted text-[0.8rem]">
                     Exemple après le jour J · ouverture le {opensLabel}

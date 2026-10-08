@@ -2,7 +2,7 @@ import { Mail, Send } from "lucide-react";
 
 import { sinceLabel, type WeddingCalendar } from "@/lib/wedding-dashboard/calendar";
 import { overview } from "@/lib/wedding-dashboard/stats";
-import type { Activity, DemoState } from "@/lib/wedding-dashboard/types";
+import type { Activity, DemoState, HouseholdRecord } from "@/lib/wedding-dashboard/types";
 
 import { buttonStyles, Card, plural } from "./dashboard-ui";
 
@@ -28,6 +28,56 @@ const Badge = ({ entry }: { entry: Activity }) => (
     </span>
 );
 
+type ActivityCardProps = {
+    activity: readonly Activity[];
+    households: readonly HouseholdRecord[];
+    now: Date;
+    onOpenHousehold: (householdId: string) => void;
+};
+
+/** Everything that happened, latest first; an event about a household opens its detail. */
+export const ActivityCard = ({ activity, households, now, onOpenHousehold }: ActivityCardProps) => {
+    const isHousehold = (id: string) => households.some((household) => household.id === id);
+    return (
+        <Card
+            title="Activité récente"
+            titleId="activite-titre"
+            aside={<span className="text-wed-muted text-[0.8rem]">Tout est horodaté</span>}
+        >
+            <ol aria-live="polite" className="divide-wed-line-soft divide-y px-5 py-1">
+                {activity.slice(0, SHOWN).map((entry) => (
+                    <li
+                        key={entry.id}
+                        className="grid grid-cols-[2.25rem_1fr_auto] items-start gap-3 py-3"
+                    >
+                        <Badge entry={entry} />
+                        <p className="text-sm">
+                            {isHousehold(entry.subject) ? (
+                                <button
+                                    type="button"
+                                    onClick={() => onOpenHousehold(entry.subject)}
+                                    className="cursor-pointer text-left hover:underline hover:underline-offset-4"
+                                >
+                                    {entry.text}
+                                </button>
+                            ) : (
+                                entry.text
+                            )}
+                            <span className="text-wed-muted block text-xs">{entry.detail}</span>
+                        </p>
+                        <time
+                            dateTime={entry.at}
+                            className="text-wed-muted text-xs whitespace-nowrap"
+                        >
+                            {sinceLabel(entry.at, now)}
+                        </time>
+                    </li>
+                ))}
+            </ol>
+        </Card>
+    );
+};
+
 /** Reminders on one side, everything that happened on the other. */
 export const FollowUpSection = ({
     state,
@@ -37,7 +87,6 @@ export const FollowUpSection = ({
     onRemind,
     onOpenHousehold,
 }: FollowUpSectionProps) => {
-    const isHousehold = (id: string) => state.households.some((household) => household.id === id);
     const { pending } = overview(state.households);
     const couple = `${state.design.first} & ${state.design.second}`;
 
@@ -46,6 +95,7 @@ export const FollowUpSection = ({
             <Card
                 title="Relances"
                 titleId="relances-titre"
+                plan="relances"
                 aside={
                     <span className="text-wed-muted text-[0.8rem]">
                         Seulement aux foyers sans réponse
@@ -89,42 +139,12 @@ export const FollowUpSection = ({
                 </div>
             </Card>
 
-            <Card
-                title="Activité récente"
-                titleId="activite-titre"
-                aside={<span className="text-wed-muted text-[0.8rem]">Tout est horodaté</span>}
-            >
-                <ol aria-live="polite" className="divide-wed-line-soft divide-y px-5 py-1">
-                    {state.activity.slice(0, SHOWN).map((entry) => (
-                        <li
-                            key={entry.id}
-                            className="grid grid-cols-[2.25rem_1fr_auto] items-start gap-3 py-3"
-                        >
-                            <Badge entry={entry} />
-                            <p className="text-sm">
-                                {isHousehold(entry.subject) ? (
-                                    <button
-                                        type="button"
-                                        onClick={() => onOpenHousehold(entry.subject)}
-                                        className="cursor-pointer text-left hover:underline hover:underline-offset-4"
-                                    >
-                                        {entry.text}
-                                    </button>
-                                ) : (
-                                    entry.text
-                                )}
-                                <span className="text-wed-muted block text-xs">{entry.detail}</span>
-                            </p>
-                            <time
-                                dateTime={entry.at}
-                                className="text-wed-muted text-xs whitespace-nowrap"
-                            >
-                                {sinceLabel(entry.at, now)}
-                            </time>
-                        </li>
-                    ))}
-                </ol>
-            </Card>
+            <ActivityCard
+                activity={state.activity}
+                households={state.households}
+                now={now}
+                onOpenHousehold={onOpenHousehold}
+            />
         </div>
     );
 };

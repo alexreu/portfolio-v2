@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { AlertTriangle, Plus, Trash2, X } from "lucide-react";
+import { AlertTriangle, Plus, RotateCw, Trash2, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { DraftIssue } from "@/lib/wedding-dashboard/drafts";
+import { isFixture, pick, type Fixture } from "@/lib/wedding-dashboard/plan-selection";
 import { freeSpot } from "@/lib/wedding-dashboard/room";
 import {
     nextTableNumber,
     seatingPlan,
+    tablesRemoval,
     validateTable,
     type SeatedGuest,
 } from "@/lib/wedding-dashboard/seating";
@@ -29,6 +31,7 @@ import {
     inputStyles,
     issueMessages,
     plural,
+    Select,
 } from "./dashboard-ui";
 
 type SeatingSectionProps = {
@@ -37,13 +40,18 @@ type SeatingSectionProps = {
     seats: Readonly<Record<string, string>>;
     room: RoomLayout;
     onSaveRoom: (name: string, size: RoomSize) => void;
-    onMoveFixture: (fixture: "head" | "entrance", x: number, y: number) => void;
+    onMoveFixture: (fixture: Fixture, x: number, y: number) => void;
+    onRotateFixture: (fixture: Fixture) => void;
     onSaveTable: (table: SeatTable) => void;
     onMoveTable: (tableId: string, x: number, y: number) => void;
-    onRemoveTable: (tableId: string) => void;
+    onRemoveTables: (tableIds: readonly string[]) => void;
     onSeatGuest: (guestId: string, tableId: string | null) => void;
     onSeatHousehold: (householdId: string, tableId: string) => void;
 };
+
+/** A round action floating beside what is picked on the plan. */
+const floatingButton =
+    "bg-wed-paper border-wed-line grid size-9 cursor-pointer place-items-center rounded-full border shadow-md transition-colors [&_svg]:size-4";
 
 /** Unseated guests by household, so a whole family is placed in one go. */
 const byHousehold = (guests: readonly SeatedGuest[]) =>
@@ -153,7 +161,7 @@ const RoomSettings = ({
         else setName(room.name);
     };
     return (
-        <fieldset className="border-wed-line-soft grid gap-3 rounded-2xl border p-3.5 sm:grid-cols-2">
+        <fieldset className="border-wed-line-soft grid gap-4 rounded-2xl border px-4 pt-2 pb-4 sm:grid-cols-2">
             <legend className="text-wed-ink-soft px-1 text-sm">La salle</legend>
             <label className="grid content-start gap-1 text-sm">
                 <span className="text-wed-muted">Nom, écrit à l&apos;entrée</span>
@@ -168,17 +176,16 @@ const RoomSettings = ({
             </label>
             <label className="grid content-start gap-1 text-sm">
                 <span className="text-wed-muted">Taille</span>
-                <select
+                <Select
                     value={room.size}
                     onChange={(event) => onSave(room.name, event.target.value as RoomSize)}
-                    className={inputStyles}
                 >
                     {sizes.map((size) => (
                         <option key={size.value} value={size.value}>
                             {size.label}
                         </option>
                     ))}
-                </select>
+                </Select>
             </label>
             {tableCount > fits && bigger && (
                 <p className="text-wed-wait text-xs sm:col-span-2">
@@ -198,15 +205,35 @@ export const SeatingSection = ({
     room,
     onSaveRoom,
     onMoveFixture,
+    onRotateFixture,
     onSaveTable,
     onMoveTable,
-    onRemoveTable,
+    onRemoveTables,
     onSeatGuest,
     onSeatHousehold,
 }: SeatingSectionProps) => {
-    const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [picked, setPicked] = useState<readonly string[]>([]);
     const plan = seatingPlan(households, tables, seats);
-    const selected = plan.tables.find((entry) => entry.table.id === selectedId) ?? null;
+    /** Tables removed meanwhile, in the guest site's tab for instance, drop out. */
+    const selection = picked.filter(
+        (item) => isFixture(item) || tables.some((table) => table.id === item),
+    );
+    const selectedTables = plan.tables.filter((entry) => selection.includes(entry.table.id));
+    const selected = selectedTables.length === 1 ? selectedTables[0] : null;
+    const fixture = selection.find(isFixture) ?? null;
+    const removal = tablesRemoval(
+        plan.tables,
+        selectedTables.map((entry) => entry.table.id),
+    );
+    const removeSelected = () => {
+        onRemoveTables(selectedTables.map((entry) => entry.table.id));
+        setPicked([]);
+    };
+    const allIds = tables.map((table) => table.id);
+    const removeAll = () => {
+        onRemoveTables(allIds);
+        setPicked([]);
+    };
     const waiting = byHousehold(plan.unseated);
     const counts = Object.fromEntries(
         plan.tables.map((entry) => [entry.table.id, entry.guests.length]),
@@ -223,7 +250,7 @@ export const SeatingSection = ({
             ...freeSpot(tables, room),
         };
         onSaveTable(table);
-        setSelectedId(table.id);
+        setPicked([table.id]);
     };
 
     const place = (value: string, tableId: string) => {
@@ -237,6 +264,7 @@ export const SeatingSection = ({
             id="plan-de-table"
             title="Plan de table · dîner"
             titleId="plan-de-table-titre"
+            plan="plan-de-table"
             aside={
                 <span className="text-wed-muted text-[0.8rem]">
                     {seatedCount} placés ·{" "}
@@ -266,56 +294,99 @@ export const SeatingSection = ({
                 </ul>
             )}
 
-            <div className="grid gap-5 p-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
-                <div className="grid content-start gap-3">
-                    <div className="border-wed-line-soft overflow-hidden rounded-2xl border">
+            <div className="grid gap-8 p-5 md:p-6 lg:grid-cols-[minmax(0,2fr)_minmax(17rem,1fr)]">
+                <div className="grid content-start gap-6">
+                    <div
+                        className="border-wed-line-soft overflow-hidden rounded-2xl border"
+                        onKeyDown={(event) => event.key === "Escape" && setPicked([])}
+                    >
                         <RoomPlan
                             tables={tables}
                             room={room}
                             onMoveFixture={onMoveFixture}
+                            onRotateFixture={onRotateFixture}
                             selectedAction={
-                                selected && (
-                                    <ConfirmPopover
-                                        question={`Retirer la table ${selected.table.number} ?`}
-                                        detail={
-                                            selected.guests.length > 0
-                                                ? `Ses ${selected.guests.length} invités repasseront « sans table ».`
-                                                : undefined
+                                fixture ? (
+                                    <button
+                                        type="button"
+                                        onClick={() => onRotateFixture(fixture)}
+                                        aria-label={
+                                            fixture === "head"
+                                                ? "Pivoter la table des mariés"
+                                                : "Pivoter l'entrée"
                                         }
-                                        confirmLabel="Retirer"
-                                        onConfirm={() => {
-                                            onRemoveTable(selected.table.id);
-                                            setSelectedId(null);
-                                        }}
+                                        className={cn(
+                                            floatingButton,
+                                            "text-wed-ink hover:bg-wed-ink hover:text-wed-paper",
+                                        )}
                                     >
-                                        <button
-                                            type="button"
-                                            aria-label={`Retirer la table ${selected.table.number}`}
-                                            className="bg-wed-paper text-wed-no hover:bg-wed-no border-wed-line grid size-9 cursor-pointer place-items-center rounded-full border shadow-md transition-colors hover:text-white [&_svg]:size-4"
+                                        <RotateCw aria-hidden="true" />
+                                    </button>
+                                ) : (
+                                    selected && (
+                                        <ConfirmPopover
+                                            question={removal.question}
+                                            detail={removal.detail}
+                                            confirmLabel="Retirer"
+                                            onConfirm={removeSelected}
                                         >
-                                            <Trash2 aria-hidden="true" />
-                                        </button>
-                                    </ConfirmPopover>
+                                            <button
+                                                type="button"
+                                                aria-label={`Retirer la table ${selected.table.number}`}
+                                                className={cn(
+                                                    floatingButton,
+                                                    "text-wed-no hover:bg-wed-no hover:text-white",
+                                                )}
+                                            >
+                                                <Trash2 aria-hidden="true" />
+                                            </button>
+                                        </ConfirmPopover>
+                                    )
                                 )
                             }
                             seated={counts}
-                            selectedId={selectedId}
+                            selectedIds={selection}
                             label="Plan de la salle : glissez une table pour la déplacer, touchez-la pour la composer"
-                            onSelect={(tableId) =>
-                                setSelectedId((current) => (current === tableId ? null : tableId))
+                            onSelect={(item, additive) =>
+                                setPicked(pick(selection, item, additive))
                             }
                             onMove={onMoveTable}
                         />
                     </div>
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                        <p className="text-wed-muted text-xs">
-                            Glissez les tables, la table des mariés et l&apos;entrée ; touchez une
-                            table pour la composer. Les invités découvrent leur table le jour J.
+                    <div className="grid gap-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={addTable}
+                                className={buttonStyles.secondary}
+                            >
+                                <Plus aria-hidden="true" />
+                                Ajouter une table
+                            </button>
+                            {tables.length > 1 && (
+                                <ConfirmPopover
+                                    {...tablesRemoval(plan.tables, allIds)}
+                                    confirmLabel="Tout retirer"
+                                    onConfirm={removeAll}
+                                >
+                                    <button
+                                        type="button"
+                                        className={cn(
+                                            buttonStyles.quiet,
+                                            "text-wed-no hover:bg-wed-no-bg hover:text-wed-no",
+                                        )}
+                                    >
+                                        <Trash2 aria-hidden="true" />
+                                        Retirer toutes les tables
+                                    </button>
+                                </ConfirmPopover>
+                            )}
+                        </div>
+                        <p className="text-wed-muted max-w-[62ch] text-xs leading-relaxed">
+                            Glissez les tables, la table des mariés et l&apos;entrée ; touchez-les
+                            pour les composer ou les pivoter. Ctrl ou ⌘ + clic sélectionne plusieurs
+                            tables. Les invités découvrent leur table le jour J.
                         </p>
-                        <button type="button" onClick={addTable} className={buttonStyles.secondary}>
-                            <Plus aria-hidden="true" />
-                            Ajouter une table
-                        </button>
                     </div>
                     <RoomSettings
                         key={room.name}
@@ -325,7 +396,61 @@ export const SeatingSection = ({
                     />
                 </div>
 
-                {selected ? (
+                {selectedTables.length > 1 ? (
+                    <section
+                        aria-label={`${selectedTables.length} tables sélectionnées`}
+                        className="grid content-start gap-4"
+                    >
+                        <div className="flex items-start justify-between gap-3">
+                            <p className="font-wed-serif text-2xl leading-tight font-medium lining-nums">
+                                {selectedTables.length} tables sélectionnées
+                                <span className="font-main text-wed-muted block text-sm font-normal">
+                                    Ctrl ou ⌘ + clic pour en ajouter ou en retirer une.
+                                </span>
+                            </p>
+                            <button
+                                type="button"
+                                onClick={() => setPicked([])}
+                                aria-label="Tout désélectionner"
+                                className={iconButton}
+                            >
+                                <X aria-hidden="true" />
+                            </button>
+                        </div>
+                        <ul className="divide-wed-line-soft border-wed-line-soft divide-y rounded-2xl border text-sm">
+                            {selectedTables.map((entry) => (
+                                <li
+                                    key={entry.table.id}
+                                    className="flex items-center justify-between gap-2 px-4 py-2.5"
+                                >
+                                    <span>
+                                        Table {entry.table.number} · {entry.table.name}
+                                    </span>
+                                    <span className="text-wed-muted text-xs lining-nums">
+                                        {entry.guests.length}/{entry.table.capacity}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                        <ConfirmPopover
+                            question={removal.question}
+                            detail={removal.detail}
+                            confirmLabel="Retirer"
+                            onConfirm={removeSelected}
+                        >
+                            <button
+                                type="button"
+                                className={cn(
+                                    buttonStyles.secondary,
+                                    "text-wed-no hover:border-wed-no justify-self-start",
+                                )}
+                            >
+                                <Trash2 aria-hidden="true" />
+                                Retirer les {selectedTables.length} tables
+                            </button>
+                        </ConfirmPopover>
+                    </section>
+                ) : selected ? (
                     <section
                         aria-label={`Table ${selected.table.number}`}
                         className="grid content-start gap-4"
@@ -339,7 +464,7 @@ export const SeatingSection = ({
                             </p>
                             <button
                                 type="button"
-                                onClick={() => setSelectedId(null)}
+                                onClick={() => setPicked([])}
                                 aria-label="Fermer la table"
                                 className={iconButton}
                             >
@@ -387,12 +512,11 @@ export const SeatingSection = ({
                         {waiting.length > 0 && (
                             <label className="grid gap-1.5 text-sm">
                                 <span className="text-wed-ink-soft">Ajouter à cette table</span>
-                                <select
+                                <Select
                                     value=""
                                     onChange={(event) =>
                                         place(event.target.value, selected.table.id)
                                     }
-                                    className={inputStyles}
                                 >
                                     <option value="" disabled>
                                         Choisir un invité sans table…
@@ -418,7 +542,7 @@ export const SeatingSection = ({
                                             ))}
                                         </optgroup>
                                     ))}
-                                </select>
+                                </Select>
                             </label>
                         )}
                     </section>
@@ -454,7 +578,7 @@ export const SeatingSection = ({
                                         <span className="sr-only">
                                             Placer {household.name} à une table
                                         </span>
-                                        <select
+                                        <Select
                                             value=""
                                             onChange={(event) =>
                                                 onSeatHousehold(
@@ -462,7 +586,6 @@ export const SeatingSection = ({
                                                     event.target.value,
                                                 )
                                             }
-                                            className={inputStyles}
                                         >
                                             <option value="" disabled>
                                                 Placer le foyer à…
@@ -473,7 +596,7 @@ export const SeatingSection = ({
                                                     ({entry.guests.length}/{entry.table.capacity})
                                                 </option>
                                             ))}
-                                        </select>
+                                        </Select>
                                     </label>
                                 </li>
                             ))}

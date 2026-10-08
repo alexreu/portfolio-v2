@@ -68,7 +68,12 @@ export const QuestionsSection = ({ questions, onSave }: QuestionsSectionProps) =
     };
 
     return (
-        <Card id="questions" title="Questions du faire-part" titleId="questions-titre">
+        <Card
+            id="questions"
+            title="Questions du faire-part"
+            titleId="questions-titre"
+            plan="questions"
+        >
             <form
                 noValidate
                 onSubmit={submit}

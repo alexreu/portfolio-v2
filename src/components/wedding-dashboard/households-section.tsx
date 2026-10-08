@@ -17,7 +17,7 @@ import {
 import type { GroupKey, HouseholdRecord, InvitationDesign } from "@/lib/wedding-dashboard/types";
 import type { Moment } from "@/lib/wedding/types";
 
-import { buttonStyles, Card, Chip, iconButton, inputStyles, plural } from "./dashboard-ui";
+import { buttonStyles, Card, Chip, iconButton, inputStyles, plural, Select } from "./dashboard-ui";
 
 type HouseholdsSectionProps = {
     households: readonly HouseholdRecord[];
@@ -157,7 +157,7 @@ export const HouseholdsSection = ({
                 </div>
             }
         >
-            <div className="border-wed-line-soft flex flex-wrap items-center gap-2.5 border-b px-5 py-3.5">
+            <div className="border-wed-line-soft flex flex-wrap items-center gap-x-4 gap-y-3 border-b px-5 py-4">
                 <label className="relative min-w-52 flex-1 md:max-w-80">
                     <span className="sr-only">Rechercher un foyer ou un prénom</span>
                     <Search
@@ -194,7 +194,7 @@ export const HouseholdsSection = ({
                         </button>
                     ))}
                 </div>
-                <select
+                <Select
                     aria-label="Filtrer par groupe"
                     value={filter.group}
                     onChange={(event) =>
@@ -203,7 +203,7 @@ export const HouseholdsSection = ({
                             group: event.target.value as HouseholdFilter["group"],
                         })
                     }
-                    className={cn(inputStyles, "w-auto pr-8")}
+                    wrapperClassName="w-auto"
                 >
                     <option value="all">Tous les groupes</option>
                     {groups.map((group) => (
@@ -211,7 +211,7 @@ export const HouseholdsSection = ({
                             {groupLabel(group, design)}
                         </option>
                     ))}
-                </select>
+                </Select>
             </div>
 
             <p aria-live="polite" className="sr-only">

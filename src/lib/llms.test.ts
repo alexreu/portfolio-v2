@@ -9,7 +9,7 @@ describe("weddingLlmsSection", () => {
 
         expect(section).toContain("## Sites de mariage");
         expect(section).toContain("- Intime : 290 €");
-        expect(section).toContain("- Signature : 990 €");
+        expect(section).toContain("- Signature : 890 €");
         expect(section).not.toContain("HT");
         expect(section).toContain("TVA non applicable, art. 293 B du CGI");
     });

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { getProjectUrl } from "@/lib/projects";
 import type { PricingPlan, Project, Service, SiteSettings } from "@/lib/sanity/types";
+import { DASHBOARD_PATH } from "@/lib/wedding-dashboard/pages";
 import type { WeddingPlan, WeddingService } from "@/lib/wedding-service/types";
 
 /**
@@ -287,7 +288,7 @@ export const weddingPage = {
 
 /** The couple's dashboard, playable with fictional data kept in the visitor's browser. */
 export const weddingDashboardDemoPage = {
-    path: "/mariage/demo/tableau-de-bord",
+    path: DASHBOARD_PATH,
     title: "Démo · tableau de bord des mariés",
     description:
         "Essayez le tableau de bord d'un site de mariage : réponses des invités en temps réel, récap traiteur, création de faire-part et relances. Données fictives, rien n'est envoyé.",

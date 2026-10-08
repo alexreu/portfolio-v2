@@ -1,13 +1,21 @@
 import { describe, expect, it } from "vitest";
 
-import { freeSpot, roomDimensions, TABLE_RADIUS } from "./room";
+import {
+    ENTRANCE_HALF,
+    fixtureInside,
+    freeSpot,
+    HEAD_HALF,
+    roomDimensions,
+    TABLE_RADIUS,
+    WALL_GAP,
+} from "./room";
 import type { RoomLayout, SeatTable } from "./types";
 
 const room: RoomLayout = {
     name: "L'orangerie",
     size: "s",
-    head: { x: 50, y: 11 },
-    entrance: { x: 50, y: 96 },
+    head: { x: 50, y: 11, rotation: 0 },
+    entrance: { x: 50, y: 96, rotation: 0 },
 };
 
 const table = (id: string, x: number, y: number): SeatTable => ({
@@ -38,6 +46,18 @@ describe("freeSpot", () => {
         expect(distance(spot, room.head)).toBeGreaterThan(TABLE_RADIUS * 2);
     });
 
+    it("keeps clear of a couple's table turned along a side wall", () => {
+        const side = { ...room, head: { x: 8, y: 50, rotation: 90 as const } };
+        const { width, height } = roomDimensions(side.size);
+        const spot = freeSpot([], side);
+        const dx = Math.abs(((spot.x - side.head.x) / 100) * width);
+        const dy = Math.abs(((spot.y - side.head.y) / 100) * height);
+
+        expect(dx > HEAD_HALF.height + TABLE_RADIUS || dy > HEAD_HALF.width + TABLE_RADIUS).toBe(
+            true,
+        );
+    });
+
     it("never puts a new table on top of another one", () => {
         const tables = [table("1", 16, 39), table("2", 36, 39), table("3", 64, 39)];
         const spot = freeSpot(tables, room);
@@ -59,5 +79,41 @@ describe("freeSpot", () => {
         tables.forEach((other) =>
             expect(distance(spot, other, "l")).toBeGreaterThan(TABLE_RADIUS * 2),
         );
+    });
+});
+
+describe("fixtureInside", () => {
+    const sizes = ["s", "m", "l", "xl"] as const;
+    const corners = [
+        { x: 0, y: 0 },
+        { x: 100, y: 100 },
+        { x: 50, y: 96 },
+        { x: 1, y: 50 },
+    ];
+
+    it("keeps the entrance and the couple's table whole, clear of every wall", () => {
+        sizes.forEach((size) => {
+            const { width, height } = roomDimensions(size);
+            [ENTRANCE_HALF, HEAD_HALF].forEach((half) =>
+                ([0, 90] as const).forEach((rotation) =>
+                    corners.forEach((corner) => {
+                        const fixture = fixtureInside({ size }, { ...corner, rotation }, half);
+                        const extent =
+                            rotation === 90 ? { width: half.height, height: half.width } : half;
+                        const x = (fixture.x / 100) * width;
+                        const y = (fixture.y / 100) * height;
+
+                        expect(x - extent.width).toBeGreaterThanOrEqual(WALL_GAP - 0.01);
+                        expect(x + extent.width).toBeLessThanOrEqual(width - WALL_GAP + 0.01);
+                        expect(y - extent.height).toBeGreaterThanOrEqual(WALL_GAP - 0.01);
+                        expect(y + extent.height).toBeLessThanOrEqual(height - WALL_GAP + 0.01);
+                    }),
+                ),
+            );
+        });
+    });
+
+    it("leaves a fixture already clear of the walls where it is", () => {
+        expect(fixtureInside(room, room.head, HEAD_HALF)).toEqual(room.head);
     });
 });

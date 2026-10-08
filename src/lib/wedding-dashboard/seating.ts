@@ -130,6 +130,26 @@ export const seatingPlan = (
     };
 };
 
+/** What the couple confirms before tables go: how many, and how many guests lose their seat. */
+export const tablesRemoval = (
+    entries: ReturnType<typeof seatingPlan>["tables"],
+    tableIds: readonly string[],
+): { readonly question: string; readonly detail?: string } => {
+    const removed = entries.filter((entry) => tableIds.includes(entry.table.id));
+    const guests = removed.reduce((sum, entry) => sum + entry.guests.length, 0);
+    const several = removed.length > 1;
+    const question = several
+        ? `Retirer les ${removed.length} tables ?`
+        : `Retirer la table ${removed[0]?.table.number ?? ""} ?`;
+    if (guests === 0) return { question };
+    if (guests === 1)
+        return { question, detail: `${several ? "Un" : "Son"} invité repassera « sans table ».` };
+    return {
+        question,
+        detail: `${several ? "Leurs" : "Ses"} ${guests} invités repasseront « sans table ».`,
+    };
+};
+
 /** The tables a household sits at, for its page on the wedding day. */
 export const householdTables = (
     household: HouseholdRecord,

@@ -1,5 +1,9 @@
-import { Clock, Download, Plus, Send } from "lucide-react";
+"use client";
 
+import { useState } from "react";
+import { Clock, Download, FileDown, Plus, Send } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 import { daysUntil, sinceLabel, type WeddingCalendar } from "@/lib/wedding-dashboard/calendar";
 import { catererSummary, momentTallies, overview } from "@/lib/wedding-dashboard/stats";
 import type { DemoState } from "@/lib/wedding-dashboard/types";
@@ -15,7 +19,42 @@ type OverviewSectionProps = {
     now: Date;
     onAddHousehold: () => void;
     onExport: () => void;
+    /** Builds the caterer's PDF and downloads it. */
+    onExportCaterer: () => Promise<void>;
     onRemind: () => void;
+};
+
+/** The caterer's sheet as a PDF: a moment to build, and a word if it fails. */
+const CatererExport = ({ onExport }: { onExport: () => Promise<void> }) => {
+    const [state, setState] = useState<"idle" | "busy" | "failed">("idle");
+    const run = async () => {
+        setState("busy");
+        try {
+            await onExport();
+            setState("idle");
+        } catch {
+            setState("failed");
+        }
+    };
+    return (
+        <>
+            <button
+                type="button"
+                onClick={run}
+                disabled={state === "busy"}
+                aria-label="Exporter le récap traiteur en PDF"
+                className={cn(buttonStyles.secondary, "min-h-9 px-3.5 text-[0.8rem]")}
+            >
+                <FileDown aria-hidden="true" />
+                {state === "busy" ? "Préparation…" : "PDF"}
+            </button>
+            {state === "failed" && (
+                <p role="alert" className="text-wed-no basis-full text-xs">
+                    Le PDF n&apos;a pas pu être préparé. Réessayez dans un instant.
+                </p>
+            )}
+        </>
+    );
 };
 
 const DINNER = "diner";
@@ -106,6 +145,7 @@ export const OverviewSection = ({
     now,
     onAddHousehold,
     onExport,
+    onExportCaterer,
     onRemind,
 }: OverviewSectionProps) => {
     const counts = overview(state.households);
@@ -268,9 +308,12 @@ export const OverviewSection = ({
                     title="Récap traiteur · dîner"
                     titleId="traiteur-titre"
                     aside={
-                        <span className="text-wed-muted text-[0.8rem]">
-                            {plural(caterer.total, "couvert", "couverts")}
-                        </span>
+                        <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1.5">
+                            <span className="text-wed-muted text-[0.8rem]">
+                                {plural(caterer.total, "couvert", "couverts")}
+                            </span>
+                            <CatererExport onExport={onExportCaterer} />
+                        </div>
                     }
                 >
                     <dl className="divide-wed-line-soft grid divide-y divide-dashed px-5 py-2">

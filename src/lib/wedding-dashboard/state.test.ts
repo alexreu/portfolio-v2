@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { noGrant, templateGrant, type Collaborator } from "./access";
 import { demoReducer, parseDemoState } from "./state";
 import type { DemoState, HouseholdRecord } from "./types";
 
@@ -21,6 +22,16 @@ const lefevre: HouseholdRecord = {
     createdAt: "2026-09-01T10:00:00+02:00",
     questions: {},
     message: "",
+};
+
+const ines: Collaborator = {
+    id: "ines",
+    firstName: "Inès",
+    email: "ines@exemple.fr",
+    role: "Témoin de Camille",
+    grant: templateGrant("temoin"),
+    invitedAt: "2026-09-20T10:00:00+02:00",
+    joinedAt: "2026-09-20T18:00:00+02:00",
 };
 
 const state: DemoState = {
@@ -54,8 +65,14 @@ const state: DemoState = {
     questions: [{ id: "chanson", label: "Une chanson", placeholder: "" }],
     tables: [{ id: "t7", number: 7, name: "Les Oliviers", capacity: 8, x: 64, y: 75 }],
     seats: { marie: "t7" },
-    room: { name: "L'orangerie", size: "s", head: { x: 50, y: 11 }, entrance: { x: 50, y: 96 } },
+    room: {
+        name: "L'orangerie",
+        size: "s",
+        head: { x: 50, y: 11, rotation: 0 },
+        entrance: { x: 50, y: 96, rotation: 0 },
+    },
     dates: { answerDeadline: null, reminder: null, galleryOpens: null },
+    collaborators: [ines],
 };
 
 const extras = () => ({
@@ -65,6 +82,7 @@ const extras = () => ({
     seats: {},
     room: state.room,
     dates: state.dates,
+    collaborators: [],
 });
 
 const at = "2026-10-06T10:00:00+02:00";
@@ -318,11 +336,31 @@ describe("demoReducer · programme, questions and room plan", () => {
         const table = { id: "t1", number: 1, name: "Les Lavandes", capacity: 6, x: 20, y: 40 };
         const added = demoReducer(state, { type: "table-saved", table });
         const moved = demoReducer(added, { type: "table-moved", tableId: "t1", x: 120, y: -5 });
-        const removed = demoReducer(moved, { type: "table-removed", tableId: "t7" });
+        const removed = demoReducer(moved, { type: "tables-removed", tableIds: ["t7"] });
 
         expect(moved.tables.find((t) => t.id === "t1")).toMatchObject({ x: 96, y: 4 });
         expect(removed.tables.map((t) => t.id)).toEqual(["t1"]);
         expect(removed.seats).toEqual({});
+    });
+
+    it("removes several tables at once and frees only their seats", () => {
+        const table = (id: string, number: number) => ({
+            id,
+            number,
+            name: `Table ${number}`,
+            capacity: 8,
+            x: 20,
+            y: 40,
+        });
+        const room = [table("t1", 1), table("t2", 2)].reduce(
+            (next, added) => demoReducer(next, { type: "table-saved", table: added }),
+            demoReducer(state, { type: "guest-seated", guestId: "thomas", tableId: "t2" }),
+        );
+        const kept = demoReducer(room, { type: "guest-seated", guestId: "marie", tableId: "t1" });
+        const removed = demoReducer(kept, { type: "tables-removed", tableIds: ["t7", "t2"] });
+
+        expect(removed.tables.map((t) => t.id)).toEqual(["t1"]);
+        expect(removed.seats).toEqual({ marie: "t1" });
     });
 
     it("renames and enlarges the room, and moves the couple's table and the entrance", () => {
@@ -339,12 +377,36 @@ describe("demoReducer · programme, questions and room plan", () => {
             y: 50,
         });
 
-        expect(door.room).toEqual({
+        expect(door.room).toMatchObject({
             name: "La grange",
             size: "l",
-            head: { x: 20, y: 4 },
-            entrance: { x: 96, y: 50 },
+            head: { x: 20, rotation: 0 },
+            entrance: { y: 50, rotation: 0 },
         });
+        expect(door.room.head.y).toBeCloseTo(4.24, 1);
+        expect(door.room.entrance.x).toBeCloseTo(88.4, 1);
+    });
+
+    it("turns the entrance along a side wall, and keeps it turned once moved", () => {
+        const turned = demoReducer(state, { type: "fixture-rotated", fixture: "entrance" });
+        const moved = demoReducer(turned, {
+            type: "fixture-moved",
+            fixture: "entrance",
+            x: 4,
+            y: 50,
+        });
+        const back = demoReducer(moved, { type: "fixture-rotated", fixture: "entrance" });
+
+        expect(moved.room.entrance).toMatchObject({ y: 50, rotation: 90 });
+        expect(moved.room.entrance.x).toBeCloseTo(4.64, 1);
+        expect(back.room.entrance.rotation).toBe(0);
+        expect(back.room.head).toEqual(state.room.head);
+    });
+
+    it("pulls a turned entrance off the bottom wall so that it stays in the room", () => {
+        const turned = demoReducer(state, { type: "fixture-rotated", fixture: "entrance" });
+
+        expect(turned.room.entrance.y).toBeLessThan(70);
     });
 
     it("seats a guest, moves them, and takes the seat back", () => {
@@ -373,6 +435,111 @@ describe("demoReducer · programme, questions and room plan", () => {
     });
 });
 
+describe("demoReducer · access", () => {
+    const sophie: Collaborator = {
+        id: "sophie",
+        firstName: "Sophie",
+        email: "sophie@exemple.fr",
+        role: "",
+        grant: templateGrant("planner"),
+        invitedAt: at,
+        joinedAt: null,
+    };
+
+    it("invites someone and says so in the activity", () => {
+        const next = demoReducer(state, { type: "collaborator-invited", collaborator: sophie, at });
+
+        expect(next.collaborators).toEqual([ines, sophie]);
+        expect(next.activity[0]).toMatchObject({
+            kind: "access",
+            text: "Invitation envoyée à Sophie",
+            detail: "Wedding planner · valable 72 h",
+            subject: "sophie",
+        });
+    });
+
+    it("records the day the invitation is accepted", () => {
+        const invited = demoReducer(state, {
+            type: "collaborator-invited",
+            collaborator: sophie,
+            at,
+        });
+        const next = demoReducer(invited, {
+            type: "collaborator-joined",
+            collaboratorId: "sophie",
+            at: "2026-10-06T12:00:00+02:00",
+        });
+
+        expect(next.collaborators[1].joinedAt).toBe("2026-10-06T12:00:00+02:00");
+        expect(next.activity[0].text).toBe("Sophie a rejoint votre tableau de bord");
+    });
+
+    it("changes what someone may do, with their role", () => {
+        const grant = { ...templateGrant("temoin"), relances: "lecture" as const };
+        const next = demoReducer(state, {
+            type: "collaborator-updated",
+            collaboratorId: "ines",
+            role: "Témoin et cousine",
+            grant,
+            at,
+        });
+
+        expect(next.collaborators[0]).toMatchObject({ role: "Témoin et cousine", grant });
+        expect(next.activity[0]).toMatchObject({
+            text: "Accès d'Inès modifiés",
+            detail: "Modifie : plan de table, galerie · Voit : invités, relances",
+        });
+    });
+
+    it("refuses to leave someone with nothing open", () => {
+        const next = demoReducer(state, {
+            type: "collaborator-updated",
+            collaboratorId: "ines",
+            role: "",
+            grant: noGrant,
+            at,
+        });
+
+        expect(next).toBe(state);
+    });
+
+    it("sends a new invitation, valid for another 72 hours", () => {
+        const invited = demoReducer(state, {
+            type: "collaborator-invited",
+            collaborator: { ...sophie, invitedAt: "2026-09-01T10:00:00+02:00" },
+            at: "2026-09-01T10:00:00+02:00",
+        });
+        const next = demoReducer(invited, {
+            type: "collaborator-reinvited",
+            collaboratorId: "sophie",
+            at,
+        });
+
+        expect(next.collaborators[1].invitedAt).toBe(at);
+        expect(next.activity[0].text).toBe("Invitation renvoyée à Sophie");
+    });
+
+    it("removes someone's access", () => {
+        const next = demoReducer(state, {
+            type: "collaborator-removed",
+            collaboratorId: "ines",
+            at,
+        });
+
+        expect(next.collaborators).toEqual([]);
+        expect(next.activity[0]).toMatchObject({
+            text: "Accès d'Inès retiré",
+            detail: "déconnexion de tous ses appareils",
+        });
+    });
+
+    it("ignores someone it does not know", () => {
+        expect(
+            demoReducer(state, { type: "collaborator-removed", collaboratorId: "personne", at }),
+        ).toBe(state);
+    });
+});
+
 describe("parseDemoState", () => {
     it("reads back what was saved", () => {
         expect(parseDemoState(JSON.stringify(state), extras)).toEqual(state);
@@ -392,7 +559,7 @@ describe("parseDemoState", () => {
     });
 
     it("fills in the programme, questions and room plan missing from an older copy", () => {
-        const { moments, questions, tables, seats, room, dates, ...older } = state;
+        const { moments, questions, tables, seats, room, dates, collaborators, ...older } = state;
         const parsed = parseDemoState(JSON.stringify(older), () => ({
             moments,
             questions,
@@ -400,9 +567,31 @@ describe("parseDemoState", () => {
             seats,
             room,
             dates,
+            collaborators,
         }));
 
         expect(parsed).toEqual(state);
+    });
+
+    it("reads a room saved before its fixtures could turn as facing the room", () => {
+        const older = {
+            ...state,
+            room: { ...state.room, head: { x: 50, y: 11 }, entrance: { x: 50, y: 96 } },
+        };
+
+        expect(parseDemoState(JSON.stringify(older), extras)?.room).toEqual(state.room);
+    });
+
+    it("reads back only the functions and levels a person may hold", () => {
+        const stored = {
+            ...state,
+            collaborators: [{ ...ines, grant: { invites: "modification", inconnu: "lecture" } }],
+        };
+
+        expect(parseDemoState(JSON.stringify(stored), extras)?.collaborators[0].grant).toEqual({
+            ...noGrant,
+            invites: "modification",
+        });
     });
 
     it("ignores anything it cannot trust, so the demo starts afresh", () => {

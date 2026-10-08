@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { collaboratorStatus } from "@/lib/wedding-dashboard/access";
 import { householdStatus } from "@/lib/wedding-dashboard/households";
 import { householdTables, seatingPlan } from "@/lib/wedding-dashboard/seating";
 import { overview } from "@/lib/wedding-dashboard/stats";
@@ -43,6 +44,19 @@ describe("demoSeed", () => {
         expect(times.every((time) => time <= now.getTime())).toBe(true);
         expect([...times].sort((a, b) => b - a)).toEqual(times);
         expect(new Set(seed.activity.map((entry) => entry.id)).size).toBe(seed.activity.length);
+    });
+
+    it("shares the dashboard with a witness already in, a lapsed invitation and a pending one", () => {
+        expect(
+            seed.collaborators.map((collaborator) => [
+                collaborator.firstName,
+                collaboratorStatus(collaborator, now).kind,
+            ]),
+        ).toEqual([
+            ["Elsa", "active"],
+            ["Malik", "expired"],
+            ["Agathe", "pending"],
+        ]);
     });
 
     it("shows the couple a few notes and songs to read", () => {

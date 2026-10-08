@@ -58,7 +58,7 @@ export const momentTallies = (
         };
     });
 
-const dietRows: readonly { choice: Exclude<DietChoice, "aucune">; label: string }[] = [
+export const dietRows: readonly { choice: Exclude<DietChoice, "aucune">; label: string }[] = [
     { choice: "vegetarien", label: "Végétarien" },
     { choice: "vegan", label: "Végan" },
     { choice: "sans-gluten", label: "Sans gluten" },

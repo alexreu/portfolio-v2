@@ -18,7 +18,14 @@ import type { Moment } from "@/lib/wedding/types";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { cormorant } from "@/app/fonts/wedding";
 
-import { buttonStyles, FieldError, iconButton, inputStyles, issueMessages } from "./dashboard-ui";
+import {
+    buttonStyles,
+    FieldError,
+    iconButton,
+    inputStyles,
+    issueMessages,
+    Select,
+} from "./dashboard-ui";
 
 type HouseholdDialogProps = {
     open: boolean;
@@ -174,19 +181,18 @@ const HouseholdForm = ({
                 </label>
                 <label className="grid content-start gap-1.5 text-sm">
                     <span className="text-wed-ink-soft">Groupe</span>
-                    <select
+                    <Select
                         value={draft.group}
                         onChange={(event) =>
                             setDraft({ ...draft, group: event.target.value as GroupKey })
                         }
-                        className={inputStyles}
                     >
                         {groups.map((group) => (
                             <option key={group} value={group}>
                                 {groupLabel(group, design)}
                             </option>
                         ))}
-                    </select>
+                    </Select>
                 </label>
             </div>
 

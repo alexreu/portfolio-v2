@@ -1,3 +1,4 @@
+import { templateGrant, type Collaborator } from "@/lib/wedding-dashboard/access";
 import { plansFromMoments } from "@/lib/wedding-dashboard/programme-plan";
 import { demoReducer, type DemoAction } from "@/lib/wedding-dashboard/state";
 import type {
@@ -327,14 +328,14 @@ const plans: readonly HouseholdPlan[] = [
 
 /** The orangery's round tables, named after Provence; table 7 is Marie & Thomas's. */
 const tables: readonly SeatTable[] = [
-    { id: "t1", number: 1, name: "Les Lavandes", capacity: 8, x: 16, y: 39 },
-    { id: "t2", number: 2, name: "Les Cyprès", capacity: 8, x: 36, y: 39 },
-    { id: "t3", number: 3, name: "Les Amandiers", capacity: 8, x: 64, y: 39 },
-    { id: "t4", number: 4, name: "Les Figuiers", capacity: 8, x: 84, y: 39 },
-    { id: "t5", number: 5, name: "Les Platanes", capacity: 8, x: 16, y: 75 },
-    { id: "t6", number: 6, name: "Les Vignes", capacity: 8, x: 36, y: 75 },
-    { id: "t7", number: 7, name: "Les Oliviers", capacity: 8, x: 64, y: 75 },
-    { id: "t8", number: 8, name: "Les Mûriers", capacity: 8, x: 84, y: 75 },
+    { id: "t1", number: 1, name: "Les Lavandes", capacity: 8, x: 16, y: 37 },
+    { id: "t2", number: 2, name: "Les Cyprès", capacity: 8, x: 36, y: 37 },
+    { id: "t3", number: 3, name: "Les Amandiers", capacity: 8, x: 64, y: 37 },
+    { id: "t4", number: 4, name: "Les Figuiers", capacity: 8, x: 84, y: 37 },
+    { id: "t5", number: 5, name: "Les Platanes", capacity: 8, x: 16, y: 69 },
+    { id: "t6", number: 6, name: "Les Vignes", capacity: 8, x: 36, y: 69 },
+    { id: "t7", number: 7, name: "Les Oliviers", capacity: 8, x: 64, y: 69 },
+    { id: "t8", number: 8, name: "Les Mûriers", capacity: 8, x: 84, y: 69 },
 ];
 
 /** Who sits where so far: the Mercier family still waits for a table. */
@@ -353,6 +354,64 @@ const seating: Readonly<Record<string, string>> = {
 
 const ago = (now: Date, { days = 0, hours = 0, minutes = 0 }: Ago) =>
     new Date(now.getTime() - ((days * 24 + hours) * 60 + minutes) * 60_000).toISOString();
+
+type CollaboratorPlan = Omit<Collaborator, "invitedAt" | "joinedAt"> & {
+    readonly invited: Ago;
+    readonly joined?: Ago;
+};
+
+/**
+ * Who shares the dashboard: Camille's witness came in long ago, Hugo's never opened his
+ * invitation, and the planner's is still waiting.
+ */
+const collaborators: readonly CollaboratorPlan[] = [
+    {
+        id: "elsa",
+        firstName: "Elsa",
+        email: "elsa.marchand@exemple.fr",
+        role: "Témoin de Camille",
+        grant: templateGrant("temoin"),
+        invited: { days: 24 },
+        joined: { days: 23, hours: 20 },
+    },
+    {
+        id: "malik",
+        firstName: "Malik",
+        email: "malik.benali@exemple.fr",
+        role: "Témoin de Hugo",
+        grant: { ...templateGrant("temoin"), relances: "lecture" },
+        invited: { days: 5 },
+    },
+    {
+        id: "agathe",
+        firstName: "Agathe",
+        email: "agathe@atelier-agathe.exemple.fr",
+        role: "Wedding planner",
+        grant: templateGrant("planner"),
+        invited: { hours: 20 },
+    },
+];
+
+const collaboratorActions = (plan: CollaboratorPlan, now: Date): readonly TimedAction[] => {
+    const { invited, joined, ...collaborator } = plan;
+    const at = ago(now, invited);
+    return [
+        {
+            type: "collaborator-invited",
+            collaborator: { ...collaborator, invitedAt: at, joinedAt: null },
+            at,
+        },
+        ...(joined
+            ? [
+                  {
+                      type: "collaborator-joined" as const,
+                      collaboratorId: plan.id,
+                      at: ago(now, joined),
+                  },
+              ]
+            : []),
+    ];
+};
 
 const guestId = (householdId: string, firstName: string) =>
     `${householdId}-${firstName
@@ -438,6 +497,7 @@ export const demoSeed = (now: Date): DemoState => {
                 : answerAction(plan, households[index], now),
         ),
         { type: "reminder-sent", at: ago(now, { days: 9, hours: 5 }) },
+        ...collaborators.flatMap((plan) => collaboratorActions(plan, now)),
     ];
     const start: DemoState = {
         version: 1,
@@ -459,9 +519,10 @@ export const demoSeed = (now: Date): DemoState => {
         room: {
             name: "L'orangerie",
             size: "s",
-            head: { x: 50, y: 11 },
-            entrance: { x: 50, y: 96 },
+            head: { x: 50, y: 11, rotation: 0 },
+            entrance: { x: 50, y: 91, rotation: 0 },
         },
+        collaborators: [],
         seats: Object.fromEntries(
             households.flatMap((household) =>
                 seating[household.id]

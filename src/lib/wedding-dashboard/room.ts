@@ -1,4 +1,4 @@
-import type { RoomLayout, RoomPoint, RoomSize, SeatTable } from "./types";
+import type { RoomFixture, RoomLayout, RoomPoint, RoomSize, SeatTable } from "./types";
 
 /** A round table on the plan, in room units. */
 export const TABLE_RADIUS = 15;
@@ -12,6 +12,34 @@ const dimensions: Record<RoomSize, { readonly width: number; readonly height: nu
     m: { width: 400, height: 230 },
     l: { width: 560, height: 330 },
     xl: { width: 720, height: 440 },
+};
+
+/** A fixture's half size once turned: a side wall swaps its width and its height. */
+export const turned = (half: { width: number; height: number }, fixture: RoomFixture) =>
+    fixture.rotation === 90 ? { width: half.height, height: half.width } : half;
+
+/** Space kept between a wall and the couple's table or the entrance, in room units. */
+export const WALL_GAP = 5;
+
+const within = (value: number, low: number) => Math.min(Math.max(value, low), 100 - low);
+
+/**
+ * Where a fixture may stand: whole inside the room, a little away from every wall, turned or
+ * not. In percent of the room, as stored.
+ */
+export const fixtureInside = (
+    room: Pick<RoomLayout, "size">,
+    fixture: RoomFixture,
+    half: { width: number; height: number },
+): RoomFixture => {
+    const { width, height } = roomDimensions(room.size);
+    const extent = turned(half, fixture);
+    const bound = (span: number, size: number) => ((span + WALL_GAP) / size) * 100;
+    return {
+        ...fixture,
+        x: within(fixture.x, bound(extent.width, width)),
+        y: within(fixture.y, bound(extent.height, height)),
+    };
 };
 
 /** The bigger the room, the smaller the tables on screen: about 10, 20, 40 and 60 tables. */
@@ -56,8 +84,9 @@ export const freeSpot = (tables: readonly SeatTable[], room: RoomLayout): RoomPo
         .flatMap((y) => columns.map((x) => ({ x, y })))
         .find(
             (point) =>
-                clearance(point, head, HEAD_HALF) > TABLE_RADIUS + MARGIN &&
-                clearance(point, entrance, ENTRANCE_HALF) > TABLE_RADIUS + MARGIN &&
+                clearance(point, head, turned(HEAD_HALF, room.head)) > TABLE_RADIUS + MARGIN &&
+                clearance(point, entrance, turned(ENTRANCE_HALF, room.entrance)) >
+                    TABLE_RADIUS + MARGIN &&
                 others.every(
                     (other) =>
                         Math.hypot(point.x - other.x, point.y - other.y) >

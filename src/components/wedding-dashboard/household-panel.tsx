@@ -335,8 +335,9 @@ export const HouseholdPanel = ({ household, onClose, ...body }: HouseholdPanelPr
                                     /* Portalled outside the page: it brings its own display font. */
                                     className={`${cormorant.variable} bg-wed-paper text-wed-ink font-main shadow-wed-night/30 fixed inset-x-0 bottom-0 z-50 max-h-[92dvh] overflow-y-auto overscroll-contain rounded-t-3xl p-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-2xl sm:inset-y-0 sm:right-0 sm:left-auto sm:max-h-none sm:w-[min(30rem,100vw)] sm:rounded-none sm:rounded-l-3xl sm:p-7`}
                                 >
+                                    {/* Keyed by household: another one replays the entrance. */}
                                     <motion.div
-                                        key={shown.id}
+                                        key={`${shown.id}-titre`}
                                         variants={rise}
                                         initial="hidden"
                                         animate="shown"
@@ -355,7 +356,11 @@ export const HouseholdPanel = ({ household, onClose, ...body }: HouseholdPanelPr
                                             <X aria-hidden="true" />
                                         </Dialog.Close>
                                     </motion.div>
-                                    <PanelBody key={shown.id} household={shown} {...body} />
+                                    <PanelBody
+                                        key={`${shown.id}-detail`}
+                                        household={shown}
+                                        {...body}
+                                    />
                                 </motion.div>
                             </Dialog.Content>
                         </Dialog.Portal>

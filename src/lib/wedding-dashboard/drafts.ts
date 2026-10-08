@@ -18,6 +18,8 @@ export type DraftIssue = {
         | "guest-required"
         | "moment-required"
         | "email-invalid"
+        | "email-taken"
+        | "access-required"
         | "date-invalid"
         | "date-past"
         | "slot-required"

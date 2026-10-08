@@ -1,55 +1,58 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, type ReactElement } from "react";
 import Link from "next/link";
-import {
-    Armchair,
-    BellRing,
-    CalendarClock,
-    CalendarDays,
-    ExternalLink,
-    Images,
-    LayoutGrid,
-    RotateCcw,
-    Stamp,
-    Users,
-    type LucideIcon,
-} from "lucide-react";
+import { usePathname } from "next/navigation";
+import { ArrowLeft, ExternalLink, PanelLeftClose, PanelLeftOpen, RotateCcw } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { planOf } from "@/lib/wedding-dashboard/plans";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { ConfirmPopover } from "./confirm-popover";
+import { dashboardEntries, dashboardHref } from "./dashboard-pages";
 
-const sections: readonly { id: string; label: string; icon: LucideIcon }[] = [
-    { id: "apercu", label: "Vue d'ensemble", icon: LayoutGrid },
-    { id: "invites", label: "Invités", icon: Users },
-    { id: "dates", label: "Dates", icon: CalendarClock },
-    { id: "programme", label: "Programme", icon: CalendarDays },
-    { id: "plan-de-table", label: "Plan de table", icon: Armchair },
-    { id: "faire-part", label: "Faire-part", icon: Stamp },
-    { id: "relances", label: "Relances", icon: BellRing },
-    { id: "galerie", label: "Galerie", icon: Images },
-];
+const entries = dashboardEntries.map((entry) => ({
+    ...entry,
+    id: entry.page ?? "apercu",
+    href: dashboardHref(entry.page),
+}));
 
-/** The section crossing the upper third of the screen is the one being read. */
-const useActiveSection = () => {
-    const [active, setActive] = useState(sections[0].id);
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const seen = entries.find((entry) => entry.isIntersecting);
-                if (seen) setActive(seen.target.id);
-            },
-            { rootMargin: "-25% 0px -70% 0px" },
-        );
-        sections.forEach(({ id }) => {
-            const section = document.getElementById(id);
-            if (section) observer.observe(section);
-        });
-        return () => observer.disconnect();
-    }, []);
-    return active;
+/** The page being read; a trailing slash or a sub-path still lights its entry. */
+const useActivePage = () => {
+    const pathname = usePathname().replace(/\/$/, "");
+    return (
+        [...entries]
+            .reverse()
+            .find((entry) => pathname === entry.href || pathname.startsWith(`${entry.href}/`))
+            ?.id ?? "apercu"
+    );
 };
+
+/** The label of an icon on the folded menu, shown beside it on hover and on focus. */
+const Hint = ({
+    label,
+    enabled,
+    children,
+    wrap = (trigger) => trigger,
+}: {
+    label: string;
+    enabled: boolean;
+    children: ReactElement;
+    /** For a trigger that also opens something, such as a confirmation. */
+    wrap?: (trigger: ReactElement) => ReactElement;
+}) => (
+    <Tooltip open={enabled ? undefined : false}>
+        {wrap(<TooltipTrigger asChild>{children}</TooltipTrigger>)}
+        <TooltipContent
+            side="right"
+            sideOffset={12}
+            className="bg-wed-night text-wed-night-text border-wed-night-line font-main rounded-lg border px-2.5 py-1.5 text-[0.8rem] shadow-lg"
+        >
+            {label}
+        </TooltipContent>
+    </Tooltip>
+);
 
 type DashboardNavProps = {
     couple: string;
@@ -57,6 +60,9 @@ type DashboardNavProps = {
     monogram: string;
     subtitle: string;
     householdCount: number;
+    /** Only the icons on large screens, named on hover. */
+    folded: boolean;
+    onFold: (folded: boolean) => void;
     onReset: () => void;
 };
 
@@ -65,49 +71,94 @@ export const DashboardNav = ({
     monogram,
     subtitle,
     householdCount,
+    folded,
+    onFold,
     onReset,
 }: DashboardNavProps) => {
-    const active = useActiveSection();
+    const active = useActivePage();
     const strip = useRef<HTMLUListElement>(null);
 
-    /** On a phone the tabs scroll sideways: the one being read slides to the middle. */
+    const placed = useRef(false);
+
+    /**
+     * On a phone the tabs scroll sideways: the open page's tab stands in the middle, put there
+     * at once on arrival, then sliding there from one page to the next.
+     */
     useEffect(() => {
         const list = strip.current;
-        const link = list?.querySelector<HTMLElement>(`a[href="#${active}"]`);
+        const link = list?.querySelector<HTMLElement>('[aria-current="page"]');
         if (!list || !link) return;
-        const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const still =
+            !placed.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        placed.current = true;
         list.scrollTo({
             left: link.offsetLeft - (list.clientWidth - link.offsetWidth) / 2,
             behavior: still ? "auto" : "smooth",
         });
     }, [active]);
 
+    const sideItem = "flex min-h-10 items-center gap-2.5 rounded-full px-3.5 whitespace-nowrap";
+    const label = cn(folded && "sr-only");
+
+    /** On the folded menu, the name of the icon, with the guest count or the formula. */
+    const hint = (id: string, name: string) => {
+        if (id === "invites") return `${name} · ${householdCount}`;
+        const plan = planOf(id);
+        return plan ? `${name} · ${plan.note}` : name;
+    };
+
     const links = (compact: boolean) =>
-        sections.map(({ id, label, icon: Icon }) => (
-            <li key={id}>
-                <a
-                    href={`#${id}`}
-                    aria-current={active === id ? "location" : undefined}
+        entries.map(({ id, href, label: name, icon: Icon }) => {
+            const plan = planOf(id);
+            const link = (
+                <Link
+                    href={href}
+                    aria-current={active === id ? "page" : undefined}
                     className={cn(
-                        "flex items-center gap-3 rounded-full transition-colors",
-                        compact
-                            ? "min-h-10 px-3.5 text-[0.8rem] whitespace-nowrap"
-                            : "min-h-11 px-3.5 text-sm",
+                        "flex items-center gap-3 rounded-full whitespace-nowrap transition-colors",
+                        compact ? "min-h-10 px-3.5 text-[0.8rem]" : "min-h-11 px-3.5 text-sm",
                         active === id
                             ? "bg-wed-night-line text-wed-night-text"
                             : "text-wed-night-muted hover:bg-wed-night-line/60 hover:text-wed-night-text",
                     )}
                 >
                     <Icon aria-hidden="true" className="size-4.5 shrink-0" strokeWidth={1.6} />
-                    {label}
+                    <span className={cn(!compact && label)}>{name}</span>
                     {id === "invites" && !compact && (
-                        <span className="bg-wed-night-line text-wed-night-text ml-auto rounded-full px-2 text-xs">
+                        <span
+                            className={cn(
+                                "bg-wed-night-line text-wed-night-text ml-auto rounded-full px-2 text-xs",
+                                label,
+                            )}
+                        >
                             {householdCount}
                         </span>
                     )}
-                </a>
-            </li>
-        ));
+                    {plan && !compact && (
+                        <span
+                            aria-hidden="true"
+                            className={cn(
+                                "border-wed-night-line text-wed-night-muted ml-auto rounded-full border px-2 text-[0.7rem]",
+                                label,
+                            )}
+                        >
+                            {plan.from}
+                        </span>
+                    )}
+                </Link>
+            );
+            return (
+                <li key={id}>
+                    {compact ? (
+                        link
+                    ) : (
+                        <Hint label={hint(id, name)} enabled={folded}>
+                            {link}
+                        </Hint>
+                    )}
+                </li>
+            );
+        });
 
     return (
         <>
@@ -123,46 +174,97 @@ export const DashboardNav = ({
                 </nav>
             </header>
 
-            <aside className="bg-wed-night text-wed-night-text sticky top-0 hidden h-dvh flex-col gap-8 px-4 py-6 lg:flex">
-                <div className="px-3.5">
-                    <p className="font-wed-serif text-[1.75rem] leading-tight">{couple}</p>
-                    <p className="text-wed-night-muted mt-1 text-xs">{subtitle}</p>
-                </div>
-                <nav aria-label="Sections du tableau de bord">
-                    <ul className="grid gap-0.5">{links(false)}</ul>
-                </nav>
-                <div className="border-wed-night-line text-wed-night-muted mt-auto grid gap-1 border-t pt-4 text-sm">
-                    <a
-                        href="/mariage/demo"
-                        target="_blank"
-                        rel="noopener"
-                        className="hover:text-wed-night-text flex min-h-10 items-center gap-2 rounded-full px-3.5"
-                    >
-                        <ExternalLink aria-hidden="true" className="size-4" />
-                        Site des invités
-                    </a>
-                    <ConfirmPopover
-                        question="Revenir aux données de départ ?"
-                        detail="Vos essais dans ce navigateur seront effacés."
-                        confirmLabel="Réinitialiser"
-                        onConfirm={onReset}
-                    >
-                        <button
-                            type="button"
-                            className="hover:text-wed-night-text flex min-h-10 cursor-pointer items-center gap-2 rounded-full px-3.5 text-left"
+            <TooltipProvider delayDuration={150} skipDelayDuration={0}>
+                <aside
+                    className={cn(
+                        "bg-wed-night text-wed-night-text sticky top-0 hidden h-dvh flex-col gap-8 overflow-x-hidden overflow-y-auto px-4 py-6 transition-[width] duration-200 ease-out motion-reduce:transition-none lg:flex",
+                        folded ? "w-[4.875rem]" : "w-64",
+                    )}
+                >
+                    {folded ? (
+                        <p className="font-wed-serif h-[3.4rem] text-center text-lg leading-[2.5rem] whitespace-nowrap italic">
+                            <span aria-hidden="true">{monogram}</span>
+                            <span className="sr-only">{couple}</span>
+                        </p>
+                    ) : (
+                        <div className="min-w-0 px-3.5">
+                            <p className="font-wed-serif text-[1.75rem] leading-tight">{couple}</p>
+                            <p className="text-wed-night-muted mt-1 text-xs">{subtitle}</p>
+                        </div>
+                    )}
+                    <nav id="menu-tableau-de-bord" aria-label="Sections du tableau de bord">
+                        <ul className="grid gap-0.5">{links(false)}</ul>
+                    </nav>
+                    <div className="border-wed-night-line text-wed-night-muted mt-auto grid gap-1 border-t pt-4 text-sm">
+                        <Hint label="Déplier le menu" enabled={folded}>
+                            <button
+                                type="button"
+                                onClick={() => onFold(!folded)}
+                                aria-expanded={!folded}
+                                aria-controls="menu-tableau-de-bord"
+                                className={cn(sideItem, "hover:text-wed-night-text cursor-pointer")}
+                            >
+                                {folded ? (
+                                    <PanelLeftOpen aria-hidden="true" className="size-4 shrink-0" />
+                                ) : (
+                                    <PanelLeftClose
+                                        aria-hidden="true"
+                                        className="size-4 shrink-0"
+                                    />
+                                )}
+                                <span className={label}>
+                                    {folded ? "Déplier le menu" : "Replier le menu"}
+                                </span>
+                            </button>
+                        </Hint>
+                        <Hint label="Site des invités" enabled={folded}>
+                            <a
+                                href="/mariage/demo"
+                                target="_blank"
+                                rel="noopener"
+                                className={cn(sideItem, "hover:text-wed-night-text")}
+                            >
+                                <ExternalLink aria-hidden="true" className="size-4 shrink-0" />
+                                <span className={label}>Site des invités</span>
+                            </a>
+                        </Hint>
+                        <Hint
+                            label="Réinitialiser la démo"
+                            enabled={folded}
+                            wrap={(trigger) => (
+                                <ConfirmPopover
+                                    question="Revenir aux données de départ ?"
+                                    detail="Vos essais dans ce navigateur seront effacés."
+                                    confirmLabel="Réinitialiser"
+                                    onConfirm={onReset}
+                                >
+                                    {trigger}
+                                </ConfirmPopover>
+                            )}
                         >
-                            <RotateCcw aria-hidden="true" className="size-4" />
-                            Réinitialiser la démo
-                        </button>
-                    </ConfirmPopover>
-                    <Link
-                        href="/mariage"
-                        className="hover:text-wed-night-text flex min-h-10 items-center rounded-full px-3.5"
-                    >
-                        ← L&apos;offre Sites de mariage
-                    </Link>
-                </div>
-            </aside>
+                            <button
+                                type="button"
+                                className={cn(
+                                    sideItem,
+                                    "hover:text-wed-night-text cursor-pointer text-left",
+                                )}
+                            >
+                                <RotateCcw aria-hidden="true" className="size-4 shrink-0" />
+                                <span className={label}>Réinitialiser la démo</span>
+                            </button>
+                        </Hint>
+                        <Hint label="L'offre Sites de mariage" enabled={folded}>
+                            <Link
+                                href="/mariage"
+                                className={cn(sideItem, "hover:text-wed-night-text")}
+                            >
+                                <ArrowLeft aria-hidden="true" className="size-4 shrink-0" />
+                                <span className={label}>L&apos;offre Sites de mariage</span>
+                            </Link>
+                        </Hint>
+                    </div>
+                </aside>
+            </TooltipProvider>
         </>
     );
 };

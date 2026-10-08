@@ -1,6 +1,8 @@
 import type { DietChoice, Presence } from "@/lib/wedding/answer";
 import type { GuestQuestion } from "@/lib/wedding/types";
 
+import type { Collaborator } from "./access";
+
 /** Who the household belongs with; the family groups take the couple's first names. */
 export type GroupKey = "famille-1" | "famille-2" | "amis" | "collegues";
 
@@ -78,13 +80,19 @@ export type RoomSize = "s" | "m" | "l" | "xl";
 
 export type RoomPoint = { readonly x: number; readonly y: number };
 
+/** 90: turned along a side wall. */
+export type FixtureRotation = 0 | 90;
+
+/** The couple's table or the entrance: placed, and turned when it stands on a side. */
+export type RoomFixture = RoomPoint & { readonly rotation: FixtureRotation };
+
 /** The dinner room: its name, its size, and where the couple's table and the entrance stand. */
 export type RoomLayout = {
     /** "L'orangerie": shown at the entrance. */
     readonly name: string;
     readonly size: RoomSize;
-    readonly head: RoomPoint;
-    readonly entrance: RoomPoint;
+    readonly head: RoomFixture;
+    readonly entrance: RoomFixture;
 };
 
 export type SealTone = "olive" | "terre" | "encre";
@@ -109,7 +117,8 @@ export type ActivityKind =
     | "created"
     | "reminded"
     | "design"
-    | "photo";
+    | "photo"
+    | "access";
 
 export type Activity = {
     readonly id: string;
@@ -145,4 +154,6 @@ export type DemoState = {
     readonly seats: Readonly<Record<string, string>>;
     readonly room: RoomLayout;
     readonly dates: DateOverrides;
+    /** The people the couple let into the dashboard, besides themselves. */
+    readonly collaborators: readonly Collaborator[];
 };

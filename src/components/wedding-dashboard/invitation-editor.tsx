@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Check, ExternalLink, RotateCcw } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -9,6 +10,7 @@ import { personalize, validateDesign, type DraftIssue } from "@/lib/wedding-dash
 import type { InvitationDesign, SealTone } from "@/lib/wedding-dashboard/types";
 import { InvitationEnvelope } from "@/components/wedding-demo/invitation-envelope";
 
+import { dashboardHref } from "./dashboard-pages";
 import { buttonStyles, FieldError, inputStyles } from "./dashboard-ui";
 
 type InvitationEditorProps = {
@@ -149,9 +151,12 @@ export const InvitationEditor = ({ design, sampleGuest, now, onSave }: Invitatio
                     </label>
                     <p className="text-wed-muted self-end pb-3 text-xs">
                         La date se règle dans{" "}
-                        <a href="#dates" className="text-wed-ink-soft underline underline-offset-4">
-                            Dates clés
-                        </a>
+                        <Link
+                            href={`${dashboardHref("programme")}#dates`}
+                            className="text-wed-ink-soft underline underline-offset-4"
+                        >
+                            Programme et dates
+                        </Link>
                         .
                     </p>
                 </div>

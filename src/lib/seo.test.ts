@@ -15,7 +15,7 @@ describe("buildWeddingJsonLd", () => {
         expect(nodeOfType("Service")?.offers).toEqual([
             expect.objectContaining({ name: "Intime", price: "290", priceCurrency: "EUR" }),
             expect.objectContaining({ name: "Essentiel", price: "490", priceCurrency: "EUR" }),
-            expect.objectContaining({ name: "Signature", price: "990", priceCurrency: "EUR" }),
+            expect.objectContaining({ name: "Signature", price: "890", priceCurrency: "EUR" }),
         ]);
     });
 

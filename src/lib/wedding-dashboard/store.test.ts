@@ -21,8 +21,14 @@ const seedState: DemoState = {
     questions: [],
     tables: [],
     seats: {},
-    room: { name: "L'orangerie", size: "s", head: { x: 50, y: 11 }, entrance: { x: 50, y: 96 } },
+    room: {
+        name: "L'orangerie",
+        size: "s",
+        head: { x: 50, y: 11, rotation: 0 },
+        entrance: { x: 50, y: 96, rotation: 0 },
+    },
     dates: { answerDeadline: null, reminder: null, galleryOpens: null },
+    collaborators: [],
 };
 
 const memoryStorage = (): KeyValueStorage & { data: Map<string, string> } => {

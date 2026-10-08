@@ -3,8 +3,19 @@ import { z } from "zod";
 import type { AnswerDraft } from "@/lib/wedding/answer";
 import type { GuestQuestion } from "@/lib/wedding/types";
 
+import {
+    accessSummary,
+    grantOf,
+    isOpen,
+    ofPerson,
+    roleLabel,
+    type AccessGrant,
+    type Collaborator,
+} from "./access";
 import { weddingCalendar } from "./calendar";
 import { dietSummary, householdStatus, householdSummary } from "./households";
+import type { Fixture } from "./plan-selection";
+import { ENTRANCE_HALF, fixtureInside, HEAD_HALF } from "./room";
 import { DINNER } from "./seating";
 import type {
     Activity,
@@ -13,6 +24,7 @@ import type {
     HouseholdRecord,
     InvitationDesign,
     MomentPlan,
+    RoomFixture,
     RoomSize,
     SeatTable,
 } from "./types";
@@ -51,7 +63,7 @@ export type DemoAction =
           readonly x: number;
           readonly y: number;
       }
-    | { readonly type: "table-removed"; readonly tableId: string }
+    | { readonly type: "tables-removed"; readonly tableIds: readonly string[] }
     | { readonly type: "guest-seated"; readonly guestId: string; readonly tableId: string | null }
     | { readonly type: "household-seated"; readonly householdId: string; readonly tableId: string }
     | {
@@ -63,9 +75,33 @@ export type DemoAction =
     | { readonly type: "room-saved"; readonly name: string; readonly size: RoomSize }
     | {
           readonly type: "fixture-moved";
-          readonly fixture: "head" | "entrance";
+          readonly fixture: Fixture;
           readonly x: number;
           readonly y: number;
+      }
+    | { readonly type: "fixture-rotated"; readonly fixture: "head" | "entrance" }
+    | {
+          readonly type: "collaborator-invited";
+          readonly collaborator: Collaborator;
+          readonly at: string;
+      }
+    | { readonly type: "collaborator-joined"; readonly collaboratorId: string; readonly at: string }
+    | {
+          readonly type: "collaborator-updated";
+          readonly collaboratorId: string;
+          readonly role: string;
+          readonly grant: AccessGrant;
+          readonly at: string;
+      }
+    | {
+          readonly type: "collaborator-reinvited";
+          readonly collaboratorId: string;
+          readonly at: string;
+      }
+    | {
+          readonly type: "collaborator-removed";
+          readonly collaboratorId: string;
+          readonly at: string;
       };
 
 const ACTIVITY_KEPT = 30;
@@ -311,8 +347,86 @@ export const demoReducer = (state: DemoState, action: DemoAction): DemoState => 
                     badge: "",
                 },
             );
+        case "collaborator-invited":
+        case "collaborator-joined":
+        case "collaborator-updated":
+        case "collaborator-reinvited":
+        case "collaborator-removed":
+            return access(state, action);
         default:
             return roomPlan(state, action);
+    }
+};
+
+const accessEntry = (collaborator: Collaborator, at: string, text: string, detail: string) => ({
+    at,
+    kind: "access" as const,
+    text,
+    detail,
+    badge: badgeFor(collaborator.firstName),
+});
+
+/** Who the couple let in, and what they may do: every change is kept in the activity. */
+const access = (state: DemoState, action: DemoAction): DemoState => {
+    if (action.type === "collaborator-invited") {
+        const { collaborator, at } = action;
+        return withActivity(
+            { ...state, collaborators: [...state.collaborators, collaborator] },
+            accessEntry(
+                collaborator,
+                at,
+                `Invitation envoyée à ${collaborator.firstName}`,
+                `${roleLabel(collaborator)} · valable 72 h`,
+            ),
+            collaborator.id,
+        );
+    }
+    if (!("collaboratorId" in action)) return state;
+    const collaborator = state.collaborators.find(
+        (candidate) => candidate.id === action.collaboratorId,
+    );
+    if (!collaborator) return state;
+    const { at } = action;
+    const change = (next: Collaborator | null, text: string, detail: string) =>
+        withActivity(
+            {
+                ...state,
+                collaborators: state.collaborators.flatMap((candidate) => {
+                    if (candidate.id !== collaborator.id) return [candidate];
+                    return next ? [next] : [];
+                }),
+            },
+            accessEntry(collaborator, at, text, detail),
+            collaborator.id,
+        );
+    switch (action.type) {
+        case "collaborator-joined":
+            return change(
+                { ...collaborator, joinedAt: at },
+                `${collaborator.firstName} a rejoint votre tableau de bord`,
+                roleLabel(collaborator),
+            );
+        case "collaborator-updated":
+            if (!isOpen(action.grant)) return state;
+            return change(
+                { ...collaborator, role: action.role, grant: action.grant },
+                `Accès ${ofPerson(collaborator.firstName)} modifiés`,
+                accessSummary(action.grant),
+            );
+        case "collaborator-reinvited":
+            return change(
+                { ...collaborator, invitedAt: at },
+                `Invitation renvoyée à ${collaborator.firstName}`,
+                "valable 72 h",
+            );
+        case "collaborator-removed":
+            return change(
+                null,
+                `Accès ${ofPerson(collaborator.firstName)} retiré`,
+                "déconnexion de tous ses appareils",
+            );
+        default:
+            return state;
     }
 };
 
@@ -389,6 +503,15 @@ const seated = (state: DemoState, guestIds: readonly string[], tableId: string |
 const withoutKeys = (record: Readonly<Record<string, string>>, keys: readonly string[]) =>
     Object.fromEntries(Object.entries(record).filter(([key]) => !keys.includes(key)));
 
+/** A fixture moved or turned, kept along its wall without leaving the room. */
+const placed = (state: DemoState, name: Fixture, fixture: RoomFixture): DemoState => ({
+    ...state,
+    room: {
+        ...state.room,
+        [name]: fixtureInside(state.room, fixture, name === "head" ? HEAD_HALF : ENTRANCE_HALF),
+    },
+});
+
 /** Room plan changes are frequent and minor: they stay out of the activity feed. */
 const roomPlan = (state: DemoState, action: DemoAction): DemoState => {
     switch (action.type) {
@@ -410,12 +533,14 @@ const roomPlan = (state: DemoState, action: DemoAction): DemoState => {
                         : table,
                 ),
             };
-        case "table-removed":
+        case "tables-removed":
             return {
                 ...state,
-                tables: state.tables.filter((table) => table.id !== action.tableId),
+                tables: state.tables.filter((table) => !action.tableIds.includes(table.id)),
                 seats: Object.fromEntries(
-                    Object.entries(state.seats).filter(([, tableId]) => tableId !== action.tableId),
+                    Object.entries(state.seats).filter(
+                        ([, tableId]) => !action.tableIds.includes(tableId),
+                    ),
                 ),
             };
         case "guest-seated":
@@ -436,13 +561,18 @@ const roomPlan = (state: DemoState, action: DemoAction): DemoState => {
         case "room-saved":
             return { ...state, room: { ...state.room, name: action.name, size: action.size } };
         case "fixture-moved":
-            return {
-                ...state,
-                room: {
-                    ...state.room,
-                    [action.fixture]: { x: clamp(action.x), y: clamp(action.y) },
-                },
-            };
+            return placed(state, action.fixture, {
+                ...state.room[action.fixture],
+                x: clamp(action.x),
+                y: clamp(action.y),
+            });
+        case "fixture-rotated": {
+            const fixture = state.room[action.fixture];
+            return placed(state, action.fixture, {
+                ...fixture,
+                rotation: fixture.rotation === 90 ? 0 : 90,
+            });
+        }
         default:
             return state;
     }
@@ -450,6 +580,13 @@ const roomPlan = (state: DemoState, action: DemoAction): DemoState => {
 
 const presence = z.enum(["yes", "no"]);
 const dietChoice = z.enum(["aucune", "vegetarien", "vegan", "sans-gluten", "autre"]);
+
+/** Copies saved before fixtures could turn have no rotation: they stood facing the room. */
+const fixtureSchema = z.object({
+    x: z.number(),
+    y: z.number(),
+    rotation: z.union([z.literal(0), z.literal(90)]).default(0),
+});
 
 const demoStateSchema = z.object({
     version: z.literal(1),
@@ -499,6 +636,7 @@ const demoStateSchema = z.object({
                 "reminded",
                 "design",
                 "photo",
+                "access",
             ]),
             text: z.string(),
             detail: z.string(),
@@ -555,8 +693,8 @@ const demoStateSchema = z.object({
         .object({
             name: z.string(),
             size: z.enum(["s", "m", "l", "xl"]),
-            head: z.object({ x: z.number(), y: z.number() }),
-            entrance: z.object({ x: z.number(), y: z.number() }),
+            head: fixtureSchema,
+            entrance: fixtureSchema,
         })
         .optional(),
     dates: z
@@ -566,16 +704,33 @@ const demoStateSchema = z.object({
             galleryOpens: z.string().nullable(),
         })
         .optional(),
+    /** Absent from copies saved before the couple could share their dashboard. */
+    collaborators: z
+        .array(
+            z.object({
+                id: z.string(),
+                firstName: z.string(),
+                email: z.string(),
+                role: z.string(),
+                grant: z.record(z.string(), z.string()).transform(grantOf),
+                invitedAt: z.string(),
+                joinedAt: z.string().nullable(),
+            }),
+        )
+        .optional(),
 });
 
 const defaultRoom = {
     name: "La salle",
     size: "s",
-    head: { x: 50, y: 11 },
-    entrance: { x: 50, y: 96 },
+    head: { x: 50, y: 11, rotation: 0 },
+    entrance: { x: 50, y: 91, rotation: 0 },
 } as const;
 
-type Editable = Pick<DemoState, "moments" | "questions" | "tables" | "seats" | "room" | "dates">;
+type Editable = Pick<
+    DemoState,
+    "moments" | "questions" | "tables" | "seats" | "room" | "dates" | "collaborators"
+>;
 
 /** The browser copy may be stale, edited by hand or from an older demo: trusted only if valid. */
 export const parseDemoState = (raw: string | null, defaults: () => Editable): DemoState | null => {
@@ -583,9 +738,12 @@ export const parseDemoState = (raw: string | null, defaults: () => Editable): De
     try {
         const parsed = demoStateSchema.safeParse(JSON.parse(raw));
         if (!parsed.success) return null;
-        const { moments, questions, tables, seats, room, dates, ...rest } = parsed.data;
+        const { moments, questions, tables, seats, room, dates, collaborators, ...rest } =
+            parsed.data;
         const missing =
-            !moments || !questions || !tables || !seats || !room || !dates ? defaults() : null;
+            !moments || !questions || !tables || !seats || !room || !dates || !collaborators
+                ? defaults()
+                : null;
         return {
             ...rest,
             moments: moments ?? missing?.moments ?? [],
@@ -595,6 +753,7 @@ export const parseDemoState = (raw: string | null, defaults: () => Editable): De
             room: room ?? missing?.room ?? defaultRoom,
             dates: dates ??
                 missing?.dates ?? { answerDeadline: null, reminder: null, galleryOpens: null },
+            collaborators: collaborators ?? missing?.collaborators ?? [],
         };
     } catch {
         return null;
