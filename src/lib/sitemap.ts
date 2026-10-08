@@ -26,7 +26,7 @@ export const sitemapEntries = ({
     },
     {
         url: absoluteUrl(weddingPage.path),
-        lastModified: weddingUpdatedAt ?? undefined,
+        lastModified: weddingUpdatedAt ?? weddingPage.updatedAt,
         changeFrequency: "monthly",
         priority: 0.8,
     },

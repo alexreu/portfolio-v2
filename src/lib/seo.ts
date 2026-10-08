@@ -77,6 +77,10 @@ type PageMetadataOptions = {
     path: string;
     /** A page's own share image, 1200 × 630; the studio's card otherwise. */
     image?: { url: string; alt: string };
+    /** Its short name in the breadcrumb trail, when the title says more. */
+    crumb?: string;
+    /** "YYYY-MM-DD": the page's last real change; the legal pages' date otherwise. */
+    updatedAt?: string;
 };
 
 /**
@@ -262,7 +266,13 @@ export const buildHomeJsonLd = (source: JsonLdSource) => {
 };
 
 /** Lightweight graph for secondary pages: the page and its breadcrumb trail. */
-export const buildPageJsonLd = ({ title, description, path }: PageMetadataOptions) => ({
+export const buildPageJsonLd = ({
+    title,
+    description,
+    path,
+    crumb,
+    updatedAt,
+}: PageMetadataOptions) => ({
     "@context": "https://schema.org",
     "@graph": [
         {
@@ -274,13 +284,18 @@ export const buildPageJsonLd = ({ title, description, path }: PageMetadataOption
             inLanguage: site.language,
             isPartOf: { "@id": ids.website },
             publisher: { "@id": ids.business },
-            dateModified: site.legalPagesUpdatedAt,
+            dateModified: updatedAt ?? site.legalPagesUpdatedAt,
         },
         {
             "@type": "BreadcrumbList",
             itemListElement: [
                 { "@type": "ListItem", position: 1, name: "Accueil", item: site.url },
-                { "@type": "ListItem", position: 2, name: title, item: absoluteUrl(path) },
+                {
+                    "@type": "ListItem",
+                    position: 2,
+                    name: crumb ?? title,
+                    item: absoluteUrl(path),
+                },
             ],
         },
     ],
@@ -288,10 +303,25 @@ export const buildPageJsonLd = ({ title, description, path }: PageMetadataOption
 
 export const weddingPage = {
     path: "/mariage",
-    title: "Sites de mariage sur-mesure",
+    /** What couples type, « site de mariage », first; under 60 characters with the brand. */
+    title: "Site de mariage sur-mesure, faire-part animé",
+    crumb: "Sites de mariage",
+    /** The default content's last change; Sanity's own date wins once it is published. */
+    updatedAt: "2026-10-08",
     description:
         "Faire-part numérique animé, réponses des invités par lien personnel, programme du jour J et galerie photo partagée. Un site de mariage unique, dès 290 €.",
+    /** Its own share image, built at deploy time: see app/(wedding)/mariage/partage. */
+    image: {
+        url: "/mariage/partage",
+        alt: "Un site de mariage sur-mesure par AlexDevLab : faire-part animé, réponses par foyer, jour J et photos, dès 290 €",
+    },
 } as const;
+
+/** The demo's share image: Camille & Hugo's faire-part, at a fixed address. */
+export const weddingDemoImage = {
+    url: "/mariage/demo/partage",
+    alt: "Faire-part de Camille & Hugo, exemple de site de mariage par AlexDevLab",
+};
 
 /** The couple's dashboard, playable with fictional data kept in the visitor's browser. */
 export const weddingDashboardDemoPage = {
@@ -299,6 +329,7 @@ export const weddingDashboardDemoPage = {
     title: "Démo · tableau de bord des mariés",
     description:
         "Essayez le tableau de bord d'un site de mariage : réponses des invités en temps réel, récap traiteur, création de faire-part et relances. Données fictives, rien n'est envoyé.",
+    image: weddingDemoImage,
 } as const;
 
 const weddingOffer = (plan: WeddingPlan) => ({

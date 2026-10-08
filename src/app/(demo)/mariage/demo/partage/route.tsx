@@ -4,6 +4,9 @@ import { defaultDesign } from "@/content/wedding-dashboard-demo";
 import { weddingCalendar } from "@/lib/wedding-dashboard/calendar";
 import { sealInitials } from "@/lib/wedding-dashboard/drafts";
 
+/** Built once at deploy time, like the offer's. */
+export const dynamic = "force-static";
+
 const size = { width: 1200, height: 630 };
 
 /** The demo's own colours: paper, ink and the olive seal, as on the guest site. */

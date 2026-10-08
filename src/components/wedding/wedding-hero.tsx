@@ -54,6 +54,7 @@ export const WeddingHero = ({ hero }: WeddingHeroProps) => (
                 <EmphasisHeading
                     as="h1"
                     id="mariage-titre"
+                    kicker="Site de mariage sur-mesure"
                     heading={hero.heading}
                     className="text-5xl leading-[1.02] md:text-7xl lg:text-[5.25rem]"
                 />

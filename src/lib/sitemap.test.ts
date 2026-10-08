@@ -29,4 +29,10 @@ describe("sitemapEntries", () => {
             ]),
         );
     });
+
+    it("dates the offer page even before its document is published in the Studio", () => {
+        const offer = sitemapEntries(input).find((entry) => entry.url.endsWith("/mariage"));
+
+        expect(offer?.lastModified).toBe("2026-10-08");
+    });
 });

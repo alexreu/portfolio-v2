@@ -1,7 +1,7 @@
 import { defaultWeddingService } from "@/content/wedding-service";
 import { describe, expect, it } from "vitest";
 
-import { buildWeddingJsonLd } from "./seo";
+import { buildPageMetadata, buildWeddingJsonLd, weddingPage } from "./seo";
 
 type Node = { "@type": string; [key: string]: unknown };
 
@@ -33,10 +33,14 @@ describe("buildWeddingJsonLd", () => {
         });
     });
 
+    it("dates the page with the offer's content, not the legal pages'", () => {
+        expect(nodeOfType("WebPage")?.dateModified).toBe("2026-10-08");
+    });
+
     it("places the page in the site breadcrumb trail", () => {
         expect(nodeOfType("BreadcrumbList")?.itemListElement).toEqual([
             expect.objectContaining({ position: 1, name: "Accueil" }),
-            expect.objectContaining({ position: 2, name: "Sites de mariage sur-mesure" }),
+            expect.objectContaining({ position: 2, name: "Sites de mariage" }),
         ]);
     });
 
@@ -45,5 +49,26 @@ describe("buildWeddingJsonLd", () => {
             name: "Alexandre Adolphe",
             image: "https://alexdevlab.com/images/wedding/alexandre-adolphe.webp",
         });
+    });
+});
+
+describe("weddingPage metadata", () => {
+    const metadata = buildPageMetadata(weddingPage);
+
+    it("shares the offer with its own image, described for whoever cannot see it", () => {
+        expect(metadata.openGraph?.images).toEqual([
+            expect.objectContaining({
+                url: "/mariage/partage",
+                width: 1200,
+                height: 630,
+                alt: expect.stringContaining("site de mariage"),
+            }),
+        ]);
+        expect(metadata.twitter?.images).toEqual(["/mariage/partage"]);
+    });
+
+    it("names the search couples type, under sixty characters with the brand", () => {
+        expect(metadata.title).toMatch(/^Site de mariage sur-mesure/);
+        expect(`${metadata.title} | AlexDevLab`.length).toBeLessThanOrEqual(60);
     });
 });

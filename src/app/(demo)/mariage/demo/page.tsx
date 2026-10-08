@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
 
-import { buildPageMetadata } from "@/lib/seo";
+import { buildPageMetadata, weddingDemoImage } from "@/lib/seo";
 import { isPreview } from "@/lib/wedding-dashboard/preview-link";
 import { DemoSite } from "@/components/wedding-demo/demo-site";
 
 export const metadata: Metadata = buildPageMetadata({
-    title: "Démo · Camille & Hugo",
+    title: "Exemple de site de mariage · Camille & Hugo",
     description:
         "Exemple de site de mariage : faire-part animé, programme personnalisé, réponses des invités par lien personnel et galerie photo du jour J.",
     path: "/mariage/demo",
-    image: {
-        url: "/mariage/demo/partage",
-        alt: "Faire-part de Camille & Hugo : vous êtes invités",
-    },
+    image: weddingDemoImage,
 });
 
 /** `?foyer=` as given; an empty or repeated one names no household, so it opens none. */
