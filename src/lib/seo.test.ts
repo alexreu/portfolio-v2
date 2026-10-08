@@ -39,4 +39,11 @@ describe("buildWeddingJsonLd", () => {
             expect.objectContaining({ position: 2, name: "Sites de mariage sur-mesure" }),
         ]);
     });
+
+    it("shows the person behind the offer with the photo of the « Qui suis-je » section", () => {
+        expect(nodeOfType("Person")).toMatchObject({
+            name: "Alexandre Adolphe",
+            image: "https://alexdevlab.com/images/wedding/alexandre-adolphe.webp",
+        });
+    });
 });

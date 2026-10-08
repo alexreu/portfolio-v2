@@ -41,13 +41,14 @@ import { DemoProgramme } from "./demo-programme";
 import { DemoStory } from "./demo-story";
 import { DemoTabBar } from "./demo-tab-bar";
 import { InvitationOverlay } from "./invitation-overlay";
+import { ScriptCouple } from "./script-couple";
 import { ThanksPanel } from "./thanks-panel";
 import { UploadSheet } from "./upload-sheet";
 
 /** The page behind a personal link the couple removed from their list. */
-const ExpiredLink = ({ couple }: { couple: string }) => (
+const ExpiredLink = ({ first, second }: { first: string; second: string }) => (
     <main className="mx-auto grid min-h-dvh max-w-120 content-center gap-3 px-4 text-center">
-        <p className="font-demo-script text-5xl">{couple}</p>
+        <ScriptCouple first={first} second={second} className="text-5xl" />
         <h1 className="font-demo-serif text-3xl font-normal">Ce lien n&apos;est plus valide</h1>
         <p className="text-demo-ink-2">
             Il a peut-être été remplacé. Demandez votre lien personnel aux mariés.
@@ -243,7 +244,7 @@ export const DemoSite = ({
             (householdId !== undefined &&
                 !state.households.some((candidate) => candidate.id === householdId)))
     )
-        return <ExpiredLink couple={`${design.first} & ${design.second}`} />;
+        return <ExpiredLink first={design.first} second={design.second} />;
 
     /** Opened first, before the site: shown alike while the browser copy is read. */
     const overlay = (
@@ -426,13 +427,11 @@ export const DemoSite = ({
                 <DemoFaq items={weddingDemo.faq} />
             </main>
             <footer className="border-demo-line border-t px-4 pt-20 pb-28 text-center md:pb-10">
-                <p className="font-demo-script text-5xl">
-                    {design.first} &amp; {design.second}
-                </p>
+                <ScriptCouple first={design.first} second={design.second} className="text-5xl" />
                 <p className="text-demo-muted mt-2.5 text-sm">
                     {mode === "after" ? "Merci d'avoir été là." : "Nous avons hâte de vous voir."}
                 </p>
-                <p className="text-demo-muted mt-10 flex flex-wrap justify-center gap-4.5 text-[0.8rem]">
+                <p className="text-demo-muted mt-10 flex flex-wrap items-center justify-center gap-x-4.5 gap-y-1 text-[0.8rem]">
                     <span>Vos données sont supprimées après le mariage</span>
                     <Link
                         href="/mariage/demo/tableau-de-bord"

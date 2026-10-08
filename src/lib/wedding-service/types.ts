@@ -71,7 +71,22 @@ export type WeddingService = {
             readonly us: string;
         }[];
     };
+    /** Who makes the site: a real face, a few words, and the way to the rest of his work. */
+    readonly about: SectionIntro & {
+        readonly paragraphs: readonly string[];
+        /** Set apart: what working with him means for the couple. */
+        readonly promise: string;
+        readonly photo: { readonly src: string; readonly alt: string };
+        readonly portfolioLabel: string;
+    };
     readonly faq: SectionIntro & {
         readonly items: readonly { readonly question: string; readonly answer: string }[];
+    };
+};
+
+/** What the Studio sends: a photo not uploaded yet comes without its address. */
+export type WeddingServiceFromCms = Partial<Omit<WeddingService, "about">> & {
+    readonly about?: Omit<WeddingService["about"], "photo"> & {
+        readonly photo?: { readonly src: string | null; readonly alt: string | null } | null;
     };
 };

@@ -336,6 +336,13 @@ export const buildWeddingJsonLd = (content: WeddingService) => ({
             areaServed: { "@type": "Country", name: "France" },
             offers: content.pricing.plans.map(weddingOffer),
         },
+        {
+            "@type": "Person",
+            "@id": ids.person,
+            name: site.author.name,
+            jobTitle: site.author.jobTitle,
+            image: absoluteUrl(content.about.photo.src),
+        },
     ],
 });
 

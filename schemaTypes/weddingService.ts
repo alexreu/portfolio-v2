@@ -160,6 +160,33 @@ export default defineType({
                 stringField("us", "AlexDevLab", 60),
             ]),
         ]),
+        section("about", "Qui suis-je", [
+            defineField({
+                name: "paragraphs",
+                title: "Paragraphes",
+                type: "array",
+                of: [{ type: "text", rows: 3 }],
+                validation: (rule) => rule.required().min(1).max(4),
+            }),
+            textField("promise", "Engagement mis en avant", 220),
+            defineField({
+                name: "photo",
+                title: "Photo",
+                type: "image",
+                description:
+                    "Portrait carré ou vertical, visage bien éclairé. Sans photo, celle du site reste affichée.",
+                options: { hotspot: true },
+                fields: [
+                    defineField({
+                        name: "alt",
+                        title: "Texte alternatif",
+                        type: "string",
+                        validation: (rule) => rule.required(),
+                    }),
+                ],
+            }),
+            stringField("portfolioLabel", "Lien vers le portfolio", 60),
+        ]),
         section("faq", "Questions fréquentes", [
             listOf("items", "Questions", [
                 stringField("question", "Question", 140),

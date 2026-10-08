@@ -32,9 +32,11 @@ export const SmoothScroll = ({ children, anchorOffset = 96 }: SmoothScrollProps)
                 lerp: 0.1,
                 duration: 1,
                 smoothWheel: true,
-                syncTouch: true,
-                syncTouchLerp: 0.06,
-                touchMultiplier: 2,
+                /**
+                 * A finger scrolls the page natively, with the phone's own momentum: smoothing
+                 * it lags behind the finger. The wheel stays smoothed, anchors still glide.
+                 */
+                syncTouch: false,
                 autoRaf: false, // We sync with Motion's frame loop instead
                 anchors: { offset: -anchorOffset },
             }}

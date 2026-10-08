@@ -1,6 +1,6 @@
 import { defaultWeddingService } from "@/content/wedding-service";
 
-import type { WeddingService } from "./types";
+import type { WeddingService, WeddingServiceFromCms } from "./types";
 
 type SectionKey = keyof WeddingService;
 
@@ -12,11 +12,19 @@ const isFilled = (section: unknown): boolean =>
     section !== null &&
     Object.values(section).every((value) => !Array.isArray(value) || value.length > 0);
 
-const sectionFrom = (fromCms: Partial<WeddingService> | null, key: SectionKey) =>
+const sectionFrom = (fromCms: WeddingServiceFromCms | null, key: SectionKey) =>
     isFilled(fromCms?.[key]) ? fromCms?.[key] : defaultWeddingService[key];
 
+/** The photo comes on its own in the Studio: until it is uploaded, the default one stays. */
+const withPhoto = (about: NonNullable<WeddingServiceFromCms["about"]>): WeddingService["about"] =>
+    about.photo?.src
+        ? { ...about, photo: { src: about.photo.src, alt: about.photo.alt ?? "" } }
+        : { ...about, photo: defaultWeddingService.about.photo };
+
 /** Section by section: what is published in Sanity wins, the default fills the gaps. */
-export const resolveWeddingService = (fromCms: Partial<WeddingService> | null): WeddingService =>
-    Object.fromEntries(
+export const resolveWeddingService = (fromCms: WeddingServiceFromCms | null): WeddingService => {
+    const resolved = Object.fromEntries(
         sectionKeys.map((key) => [key, sectionFrom(fromCms, key)]),
-    ) as WeddingService;
+    ) as WeddingService & { readonly about: NonNullable<WeddingServiceFromCms["about"]> };
+    return { ...resolved, about: withPhoto(resolved.about) };
+};

@@ -78,7 +78,8 @@ export const SeatingQrPage = () => {
     const { date } = copy.design;
     return (
         <GuestPageFrame
-            couple={couple}
+            first={copy.design.first}
+            second={copy.design.second}
             when={when}
             demoNote="Démo : le plan placé dans le tableau de bord, avec des invités fictifs. Seuls les invités attendus au dîner y figurent."
         >
@@ -102,7 +103,8 @@ export const GalleryQrPage = () => {
     const now = useNow();
     return (
         <GuestPageFrame
-            couple={couple}
+            first={copy.design.first}
+            second={copy.design.second}
             when={when}
             demoNote="Démo : aucune photo n'est envoyée. Les photos retirées dans le tableau de bord disparaissent ici."
         >

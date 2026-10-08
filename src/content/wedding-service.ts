@@ -260,6 +260,24 @@ export const defaultWeddingService: WeddingService = {
             },
         ],
     },
+    about: {
+        eyebrow: "Qui suis-je",
+        heading: {
+            text: "Une seule personne, du premier message au lendemain.",
+            emphasis: "au lendemain.",
+        },
+        paragraphs: [
+            "Je m'appelle Alexandre, je suis développeur à La Réunion. Je dessine et je code chaque site de mariage moi-même : pas de modèle acheté, pas de sous-traitance.",
+            "Votre site est fait pour vous deux et pour vos invités : il doit s'ouvrir sans effort sur le téléphone de chacun, de votre grand-mère au cousin qui arrive en retard.",
+        ],
+        promise:
+            "Vous me parlez directement, du premier échange jusqu'aux photos du lendemain : personne d'autre ne touche à votre site.",
+        photo: {
+            src: "/images/wedding/alexandre-adolphe.webp",
+            alt: "Alexandre Adolphe, en costume rose, sourit dans un jardin aux palmiers",
+        },
+        portfolioLabel: "Voir mes autres réalisations",
+    },
     faq: {
         eyebrow: "Questions fréquentes",
         heading: { text: "Ce qu'on me demande souvent.", emphasis: "demande souvent." },

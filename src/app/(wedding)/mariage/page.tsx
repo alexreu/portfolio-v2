@@ -4,6 +4,7 @@ import { getWeddingService } from "@/lib/sanity/sanity.query";
 import { buildPageMetadata, buildWeddingJsonLd, weddingPage } from "@/lib/seo";
 import { resolveWeddingService } from "@/lib/wedding-service/content";
 import { JsonLd } from "@/components/shared/json-ld";
+import { WeddingAbout } from "@/components/wedding/wedding-about";
 import { WeddingComparison } from "@/components/wedding/wedding-comparison";
 import { WeddingContactSection } from "@/components/wedding/wedding-contact-section";
 import { WeddingDashboard } from "@/components/wedding/wedding-dashboard";
@@ -29,6 +30,7 @@ export default async function WeddingPage() {
             <WeddingFeatures features={content.features} />
             <WeddingDashboard dashboard={content.dashboard} />
             <WeddingSteps steps={content.steps} />
+            <WeddingAbout about={content.about} />
             <WeddingPricing pricing={content.pricing} />
             <WeddingComparison comparison={content.comparison} />
             <WeddingFaq faq={content.faq} />

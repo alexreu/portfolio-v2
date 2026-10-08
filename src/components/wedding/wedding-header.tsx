@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { ArrowLeft, Code2, Menu, X } from "lucide-react";
+import { Code2, Menu, X } from "lucide-react";
 
 const sections = [
     { label: "L'expérience", href: "#experience" },
     { label: "Démo", href: "#demo" },
     { label: "Fonctionnalités", href: "#fonctionnalites" },
+    /** Who makes the site, on this page: the portfolio is linked from that section. */
+    { label: "Qui suis-je", href: "#qui-suis-je" },
     { label: "Tarifs", href: "#tarifs" },
     { label: "FAQ", href: "#faq" },
 ] as const;
@@ -25,18 +26,7 @@ const Logo = () => (
     </a>
 );
 
-const BackToPortfolio = ({ onNavigate }: { onNavigate?: () => void }) => (
-    <Link
-        href="/"
-        onClick={onNavigate}
-        className="text-wed-ink-soft hover:text-wed-ink inline-flex min-h-11 items-center gap-1.5 text-sm"
-    >
-        <ArrowLeft aria-hidden="true" className="size-4" />
-        Retour au portfolio
-    </Link>
-);
-
-/** The wedding page's own navigation: its sections, a way back to the portfolio, and the call to action. */
+/** The wedding page's own navigation: its sections, who makes the site among them, and the call to action. */
 export const WeddingHeader = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const menuTrigger = useRef<HTMLButtonElement>(null);
@@ -62,7 +52,7 @@ export const WeddingHeader = () => {
             <div className="mx-auto flex h-18 max-w-300 items-center justify-between gap-6 px-6">
                 <Logo />
                 <nav aria-label="Sections de la page" className="hidden lg:block">
-                    <ul className="flex gap-7 text-sm">
+                    <ul className="flex gap-5 text-sm whitespace-nowrap xl:gap-7">
                         {sections.map((section) => (
                             <li key={section.href}>
                                 <a
@@ -75,8 +65,7 @@ export const WeddingHeader = () => {
                         ))}
                     </ul>
                 </nav>
-                <div className="hidden items-center gap-5 lg:flex">
-                    <BackToPortfolio />
+                <div className="hidden items-center gap-5 whitespace-nowrap lg:flex">
                     <a
                         href="#contact"
                         className="bg-wed-ink text-wed-paper inline-flex min-h-10 items-center rounded-sm px-4 text-sm font-medium transition-colors hover:bg-black"
@@ -127,7 +116,6 @@ export const WeddingHeader = () => {
                     >
                         Parler de mon mariage
                     </a>
-                    <BackToPortfolio onNavigate={close} />
                 </div>
             </nav>
         </header>
