@@ -15,6 +15,8 @@ type DemoHeroProps = {
     /** The couple's greeting, already addressed to the household. */
     welcome: string;
     ceremonyAt: string;
+    /** The countdown of the Essentiel and Signature formulas. */
+    countdown: boolean;
     photo: { readonly src: string; readonly alt: string };
     /** False while the faire-part covers the page; turning true plays the entrance. */
     revealed: boolean;
@@ -84,6 +86,7 @@ export const DemoHero = ({
     venue,
     welcome,
     ceremonyAt,
+    countdown: withCountdown,
     photo,
     revealed,
 }: DemoHeroProps) => {
@@ -157,23 +160,28 @@ export const DemoHero = ({
                             className="object-cover object-[center_35%]"
                         />
                     </motion.div>
-                    <motion.dl
-                        aria-label="Compte à rebours"
-                        variants={risen(instant, 0.9)}
-                        className="bg-demo-card absolute inset-x-4 bottom-4 flex justify-between gap-4 px-5 py-4 md:inset-x-auto md:right-7 md:bottom-7 md:gap-6"
-                    >
-                        {units.map((unit) => (
-                            <div
-                                key={unit.label}
-                                className="flex flex-col-reverse items-center text-center"
-                            >
-                                <dt className="text-demo-muted text-[0.8rem]">{unit.label}</dt>
-                                <dd className="font-demo-serif text-4xl leading-none">
-                                    <TickingNumber value={unit.value} minDigits={unit.minDigits} />
-                                </dd>
-                            </div>
-                        ))}
-                    </motion.dl>
+                    {withCountdown && (
+                        <motion.dl
+                            aria-label="Compte à rebours"
+                            variants={risen(instant, 0.9)}
+                            className="bg-demo-card absolute inset-x-4 bottom-4 flex justify-between gap-4 px-5 py-4 md:inset-x-auto md:right-7 md:bottom-7 md:gap-6"
+                        >
+                            {units.map((unit) => (
+                                <div
+                                    key={unit.label}
+                                    className="flex flex-col-reverse items-center text-center"
+                                >
+                                    <dt className="text-demo-muted text-[0.8rem]">{unit.label}</dt>
+                                    <dd className="font-demo-serif text-4xl leading-none">
+                                        <TickingNumber
+                                            value={unit.value}
+                                            minDigits={unit.minDigits}
+                                        />
+                                    </dd>
+                                </div>
+                            ))}
+                        </motion.dl>
+                    )}
                 </motion.div>
             </div>
         </motion.section>

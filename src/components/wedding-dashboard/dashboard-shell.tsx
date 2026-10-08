@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
     canSee,
@@ -15,6 +16,7 @@ import {
     resolveFeatures,
     roleLabel,
     weddingCalendar,
+    weddingExport,
     type Actor,
     type HouseholdRecord,
     type Resize,
@@ -27,10 +29,11 @@ import {
 } from "@alexreu/wedding-core/prints";
 import { FeatureFlagProvider } from "@alexreu/wedding-core/react";
 import { useLenis } from "lenis/react";
-import { ExternalLink, RotateCcw } from "lucide-react";
+import { ExternalLink, LogIn, RotateCcw } from "lucide-react";
 
-import { DEMO_FLAGS } from "@/lib/wedding-demo/offer";
+import { demoFlags, demoPlanName, PLAN_PARAMS } from "@/lib/wedding-demo/offer";
 import { pageAt } from "@/lib/wedding-demo/routes";
+import { useDemoPlan } from "@/hooks/use-demo-plan";
 import { useNow } from "@/hooks/use-now";
 import { useStoredFlag } from "@/hooks/use-stored-flag";
 import { useWeddingDemo } from "@/hooks/use-wedding-demo";
@@ -96,6 +99,25 @@ const NoAccess = ({ name, onBack }: { name: string; onBack: () => void }) => (
     </section>
 );
 
+/** A page of a function the formula the demo plays does not include. */
+const NotInFormula = ({ plan, onShowAll }: { plan: string; onShowAll: () => void }) => (
+    <section
+        aria-labelledby="hors-formule-titre"
+        className="border-wed-line-soft bg-wed-paper grid justify-items-start gap-3 rounded-2xl border p-6"
+    >
+        <h1 id="hors-formule-titre" className="font-wed-serif text-3xl font-medium">
+            Cette page n&apos;est pas dans la formule {plan}
+        </h1>
+        <p className="text-wed-muted text-sm">
+            Avec {plan}, elle n&apos;apparaît pas dans le menu des mariés. Elle s&apos;ajoute avec
+            une autre formule ou en option.
+        </p>
+        <button type="button" onClick={onShowAll} className={buttonStyles.secondary}>
+            Voir la formule Signature
+        </button>
+    </section>
+);
+
 /** Same frame as the dashboard, so nothing jumps once the browser copy is read. */
 const DashboardSkeleton = () => {
     const [folded] = useStoredFlag(MENU_FOLDED_KEY);
@@ -126,6 +148,9 @@ const DashboardSkeleton = () => {
  */
 export const DashboardShell = ({ children }: { children: ReactNode }) => {
     const { state, dispatch, reset } = useWeddingDemo();
+    /** The formula the demo plays: what the menu, the pages and the buttons open. */
+    const [plan, setPlan] = useDemoPlan();
+    const flags = demoFlags(plan);
     const now = useNow();
     const lenis = useLenis();
     const router = useRouter();
@@ -135,6 +160,11 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
     const [detailId, setDetailId] = useState<string | null>(null);
     /** The demo can show the dashboard as someone the couple let in sees it. */
     const [viewerId, setViewerId] = useState<string | null>(null);
+    /** Opened from a magic link: `?vue=` shows the dashboard as that person sees it. */
+    useEffect(() => {
+        const asked = new URLSearchParams(window.location.search).get("vue");
+        if (asked) setViewerId(asked);
+    }, []);
     /** The household the guest list was last sent to: once, never again on another page. */
     const sentTo = useRef<string | null>(null);
 
@@ -161,7 +191,9 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
         ? { role: looking.role, added: looking.added, removed: looking.removed }
         : { role: "couple" as const, added: [], removed: [] };
     const actor: Actor = looking ? { kind: "collaborator", access } : { kind: "couple" };
-    const features = resolveFeatures({ ...access, flags: DEMO_FLAGS });
+    const features = resolveFeatures({ ...access, flags });
+    /** Closed to the couple too: the formula lacks the function, not the person looking. */
+    const inFormula = canSee(resolveFeatures({ role: "couple", flags }), pageAt(pathname));
     const can = (feature: Parameters<typeof features.has>[0]) => features.has(feature);
     const open = canSee(features, pageAt(pathname));
 
@@ -248,16 +280,22 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
         remind: () => {
             dispatch({ type: "reminders.send" }, { actor });
         },
+        planName: demoPlanName(plan),
+        flags,
+        exportData: () => {
+            const file = weddingExport(state, new Date());
+            download(file.filename, new Blob([file.content], { type: "application/json" }));
+        },
     };
 
     return (
         <DashboardProvider value={dashboard}>
-            <FeatureFlagProvider {...access} flags={DEMO_FLAGS}>
+            <FeatureFlagProvider {...access} flags={flags}>
                 <div className="grid min-h-dvh grid-cols-[minmax(0,1fr)] lg:grid-cols-[auto_minmax(0,1fr)]">
                     <DashboardNav
                         couple={`${design.first} & ${design.second}`}
                         monogram={monogram(design.first, design.second)}
-                        subtitle={`${calendar.dateLabel} · Signature`}
+                        subtitle={`${calendar.dateLabel} · ${demoPlanName(plan)}`}
                         householdCount={state.households.length}
                         canOpen={(page) => canSee(features, page)}
                         onReset={startAgain}
@@ -273,6 +311,25 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                                 Répondez comme un invité sur le site : vos chiffres bougent ici.
                             </p>
                             <div className="flex flex-wrap items-center gap-1">
+                                <label className="text-wed-ink-soft flex items-center gap-2">
+                                    <span className="whitespace-nowrap">Formule</span>
+                                    <Select
+                                        value={plan}
+                                        onChange={(event) =>
+                                            setPlan(event.target.value as typeof plan)
+                                        }
+                                        wrapperClassName="w-auto min-w-36"
+                                        className="min-h-10 py-0 text-sm"
+                                    >
+                                        {(Object.keys(PLAN_PARAMS) as (typeof plan)[]).map(
+                                            (option) => (
+                                                <option key={option} value={option}>
+                                                    {demoPlanName(option)}
+                                                </option>
+                                            ),
+                                        )}
+                                    </Select>
+                                </label>
                                 {state.collaborators.length > 0 && (
                                     <label className="text-wed-ink-soft flex items-center gap-2">
                                         <span className="whitespace-nowrap">Voir en tant que</span>
@@ -281,7 +338,7 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                                             onChange={(event) =>
                                                 setViewerId(event.target.value || null)
                                             }
-                                            wrapperClassName="w-auto"
+                                            wrapperClassName="w-auto min-w-36"
                                             className="min-h-10 py-0 text-sm"
                                         >
                                             <option value="">Vous deux</option>
@@ -297,6 +354,10 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                                         </Select>
                                     </label>
                                 )}
+                                <Link href="/mariage/demo/connexion" className={buttonStyles.quiet}>
+                                    <LogIn aria-hidden="true" />
+                                    Connexion
+                                </Link>
                                 <a
                                     href={previewOf("/mariage/demo")}
                                     target="_blank"
@@ -322,6 +383,11 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                         </aside>
                         {open ? (
                             children
+                        ) : !inFormula ? (
+                            <NotInFormula
+                                plan={demoPlanName(plan)}
+                                onShowAll={() => setPlan("signature")}
+                            />
                         ) : (
                             <NoAccess
                                 name={looking?.firstName ?? ""}
@@ -342,6 +408,7 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                         now={now}
                         linkFor={linkFor}
                         allowed={{
+                            resend: can("guests.write"),
                             edit: can("guests.write"),
                             answer: can("guests.write"),
                             remove: can("guests.write"),
@@ -364,6 +431,12 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
                                 householdId: household.id,
                                 draft,
                             })
+                        }
+                        onResendLink={(household) =>
+                            dashboard.dispatch({
+                                type: "household.resendLink",
+                                householdId: household.id,
+                            }).ok
                         }
                         onRemove={(household) => {
                             setDetailId(null);

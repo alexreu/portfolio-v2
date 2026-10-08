@@ -21,6 +21,8 @@ type DemoNavProps = {
     /** The moment the demo shows instead of today: the wedding day, or the day after. */
     preview: SiteMode | null;
     onPreview: (preview: SiteMode | null) => void;
+    /** Without a guest gallery in the formula, no « Photos » link. */
+    gallery: boolean;
 };
 
 /** "Aperçu" is the site as it is today; the others show it ahead of time. */
@@ -30,7 +32,7 @@ const previews: readonly { value: string; label: string }[] = [
     { value: "after", label: "Lendemain" },
 ];
 
-export const DemoNav = ({ monogram, mode, preview, onPreview }: DemoNavProps) => {
+export const DemoNav = ({ monogram, mode, preview, onPreview, gallery }: DemoNavProps) => {
     const scrollTo = useAnchorScroll();
     return (
         <header className="bg-demo-paper/90 border-demo-line sticky top-0 z-30 border-b backdrop-blur-md">
@@ -44,17 +46,19 @@ export const DemoNav = ({ monogram, mode, preview, onPreview }: DemoNavProps) =>
                 </a>
                 <nav aria-label="Sections" className="hidden md:block">
                     <ul className="flex gap-7 text-[0.95rem]">
-                        {links.map((link) => (
-                            <li key={link.href}>
-                                <a
-                                    href={link.href}
-                                    onClick={scrollTo}
-                                    className="text-demo-ink-2 hover:text-demo-ink"
-                                >
-                                    {link.label}
-                                </a>
-                            </li>
-                        ))}
+                        {links
+                            .filter((link) => gallery || link.href !== "#photos")
+                            .map((link) => (
+                                <li key={link.href}>
+                                    <a
+                                        href={link.href}
+                                        onClick={scrollTo}
+                                        className="text-demo-ink-2 hover:text-demo-ink"
+                                    >
+                                        {link.label}
+                                    </a>
+                                </li>
+                            ))}
                     </ul>
                 </nav>
                 <div className="absolute right-4 flex items-center gap-2.5 md:static">

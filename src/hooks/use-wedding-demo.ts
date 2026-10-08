@@ -4,7 +4,9 @@ import { useSyncExternalStore } from "react";
 import { DEMO_STORAGE_KEY, demoSeed } from "@/content/wedding-dashboard-demo";
 import { createLocalStore, type DashboardStore } from "@alexreu/wedding-core";
 
-import { DEMO_FLAGS } from "@/lib/wedding-demo/offer";
+import { demoFlags } from "@/lib/wedding-demo/offer";
+
+import { readDemoPlan } from "./use-demo-plan";
 
 const browserStorage = () => {
     try {
@@ -32,7 +34,7 @@ const demoStore = () =>
             at: new Date().toISOString(),
             newId,
             actor: { kind: "couple" },
-            flags: DEMO_FLAGS,
+            flags: demoFlags(readDemoPlan()),
         }),
     }));
 

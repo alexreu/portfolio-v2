@@ -2,8 +2,16 @@
 
 import { useState, type ReactNode } from "react";
 import { demoSeed } from "@/content/wedding-dashboard-demo";
-import { hasOpened, seatedMomentKey, seatingBoard, weddingCalendar } from "@alexreu/wedding-core";
+import {
+    hasOpened,
+    resolveFeatures,
+    seatedMomentKey,
+    seatingBoard,
+    weddingCalendar,
+} from "@alexreu/wedding-core";
 
+import { demoFlags, demoPlanName } from "@/lib/wedding-demo/offer";
+import { useDemoPlan } from "@/hooks/use-demo-plan";
 import { useNow } from "@/hooks/use-now";
 import { useWeddingDemo } from "@/hooks/use-wedding-demo";
 
@@ -54,13 +62,29 @@ const Gate = ({
     );
 };
 
+/** A day-of page of a function the formula the demo plays does not include. */
+const NotInFormula = ({ title, plan }: { title: string; plan: string }) => (
+    <section aria-labelledby="hors-formule-titre" className="grid justify-items-start gap-4">
+        <h1 id="hors-formule-titre" className="font-demo-serif text-4xl leading-tight font-normal">
+            {title}
+        </h1>
+        <p className="text-demo-ink-2 max-w-[44ch]">
+            La démo joue la formule {plan}, qui ne comprend pas cette page. Choisissez une autre
+            formule dans le tableau de bord pour la voir.
+        </p>
+    </section>
+);
+
 /** The demo copy kept in this browser, shared with the couple's dashboard. */
 const useDemoCopy = () => {
     const { state } = useWeddingDemo();
     const copy = state ?? fallback;
     const { design } = copy;
     const calendar = weddingCalendar(design.date, copy.dates);
+    const [plan] = useDemoPlan();
     return {
+        site: resolveFeatures({ role: "guest", flags: demoFlags(plan) }),
+        planName: demoPlanName(plan),
         copy,
         calendar,
         couple: `${design.first} & ${design.second}`,
@@ -70,8 +94,19 @@ const useDemoCopy = () => {
 
 /** Opened by the QR code at the dinner's entrance: the room plan, and who sits where. */
 export const SeatingQrPage = () => {
-    const { copy, couple, when, calendar } = useDemoCopy();
+    const { copy, couple, when, calendar, site, planName } = useDemoCopy();
     const now = useNow();
+    if (!site.has("site.table"))
+        return (
+            <GuestPageFrame
+                first={copy.design.first}
+                second={copy.design.second}
+                when={when}
+                demoNote="Démo : données fictives."
+            >
+                <NotInFormula title="Pas de plan de table numérique" plan={planName} />
+            </GuestPageFrame>
+        );
     return (
         <GuestPageFrame
             first={copy.design.first}
@@ -100,8 +135,19 @@ export const SeatingQrPage = () => {
 
 /** Opened by the gallery's QR code, on the tables: the photos, nothing else. */
 export const GalleryQrPage = () => {
-    const { copy, calendar, couple, when } = useDemoCopy();
+    const { copy, calendar, couple, when, site, planName } = useDemoCopy();
     const now = useNow();
+    if (!site.has("site.gallery"))
+        return (
+            <GuestPageFrame
+                first={copy.design.first}
+                second={copy.design.second}
+                when={when}
+                demoNote="Démo : données fictives."
+            >
+                <NotInFormula title="Pas de galerie des invités" plan={planName} />
+            </GuestPageFrame>
+        );
     return (
         <GuestPageFrame
             first={copy.design.first}

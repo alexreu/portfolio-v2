@@ -23,7 +23,7 @@ import {
     type Moment,
 } from "@alexreu/wedding-core";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Check, Copy, ExternalLink, Music, PenLine, Trash2, UserPen, X } from "lucide-react";
+import { Check, Copy, ExternalLink, Music, PenLine, Send, Trash2, UserPen, X } from "lucide-react";
 import {
     AnimatePresence,
     motion,
@@ -63,8 +63,11 @@ type HouseholdPanelProps = {
     /** An answer received by post or by phone, typed in by the couple. */
     onAnswer: (household: HouseholdRecord, draft: AnswerDraft) => void;
     onRemove: (household: HouseholdRecord) => void;
+    /** Sends the household its personal link again, by e-mail; false when it was refused. */
+    onResendLink: (household: HouseholdRecord) => boolean;
     /** What the person looking may do here; the couple may do it all. */
     allowed: {
+        readonly resend: boolean;
         readonly edit: boolean;
         readonly answer: boolean;
         readonly remove: boolean;
@@ -194,6 +197,7 @@ const PanelBody = ({
     onEdit,
     onAnswer,
     onRemove,
+    onResendLink,
     allowed,
 }: Omit<HouseholdPanelProps, "household" | "onClose"> & { household: HouseholdRecord }) => {
     const [copied, setCopied] = useState(false);
@@ -325,6 +329,19 @@ const PanelBody = ({
                         {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
                         {copied ? "Lien copié" : "Copier son lien"}
                     </button>
+                    {allowed.resend && household.email && (
+                        <button
+                            type="button"
+                            onClick={() =>
+                                onResendLink(household) &&
+                                setSaved(`Lien renvoyé à ${household.email}. Démo : rien ne part.`)
+                            }
+                            className={buttonStyles.secondary}
+                        >
+                            <Send aria-hidden="true" />
+                            Renvoyer son lien
+                        </button>
+                    )}
                     <a
                         href={previewOf(linkFor(household))}
                         target="_blank"
@@ -335,6 +352,12 @@ const PanelBody = ({
                         Son faire-part
                     </a>
                 </div>
+                {allowed.resend && !household.email && (
+                    <p className="text-wed-muted text-xs">
+                        Pour lui renvoyer son lien par e-mail, ajoutez son adresse en modifiant le
+                        foyer.
+                    </p>
+                )}
                 {(allowed.answer || allowed.edit || allowed.remove) && (
                     <div className="border-wed-line-soft flex w-full flex-wrap gap-2 border-t pt-3">
                         {allowed.answer && (

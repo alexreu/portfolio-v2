@@ -5,8 +5,14 @@ import { pageBadge, planBadge } from "./badges";
 describe("planBadge", () => {
     it("says from which formula a function comes, and as which option", () => {
         expect(planBadge("reminders")).toEqual({ from: "Essentiel", note: "Dès Essentiel" });
-        expect(planBadge("gallery")).toEqual({ from: "Essentiel", note: "Dès Essentiel · option Intime" });
-        expect(planBadge("seating")).toEqual({ from: "Signature", note: "Signature · option Essentiel" });
+        expect(planBadge("gallery")).toEqual({
+            from: "Essentiel",
+            note: "Dès Essentiel · option Intime",
+        });
+        expect(planBadge("seating")).toEqual({
+            from: "Signature",
+            note: "Signature · option Essentiel",
+        });
         expect(planBadge("collaborators")?.note).toBe("Signature · option Intime et Essentiel");
     });
 

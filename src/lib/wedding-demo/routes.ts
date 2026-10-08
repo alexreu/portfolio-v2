@@ -12,6 +12,7 @@ export const PAGE_ROUTES: Readonly<Record<DashboardPage, string>> = {
     reminders: "relances",
     gallery: "galerie",
     access: "acces",
+    settings: "reglages",
 };
 
 export const dashboardHref = (page: DashboardPage | null) =>

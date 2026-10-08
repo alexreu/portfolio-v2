@@ -12,6 +12,22 @@ type DemoDressCodeProps = {
     photo: { readonly src: string; readonly alt: string };
 };
 
+/** The dress code of the Intime formula: one visible line, under the programme. */
+export const DressCodeLine = ({ dressCode }: Pick<DemoDressCodeProps, "dressCode">) => (
+    <section
+        id="dresscode"
+        aria-label="Dress code"
+        className="mx-auto max-w-310 scroll-mt-16 px-4 pb-12 md:px-7"
+    >
+        <p className="border-demo-line text-demo-ink-2 border-y py-4">
+            <strong className="font-demo-serif text-demo-ink text-xl font-normal">
+                Dress code · {dressCode.title}
+            </strong>{" "}
+            — {dressCode.text}
+        </p>
+    </section>
+);
+
 /** The illustrated dress code of the Essentiel and Signature plans: text and colour palette. */
 export const DemoDressCode = ({ dressCode, photo }: DemoDressCodeProps) => (
     <section

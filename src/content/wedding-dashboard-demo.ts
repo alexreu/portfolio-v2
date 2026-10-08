@@ -32,8 +32,8 @@ export const DEMO_GUEST_HOUSEHOLD = "lefevre";
 /** The day the demo content is written for; another date moves the whole programme. */
 export const CONTENT_WEDDING_DAY = "2027-06-12";
 
-/** v2: the wedding-core state, English identifiers, free groups and opening hours. */
-export const DEMO_STORAGE_KEY = "alexdevlab:mariage-demo:v2";
+/** v3: the wedding-core 0.3 state, with the wedding's settings. */
+export const DEMO_STORAGE_KEY = "alexdevlab:mariage-demo:v3";
 
 export const defaultDesign: InvitationDesign = {
     first: weddingDemo.couple.first,
@@ -72,6 +72,8 @@ type HouseholdPlan = {
     readonly id: string;
     readonly name: string;
     readonly group: string;
+    /** Where the household's personal link is sent; some families only got the paper one. */
+    readonly email?: string;
     readonly guests: readonly GuestPlan[];
     readonly moments: readonly string[];
     readonly seen?: Ago;
@@ -94,6 +96,7 @@ const yesAll = { [C]: "yes", [D]: "yes", [B]: "yes" } as const;
 const plans: readonly HouseholdPlan[] = [
     {
         id: DEMO_GUEST_HOUSEHOLD,
+        email: "marie.lefevre@exemple.fr",
         name: weddingDemo.household.name,
         group: "friends",
         guests: weddingDemo.household.invitation.guests.map((guest) => ({
@@ -109,6 +112,7 @@ const plans: readonly HouseholdPlan[] = [
     },
     {
         id: "moreau",
+        email: "claire.moreau@exemple.fr",
         name: "Famille Moreau",
         group: "family-2",
         guests: [
@@ -129,6 +133,7 @@ const plans: readonly HouseholdPlan[] = [
     },
     {
         id: "bertrand",
+        email: "julien.bertrand@exemple.fr",
         name: "Julien Bertrand",
         group: "colleagues",
         guests: ["Julien"],
@@ -142,6 +147,7 @@ const plans: readonly HouseholdPlan[] = [
     },
     {
         id: "haddad",
+        email: "ines.haddad@exemple.fr",
         name: "Inès & Karim",
         group: "friends",
         guests: [
@@ -459,7 +465,7 @@ const invited = (plan: HouseholdPlan, now: Date): HouseholdRecord => ({
     id: plan.id,
     name: plan.name,
     group: plan.group,
-    email: "",
+    email: plan.email ?? "",
     guests: plan.guests.map((guest) => guestOf(plan.id, guest)),
     momentKeys: plan.moments,
     lastSeenAt: null,
@@ -561,6 +567,7 @@ export const demoSeed = (now: Date): WeddingState => {
     const start: WeddingState = {
         version: 1,
         timezone: "Europe/Paris",
+        settings: { contactEmail: "camille.hugo@exemple.fr", domain: "camille-et-hugo.fr" },
         design: defaultDesign,
         groups,
         households,

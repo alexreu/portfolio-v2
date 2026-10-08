@@ -18,12 +18,12 @@ import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 
 const icons: Record<string, LucideIcon> = {
     programme: Calendar,
-    lieux: MapPin,
+    places: MapPin,
     questions: CircleHelp,
-    reponse: Send,
+    answer: Send,
     table: Target,
-    ajouter: Camera,
-    merci: Heart,
+    add: Camera,
+    thanks: Heart,
     photos: Camera,
 };
 
@@ -40,18 +40,23 @@ const tabClass = (tab: Tab) =>
 type DemoTabBarProps = {
     mode: SiteMode;
     answered: boolean;
+    /** The functions the formula opens: no tab leads to a missing one. */
+    gallery: boolean;
+    table: boolean;
     onAddPhotos: () => void;
 };
 
 /** Thumb-reach shortcuts on phones; only the action that matters now is filled. */
-export const DemoTabBar = ({ mode, answered, onAddPhotos }: DemoTabBarProps) => {
+export const DemoTabBar = ({ mode, answered, gallery, table, onAddPhotos }: DemoTabBarProps) => {
     const scrollTo = useAnchorScroll();
+    const tabs = tabBar(mode, { answered, gallery, table });
     return (
         <nav
             aria-label="Accès rapide"
-            className="bg-demo-card/95 border-demo-line fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 gap-1.5 border-t px-2 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] backdrop-blur-md md:hidden"
+            style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }}
+            className="bg-demo-card/95 border-demo-line fixed inset-x-0 bottom-0 z-30 grid gap-1.5 border-t px-2 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] backdrop-blur-md md:hidden"
         >
-            {tabBar(mode, { answered }).map((tab) => {
+            {tabs.map((tab) => {
                 const Icon = iconOf(tab);
                 const content = (
                     <>

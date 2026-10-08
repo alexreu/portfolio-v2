@@ -19,6 +19,8 @@ type DayPanelProps = {
     ownTables: readonly SeatTable[];
     programme: Programme;
     photoCount: number;
+    /** Without a guest gallery in the formula, no photo to add. */
+    gallery: boolean;
     /** Invited to dinner and not all declined: the table card has something to say. */
     seated: boolean;
     /** "10 h": while the tables are not shown yet; null once they are. */
@@ -36,6 +38,7 @@ export const DayPanel = ({
     ownTables,
     programme,
     photoCount,
+    gallery,
     seated,
     tablesAt,
     onAddPhotos,
@@ -149,19 +152,26 @@ export const DayPanel = ({
                         Tout le programme →
                     </a>
                 </div>
-                <button
-                    type="button"
-                    onClick={onAddPhotos}
-                    className="bg-demo-olive hover:bg-demo-olive-dark mt-3.5 flex min-h-15 w-full cursor-pointer items-center justify-center gap-2.5 rounded-full text-[1.05rem] font-medium text-white transition-[background-color,scale] active:scale-[0.99]"
-                >
-                    <Camera aria-hidden="true" className="size-5.5" strokeWidth={1.6} />
-                    Ajouter mes photos
-                </button>
-                <p className="mt-1.5 text-center">
-                    <a href="#photos" className="text-demo-ink-2 inline-flex min-h-11 items-center">
-                        {photoCount.toLocaleString("fr-FR")} photos déjà partagées
-                    </a>
-                </p>
+                {gallery && (
+                    <>
+                        <button
+                            type="button"
+                            onClick={onAddPhotos}
+                            className="bg-demo-olive hover:bg-demo-olive-dark mt-3.5 flex min-h-15 w-full cursor-pointer items-center justify-center gap-2.5 rounded-full text-[1.05rem] font-medium text-white transition-[background-color,scale] active:scale-[0.99]"
+                        >
+                            <Camera aria-hidden="true" className="size-5.5" strokeWidth={1.6} />
+                            Ajouter mes photos
+                        </button>
+                        <p className="mt-1.5 text-center">
+                            <a
+                                href="#photos"
+                                className="text-demo-ink-2 inline-flex min-h-11 items-center"
+                            >
+                                {photoCount.toLocaleString("fr-FR")} photos déjà partagées
+                            </a>
+                        </p>
+                    </>
+                )}
             </div>
         </section>
     );

@@ -16,7 +16,7 @@ import {
     type Moment,
     type StatusFilter,
 } from "@alexreu/wedding-core";
-import { Check, ChevronRight, Copy, ExternalLink, Plus, Search } from "lucide-react";
+import { Check, ChevronRight, Copy, ExternalLink, Plus, Search, Upload } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 
 import { cn } from "@/lib/utils";
@@ -37,6 +37,8 @@ type HouseholdsSectionProps = {
     linkFor: (household: HouseholdRecord) => string;
     /** Left out for whoever may not create a household, with its button. */
     onAddHousehold?: () => void;
+    /** Left out like the creation: imports a whole list at once. */
+    onImport?: () => void;
     /** Whether the person looking may read the diets, health data. */
     showDiets: boolean;
     /** Opens the household's whole answer. */
@@ -104,6 +106,7 @@ export const HouseholdsSection = ({
     highlightId,
     linkFor,
     onAddHousehold,
+    onImport,
     showDiets,
     onOpen,
 }: HouseholdsSectionProps) => {
@@ -161,11 +164,17 @@ export const HouseholdsSection = ({
             title="Foyers invités"
             titleId="invites-titre"
             aside={
-                <div className="flex items-center gap-3">
-                    <span className="text-wed-muted text-[0.8rem]">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                    <span className="text-wed-muted text-[0.8rem] whitespace-nowrap">
                         {plural(households.length, "foyer", "foyers")} ·{" "}
                         {plural(guests, "invité", "invités")}
                     </span>
+                    {onImport && (
+                        <button type="button" onClick={onImport} className={buttonStyles.quiet}>
+                            <Upload aria-hidden="true" />
+                            Importer une liste
+                        </button>
+                    )}
                     {onAddHousehold && (
                         <button
                             type="button"

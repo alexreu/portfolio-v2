@@ -6,6 +6,7 @@ import {
     Images,
     KeyRound,
     LayoutGrid,
+    Settings,
     Stamp,
     Users,
     type LucideIcon,
@@ -73,6 +74,12 @@ export const dashboardEntries: readonly DashboardEntry[] = [
         label: "Accès",
         icon: KeyRound,
         intro: "Qui d'autre que vous deux ouvre ce tableau de bord, et pour quoi faire.",
+    },
+    {
+        page: "settings",
+        label: "Réglages",
+        icon: Settings,
+        intro: "Vos groupes d'invités, l'adresse du site, qui vos invités contactent, et vos données.",
     },
 ];
 

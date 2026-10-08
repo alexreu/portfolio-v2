@@ -5,6 +5,7 @@ import type {
     Command,
     CommandIssue,
     Feature,
+    Flag,
     HouseholdRecord,
     Moment,
     Result,
@@ -51,6 +52,11 @@ export type Dashboard = {
     /** The guest site the day after: the couple's thanks and the photos. */
     readonly dayAfterUrl: string;
     readonly remind: () => void;
+    /** The formula the demo plays, and the functions it opens. */
+    readonly planName: string;
+    readonly flags: ReadonlySet<Flag>;
+    /** The whole wedding in one JSON file, before the guests' data is purged. */
+    readonly exportData: () => void;
 };
 
 const DashboardContext = createContext<Dashboard | null>(null);

@@ -23,6 +23,7 @@ import {
     moveToDay,
     personalize,
     programmeAt,
+    resolveFeatures,
     seatedMomentKey,
     signPhoto,
     siteModeAt,
@@ -36,13 +37,15 @@ import {
 import { useLenis } from "lenis/react";
 import { AnimatePresence } from "motion/react";
 
+import { demoFlags } from "@/lib/wedding-demo/offer";
 import { sealToneOf } from "@/lib/wedding-demo/tones";
+import { useDemoPlan } from "@/hooks/use-demo-plan";
 import { useNow } from "@/hooks/use-now";
 import { useWeddingDemo } from "@/hooks/use-wedding-demo";
 
 import { AnswerForm } from "./answer-form";
 import { DayPanel } from "./day-panel";
-import { DemoDressCode } from "./demo-dress-code";
+import { DemoDressCode, DressCodeLine } from "./demo-dress-code";
 import { DemoFaq } from "./demo-faq";
 import { DemoGallery } from "./demo-gallery";
 import { DemoHeading } from "./demo-heading";
@@ -118,6 +121,10 @@ export const DemoSite = ({
     preview = false,
 }: DemoSiteProps) => {
     const { state, dispatch } = useWeddingDemo();
+    /** What the guest site shows with the formula the demo plays. */
+    const [formula] = useDemoPlan();
+    const site = resolveFeatures({ role: "guest", flags: demoFlags(formula) });
+    const withGallery = site.has("site.gallery");
     const now = useNow();
     const [opened, setOpened] = useState(skipInvitation || startOnWeddingDay || startAfter);
     const [previewMode, setPreviewMode] = useState<SiteMode | null>(
@@ -168,6 +175,7 @@ export const DemoSite = ({
     const photos = state ? state.photos.filter((photo) => !photo.removed) : [];
     const seatedKey = seatedMomentKey(plan.moments);
     const seated =
+        site.has("site.table") &&
         seatedKey !== null &&
         household.momentKeys.includes(seatedKey) &&
         household.guests.some((guest) => household.attendance[guest.id]?.[seatedKey] !== "no");
@@ -315,6 +323,7 @@ export const DemoSite = ({
             )}
             <DemoNav
                 monogram={monogram(design.first, design.second)}
+                gallery={withGallery}
                 mode={mode}
                 preview={previewMode}
                 onPreview={(next) => {
@@ -329,6 +338,7 @@ export const DemoSite = ({
                         dateLabel={calendar.dateLabel}
                         thanks={thanksOf(design)}
                         photoCount={Math.max(weddingDemo.gallery.count, photos.length)}
+                        gallery={withGallery}
                         onAddPhotos={openUpload}
                     />
                 ) : mode === "day" ? (
@@ -341,6 +351,7 @@ export const DemoSite = ({
                         ownTables={householdTables(household, plan.tables, plan.seats)}
                         programme={programme}
                         photoCount={weddingDemo.gallery.count}
+                        gallery={withGallery}
                         seated={seated}
                         tablesAt={tablesAt}
                         onAddPhotos={openUpload}
@@ -353,6 +364,7 @@ export const DemoSite = ({
                         venue={weddingDemo.venue}
                         welcome={personalize(design.welcome, household.name)}
                         ceremonyAt={moved(weddingDemo.ceremonyAt)}
+                        countdown={site.has("site.countdown")}
                         photo={weddingDemo.heroPhoto}
                         revealed={opened}
                     />
@@ -366,8 +378,11 @@ export const DemoSite = ({
                         onAddToCalendar={mode === "before" ? addToCalendar : undefined}
                     />
                 )}
+                {mode !== "after" && !site.has("site.dressCode") && (
+                    <DressCodeLine dressCode={weddingDemo.dressCode} />
+                )}
                 <DemoPlaces places={weddingDemo.places} />
-                {mode !== "after" && (
+                {mode !== "after" && site.has("site.dressCode") && (
                     <DemoDressCode
                         dressCode={weddingDemo.dressCode}
                         photo={weddingDemo.dressPhoto}
@@ -437,13 +452,15 @@ export const DemoSite = ({
                         </div>
                     </section>
                 )}
-                <DemoGallery
-                    open={galleryOpen}
-                    opensLabel={calendar.galleryOpensLabel}
-                    count={weddingDemo.gallery.count}
-                    photos={photos}
-                    onAddPhotos={openUpload}
-                />
+                {withGallery && (
+                    <DemoGallery
+                        open={galleryOpen}
+                        opensLabel={calendar.galleryOpensLabel}
+                        count={weddingDemo.gallery.count}
+                        photos={photos}
+                        onAddPhotos={openUpload}
+                    />
+                )}
                 <DemoFaq items={weddingDemo.faq} />
             </main>
             <footer className="border-demo-line border-t px-4 pt-20 pb-28 text-center md:pb-10">
@@ -451,6 +468,17 @@ export const DemoSite = ({
                 <p className="text-demo-muted mt-2.5 text-sm">
                     {mode === "after" ? "Merci d'avoir été là." : "Nous avons hâte de vous voir."}
                 </p>
+                {plan.settings.contactEmail && (
+                    <p className="text-demo-ink-2 mt-4 text-sm">
+                        Une question ?{" "}
+                        <a
+                            href={`mailto:${plan.settings.contactEmail}`}
+                            className="underline underline-offset-4"
+                        >
+                            {plan.settings.contactEmail}
+                        </a>
+                    </p>
+                )}
                 <p className="text-demo-muted mt-10 flex flex-wrap items-center justify-center gap-x-4.5 gap-y-1 text-[0.8rem]">
                     <span>Vos données sont supprimées après le mariage</span>
                     <Link
@@ -468,8 +496,14 @@ export const DemoSite = ({
                     <span>Photos : Pexels</span>
                 </p>
             </footer>
-            <DemoTabBar mode={mode} answered={answered} onAddPhotos={openUpload} />
-            {uploading && photoSignature.ok && (
+            <DemoTabBar
+                mode={mode}
+                answered={answered}
+                gallery={withGallery}
+                table={site.has("site.table")}
+                onAddPhotos={openUpload}
+            />
+            {withGallery && uploading && photoSignature.ok && (
                 <UploadSheet signature={photoSignature.value} onClose={closeUpload} />
             )}
         </>
