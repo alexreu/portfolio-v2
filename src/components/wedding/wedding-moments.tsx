@@ -1,12 +1,11 @@
 import type { WeddingService } from "@/lib/wedding-service/types";
+import { romanNumeral } from "@/lib/wedding/roman";
 
 import { SectionIntro } from "./section-intro";
 
 type WeddingMomentsProps = {
     moments: WeddingService["moments"];
 };
-
-const romanNumerals = ["i.", "ii.", "iii.", "iv.", "v.", "vi."];
 
 export const WeddingMoments = ({ moments }: WeddingMomentsProps) => (
     <section
@@ -23,8 +22,12 @@ export const WeddingMoments = ({ moments }: WeddingMomentsProps) => (
                             aria-hidden="true"
                             className="border-wed-ink bg-wed-ivory absolute -top-[5px] left-0 size-2.5 rounded-full border"
                         />
-                        <span className="font-wed-serif text-wed-gold text-2xl italic">
-                            {romanNumerals[index]}
+                        {/* The list already says the order: the numeral is only seen. */}
+                        <span
+                            aria-hidden="true"
+                            className="font-wed-serif text-wed-gold text-2xl tracking-[0.08em]"
+                        >
+                            {romanNumeral(index + 1)}
                         </span>
                         <h3 className="font-wed-serif mt-3 text-[1.75rem] leading-tight font-medium">
                             {moment.title}
