@@ -38,6 +38,15 @@ tout seul.
 - Site invité : modes avant, jour J, lendemain ; date limite ; réponse « à
   compléter » ; ajout à l'agenda.
 - Une seule relance automatique, J-15 avant la date limite, date réglable.
+- Sélecteur « Formule » dans le bandeau de démo (et `?formule=` sur le site
+  invité) : menu, pages et site suivent Intime, Essentiel ou Signature ; une
+  page hors formule le dit et propose de passer à Signature.
+- « Renvoyer son lien » sur le détail d'un foyer, noté dans l'activité.
+- « Importer une liste » : CSV ou collage, lignes à corriger listées.
+- Page « Réglages » : groupes libres, contact, adresse du site, fuseau, formule,
+  « Vos données » (export JSON complet).
+- Connexion simulée par lien e-mail (`/mariage/demo/connexion`), même réponse
+  pour toute adresse, le lien ouvre la vue de la personne.
 
 ## 2. Le principe : des droits calculés depuis la formule
 
@@ -246,13 +255,16 @@ restent en français, dans le paquet.
 | `react/` | Sous-chemin `/react` : `FeatureFlagProvider`, `FeatureScope`, `useCheckFeatureFlag` | 7 |
 | `guest-site/` | Programme, modes, barre du bas, réponses, signature des photos, compte à rebours, .ics | 30 |
 | `dashboard/` | État, calendrier et ouvertures, foyers, stats, plan de table, salle, programme, CSV, récap traiteur, recherche de table, résumés, archive galerie | 150 |
-| `commands/` | 27 commandes (`runCommand`), `diffState` / `applyChanges`, `createLocalStore` | 74 |
+| `commands/` | 29 commandes (`runCommand`), `diffState` / `applyChanges`, `createLocalStore` | 74 |
 | `state/` | `parseWeddingState` (zod) | 8 |
 | `prints/` | Sous-chemin `/prints` : faire-part, affiches, récap traiteur en PDF, QR | 18 |
 
 Nouveautés par rapport à la démo : fuseau du mariage, groupes libres, moment
 placé à table, ouvertures de la galerie et des tables à un jour et une heure,
-commande de renvoi du lien (`household.resendLink`), refus explicites
+commande de renvoi du lien (`household.resendLink`), import d'une liste
+(`parseGuestList`, commande `households.import`, tout ou rien), réglages
+(`settings.save` : contact, adresse du site, fuseau ; feature `settings.write`),
+export complet (`weddingExport`), refus explicites
 (`forbidden`, `not-found`, `answers-closed`, `invitation-expired`,
 `last-moment`), réponse d'un invité refusée après la date limite.
 
@@ -462,7 +474,7 @@ Chaque lot en TDD : un test, puis le code minimal. Durées pour une personne.
 | **6. Modules Essentiel** | Questions perso, relance (Vercel Cron + Resend + `email_log`), galerie (R2, retrait, ZIP), faire-part PDF + QR | Formule Essentiel vendable ; options Intime actives | 2-3 sem. | — |
 | **7. Modules Signature** | Plan de table (éditeur de la démo, révélation à l'heure dite, liste traiteur par table), QR par foyer, co-gestion (page « Accès », §5.4) | Formule Signature vendable ; options Essentiel actives | 2-3 sem. | — |
 | **8. Admin AlexDevLab** | Créer un mariage (formule + options + fuseau), changer de formule (montée seulement), consulter en lecture seule, déclencher l'export avant purge | Un mariage livré sans toucher à la base | 1 sem. | — |
-| **9. Démo branchée** | La démo du portfolio consomme `wedding-core` (puis `dashboard-ui`) avec `localStorageStore` et le sélecteur de formule ; badges calculés depuis le catalogue | La démo montre chaque formule telle qu'elle est vendue | 3-4 j | **wedding-core fait** (2026-10-08) : la démo consomme `@alexreu/wedding-core@0.2.0` (commandes, features, impressions) ; reste `dashboard-ui` et le sélecteur de formule |
+| **9. Démo branchée** | La démo du portfolio consomme `wedding-core` (puis `dashboard-ui`) avec `localStorageStore` et le sélecteur de formule ; badges calculés depuis le catalogue | La démo montre chaque formule telle qu'elle est vendue | 3-4 j | **wedding-core fait** (2026-10-08) : la démo consomme `@alexreu/wedding-core@0.3.0` (commandes, features, impressions), sélecteur de formule fait ; reste `dashboard-ui`, à extraire une fois l'interface figée |
 
 Total : **11 à 14 semaines** pour le tableau de bord. Le site invité (réponse
 par lien personnel, galerie, jour J) avance en parallèle sur le même cœur ; les
@@ -495,15 +507,15 @@ lots 5, 6 et 7 en dépendent pour être vendables de bout en bout.
 
 ## 8. Ce qui manque à la démo pour un vrai produit
 
-- Import CSV des invités (condition de rentabilité d'Intime, `PLAN.md` §2.4).
-- Bouton « Renvoyer le lien » sur le détail d'un foyer (email au foyer, tracé
-  dans l'activité), inclus dans toutes les formules. La commande existe dans
-  le paquet (`household.resendLink`).
-- Page de connexion (simulée dans la démo, sans email).
-- Réglages du mariage : contact affiché, domaine, **fuseau horaire**.
-- Groupes d'invités libres (aujourd'hui quatre groupes fixes).
-- Export complet avant purge, page « Vos données ».
+Fait le 2026-10-08 (paquet 0.3.0) : import CSV des invités, « Renvoyer son
+lien », page de connexion simulée, réglages (contact, adresse du site, fuseau),
+groupes libres, export complet « Vos données ».
+
+Reste, côté plateforme :
+
+- Envoi réel des e-mails (lien de connexion, renvoi du lien, relance).
 - États vides et erreurs réseau du `serverStore` (la démo n'en a pas).
+- Purge programmée après l'export (`PLAN.md` §5.9).
 
 ## 9. Décisions
 
@@ -545,3 +557,6 @@ Prises le 2026-10-08 :
     logique du site invité ou du tableau de bord évolue dans le paquet, plus
     dans le portfolio. Heure d'ouverture des tables réglée dans « Dates
     clés », plus dans le plan de table.
+14. **Démo complète avant la plateforme** (2026-10-08, paquet `^0.3.0`) :
+    formule jouable, import, renvoi du lien, réglages, connexion simulée,
+    export. `dashboard-ui` attend que l'interface soit figée.
