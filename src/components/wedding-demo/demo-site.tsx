@@ -429,7 +429,7 @@ export const DemoSite = ({
                                     {closed
                                         ? "Les réponses sont closes : pour un changement, écrivez-nous directement."
                                         : shared
-                                          ? "Chaque foyer répond avec son lien personnel, reçu par e-mail : il ouvre votre réponse sans rien taper. Vous ne le retrouvez plus ? Recevez-le à nouveau ici."
+                                          ? "Chaque foyer répond avec son lien personnel, reçu par e-mail. Vous ne le retrouvez plus ? Recevez-le à nouveau ici."
                                           : "Une réponse par personne et par moment. Vous pourrez la modifier avec ce même lien jusqu'à la date limite."}
                                 </p>
                                 <p className="bg-demo-card border-demo-line mt-7 inline-flex gap-2.5 rounded-full border px-5 py-3">
