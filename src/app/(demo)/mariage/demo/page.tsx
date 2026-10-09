@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { isPreview } from "@alexreu/wedding-core";
 
 import { buildPageMetadata, weddingDemoImage } from "@/lib/seo";
+import { SHARED_MARK } from "@/lib/wedding-demo/routes";
 import { DemoSite } from "@/components/wedding-demo/demo-site";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -31,6 +32,7 @@ export default async function WeddingDemoPage({ searchParams }: Props) {
             startAfter={"apres" in params}
             householdId={householdIdOf(params.foyer)}
             preview={isPreview(params)}
+            shared={SHARED_MARK in params}
         />
     );
 }

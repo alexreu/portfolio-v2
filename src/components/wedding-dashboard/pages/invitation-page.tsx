@@ -15,6 +15,7 @@ export const InvitationPage = () => {
         dispatch,
         now,
         siteUrl,
+        sharedUrl,
         linkFor,
         downloadSharedInvitation,
         downloadHouseholdInvitations,
@@ -42,7 +43,7 @@ export const InvitationPage = () => {
             )}
             {(can("invitation.print") || can("household.print")) && (
                 <InvitationPrintSection
-                    siteUrl={siteUrl}
+                    sharedUrl={sharedUrl}
                     sample={{
                         name: sampleGuest,
                         link: sampleHousehold ? linkFor(sampleHousehold) : siteUrl,

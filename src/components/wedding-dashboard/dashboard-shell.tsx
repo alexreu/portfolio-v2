@@ -32,7 +32,7 @@ import { useLenis } from "lenis/react";
 import { ExternalLink, LogIn, RotateCcw } from "lucide-react";
 
 import { demoFlags, demoPlanName, PLAN_PARAMS } from "@/lib/wedding-demo/offer";
-import { pageAt } from "@/lib/wedding-demo/routes";
+import { pageAt, SHARED_MARK } from "@/lib/wedding-demo/routes";
 import { useDemoPlan } from "@/hooks/use-demo-plan";
 import { useNow } from "@/hooks/use-now";
 import { useStoredFlag } from "@/hooks/use-stored-flag";
@@ -53,6 +53,9 @@ const siteUrl = () => `${window.location.origin}/mariage/demo`;
 
 const linkFor = (household: HouseholdRecord) =>
     `${siteUrl()}?foyer=${encodeURIComponent(household.id)}`;
+
+/** What the shared faire-part's code opens: the site, addressed to nobody. */
+const sharedUrl = () => `${siteUrl()}?${SHARED_MARK}`;
 
 const seatingUrl = () => `${siteUrl()}/plan-de-table`;
 
@@ -212,6 +215,7 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
         moments,
         linkFor,
         siteUrl: siteUrl(),
+        sharedUrl: sharedUrl(),
         seatingUrl: seatingUrl(),
         galleryUrl: galleryUrl(),
         highlightId,
@@ -240,7 +244,7 @@ export const DashboardShell = ({ children }: { children: ReactNode }) => {
         },
         downloadSharedInvitation: async () => {
             const { invitationPdf } = await printPdf();
-            const print = sharedInvitation(design, calendar, siteUrl());
+            const print = sharedInvitation(design, calendar, sharedUrl());
             downloadPdf(print.filename, await invitationPdf(print));
         },
         downloadHouseholdInvitations: async (households = state.households) => {

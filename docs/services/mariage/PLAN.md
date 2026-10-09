@@ -285,8 +285,16 @@ Calendrier conseillé au couple :
   couple, sans limite de nombre — chanson pour la soirée, âge des enfants, covoiturage, etc.
 - Date limite : après elle, formulaire verrouillé, message « contactez-nous ».
 - Modification possible jusqu'à la date limite, historique conservé.
-- Fallback sans lien : recherche par nom + code du faire-part (pour les invités
-  qui ont perdu leur lien) avec limitation de débit.
+- Sans lien personnel (QR du faire-part commun, lien perdu) : le site s'ouvre
+  adressé à personne, programme limité aux moments communs à tous les foyers.
+  À la place du formulaire, « Recevoir mon lien personnel » : recherche par
+  prénom ou nom, puis le lien part **à l'adresse notée par les mariés**, jamais
+  affichée en clair (`m•••@exemple.fr`). La page n'ouvre jamais le foyer :
+  personne ne répond à la place d'un autre (décidé le 2026-10-09, remplace
+  « nom + code du faire-part », le faire-part commun n'ayant pas de code propre
+  au foyer). Sans adresse : « demandez votre lien aux mariés ». Côté serveur :
+  limitation de débit par IP et par foyer, pour qu'on ne noie pas une boîte de
+  liens. Révèle seulement qu'un nom est invité, comme le plan de table.
 
 ### 4.4 Galerie invités
 
@@ -341,7 +349,8 @@ Calendrier conseillé au couple :
 
 ### 4.6 Faire-part imprimable
 
-- PDF A5 / 148×148 mm généré depuis le même design, QR vers le site.
+- PDF A5 / 148×148 mm généré depuis le même design, QR vers le site adressé à
+  personne (voir « Sans lien personnel » ci-dessus), jamais vers un foyer.
 - Option : un PDF par foyer avec **QR personnel** (le RSVP s'ouvre directement).
 - Fichiers prêts pour l'imprimeur : fonds perdus 3 mm, CMJN laissé à l'imprimeur.
 

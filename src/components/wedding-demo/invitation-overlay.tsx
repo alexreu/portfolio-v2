@@ -19,6 +19,8 @@ type InvitationOverlayProps = {
     tone: SealTone;
     /** Opened by the couple from their dashboard: said before the seal, not counted. */
     preview?: boolean;
+    /** The shared faire-part's code: addressed to nobody, every guest reads it alike. */
+    shared?: boolean;
     onOpened: () => void;
 };
 
@@ -37,6 +39,7 @@ export const InvitationOverlay = ({
     dateLabel,
     tone,
     preview = false,
+    shared = false,
     onOpened,
 }: InvitationOverlayProps) => {
     const [opening, setOpening] = useState(false);
@@ -91,17 +94,23 @@ export const InvitationOverlay = ({
             )}
             <div className="flex flex-col items-center">
                 <motion.div initial={false} animate={state} variants={leaving} className="mb-8">
-                    <p
-                        className={cn(
-                            "text-demo-muted text-center text-sm transition-opacity duration-500",
-                            guestName === null && "opacity-0",
-                        )}
-                    >
-                        Faire-part pour
-                        <span className="font-demo-serif text-demo-ink mt-1 block min-h-8 text-2xl italic">
-                            {guestName}
-                        </span>
-                    </p>
+                    {shared ? (
+                        <p className="font-demo-serif text-demo-ink min-h-8 text-center text-2xl italic">
+                            Vous êtes invités
+                        </p>
+                    ) : (
+                        <p
+                            className={cn(
+                                "text-demo-muted text-center text-sm transition-opacity duration-500",
+                                guestName === null && "opacity-0",
+                            )}
+                        >
+                            Faire-part pour
+                            <span className="font-demo-serif text-demo-ink mt-1 block min-h-8 text-2xl italic">
+                                {guestName}
+                            </span>
+                        </p>
+                    )}
                 </motion.div>
 
                 <InvitationEnvelope

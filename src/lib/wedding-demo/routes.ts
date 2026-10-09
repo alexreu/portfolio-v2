@@ -23,3 +23,6 @@ export const pageAt = (pathname: string): DashboardPage | null =>
     (Object.keys(PAGE_ROUTES) as DashboardPage[]).find((page) =>
         pathname.replace(/\/$/, "").startsWith(dashboardHref(page)),
     ) ?? null;
+
+/** `?commun`: the guest site as the shared faire-part's code opens it, addressed to nobody. */
+export const SHARED_MARK = "commun";

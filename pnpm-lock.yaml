@@ -15,8 +15,8 @@ importers:
   .:
     dependencies:
       '@alexreu/wedding-core':
-        specifier: ^0.3.1
-        version: 0.3.1(react@19.2.4)
+        specifier: ^0.4.0
+        version: 0.4.0(react@19.2.4)
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.1(react@19.2.4))
@@ -288,8 +288,8 @@ packages:
   '@adobe/css-tools@4.5.0':
     resolution: {integrity: sha512-6OzddxPio9UiWTCemp4N8cYLV2ZN1ncRnV1cVGtve7dhPOtRkleRyx32GQCYSwDYgaHU3USMm84tNsvKzRCa1Q==}
 
-  '@alexreu/wedding-core@0.3.1':
-    resolution: {integrity: sha512-d5Imu2XAM35xUdsMhiVtL0vVn8TUquMFRpEcypRWmH+KPBHcDHnV5o3PhzMKXqtYQ7nqhz90IC013xzyEuT4tw==, tarball: https://npm.pkg.github.com/download/@alexreu/wedding-core/0.3.1/99b97a00fcf368ff3fc92b392badfb4d12292040}
+  '@alexreu/wedding-core@0.4.0':
+    resolution: {integrity: sha512-dWLfNwWb+vhrDeRvuMmC+LQhHBNgB39/IgTx9qJ2sXf4oxsD2lSGf+CDDiJC9iyCGOByOEwm176r4BVKcbPrWw==, tarball: https://npm.pkg.github.com/download/@alexreu/wedding-core/0.4.0/ca04e4501772b77e611b4a3e43cbde3ccfb5cb24}
     peerDependencies:
       react: '>=18'
 
@@ -7688,7 +7688,7 @@ snapshots:
 
   '@adobe/css-tools@4.5.0': {}
 
-  '@alexreu/wedding-core@0.3.1(react@19.2.4)':
+  '@alexreu/wedding-core@0.4.0(react@19.2.4)':
     dependencies:
       pdf-lib: 1.17.1
       react: 19.2.4

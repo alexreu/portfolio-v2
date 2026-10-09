@@ -24,8 +24,10 @@ export type Dashboard = {
     readonly calendar: WeddingCalendar;
     readonly moments: readonly Moment[];
     readonly linkFor: (household: HouseholdRecord) => string;
-    /** The guest site, where the shared faire-part's QR code leads. */
+    /** The guest site, without any household. */
     readonly siteUrl: string;
+    /** Where the shared faire-part's QR code leads: the site, addressed to nobody. */
+    readonly sharedUrl: string;
     /** The room plan, opened by the QR code at the dinner's entrance. */
     readonly seatingUrl: string;
     /** The guests' gallery, opened by the QR code on the tables. */
