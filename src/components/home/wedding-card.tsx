@@ -4,8 +4,9 @@ import { weddingPhotos } from "@/content/wedding-photos";
 import { ArrowRight, BarChart3, Link2, Mail, QrCode } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { GlassCard } from "@/components/shared/glass-card";
-import { cormorant, pinyon } from "@/app/fonts/wedding";
+import { cardCormorant, cardPinyon } from "@/app/fonts/wedding-card";
 
 const features = [
     { icon: Mail, label: "Faire-part animé" },
@@ -59,8 +60,8 @@ export const WeddingCard = () => (
         <section
             aria-labelledby="mariage-carte-titre"
             className={cn(
-                cormorant.variable,
-                pinyon.variable,
+                cardCormorant.variable,
+                cardPinyon.variable,
                 "grid min-h-[34rem] lg:grid-cols-[1.05fr_1fr]",
             )}
         >
@@ -100,19 +101,18 @@ export const WeddingCard = () => (
                     ))}
                 </ul>
                 <div className="mt-auto flex flex-wrap items-center gap-3.5 pt-9">
-                    <Link
-                        href="/mariage"
-                        className="bg-primary text-background hover:bg-primary-light inline-flex min-h-12 items-center gap-2.5 rounded-xl px-5.5 font-medium transition-colors"
-                    >
-                        Découvrir l&apos;offre
-                        <ArrowRight aria-hidden="true" className="size-4" />
-                    </Link>
-                    <Link
-                        href="/mariage/demo"
-                        className="text-foreground inline-flex min-h-12 items-center rounded-xl border border-white/15 px-5.5 transition-colors hover:border-white/30"
-                    >
-                        Voir le site démo
-                    </Link>
+                    <Button variant="primary" asChild>
+                        <Link href="/mariage">
+                            Découvrir l&apos;offre
+                            <ArrowRight
+                                aria-hidden="true"
+                                className="size-4 transition-transform group-hover:translate-x-1"
+                            />
+                        </Link>
+                    </Button>
+                    <Button variant="ghost" asChild>
+                        <Link href="/mariage/demo">Voir le site démo</Link>
+                    </Button>
                     <span className="text-sm text-gray-400">
                         dès <b className="text-foreground font-semibold">290 €</b>
                     </span>
