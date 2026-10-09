@@ -17,6 +17,7 @@ import { PricingCard } from "./pricing-card";
 import { ProjectsSection } from "./projects-section";
 import { ServicesCard } from "./services-card";
 import { SkillsCard } from "./skill-cards";
+import { WeddingCard } from "./wedding-card";
 
 type BentoGridProps = {
     projects?: Project[];
@@ -62,6 +63,18 @@ export const BentoGrid = ({
                     className="scroll-mt-24 md:col-span-2 lg:col-span-3"
                 >
                     <ServicesCard services={services} />
+                </motion.div>
+
+                {/* Wedding websites offer */}
+                <motion.div
+                    id="mariage"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.5, delay: 0.15 }}
+                    className="scroll-mt-24 md:col-span-2 lg:col-span-3"
+                >
+                    <WeddingCard />
                 </motion.div>
 
                 <motion.div

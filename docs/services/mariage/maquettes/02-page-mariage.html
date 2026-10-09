@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sites de mariage — AlexDevLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#F4F0E8; --paper:#FBF8F2; --ink:#1E1B17; --ink-soft:#3A342D; --muted:#6B6359;
+  --line:#DDD5C8; --line-soft:#E9E3D8; --gold:#9A7B4F; --gold-text:#7A5F37;
+  --night:#14120F; --night-2:#1E1B17; --night-line:#2E2A24; --night-text:#EDE7DC; --night-muted:#A39A8D;
+  --brand:#FF4D4D; --ok:#4F6B4A; --warn:#9A6A2F;
+  --serif:"Cormorant Garamond", Georgia, serif; --sans:"Poppins", system-ui, sans-serif;
+  --r:4px; --maxw:1200px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--ivory);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-text);font-weight:500}
+.display{font-family:var(--serif);font-weight:400;letter-spacing:-.01em;line-height:1.02}
+.display em{font-style:italic;color:var(--gold-text)}
+.lead{font-size:18px;color:var(--muted);max-width:56ch}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 22px;border-radius:var(--r);font:500 15px/1 var(--sans);text-decoration:none;cursor:pointer;border:1px solid transparent;transition:background .2s,color .2s,border-color .2s,transform .2s}
+.btn-ink{background:var(--ink);color:var(--paper)}
+.btn-ink:hover{background:#000}
+.btn-line{border-color:var(--ink);color:var(--ink);background:transparent}
+.btn-line:hover{background:var(--ink);color:var(--paper)}
+.btn svg{width:16px;height:16px}
+:focus-visible{outline:2px solid var(--gold-text);outline-offset:3px}
+section{padding:120px 0}
+.rule{height:1px;background:var(--line)}
+.num{font-family:var(--serif);font-style:italic;color:var(--gold-text);font-size:24px}
+
+/* header */
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--ivory) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line-soft)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;text-decoration:none;letter-spacing:.02em}
+.logo i{width:10px;height:10px;border-radius:2px;background:var(--brand);display:block}
+.logo small{font-weight:400;color:var(--muted);font-size:13px;border-left:1px solid var(--line);padding-left:10px;margin-left:2px}
+nav.main{display:flex;gap:32px;font-size:14px}
+nav.main a{text-decoration:none;color:var(--ink-soft)}
+nav.main a:hover{color:var(--ink)}
+.top .btn{min-height:40px;padding:0 16px;font-size:14px}
+.logo{min-height:44px}
+@media(max-width:900px){.top .btn{min-height:44px}}
+@media(max-width:900px){nav.main{display:none}}
+
+/* hero */
+.hero{padding:88px 0 96px;position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center}
+.hero h1{font-size:clamp(46px,6vw,84px);margin:0 0 28px}
+.hero .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.hero .meta{display:flex;gap:28px;margin-top:48px;padding-top:28px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.hero .meta b{display:block;font-family:var(--serif);font-weight:500;font-size:28px;color:var(--ink);line-height:1.1}
+.stage{position:relative;height:640px}
+.photo-back{position:absolute;right:0;top:0;width:78%;height:88%;object-fit:cover;border-radius:2px;filter:saturate(.85)}
+.phone{position:absolute;left:0;bottom:0;width:280px;height:572px;border-radius:40px;background:#111;padding:10px;box-shadow:0 40px 80px -30px rgba(30,27,23,.55)}
+.phone .screen{width:100%;height:100%;border-radius:31px;overflow:hidden;background:#EFEAE0;position:relative}
+.ph-cover{height:58%;position:relative}
+.ph-cover img{width:100%;height:100%;object-fit:cover}
+.ph-cover:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(20,18,15,.78))}
+.ph-names{position:absolute;left:18px;right:18px;bottom:16px;color:#F6F1E8;z-index:2}
+.ph-names .n{font-family:"Bodoni Moda",var(--serif);font-style:italic;font-size:34px;line-height:1}
+.ph-names .d{font-size:10px;letter-spacing:.2em;text-transform:uppercase;margin-top:8px}
+.ph-body{padding:18px}
+.ph-body .hi{font-family:var(--serif);font-size:19px;line-height:1.2}
+.ph-body p{font-size:11px;color:#5d564c;margin-top:6px;line-height:1.5}
+.ph-cta{margin-top:14px;background:#1F1D1A;color:#EFEAE0;text-align:center;font-size:12px;padding:11px;border-radius:3px}
+.float{position:absolute;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px 16px;box-shadow:0 10px 24px -16px rgba(30,27,23,.35);font-size:13px}
+.float .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.float .v{font-family:var(--serif);font-size:30px;line-height:1.1}
+.float .bar{height:4px;background:var(--line-soft);border-radius:2px;margin-top:8px;width:180px;overflow:hidden}
+.float .bar i{display:block;height:100%;width:71%;background:var(--ok)}
+.f1{right:-8px;bottom:120px}
+.f2{right:56px;top:36px;display:flex;align-items:center;gap:10px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+@media(max-width:980px){.hero .wrap{grid-template-columns:1fr}.stage{height:560px;max-width:520px}}
+
+/* moments */
+.moments{background:var(--paper);border-block:1px solid var(--line-soft)}
+.sec-head{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end;margin-bottom:64px}
+.sec-head h2{font-size:clamp(38px,4.6vw,60px);margin-top:14px}
+.sec-head p{color:var(--muted);font-size:17px}
+@media(max-width:860px){.sec-head{grid-template-columns:1fr}}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--ink)}
+.moment{padding:28px 28px 0 0;position:relative}
+.moment:before{content:"";position:absolute;top:-5px;left:0;width:9px;height:9px;border-radius:50%;background:var(--ivory);border:1px solid var(--ink)}
+.moment .when{font-size:13px;color:var(--gold-text);margin-top:14px;font-style:italic;font-family:var(--serif);font-size:18px}
+.moment h3{font-family:var(--serif);font-weight:500;font-size:28px;line-height:1.15;margin:14px 0 10px}
+.moment p{font-size:14.5px;color:var(--ink-soft);margin-top:8px}
+@media(max-width:860px){.timeline{grid-template-columns:1fr 1fr;row-gap:40px}}
+@media(max-width:520px){.timeline{grid-template-columns:1fr}}
+
+/* demo */
+.demo{padding:0;background:var(--night);color:var(--night-text)}
+.demo-grid{display:grid;grid-template-columns:1.25fr 1fr;min-height:640px}
+.demo-img{position:relative;overflow:hidden}
+.demo-img img{width:100%;height:100%;object-fit:cover;filter:saturate(.8) brightness(.92)}
+.demo-img .cap{position:absolute;left:28px;bottom:24px;font-family:var(--serif);font-style:italic;font-size:18px;color:#F4EEE3;text-shadow:0 1px 12px rgba(0,0,0,.5)}
+.demo-copy{padding:88px 64px;display:flex;flex-direction:column;justify-content:center}
+.demo-copy .eyebrow{color:#C9AE82}
+.demo-copy h2{font-family:"Bodoni Moda",var(--serif);font-style:italic;font-weight:400;font-size:clamp(48px,5vw,72px);line-height:1;margin:18px 0 8px}
+.demo-copy .date{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--night-muted)}
+.demo-copy p{color:var(--night-muted);margin:28px 0 36px;max-width:44ch}
+.demo-copy ul{list-style:none;display:grid;gap:12px;margin-bottom:40px;font-size:14.5px}
+.demo-copy li{display:flex;gap:12px;align-items:baseline;border-bottom:1px solid var(--night-line);padding-bottom:12px}
+.demo-copy li span{font-family:var(--serif);font-style:italic;color:#C9AE82;min-width:24px}
+.btn-paper{background:var(--ivory);color:var(--ink)}
+.btn-paper:hover{background:#fff}
+.btn-ghost-n{border-color:#4a443b;color:var(--night-text)}
+.btn-ghost-n:hover{border-color:var(--night-text)}
+@media(max-width:900px){.demo-grid{grid-template-columns:1fr}.demo-img{height:420px}.demo-copy{padding:56px 24px}}
+
+/* features */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.feat{padding:36px 32px 40px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:transparent;transition:background .25s}
+.feat:hover{background:var(--paper)}
+.feat .ic{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;color:var(--gold-text);margin-bottom:28px}
+.feat .ic svg{width:20px;height:20px}
+.feat h3{font-family:var(--serif);font-weight:500;font-size:26px;line-height:1.2;margin-bottom:10px}
+.feat p{font-size:14.5px;color:var(--ink-soft)}
+.feat .tag{display:inline-block;margin-top:18px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:4px 8px;border-radius:2px}
+@media(max-width:900px){.feat-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.feat-grid{grid-template-columns:1fr}}
+
+/* dashboard band */
+.dash{background:var(--night);color:var(--night-text)}
+.dash .sec-head p{color:var(--night-muted)}
+.dash .eyebrow{color:#C9AE82}
+.dash .display em{color:#C9AE82}
+.dash-frame{border:1px solid var(--night-line);border-radius:8px;overflow:hidden;background:#F7F4EE;color:var(--ink)}
+.dash-bar{height:36px;background:#E9E4DA;display:flex;align-items:center;gap:6px;padding:0 14px}
+.dash-bar i{width:10px;height:10px;border-radius:50%;background:#CFC6B8}
+.dash-bar span{margin-left:14px;font-size:12px;color:var(--muted)}
+.dash-in{display:grid;grid-template-columns:200px 1fr;min-height:420px}
+.dash-side{border-right:1px solid var(--line);padding:22px 16px;font-size:13px;display:flex;flex-direction:column;gap:4px}
+.dash-side b{font-family:var(--serif);font-size:20px;font-weight:500;margin-bottom:16px;padding-left:10px}
+.dash-side a{text-decoration:none;padding:8px 10px;border-radius:4px;color:var(--ink-soft)}
+.dash-side a.on{background:var(--ink);color:var(--paper)}
+.dash-main{padding:24px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:#fff;border:1px solid var(--line-soft);border-radius:6px;padding:14px}
+.kpi .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.kpi .v{font-family:var(--serif);font-size:34px;line-height:1.1}
+.kpi .s{font-size:12px;color:var(--muted)}
+.rows{margin-top:16px;background:#fff;border:1px solid var(--line-soft);border-radius:6px}
+.row{display:grid;grid-template-columns:1.4fr 1fr 1fr .8fr;padding:12px 16px;font-size:13px;border-bottom:1px solid var(--line-soft);align-items:center}
+.row:last-child{border:0}
+.row.h{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:3px 9px;border-radius:20px;width:max-content}
+.chip.y{background:#E5EBDF;color:#3D5537}.chip.n{background:#F1E3DD;color:#7E3D2A}.chip.p{background:#EFE8DA;color:#7A5F37}
+.dash-points{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:48px}
+.dash-points div{border-top:1px solid var(--night-line);padding-top:18px;font-size:14.5px;color:var(--night-muted)}
+.dash-points b{display:block;color:var(--night-text);font-weight:500;margin-bottom:6px}
+@media(max-width:900px){.dash-in{grid-template-columns:1fr}.dash-side{display:none}.kpis{grid-template-columns:1fr 1fr}.dash-points{grid-template-columns:1fr}.row{grid-template-columns:1.4fr 1fr}.row>*:nth-child(n+3){display:none}}
+
+/* process */
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;counter-reset:s}
+.step{padding:0 24px 0 0;border-left:1px solid var(--line);padding-left:20px}
+.step .num{font-size:40px;line-height:1}
+.step h3{font-weight:500;font-size:16px;margin:16px 0 6px}
+.step p{font-size:14px;color:var(--muted)}
+.step .d{display:inline-block;margin-top:14px;font-size:13px;color:var(--gold-text)}
+@media(max-width:900px){.steps{grid-template-columns:1fr 1fr;row-gap:36px}}
+
+/* pricing */
+.pricing{background:var(--paper);border-block:1px solid var(--line-soft)}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+.plan{border:1px solid var(--line);border-radius:6px;padding:36px 30px;background:var(--ivory);display:flex;flex-direction:column;position:relative}
+.plan.pop{background:var(--ink);color:var(--night-text);border-color:var(--ink)}
+.plan .badge{position:absolute;top:-12px;left:30px;background:#C9AE82;color:var(--ink);font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:2px}
+.plan h3{font-family:var(--serif);font-weight:500;font-size:34px}
+.plan .for{font-size:14px;color:var(--muted);margin-top:4px;min-height:44px}
+.plan.pop .for{color:var(--night-muted)}
+.plan .price{display:flex;align-items:baseline;gap:8px;margin:24px 0;padding-bottom:24px;border-bottom:1px solid var(--line)}
+.plan.pop .price{border-color:var(--night-line)}
+.plan .price b{font-family:var(--serif);font-weight:500;font-size:60px;line-height:1}
+.plan .price span{font-size:13px;color:var(--muted)}
+.plan.pop .price span{color:var(--night-muted)}
+.plan ul{list-style:none;display:grid;gap:11px;font-size:14.5px;flex:1}
+.plan li{display:flex;gap:10px;align-items:flex-start}
+.plan li svg{width:16px;height:16px;flex:none;margin-top:4px;color:var(--gold)}
+.plan.pop li svg{color:#C9AE82}
+.plan li.inh{color:var(--muted);font-style:italic}
+.plan.pop li.inh{color:var(--night-muted)}
+.plan .btn{margin-top:32px;justify-content:center}
+.plan.pop .btn{background:var(--ivory);color:var(--ink)}
+.plan .delay{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+.plan.pop .delay{color:var(--night-muted)}
+.options{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line)}
+.options div{padding:16px 16px 16px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;font-size:14px;margin-right:24px}
+.options b{font-weight:500;white-space:nowrap}
+.legal{font-size:12.5px;color:var(--muted);margin-top:20px}
+@media(max-width:960px){.plans{grid-template-columns:1fr;max-width:480px;margin:0 auto}.options{grid-template-columns:1fr}}
+
+/* compare */
+.cmp{width:100%;border-collapse:collapse;font-size:14.5px}
+.cmp th,.cmp td{text-align:left;padding:16px 12px;border-bottom:1px solid var(--line)}
+.cmp thead th{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.cmp thead th.me{color:var(--ink)}
+.cmp td.me{background:var(--paper);font-weight:500}
+.cmp tbody th{font-weight:400;color:var(--ink-soft)}
+.scroll-x{overflow-x:auto}
+
+/* faq */
+.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:64px}
+details{border-bottom:1px solid var(--line)}
+details:first-of-type{border-top:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:24px;padding:22px 0;font-family:var(--serif);font-size:23px;font-weight:500}
+summary::-webkit-details-marker{display:none}
+summary .pm{flex:none;width:28px;height:28px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;transition:transform .25s}
+details[open] summary .pm{transform:rotate(45deg)}
+details p{padding:0 48px 24px 0;color:var(--ink-soft);font-size:15px}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr;gap:32px}}
+
+/* contact */
+.contact{background:var(--night);color:var(--night-text)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:72px;align-items:start}
+.contact .display em{color:#C9AE82}
+.contact .eyebrow{color:#C9AE82}
+.contact .lead{color:var(--night-muted)}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:18px 16px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+.field label{font-size:13px;color:var(--night-text)}
+.field label small{color:var(--night-muted)}
+.field input,.field select,.field textarea{background:transparent;border:1px solid #3B362F;border-radius:4px;color:var(--night-text);font:15px var(--sans);padding:13px 14px;min-height:48px}
+.field textarea{min-height:110px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:#C9AE82}
+.field select option{color:#111;background:#fff}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg label{border:1px solid #3B362F;border-radius:4px;padding:10px 14px;font-size:14px;cursor:pointer;min-height:44px;display:flex;align-items:center}
+.seg input{position:absolute;opacity:0}
+.seg input:checked+span{color:#C9AE82}
+.seg label:has(input:checked){border-color:#C9AE82}
+.consent{display:flex;gap:10px;font-size:13px;color:var(--night-muted);align-items:flex-start}
+.consent input{margin-top:4px;accent-color:#C9AE82}
+.contact .reassure{margin-top:40px;display:grid;gap:14px;font-size:14px;color:var(--night-muted)}
+.contact .reassure div{display:flex;gap:12px;align-items:center}
+.contact .reassure svg{width:18px;height:18px;color:#C9AE82;flex:none}
+@media(max-width:900px){.contact-grid{grid-template-columns:1fr}.form{grid-template-columns:1fr}}
+
+footer{background:var(--night);color:var(--night-muted);border-top:1px solid var(--night-line);font-size:13px;padding:28px 0}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a href="#" class="logo"><i></i>AlexDevLab <small>Mariage</small></a>
+    <nav class="main" aria-label="Navigation de la page">
+      <a href="#moments">L'expérience</a>
+      <a href="#demo">Démo</a>
+      <a href="#fonctionnalites">Fonctionnalités</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a href="#contact" class="btn btn-ink">Parler de mon mariage</a>
+  </div>
+</header>
+
+<main>
+<!-- 1. HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <h1 class="display">Un site à votre image, <em>de l'annonce</em> au dernier souvenir.</h1>
+      <p class="lead">Faire-part numérique, réponses de vos invités, infos du jour J et photos partagées. Un seul lien par foyer, un tableau de bord pour vous, un design qui n'existe qu'une fois.</p>
+      <div class="actions">
+        <a href="#contact" class="btn btn-ink">Parler de mon mariage
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="03-demo-camille-hugo.html" class="btn btn-line">Voir le site démo</a>
+      </div>
+      <div class="meta">
+        <div><b>30 s</b>pour répondre</div>
+        <div><b>0</b>application à installer</div>
+        <div><b>12 mois</b>en ligne, domaine inclus</div>
+      </div>
+    </div>
+    <div class="stage" aria-hidden="true">
+      <img class="photo-back" src="https://images.pexels.com/photos/13765483/pexels-photo-13765483.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1100&w=760" alt="">
+      <div class="phone"><div class="screen">
+        <div class="ph-cover">
+          <img src="https://images.pexels.com/photos/9755935/pexels-photo-9755935.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=700&w=520" alt="">
+          <div class="ph-names"><div class="n">Camille<br>&amp; Hugo</div><div class="d">12 · 06 · 2027 — Luberon</div></div>
+        </div>
+        <div class="ph-body">
+          <div class="hi">Chers Marie &amp; Thomas,</div>
+          <p>Nous serions heureux de vous compter parmi nous pour la cérémonie et le dîner.</p>
+          <div class="ph-cta">Répondre avant le 1er mai</div>
+        </div>
+      </div></div>
+      <div class="float f2"><span class="dot"></span><span>Marie a répondu · <b>2 présents</b></span></div>
+      <div class="float f1">
+        <div class="k">Réponses reçues</div>
+        <div class="v">86 <span style="font-size:16px;color:var(--muted)">/ 121</span></div>
+        <div class="bar"><i></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. MOMENTS -->
+<section class="moments" id="moments">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">L'expérience invité</span>
+        <h2 class="display">Quatre moments, <em>un seul lien.</em></h2></div>
+      <p>Vos invités reçoivent un lien personnel. Il les accompagne de l'annonce jusqu'aux photos du lendemain, sans compte, sans mot de passe, sur le téléphone qu'ils ont en main.</p>
+    </div>
+    <div class="timeline reveal">
+      <div class="moment"><span class="num">i.</span><h3>Le faire-part</h3><div class="when">6 mois avant</div>
+        <p>Une ouverture animée, leurs prénoms, la date. L'aperçu WhatsApp est déjà soigné.</p></div>
+      <div class="moment"><span class="num">ii.</span><h3>La réponse en 30 secondes</h3><div class="when">Jusqu'à la date limite</div>
+        <p>Le foyer est pré-rempli. Chacun répond pour chaque moment auquel il est invité, régime compris.</p></div>
+      <div class="moment"><span class="num">iii.</span><h3>Le programme et les photos</h3><div class="when">Le jour J</div>
+        <p>Horaires, lieux, dress code. Un QR code sur les tables, les photos arrivent dans votre galerie.</p></div>
+      <div class="moment"><span class="num">iv.</span><h3>Les souvenirs</h3><div class="when">Le lendemain</div>
+        <p>Une galerie privée, votre message de remerciement, tout reste en ligne une année.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. DEMO -->
+<section class="demo" id="demo">
+  <div class="demo-grid">
+    <div class="demo-img">
+      <img src="https://images.pexels.com/photos/29175671/pexels-photo-29175671.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1000&w=1100" alt="Couple de mariés marchant dans une cour de pierre">
+      <span class="cap">Projet démo · direction éditoriale</span>
+    </div>
+    <div class="demo-copy reveal">
+      <span class="eyebrow">Projet d'exemple</span>
+      <h2>Camille &amp; Hugo</h2>
+      <div class="date">12 juin 2027 · Domaine des Oliviers, Luberon</div>
+      <p>Un mariage en trois temps — mairie, cérémonie laïque, dîner — et un brunch le dimanche. Une mise en page de magazine, des photos plein cadre, une typographie qui a du caractère.</p>
+      <ul>
+        <li><span>01</span>Faire-part qui s'ouvre au prénom de l'invité</li>
+        <li><span>02</span>Programme filtré&nbsp;: vin d'honneur seul ou dîner</li>
+        <li><span>03</span>Réponses des invités par personne et par moment</li>
+        <li><span>04</span>Galerie alimentée par les invités</li>
+      </ul>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="03-demo-camille-hugo.html" class="btn btn-paper">Ouvrir le site démo</a>
+        <a href="04-dashboard.html" class="btn btn-ghost-n">Voir le tableau de bord</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. FEATURES -->
+<section id="fonctionnalites">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Ce qui est inclus</span>
+        <h2 class="display">Tout ce dont vos invités ont besoin, <em>rien de plus.</em></h2></div>
+      <p>Pas de liste de cadeaux imposée, pas de publicité, pas de thème vu cent fois. Les briques essentielles, conçues pour votre mariage.</p>
+    </div>
+    <div class="feat-grid reveal">
+      <article class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m3 6 9 7 9-7"/></svg></div>
+        <h3>Faire-part numérique</h3><p>Ouverture animée, prénoms de l'invité, ajout au calendrier, aperçu soigné sur WhatsApp et iMessage.</p><span class="tag">Toutes formules</span></article>
+      <article class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></div>
+        <h3>Réponses des invités par lien personnel</h3><p>Un lien par foyer&nbsp;: noms pré-remplis, réponse par personne et par moment, régimes, modifiable jusqu'à la date limite.</p><span class="tag">Toutes formules</span></article>
+      <article class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+        <h3>Infos pratiques</h3><p>Programme, lieux avec itinéraire, dress code et nuancier, questions fréquentes. Chacun ne voit que ce qui le concerne.</p><span class="tag">Toutes formules</span></article>
+      <article class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg></div>
+        <h3>Galerie des invités</h3><p>Un QR code sur les tables, les photos arrivent sans application. Vous les retrouvez toutes et les téléchargez en un clic.</p><span class="tag">Essentiel et Signature</span></article>
+      <article class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+        <h3>Tableau de bord</h3><p>Qui a ouvert, qui a répondu, combien de végétariens. Relances, export pour le traiteur.</p><span class="tag">Toutes formules</span></article>
+      <article class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/><rect x="6" y="14" width="12" height="7"/></svg></div>
+        <h3>Du site au papier</h3><p>Le faire-part en PDF avec son QR code. En Signature, toute la papeterie du jour J assortie, et chaque invité trouve sa table en scannant un QR code.</p><span class="tag">Essentiel et Signature</span></article>
+    </div>
+  </div>
+</section>
+
+<!-- 5. DASHBOARD -->
+<section class="dash">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Votre espace</span>
+        <h2 class="display">Vous, <em>vous gardez la main.</em></h2></div>
+      <p>Fini le tableur partagé et les messages « tu as eu la réponse de tante Brigitte&nbsp;? ». Les réponses tombent, le tableau se met à jour.</p>
+    </div>
+    <div class="dash-frame reveal" aria-label="Aperçu du tableau de bord">
+      <div class="dash-bar"><i></i><i></i><i></i><span>app.mariage.alexdevlab.fr / camille-hugo</span></div>
+      <div class="dash-in">
+        <div class="dash-side"><b>Camille &amp; Hugo</b>
+          <a class="on">Vue d'ensemble</a><a>Invités</a><a>Récap traiteur</a><a>Plan de table</a><a>Galerie</a><a>Relances</a><a>Paramètres</a></div>
+        <div class="dash-main">
+          <div class="kpis">
+            <div class="kpi"><div class="k">Réponses</div><div class="v">86</div><div class="s">sur 121 invités · 71 %</div></div>
+            <div class="kpi"><div class="k">Au dîner</div><div class="v">74</div><div class="s">dont 9 enfants</div></div>
+            <div class="kpi"><div class="k">Régimes</div><div class="v">11</div><div class="s">8 végé · 3 sans gluten</div></div>
+            <div class="kpi"><div class="k">Date limite</div><div class="v">J-23</div><div class="s">relance auto J-15</div></div>
+          </div>
+          <div class="rows">
+            <div class="row h"><span>Foyer</span><span>Cérémonie</span><span>Dîner</span><span>Ouvert</span></div>
+            <div class="row"><span>Marie &amp; Thomas Lefèvre</span><span class="chip y">2 présents</span><span class="chip y">2 présents</span><span>il y a 2 h</span></div>
+            <div class="row"><span>Famille Moreau (4)</span><span class="chip y">4 présents</span><span class="chip p">En attente</span><span>hier</span></div>
+            <div class="row"><span>Julien Bertrand</span><span class="chip n">Absent</span><span class="chip n">Absent</span><span>3 j</span></div>
+            <div class="row"><span>Inès &amp; Karim</span><span class="chip p">Non ouvert</span><span class="chip p">Non ouvert</span><span>—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-points">
+      <div><b>Suivi en temps réel</b>Ouverture du lien, réponse, modification&nbsp;: tout est horodaté.</div>
+      <div><b>Relances sans gêne</b>Un rappel automatique avant la date limite, seulement à ceux qui n'ont pas répondu.</div>
+      <div><b>Export traiteur</b>Effectifs par moment, régimes et enfants, en un clic.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. PROCESS -->
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Comment ça se passe</span>
+        <h2 class="display">De notre premier appel <em>à la mise en ligne.</em></h2></div>
+      <p>Idéalement 6 à 9 mois avant le mariage. Possible jusqu'à 2 mois avant, selon le planning.</p>
+    </div>
+    <div class="steps reveal">
+      <div class="step"><span class="num">1</span><h3>On se rencontre</h3><p>30 minutes en visio&nbsp;: votre mariage, vos envies, vos invités.</p><span class="d">Gratuit</span></div>
+      <div class="step"><span class="num">2</span><h3>Vous me racontez</h3><p>Un questionnaire, vos photos, vos textes et la liste des invités en CSV.</p><span class="d">1 semaine</span></div>
+      <div class="step"><span class="num">3</span><h3>Je propose</h3><p>Une direction visuelle et la page d'accueil. On ajuste ensemble.</p><span class="d">1 semaine</span></div>
+      <div class="step"><span class="num">4</span><h3>On met en ligne</h3><p>Votre domaine, vos liens personnels prêts à envoyer, le PDF à imprimer.</p><span class="d">1 à 2 semaines</span></div>
+      <div class="step"><span class="num">5</span><h3>Je reste là</h3><p>Ajustements, relances, support le jour J, galerie après la fête.</p><span class="d">12 mois</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. PRICING -->
+<section class="pricing" id="tarifs">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Tarifs</span>
+        <h2 class="display">Trois formules, <em>un même soin.</em></h2></div>
+      <p>Domaine personnalisé et 12 mois d'hébergement inclus. Acompte de 40 % à la commande, solde à la mise en ligne.</p>
+    </div>
+    <div class="plans">
+      <article class="plan reveal">
+        <h3>Intime</h3><p class="for">Annoncer votre mariage et recevoir les réponses.</p>
+        <div class="price"><b>290</b><span>€</span></div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Un design standard, à vos couleurs et photos</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Faire-part animé à l'ouverture</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Réponses des invités par lien personnel, pour tous vos moments (mairie, cérémonie, dîner, brunch…)</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Notre histoire, programme, lieux, FAQ</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Votre dress code en une ligne, bien visible</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Questions de base&nbsp;: contraintes alimentaires, mot pour les mariés</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Tableau de bord + export CSV</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Votre nom de domaine, 12 mois en ligne</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>1 aller-retour</li>
+        </ul>
+        <a href="#contact" class="btn btn-line">Choisir Intime</a><p class="delay">Livré en 10 jours</p>
+      </article>
+      <article class="plan reveal">
+        <h3>Essentiel</h3><p class="for">Tout le parcours, jusqu'aux photos de vos invités.</p>
+        <div class="price"><b>490</b><span>€</span></div>
+        <ul>
+          <li class="inh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/></svg>Tout Intime, plus&nbsp;:</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Galerie des invités par QR code</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Compte à rebours et dress code illustrée (nuancier)</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Relances automatiques avant la date limite</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Faire-part PDF + QR code à imprimer</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Design ajusté&nbsp;: palette, typos, mise en page</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>2 allers-retours</li>
+        </ul>
+        <a href="#contact" class="btn btn-line">Choisir Essentiel</a><p class="delay">Livré en 2 semaines</p>
+      </article>
+      <article class="plan pop reveal">
+        <span class="badge">Le plus choisi</span>
+        <h3>Signature</h3><p class="for">Tout votre mariage dans un même univers, de l'écran au papier.</p>
+        <div class="price"><b>990</b><span>€</span></div>
+        <ul>
+          <li class="inh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/></svg>Tout Essentiel, plus&nbsp;:</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Un univers graphique créé pour vous, validé sur une planche d'inspiration</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Animation du faire-part conçue pour vous</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Papeterie assortie à imprimer&nbsp;: menu, plan de table, marque-places, remerciements</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Plan de table numérique&nbsp;: chaque invité trouve sa table en scannant un QR code</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Faire-part avec QR personnel par foyer</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Co-gestion avec vos témoins ou votre wedding planner</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>3 allers-retours</li>
+        </ul>
+        <a href="#contact" class="btn">Choisir Signature</a><p class="delay">Site en 3 semaines, papeterie au plus tard 1 mois avant</p>
+      </article>
+    </div>
+    <div class="options reveal">
+      <div><span>Vos propres questions aux invités</span><b>40 €</b></div>
+      <div><span>Galerie invités (Intime)</span><b>190 €</b></div>
+      <div><span>Faire-part PDF + QR (Intime)</span><b>60 €</b></div>
+      <div><span>QR personnel par foyer (Intime, Essentiel)</span><b>90 €</b></div>
+      <div><span>Co-gestion (Intime, Essentiel)</span><b>60 €</b></div>
+      <div><span>Site bilingue</span><b>150 €</b></div>
+      <div><span>Support print supplémentaire</span><b>60 €</b></div>
+      <div><span>Prolongation du site</span><b>49 € / an</b></div>
+      <div><span>Livraison express</span><b>150 €</b></div>
+      <div><span>Design 100 % sur-mesure</span><b>sur devis</b></div>
+    </div>
+    <p class="legal">TVA non applicable, art. 293 B du CGI. PACS, fiançailles, anniversaires&nbsp;: sur demande, à partir de la formule Intime.</p>
+  </div>
+</section>
+
+<!-- 8. COMPARE -->
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div><span class="eyebrow">Comparatif</span>
+        <h2 class="display">Un modèle, <em>ou votre site&nbsp;?</em></h2></div>
+      <p>Les plateformes en ligne proposent des modèles, de la version gratuite avec publicité jusqu'à 300 €. Les agences, des budgets à quatre chiffres. Entre les deux&nbsp;: un design pensé pour vous et un seul interlocuteur.</p>
+    </div>
+    <div class="scroll-x reveal">
+    <table class="cmp">
+      <thead><tr><th scope="col"></th><th scope="col">Plateformes en ligne</th><th scope="col">Agence événementielle</th><th scope="col" class="me">AlexDevLab</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Design</th><td>Thème parmi des centaines</td><td>Sur-mesure</td><td class="me">Sur-mesure</td></tr>
+        <tr><th scope="row">Lien personnel par foyer</th><td>Selon la plateforme</td><td>Variable</td><td class="me">Toujours</td></tr>
+        <tr><th scope="row">Publicité, upsell</th><td>Souvent, sur les offres gratuites</td><td>Non</td><td class="me">Non</td></tr>
+        <tr><th scope="row">Données hébergées en Europe</th><td>Pas toujours</td><td>Variable</td><td class="me">Oui, purge programmée</td></tr>
+        <tr><th scope="row">Votre nom de domaine</th><td>En option payante</td><td>Oui</td><td class="me">Inclus</td></tr>
+        <tr><th scope="row">Prix</th><td>0 € à 300 €</td><td>2 500 € et plus</td><td class="me">290 € à 990 €</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- 9. FAQ -->
+<section id="faq" style="padding-top:0">
+  <div class="wrap faq-grid">
+    <div class="reveal"><span class="eyebrow">Questions fréquentes</span>
+      <h2 class="display" style="font-size:clamp(38px,4.6vw,60px);margin-top:14px">Ce qu'on me <em>demande souvent.</em></h2></div>
+    <div class="reveal">
+      <details open><summary>Et si un invité n'a pas de smartphone&nbsp;?<span class="pm" aria-hidden="true">+</span></summary>
+        <p>Le faire-part papier fourni en PDF porte un QR code et l'adresse du site. Vous pouvez aussi saisir sa réponse vous-même depuis le tableau de bord.</p></details>
+      <details><summary>Nos invités doivent-ils créer un compte&nbsp;?<span class="pm" aria-hidden="true">+</span></summary>
+        <p>Non. Chaque foyer reçoit un lien personnel qui l'identifie. Pour la galerie, un QR code suffit.</p></details>
+      <details><summary>Peut-on modifier le site après la mise en ligne&nbsp;?<span class="pm" aria-hidden="true">+</span></summary>
+        <p>Oui, les changements d'horaires, de textes ou de FAQ sont inclus pendant toute la durée de mise en ligne.</p></details>
+      <details><summary>Que deviennent les données de nos invités&nbsp;?<span class="pm" aria-hidden="true">+</span></summary>
+        <p>Elles sont hébergées en Europe, jamais revendues, et supprimées trois mois après le mariage. Vous recevez un export complet avant.</p></details>
+      <details><summary>Le nom de domaine nous appartient-il&nbsp;?<span class="pm" aria-hidden="true">+</span></summary>
+        <p>Il est réservé et renouvelé par mes soins pendant le contrat, puis transférable à votre nom sur simple demande.</p></details>
+      <details><summary>Combien de temps à l'avance faut-il s'y prendre&nbsp;?<span class="pm" aria-hidden="true">+</span></summary>
+        <p>Idéalement 6 à 9 mois avant, pour envoyer les liens 4 à 6 mois avant la date. Minimum 2 mois.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- 10. CONTACT -->
+<section class="contact" id="contact">
+  <div class="wrap contact-grid">
+    <div class="reveal">
+      <span class="eyebrow">Parlons de votre mariage</span>
+      <h2 class="display" style="font-size:clamp(42px,5vw,68px);margin:14px 0 22px">Racontez-moi <em>votre jour.</em></h2>
+      <p class="lead">Je réponds sous 48 heures avec une première idée de direction et une date pour en parler de vive voix.</p>
+      <div class="reassure">
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Premier échange gratuit, sans engagement</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Rétractation de 14 jours</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Un seul interlocuteur, du début à la fin</div>
+      </div>
+    </div>
+    <form class="form reveal" onsubmit="event.preventDefault()">
+      <div class="field"><label for="n">Vos prénoms</label><input id="n" placeholder="Camille & Hugo" autocomplete="name"></div>
+      <div class="field"><label for="e">Email</label><input id="e" type="email" autocomplete="email"></div>
+      <div class="field"><label for="d">Date du mariage <small>(même approximative)</small></label><input id="d" type="text" placeholder="Juin 2027"></div>
+      <div class="field"><label for="g">Nombre d'invités</label>
+        <select id="g"><option>Moins de 60</option><option selected>60 à 120</option><option>120 à 200</option><option>Plus de 200</option></select></div>
+      <div class="field full"><label>Formule envisagée</label>
+        <div class="seg" role="radiogroup">
+          <label><input type="radio" name="f"><span>Intime</span></label>
+          <label><input type="radio" name="f"><span>Essentiel</span></label>
+          <label><input type="radio" name="f" checked><span>Signature</span></label>
+          <label><input type="radio" name="f"><span>Je ne sais pas encore</span></label>
+        </div></div>
+      <div class="field full"><label for="m">Votre mariage en quelques mots</label><textarea id="m" placeholder="Le lieu, l'ambiance, ce qui compte pour vous…"></textarea></div>
+      <label class="consent field full" style="flex-direction:row"><input type="checkbox"><span>J'accepte que ces informations soient utilisées pour me recontacter. Elles ne sont jamais partagées.</span></label>
+      <div class="field full"><button class="btn btn-paper" style="justify-content:center">Envoyer ma demande</button></div>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 AlexDevLab · Maquette — contenu indicatif</span><span>Photos&nbsp;: Pexels (anait film, Furknsaglam, Filip Rankovic Grobgaard)</span></div></footer>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

@@ -26,6 +26,11 @@ module.exports = {
                 protocol: "https",
                 hostname: "cdn.sanity.io",
             },
+            // Demo photos are hotlinked, as the Pexels licence asks.
+            {
+                protocol: "https",
+                hostname: "images.pexels.com",
+            },
         ],
     },
 };

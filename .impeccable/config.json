@@ -1,0 +1,44 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "docs/services/mariage/maquettes/*.html"
+        ],
+        "createdAt": "2026-10-06T06:30:07.358Z",
+        "reason": "user confirmed: chose 'Rupture élégante' ivory/serif/gold direction for wedding mockups"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "docs/services/mariage/maquettes/02-page-mariage.html"
+        ],
+        "createdAt": "2026-10-06T06:30:07.382Z",
+        "reason": "intentional full-bleed demo band and browser-chrome frame in mockup"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "docs/services/mariage/maquettes/03-demo-camille-hugo.html"
+        ],
+        "createdAt": "2026-10-06T06:32:20.811Z",
+        "reason": "segmented yes/no control, colour swatches and map are intentionally edge-to-edge"
+      },
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "docs/services/mariage/maquettes/03-demo-camille-hugo.html"
+        ],
+        "createdAt": "2026-10-06T07:00:07.312Z",
+        "reason": "display headings (Bodoni/script names, 24-30px titles) intentionally set at 1.1-1.25; body text stays 1.65"
+      }
+    ]
+  }
+}

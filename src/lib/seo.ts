@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 import { getProjectUrl } from "@/lib/projects";
 import type { PricingPlan, Project, Service, SiteSettings } from "@/lib/sanity/types";
+import { DASHBOARD_PATH } from "@/lib/wedding-demo/routes";
+import type { WeddingPlan, WeddingService } from "@/lib/wedding-service/types";
 
 /**
  * Single source of truth for SEO: metadata, JSON-LD, sitemap, robots and llms.txt
@@ -73,13 +75,24 @@ type PageMetadataOptions = {
     title: string;
     description: string;
     path: string;
+    /** A page's own share image, 1200 × 630; the studio's card otherwise. */
+    image?: { url: string; alt: string };
+    /** Its short name in the breadcrumb trail, when the title says more. */
+    crumb?: string;
+    /** "YYYY-MM-DD": the page's last real change; the legal pages' date otherwise. */
+    updatedAt?: string;
 };
 
 /**
  * Child routes inherit `alternates` and `openGraph` from the root layout, so every
  * page must declare its own canonical and og:url or Google folds it into the homepage.
  */
-export const buildPageMetadata = ({ title, description, path }: PageMetadataOptions): Metadata => ({
+export const buildPageMetadata = ({
+    title,
+    description,
+    path,
+    image,
+}: PageMetadataOptions): Metadata => ({
     title,
     description,
     alternates: { canonical: path },
@@ -90,13 +103,13 @@ export const buildPageMetadata = ({ title, description, path }: PageMetadataOpti
         siteName: site.name,
         locale: site.locale,
         type: "website",
-        images: [ogImage],
+        images: [image ? { ...ogImage, ...image } : ogImage],
     },
     twitter: {
         card: "summary_large_image",
         title: `${title} | ${site.name}`,
         description,
-        images: [ogImage.url],
+        images: [image?.url ?? ogImage.url],
     },
 });
 
@@ -253,7 +266,13 @@ export const buildHomeJsonLd = (source: JsonLdSource) => {
 };
 
 /** Lightweight graph for secondary pages: the page and its breadcrumb trail. */
-export const buildPageJsonLd = ({ title, description, path }: PageMetadataOptions) => ({
+export const buildPageJsonLd = ({
+    title,
+    description,
+    path,
+    crumb,
+    updatedAt,
+}: PageMetadataOptions) => ({
     "@context": "https://schema.org",
     "@graph": [
         {
@@ -265,14 +284,95 @@ export const buildPageJsonLd = ({ title, description, path }: PageMetadataOption
             inLanguage: site.language,
             isPartOf: { "@id": ids.website },
             publisher: { "@id": ids.business },
-            dateModified: site.legalPagesUpdatedAt,
+            dateModified: updatedAt ?? site.legalPagesUpdatedAt,
         },
         {
             "@type": "BreadcrumbList",
             itemListElement: [
                 { "@type": "ListItem", position: 1, name: "Accueil", item: site.url },
-                { "@type": "ListItem", position: 2, name: title, item: absoluteUrl(path) },
+                {
+                    "@type": "ListItem",
+                    position: 2,
+                    name: crumb ?? title,
+                    item: absoluteUrl(path),
+                },
             ],
+        },
+    ],
+});
+
+export const weddingPage = {
+    path: "/mariage",
+    /** What couples type, « site de mariage », first; under 60 characters with the brand. */
+    title: "Site de mariage sur-mesure, faire-part animé",
+    crumb: "Sites de mariage",
+    /** The default content's last change; Sanity's own date wins once it is published. */
+    updatedAt: "2026-10-08",
+    description:
+        "Faire-part numérique animé, réponses des invités par lien personnel, programme du jour J et galerie photo partagée. Un site de mariage unique, dès 290 €.",
+    /** Its own share image, built at deploy time: see app/(wedding)/mariage/partage. */
+    image: {
+        url: "/mariage/partage",
+        alt: "Un site de mariage sur-mesure par AlexDevLab : faire-part animé, réponses par foyer, jour J et photos, dès 290 €",
+    },
+} as const;
+
+/** The demo's share image: Camille & Hugo's faire-part, at a fixed address. */
+export const weddingDemoImage = {
+    url: "/mariage/demo/partage",
+    alt: "Faire-part de Camille & Hugo, exemple de site de mariage par AlexDevLab",
+};
+
+/** The couple's dashboard, playable with fictional data kept in the visitor's browser. */
+export const weddingDashboardDemoPage = {
+    path: DASHBOARD_PATH,
+    title: "Démo · tableau de bord des mariés",
+    description:
+        "Essayez le tableau de bord d'un site de mariage : réponses des invités en temps réel, récap traiteur, création de faire-part et relances. Données fictives, rien n'est envoyé.",
+    image: weddingDemoImage,
+} as const;
+
+const weddingOffer = (plan: WeddingPlan) => ({
+    "@type": "Offer",
+    name: plan.name,
+    description: plan.tagline,
+    price: String(plan.price),
+    priceCurrency: "EUR",
+    url: absoluteUrl(`${weddingPage.path}#tarifs`),
+});
+
+const faqNode = (content: WeddingService) => ({
+    "@type": "FAQPage",
+    "@id": `${absoluteUrl(weddingPage.path)}#faq`,
+    mainEntity: content.faq.items.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+});
+
+/** The wedding offer page: the page itself, the service with its three plans, and its FAQ. */
+export const buildWeddingJsonLd = (content: WeddingService) => ({
+    "@context": "https://schema.org",
+    "@graph": [
+        ...buildPageJsonLd(weddingPage)["@graph"],
+        faqNode(content),
+        {
+            "@type": "Service",
+            "@id": `${absoluteUrl(weddingPage.path)}#service`,
+            name: "Sites de mariage",
+            serviceType: "Création de site internet de mariage",
+            description: weddingPage.description,
+            provider: { "@id": ids.business },
+            areaServed: { "@type": "Country", name: "France" },
+            offers: content.pricing.plans.map(weddingOffer),
+        },
+        {
+            "@type": "Person",
+            "@id": ids.person,
+            name: site.author.name,
+            jobTitle: site.author.jobTitle,
+            image: absoluteUrl(content.about.photo.src),
         },
     ],
 });

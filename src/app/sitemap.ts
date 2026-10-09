@@ -1,14 +1,17 @@
 import type { MetadataRoute } from "next";
 
-import { getHomepageData, getLastContentUpdate } from "@/lib/sanity/sanity.query";
-import { absoluteUrl, site } from "@/lib/seo";
-
-const legalPages = ["/mentions-legales", "/politique-de-confidentialite", "/politique-de-cookies"];
+import {
+    getHomepageData,
+    getLastContentUpdate,
+    getWeddingService,
+} from "@/lib/sanity/sanity.query";
+import { sitemapEntries } from "@/lib/sitemap";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const [data, lastContentUpdate] = await Promise.all([
+    const [data, lastContentUpdate, wedding] = await Promise.all([
         getHomepageData(),
         getLastContentUpdate(),
+        getWeddingService(),
     ]);
 
     const images = [
@@ -16,19 +19,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ...data.projects.map((project) => project.cover?.image),
     ].filter((image): image is string => Boolean(image));
 
-    return [
-        {
-            url: absoluteUrl("/"),
-            lastModified: lastContentUpdate ?? undefined,
-            changeFrequency: "weekly",
-            priority: 1,
-            images,
-        },
-        ...legalPages.map((path) => ({
-            url: absoluteUrl(path),
-            lastModified: site.legalPagesUpdatedAt,
-            changeFrequency: "yearly" as const,
-            priority: 0.3,
-        })),
-    ];
+    return sitemapEntries({
+        images,
+        lastContentUpdate,
+        weddingUpdatedAt: wedding?.updatedAt ?? null,
+    });
 }

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 
+import { cn } from "@/lib/utils";
+
 import { CurrentYear } from "./current-year";
 
 const navItems = [
@@ -20,11 +22,37 @@ const legalLinks = [
     { label: "Cookies", href: "/politique-de-cookies" },
 ];
 
+export type FooterTone = "dark" | "ivory";
+
+/** Class sets per surface: the wedding page closes on paper, not on the dark portfolio. */
+const toneStyles = {
+    dark: {
+        footer: "bg-background/80 border-white/5",
+        text: "text-gray-400",
+        signature: "text-primary",
+        link: "text-gray-400 hover:text-white",
+        divider: "border-white/5",
+        legalLink: "text-gray-500 hover:text-gray-300",
+        dot: "text-gray-700",
+    },
+    ivory: {
+        footer: "bg-wed-paper border-wed-line",
+        text: "text-wed-muted",
+        signature: "text-wed-gold",
+        link: "text-wed-muted hover:text-wed-ink",
+        divider: "border-wed-line",
+        legalLink: "text-wed-muted hover:text-wed-ink",
+        dot: "text-wed-line",
+    },
+} as const satisfies Record<FooterTone, Record<string, string>>;
+
 type FooterProps = {
     renderedYear: number;
+    tone?: FooterTone;
 };
 
-export const Footer = ({ renderedYear }: FooterProps) => {
+export const Footer = ({ renderedYear, tone = "dark" }: FooterProps) => {
+    const styles = toneStyles[tone];
     const pathname = usePathname();
     const sectionHref = (hash: string) => (pathname === "/" ? hash : `/${hash}`);
 
@@ -33,14 +61,15 @@ export const Footer = ({ renderedYear }: FooterProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
-            className="bg-background/80 border-t border-white/5 backdrop-blur-xl"
+            className={cn("border-t backdrop-blur-xl", styles.footer)}
         >
             <div className="mx-auto max-w-350 px-6 py-8">
                 <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
                     {/* Copyright */}
-                    <div className="text-center text-sm text-gray-400 md:text-left">
+                    <div className={cn("text-center text-sm md:text-left", styles.text)}>
                         Copyright © <CurrentYear renderedYear={renderedYear} /> AlexDevLab |
-                        Designed by <span className="text-primary font-semibold">AlexDevLab</span>
+                        Designed by{" "}
+                        <span className={cn("font-semibold", styles.signature)}>AlexDevLab</span>
                     </div>
 
                     {/* Footer Navigation */}
@@ -53,7 +82,7 @@ export const Footer = ({ renderedYear }: FooterProps) => {
                                 key={item.href}
                                 href={sectionHref(item.href)}
                                 whileHover={{ y: -2 }}
-                                className="text-sm text-gray-400 transition-colors hover:text-white"
+                                className={cn("text-sm transition-colors", styles.link)}
                             >
                                 {item.label}
                             </motion.a>
@@ -63,18 +92,21 @@ export const Footer = ({ renderedYear }: FooterProps) => {
             </div>
 
             {/* Legal links — full-width border */}
-            <div className="border-t border-white/5">
+            <div className={cn("border-t", styles.divider)}>
                 <div className="mx-auto flex max-w-350 flex-wrap items-center justify-center gap-x-5 gap-y-2 px-6 py-6">
                     {legalLinks.map((item, index) => (
                         <span key={item.href} className="flex items-center gap-5">
                             <Link
                                 href={item.href}
-                                className="text-xs text-gray-500 transition-colors hover:text-gray-300"
+                                className={cn("text-xs transition-colors", styles.legalLink)}
                             >
                                 {item.label}
                             </Link>
                             {index < legalLinks.length - 1 && (
-                                <span className="hidden text-gray-700 sm:inline" aria-hidden="true">
+                                <span
+                                    className={cn("hidden sm:inline", styles.dot)}
+                                    aria-hidden="true"
+                                >
                                     ·
                                 </span>
                             )}

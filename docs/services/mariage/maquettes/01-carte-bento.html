@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carte bento mariage — AlexDevLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Bodoni+Moda:ital,opsz,wght@1,6..96,400&display=swap" rel="stylesheet">
+<style>
+/* tokens repris de src/app/globals.css */
+:root{
+  --background:#0A090D; --foreground:#F5F5F5; --primary:#FF4D4D; --muted-foreground:#9ca3af;
+  --border:rgba(255,255,255,.12);
+  --ivory:#F4F0E8; --paper:#FBF8F2; --ink:#1E1B17; --gold-soft:#C9AE82; --gold-text:#7A5F37;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--background);color:var(--foreground);font-family:"Poppins",sans-serif;-webkit-font-smoothing:antialiased;padding:48px 32px 80px}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--primary);outline-offset:4px}
+.container{max-width:1400px;margin:0 auto}
+.note{font-size:13px;color:var(--muted-foreground);margin-bottom:20px;display:flex;gap:10px;align-items:center}
+.note i{width:8px;height:8px;border-radius:50%;background:var(--primary)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.span3{grid-column:1/-1}
+.glass{position:relative;overflow:hidden;border-radius:24px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.02));backdrop-filter:blur(12px)}
+.ghost{padding:40px;opacity:.38}
+.ghost .ey{color:var(--primary);font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.ghost h2{font-size:34px;font-weight:700;margin-top:10px}
+.ghost h2 span{color:var(--primary)}
+.ghost .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px}
+.ghost .tiles div{height:120px;border-radius:16px;border:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.03)}
+
+/* ===== NOUVELLE CARTE ===== */
+.wed{display:grid;grid-template-columns:1.05fr 1fr;min-height:540px}
+.wed-copy{padding:48px 48px 44px;display:flex;flex-direction:column;position:relative;z-index:2}
+.ey{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--primary)}
+.new{font-size:11px;letter-spacing:.06em;text-transform:none;font-weight:500;color:var(--background);background:var(--gold-soft);padding:3px 9px;border-radius:20px}
+.wed h2{font-size:clamp(30px,3.4vw,46px);line-height:1.08;font-weight:700;margin-top:16px;letter-spacing:-.01em}
+.wed h2 em{font-family:"Cormorant Garamond",serif;font-weight:500;font-style:italic;font-size:1.18em;color:var(--gold-soft);letter-spacing:0}
+.wed p.lead{margin-top:18px;color:#d1d5db;font-size:17px;line-height:1.6;max-width:46ch}
+.feats{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;margin-top:28px}
+.feats li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:#d1d5db}
+.feats svg{width:18px;height:18px;flex:none;color:var(--gold-soft);margin-top:2px}
+.foot{margin-top:auto;padding-top:34px;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:0 22px;border-radius:12px;font:500 15px "Poppins",sans-serif;text-decoration:none;transition:background .2s,box-shadow .2s,border-color .2s}
+.btn svg{width:16px;height:16px}
+.btn-p{background:var(--primary);color:var(--background)}
+.btn-p:hover{background:#ff6b6b}
+.btn-g{border:1px solid var(--border);color:var(--foreground)}
+.btn-g:hover{border-color:rgba(255,255,255,.3)}
+.price{font-size:14px;color:var(--muted-foreground)}
+.price b{color:var(--foreground);font-weight:600}
+
+/* visuel : papier ivoire dans l'écrin sombre */
+.wed-vis{position:relative;overflow:hidden}
+.wed-vis:before{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 60% 50%,rgba(201,174,130,.16),transparent 70%)}
+.photo{position:absolute;right:-30px;top:40px;width:62%;height:78%;object-fit:cover;border-radius:4px;filter:grayscale(.15) brightness(.85);transform:rotate(4deg)}
+.paper{position:absolute;left:10%;top:48px;width:min(44%,300px);aspect-ratio:3/4.1;background:var(--paper);color:var(--ink);border-radius:2px;transform:rotate(-5deg);box-shadow:0 28px 36px -28px rgba(0,0,0,.85);padding:28px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.paper:before{content:"";position:absolute;inset:8px;border:1px solid #DDD5C8}
+.paper .to{font-size:11px;color:#6B6359}
+.paper .to b{display:block;font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;font-size:17px;color:var(--ink)}
+.paper .n{font-family:"Bodoni Moda",serif;font-style:italic;font-size:clamp(30px,3.2vw,44px);line-height:.95;margin:16px 0 10px}
+.paper .n i{display:block;font-size:.5em;color:var(--gold-text);margin:4px 0}
+.paper .d{font-size:11px;color:#3A342D}
+.paper .seal{margin-top:18px;width:46px;height:46px;border-radius:50%;background:#5E6B4E;color:#F7F4EE;display:grid;place-items:center;font-family:"Bodoni Moda",serif;font-style:italic;font-size:13px;box-shadow:inset 0 0 0 4px #4A5640}
+.glass:hover .paper{transform:rotate(-2deg) translateY(-6px)}
+.toast{position:absolute;left:6%;bottom:28px;z-index:2;background:rgba(20,18,15,.92);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;font-size:13px;color:#e5e7eb;backdrop-filter:blur(8px)}
+.toast .dot{width:8px;height:8px;border-radius:50%;background:#7FA36F}
+.toast b{font-weight:600}
+.stat{position:absolute;right:28px;bottom:28px;z-index:2;background:var(--paper);color:var(--ink);border-radius:8px;padding:12px 16px;font-size:12px}
+.stat b{display:block;font-family:"Cormorant Garamond",serif;font-weight:500;font-size:30px;line-height:1}
+
+@media(max-width:1024px){.wed{grid-template-columns:1fr}.wed-vis{height:420px;order:-1}}
+@media(max-width:640px){body{padding:24px 16px}.wed-copy{padding:28px 22px}.feats{grid-template-columns:1fr}.ghost{padding:24px}.ghost .tiles{grid-template-columns:1fr 1fr}.wed-vis{height:380px}.paper{width:56%;left:8%;top:28px}.stat{display:none}}
+@media (prefers-reduced-motion:reduce){.paper{transition:none}}
+
+.variants{margin-top:64px}
+.variants h3{font-size:14px;color:var(--muted-foreground);font-weight:500;margin-bottom:16px}
+.compact{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.mini{padding:28px;display:flex;flex-direction:column;gap:14px;min-height:260px}
+.mini .paper-s{background:var(--paper);color:var(--ink);border-radius:2px;padding:16px;text-align:center;transform:rotate(-3deg);width:150px;align-self:flex-end;margin-top:-6px}
+.mini .paper-s .n{font-family:"Bodoni Moda",serif;font-style:italic;font-size:24px;line-height:1}
+.mini .paper-s .d{font-size:11px;color:#3A342D;margin-top:6px}
+.mini h4{font-size:22px;font-weight:700;line-height:1.15}
+.mini h4 em{font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;color:var(--gold-soft);font-size:1.15em}
+.mini a{margin-top:auto;font-size:14px;color:var(--primary);text-decoration:none;display:inline-flex;gap:8px;align-items:center}
+@media(max-width:900px){.compact{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+  <p class="note"><i></i>Maquette — insertion dans <code>BentoGrid</code> entre « Services » et « Projets », pleine largeur (<code>md:col-span-2 lg:col-span-3</code>).</p>
+
+  <div class="grid">
+    <div class="glass ghost span3" aria-hidden="true">
+      <div class="ey">Mes Services</div>
+      <h2>Ce que je fais <span>de mieux</span></h2>
+      <div class="tiles"><div></div><div></div><div></div><div></div></div>
+    </div>
+
+    <!-- ===== CARTE MARIAGE ===== -->
+    <article class="glass span3 wed" id="mariage" aria-labelledby="wed-h">
+      <div class="wed-copy">
+        <div class="ey">Sites de mariage <span class="new">Nouveau</span></div>
+        <h2 id="wed-h">Votre mariage mérite mieux <em>qu'un template.</em></h2>
+        <p class="lead">Faire-part numérique, réponses de vos invités, programme du jour J et photos partagées&nbsp;: un site unique, avec un lien personnel par foyer et un tableau de bord pour vous.</p>
+        <ul class="feats">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m3 6 9 7 9-7"/></svg>Faire-part animé</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>RSVP en 30 secondes</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM20 20h1"/></svg>Galerie invités par QR</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Tableau de bord mariés</li>
+        </ul>
+        <div class="foot">
+          <a href="02-page-mariage.html" class="btn btn-p">Découvrir l'offre
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a href="03-demo-camille-hugo.html" class="btn btn-g">Voir le site démo</a>
+          <span class="price">dès <b>290 €</b></span>
+        </div>
+      </div>
+      <div class="wed-vis" aria-hidden="true">
+        <img class="photo" src="https://images.pexels.com/photos/9755935/pexels-photo-9755935.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=900&w=700" alt="">
+        <div class="paper">
+          <div class="to">Faire-part pour<b>Marie &amp; Thomas</b></div>
+          <div class="n">Camille<i>&amp;</i>Hugo</div>
+          <div class="d">12 juin 2027 · Luberon</div>
+          <div class="seal">C·H</div>
+        </div>
+        <div class="toast"><span class="dot"></span><span><b>Marie</b> a répondu · 2 présents au dîner</span></div>
+        <div class="stat"><b>86/121</b>réponses reçues</div>
+      </div>
+    </article>
+
+    <div class="glass ghost span3" aria-hidden="true" style="height:140px">
+      <div class="ey">Projets</div>
+    </div>
+  </div>
+
+  <div class="variants">
+    <h3>Variantes compactes (si la carte doit tenir dans une colonne du bento)</h3>
+    <div class="compact">
+      <div class="glass mini">
+        <h4>Un site à votre image, <em>de l'annonce au souvenir.</em></h4>
+        <a href="02-page-mariage.html">Découvrir l'offre →</a>
+      </div>
+      <div class="glass mini">
+        <div class="paper-s"><div class="n">C &amp; H</div><div class="d">12 · 06 · 2027</div></div>
+        <h4>Faire-part, RSVP <em>et photos.</em></h4>
+        <a href="03-demo-camille-hugo.html">Voir la démo →</a>
+      </div>
+      <div class="glass mini">
+        <h4>Mariage, PACS, <em>fiançailles.</em></h4>
+        <p style="color:#9ca3af;font-size:14px">Trois formules dès 290 €, domaine inclus.</p>
+        <a href="02-page-mariage.html#tarifs">Voir les tarifs →</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -4,6 +4,7 @@ import project from "./project";
 import service from "./service";
 import siteSettings from "./siteSettings";
 import skillCategory from "./skillCategory";
+import weddingService from "./weddingService";
 
 export const schemaTypes = [
     siteSettings,
@@ -12,4 +13,5 @@ export const schemaTypes = [
     pricingPlan,
     skillCategory,
     maintenanceSection,
+    weddingService,
 ];

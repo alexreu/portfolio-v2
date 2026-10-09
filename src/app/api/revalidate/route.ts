@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Every route built from Sanity content, so crawlers never read a stale copy.
-    for (const path of ["/", "/sitemap.xml", "/llms.txt"]) {
+    for (const path of ["/", "/mariage", "/sitemap.xml", "/llms.txt"]) {
         revalidatePath(path);
     }
 

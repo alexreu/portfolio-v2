@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquettes service mariage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#14120F;--panel:#1E1B17;--line:#2E2A24;--text:#EDE7DC;--muted:#A39A8D;--gold:#C9AE82;--brand:#FF4D4D}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:"Poppins",sans-serif;padding:56px 32px 96px;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.wrap{max-width:1320px;margin:0 auto}
+h1{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:clamp(40px,5vw,64px);line-height:1.05}
+h1 em{color:var(--gold)}
+.sub{color:var(--muted);margin-top:12px;max-width:62ch}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:44px}
+.c{display:flex;flex-direction:column;gap:8px;border:1px solid var(--line);border-radius:8px;padding:22px;text-decoration:none;background:var(--panel);transition:border-color .2s,transform .2s}
+.c:hover{border-color:var(--gold);transform:translateY(-2px)}
+.c .n{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--gold);font-size:22px}
+.c b{font-weight:500;font-size:17px}
+.c span{color:var(--muted);font-size:14px}
+h2{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:36px;margin:80px 0 8px}
+.phones{display:flex;gap:28px;flex-wrap:wrap;margin-top:28px}
+.ph figure{width:390px;max-width:100%}
+.frame{width:390px;height:780px;border-radius:44px;background:#000;padding:12px;box-shadow:0 24px 40px -28px rgba(0,0,0,.8)}
+.frame iframe{width:100%;height:100%;border:0;border-radius:33px;background:#EFEAE0}
+figcaption{margin-top:14px;font-size:14px;color:var(--muted)}
+figcaption b{color:var(--text);font-weight:500;display:block}
+.plan{margin-top:20px;border:1px solid var(--line);border-radius:8px;padding:22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.plan a{background:var(--text);color:var(--bg);text-decoration:none;font-weight:500;padding:12px 18px;border-radius:6px}
+@media(max-width:1000px){.cards{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){body{padding:32px 16px}.cards{grid-template-columns:1fr}.frame{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Service mariage — <em>maquettes</em></h1>
+  <p class="sub">Quatre écrans&nbsp;: l'entrée depuis la home du portfolio, la page d'offre <code>/mariage</code>, le site démo d'un couple fictif et le tableau de bord des mariés. Contenus et photos indicatifs (Pexels).</p>
+
+  <div class="cards">
+    <a class="c" href="01-carte-bento.html"><span class="n">01</span><b>Carte bento</b><span>Teaser sur la home sombre, aperçu ivoire du faire-part</span></a>
+    <a class="c" href="02-page-mariage.html"><span class="n">02</span><b>Page /mariage</b><span>Offre, démo, fonctionnalités, process, tarifs, FAQ, contact</span></a>
+    <a class="c" href="03-demo-camille-hugo.html"><span class="n">03</span><b>Site démo</b><span>Camille &amp; Hugo&nbsp;: faire-part, programme, lieux, RSVP, galerie</span></a>
+    <a class="c" href="04-dashboard.html"><span class="n">04</span><b>Tableau de bord</b><span>Suivi des réponses, récap traiteur, foyers, galerie</span></a>
+    <a class="c" href="05-jour-j-table.html"><span class="n">05</span><b>Jour J · trouver sa table</b><span>QR code unique, plan de table numérique (Signature)</span></a>
+  </div>
+
+  <div class="plan"><span>Plan complet&nbsp;: offre, parcours, spécifications, infrastructure, RGPD, feuille de route.</span><a href="../PLAN.md">Ouvrir PLAN.md</a></div>
+
+  <h2>Le site démo sur mobile</h2>
+  <p class="sub">La plupart des invités ouvrent le lien depuis WhatsApp. Les trois écrans ci-dessous sont le même fichier, affiché à 390 px.</p>
+  <div class="phones">
+    <figure class="ph"><div class="frame"><iframe src="03-demo-camille-hugo.html" title="Faire-part sur mobile" loading="lazy"></iframe></div>
+      <figcaption><b>1 · Le faire-part</b>Ouverture au prénom du foyer, sceau à toucher.</figcaption></figure>
+    <figure class="ph"><div class="frame"><iframe src="03-demo-camille-hugo.html?skip#rsvp" title="RSVP sur mobile" loading="lazy"></iframe></div>
+      <figcaption><b>2 · La réponse</b>Par personne et par moment, boutons de 44 px.</figcaption></figure>
+    <figure class="ph"><div class="frame"><iframe src="03-demo-camille-hugo.html?jourj" title="Le jour J sur mobile" loading="lazy"></iframe></div>
+      <figcaption><b>3 · Le jour J</b>Sa table, ce qui se passe maintenant, et un bouton pour envoyer ses photos.</figcaption></figure>
+  </div>
+</div>
+</body>
+</html>
