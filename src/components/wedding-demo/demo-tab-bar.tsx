@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useActiveSection } from "@/hooks/use-active-section";
 import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 
 const icons: Record<string, LucideIcon> = {
@@ -29,12 +30,16 @@ const icons: Record<string, LucideIcon> = {
 
 const iconOf = (tab: Tab) => (tab.emphasis === "done" ? CircleCheck : (icons[tab.key] ?? Calendar));
 
-const tabClass = (tab: Tab) =>
+/** The section being read is lit; the action that matters now stays filled. */
+const tabClass = (tab: Tab, current: boolean) =>
     cn(
-        "flex min-h-13.5 flex-col items-center justify-center gap-0.5 rounded-full text-[0.8rem] whitespace-nowrap",
+        "flex min-h-13.5 flex-col items-center justify-center gap-0.5 rounded-full text-[0.8rem] whitespace-nowrap transition-colors",
         tab.emphasis === "primary" && "bg-demo-ink text-demo-card font-medium",
         tab.emphasis === "done" && "text-demo-olive font-medium",
         tab.emphasis === "normal" && "text-demo-muted",
+        current &&
+            tab.emphasis !== "primary" &&
+            "bg-demo-olive/15 text-demo-olive-dark font-medium",
     );
 
 type DemoTabBarProps = {
@@ -50,6 +55,7 @@ type DemoTabBarProps = {
 export const DemoTabBar = ({ mode, answered, gallery, table, onAddPhotos }: DemoTabBarProps) => {
     const scrollTo = useAnchorScroll();
     const tabs = tabBar(mode, { answered, gallery, table });
+    const active = useActiveSection(tabs.map((tab) => tab.href));
     return (
         <nav
             aria-label="Accès rapide"
@@ -69,12 +75,18 @@ export const DemoTabBar = ({ mode, answered, gallery, table, onAddPhotos }: Demo
                         key={tab.key}
                         type="button"
                         onClick={onAddPhotos}
-                        className={cn(tabClass(tab), "cursor-pointer")}
+                        className={cn(tabClass(tab, false), "cursor-pointer")}
                     >
                         {content}
                     </button>
                 ) : (
-                    <a key={tab.key} href={tab.href} onClick={scrollTo} className={tabClass(tab)}>
+                    <a
+                        key={tab.key}
+                        href={tab.href}
+                        onClick={scrollTo}
+                        aria-current={tab.href === active ? "location" : undefined}
+                        className={tabClass(tab, tab.href === active)}
+                    >
                         {content}
                     </a>
                 );

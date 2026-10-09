@@ -3,6 +3,7 @@
 import { type SiteMode } from "@alexreu/wedding-core";
 
 import { cn } from "@/lib/utils";
+import { useActiveSection } from "@/hooks/use-active-section";
 import { useAnchorScroll } from "@/hooks/use-anchor-scroll";
 import { SelectField } from "@/components/shared/select-field";
 
@@ -34,6 +35,8 @@ const previews: readonly { value: string; label: string }[] = [
 
 export const DemoNav = ({ monogram, mode, preview, onPreview, gallery }: DemoNavProps) => {
     const scrollTo = useAnchorScroll();
+    const shown = links.filter((link) => gallery || link.href !== "#photos");
+    const active = useActiveSection(shown.map((link) => link.href));
     return (
         <header className="bg-demo-paper/90 border-demo-line sticky top-0 z-30 border-b backdrop-blur-md">
             <div className="relative mx-auto flex h-16 max-w-310 items-center justify-center px-4 md:justify-between md:px-7">
@@ -46,19 +49,18 @@ export const DemoNav = ({ monogram, mode, preview, onPreview, gallery }: DemoNav
                 </a>
                 <nav aria-label="Sections" className="hidden md:block">
                     <ul className="flex gap-7 text-[0.95rem]">
-                        {links
-                            .filter((link) => gallery || link.href !== "#photos")
-                            .map((link) => (
-                                <li key={link.href}>
-                                    <a
-                                        href={link.href}
-                                        onClick={scrollTo}
-                                        className="text-demo-ink-2 hover:text-demo-ink"
-                                    >
-                                        {link.label}
-                                    </a>
-                                </li>
-                            ))}
+                        {shown.map((link) => (
+                            <li key={link.href}>
+                                <a
+                                    href={link.href}
+                                    onClick={scrollTo}
+                                    aria-current={link.href === active ? "location" : undefined}
+                                    className="text-demo-ink-2 hover:text-demo-ink aria-[current]:text-demo-ink decoration-demo-olive underline-offset-8 transition-colors aria-[current]:underline aria-[current]:decoration-2"
+                                >
+                                    {link.label}
+                                </a>
+                            </li>
+                        ))}
                     </ul>
                 </nav>
                 <div className="absolute right-4 flex items-center gap-2.5 md:static">

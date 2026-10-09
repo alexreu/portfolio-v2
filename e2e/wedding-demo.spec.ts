@@ -26,6 +26,27 @@ test.describe("site démo Camille & Hugo", () => {
         await expect(tabBar.getByRole("link", { name: "Répondu" })).toBeVisible();
     });
 
+    test("le menu met en avant la section où l'on se trouve", async ({ page, isMobile }) => {
+        await page.goto("/mariage/demo?skip");
+        const menu = isMobile
+            ? page.getByRole("navigation", { name: "Accès rapide" })
+            : page.getByRole("navigation", { name: "Sections" });
+
+        await menu.getByRole("link", { name: "Lieux" }).click();
+        await expect(menu.getByRole("link", { name: "Lieux" })).toHaveAttribute(
+            "aria-current",
+            "location",
+        );
+        await expect(menu.locator("[aria-current]")).toHaveCount(1);
+
+        await menu.getByRole("link", { name: "Programme" }).click();
+        await expect(menu.getByRole("link", { name: "Programme" })).toHaveAttribute(
+            "aria-current",
+            "location",
+        );
+        await expect(menu.getByRole("link", { name: "Lieux" })).not.toHaveAttribute("aria-current");
+    });
+
     test("une fois la réponse envoyée, le merci s'affiche à l'écran et reçoit le focus", async ({
         page,
     }) => {
